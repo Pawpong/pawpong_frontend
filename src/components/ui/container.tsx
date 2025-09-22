@@ -1,8 +1,19 @@
-export default function Container({ ...props }: React.ComponentProps<"div">) {
+import { cn } from "@/lib/utils";
+
+export default function Container({
+  wrapperClassName,
+  className,
+  ...props
+}: React.ComponentProps<"div"> & {
+  wrapperClassName?: string;
+}) {
   return (
-    <div className="flex">
+    <div className={cn("flex", wrapperClassName)}>
       <div
-        className="m-auto w-full max-w-360 lg:px-12 md:px-8 px-5"
+        className={cn(
+          "m-auto w-full max-w-360 lg:px-12 md:px-8 px-5",
+          className
+        )}
         {...props}
       />
     </div>
