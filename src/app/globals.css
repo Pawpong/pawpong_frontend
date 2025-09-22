@@ -3,6 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* shadcn 기본 테마 설정 */
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -14,13 +15,13 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-  --color-primary: #4f3b2e;
+
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
+  --color-accent: var(--color-branding-bg);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-border: var(--border);
@@ -39,6 +40,16 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* 반응형 브레이크포인트 설정 */
+@theme {
+  --breakpoint-lg: 80rem;
+}
+
+/* 피그마 디자인 토큰 : Color */
+@theme inline {
+  --color-primary: #4f3b2e;
   --color-grayscale-black: #1f1f1f;
   --color-grayscale-gray7: #343434;
   --color-grayscale-gray6: #545454;
@@ -53,75 +64,7 @@
   --color-branding-bg: #f6f6ea;
 }
 
-/* 텍스트 스타일 변수 설정 */
-
-/* PC (min-width: 1280px) */
-@media (min-width: 1280px) {
-  @theme {
-    --text-display: --spacing(12);
-    --text-display--line-height: --spacing(16);
-    --text-display--font-weight: 600;
-
-    --text-heading-1: --spacing(10);
-    --text-heading-1--line-height: --spacing(15);
-    --text-heading-1--font-weight: 600;
-
-    --text-heading-2: --spacing(8);
-    --text-heading-2--line-height: --spacing(12);
-
-    --text-heading-3: --spacing(6);
-    --text-heading-3--line-height: --spacing(9);
-
-    --text-body-l: --spacing(5);
-    --text-body-1--line-height: --spacing(8);
-
-    --text-body-m: --spacing(4.5);
-    --text-body-m--line-height: --spacing(7);
-
-    --text-body-s: --spacing(4);
-    --text-body-s--line-height: --spacing(6);
-
-    --text-body-xs: --spacing(3.5);
-    --text-body-xs--line-height: --spacing(5);
-
-    --text-caption-s: --spacing(3);
-    --text-caption-s--line-height: --spacing(3);
-  }
-}
-
-/* 태블릿 (min-width: 768px) */
-@media (min-width: 768px) {
-  @theme {
-    --text-display: --spacing(10);
-    --text-display--line-height: --spacing(14);
-    --text-display--font-weight: 600;
-
-    --text-heading-1: --spacing(8);
-    --text-heading-1--line-height: --spacing(12);
-    --text-heading-1--font-weight: 600;
-
-    --text-heading-2: --spacing(7);
-    --text-heading-2--line-height: --spacing(10);
-
-    --text-heading-3: --spacing(5);
-    --text-heading-3--line-height: --spacing(8);
-
-    --text-body-l: --spacing(5);
-    --text-body-1--line-height: --spacing(8);
-
-    --text-body-m: --spacing(4.5);
-    --text-body-m--line-height: --spacing(7);
-
-    --text-body-s: --spacing(4);
-    --text-body-s--line-height: --spacing(6);
-
-    --text-body-xs: --spacing(3.5);
-    --text-body-xs--line-height: --spacing(5);
-
-    --text-caption-s: --spacing(3);
-    --text-caption-s--line-height: --spacing(3);
-  }
-}
+/* 피그마 디자인 토큰 : Typography */
 
 /* 모바일 (기본) */
 @theme {
@@ -153,6 +96,76 @@
 
   --text-caption-s: --spacing(2.75);
   --text-caption-s--line-height: --spacing(2.75);
+}
+
+@layer theme {
+  :root {
+    @media (width >= 48rem) {
+      --text-display: --spacing(10);
+      --text-display--line-height: --spacing(14);
+      --text-display--font-weight: 600;
+
+      --text-heading-1: --spacing(8);
+      --text-heading-1--line-height: --spacing(12);
+      --text-heading-1--font-weight: 600;
+
+      --text-heading-2: --spacing(7);
+      --text-heading-2--line-height: --spacing(10);
+
+      --text-heading-3: --spacing(5);
+      --text-heading-3--line-height: --spacing(8);
+
+      --text-body-l: --spacing(5);
+      --text-body-1--line-height: --spacing(8);
+
+      --text-body-m: --spacing(4.5);
+      --text-body-m--line-height: --spacing(7);
+
+      --text-body-s: --spacing(4);
+      --text-body-s--line-height: --spacing(6);
+
+      --text-body-xs: --spacing(3.5);
+      --text-body-xs--line-height: --spacing(5);
+
+      --text-caption-s: --spacing(3);
+      --text-caption-s--line-height: --spacing(3);
+    }
+  }
+}
+
+@layer theme {
+  :root {
+    @media (width >= 80rem) {
+      --text-display: --spacing(12);
+      --text-display--line-height: --spacing(16);
+      --text-display--font-weight: 600;
+
+      --text-heading-1: --spacing(10);
+      --text-heading-1--line-height: --spacing(15);
+      --text-heading-1--font-weight: 600;
+
+      --text-heading-2: --spacing(8);
+      --text-heading-2--line-height: --spacing(12);
+
+      --text-heading-3: --spacing(6);
+      --text-heading-3--line-height: --spacing(9);
+
+      --text-body-l: --spacing(5);
+      --text-body-1--line-height: --spacing(8);
+
+      --text-body-m: --spacing(4.5);
+      --text-body-m--line-height: --spacing(7);
+
+      --text-body-s: --spacing(4);
+      --text-body-s--line-height: --spacing(6);
+
+      --text-body-xs: --spacing(3.5);
+      --text-body-xs--line-height: --spacing(5);
+
+      --text-caption-s: --spacing(3);
+      --text-caption-s--line-height: --spacing(3);
+    }
+  }
 }
 
 :root {

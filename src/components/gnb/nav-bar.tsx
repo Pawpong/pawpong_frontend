@@ -8,7 +8,7 @@ import SearchFillIcon from "@/assets/icons/search-fill.svg";
 import SearchIcon from "@/assets/icons/search.svg";
 import Link from "next/link";
 
-import { useFirstSegment } from "@/hooks/use-first-segment";
+import { useSegment } from "@/hooks/use-segment";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 
@@ -34,7 +34,8 @@ const navItems = [
 ];
 
 export default function NavBar() {
-  const currNav = useFirstSegment();
+  const currNav = useSegment(0);
+  console.log(currNav);
 
   return (
     <div className="flex">
@@ -45,13 +46,17 @@ export default function NavBar() {
           <Link href={item.href} key={item.name}>
             <Button
               key={item.name}
-              variant="link"
-              className={cn("h-auto text-body-s text-grayscale-gray6", {
-                "text-primary font-semibold": active,
-              })}
+              variant="ghost"
+              className={cn(" h-auto gap-1.5 has-[>svg]:px-5")}
             >
               <Icon className="size-5" />
-              {item.name}
+              <span
+                className={cn("text-body-s text-grayscale-gray6", {
+                  "text-primary font-semibold": active,
+                })}
+              >
+                {item.name}
+              </span>
             </Button>
           </Link>
         );

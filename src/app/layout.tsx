@@ -28,10 +28,8 @@ export default function RootLayout({
       <body
         className={`${pretendard.variable}  ${pretendard.className} antialiased`}
       >
-        <div className="[--gnb-height:calc(--spacing(16))]">
-          <Gnb />
-          <div className="pt-[var(--gnb-height)]">{children}</div>
-        </div>
+        <Gnb />
+        {children}
       </body>
     </html>
   );
