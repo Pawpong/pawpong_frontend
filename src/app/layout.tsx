@@ -1,6 +1,7 @@
 import Gnb from "@/components/gnb/gnb";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Suspense } from "react";
 import "./globals.css";
 
 const pretendard = localFont({
@@ -28,8 +29,10 @@ export default function RootLayout({
       <body
         className={`${pretendard.variable}  ${pretendard.className} antialiased`}
       >
-        <Gnb />
-        {children}
+        <Suspense>
+          <Gnb />
+          {children}
+        </Suspense>
       </body>
     </html>
   );
