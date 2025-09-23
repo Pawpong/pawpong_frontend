@@ -1,4 +1,5 @@
 import BreederDescription from "@/components/breeder-list/breader-description";
+import BreederLikeButton from "@/components/breeder-list/breader-like-button";
 import Breeder from "@/components/breeder-list/breeder";
 import BreederAvatar from "@/components/breeder-list/breeder-avatar";
 import BreederContent from "@/components/breeder-list/breeder-content";
@@ -82,7 +83,12 @@ export default function SiteBreederList() {
               </BreederTags>
             </BreederContent>
           </BreederProfile>
-          <BreederImage src="/main-img-sample.png" />
+          <div className="relative">
+            <BreederImage src="/main-img-sample.png" />
+            <div className="absolute top-0 right-0 p-3">
+              <BreederLikeButton />
+            </div>
+          </div>
         </Breeder>
       ))}
     </BreederList>
