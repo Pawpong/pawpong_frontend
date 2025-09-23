@@ -10,9 +10,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <AnimalTabs />
 
       <FilterSortBar />
-      <Container className=" flex">
+      <Container className="flex">
         <FilterSidebar />
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 @container">{children}</div>
       </Container>
     </SidebarProvider>
   );

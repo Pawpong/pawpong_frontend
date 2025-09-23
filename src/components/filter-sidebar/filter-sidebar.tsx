@@ -14,7 +14,7 @@ export default function FilterSidebar() {
   return (
     <div
       className={cn(
-        "overflow-hidden transition-all duration-300 ease-in-out ",
+        "overflow-hidden transition-all duration-300 ease-in-out shrink-0",
         isOpen ? "w-84 pr-[calc(19.875rem+var(--gutter))]" : "w-0 pr-0"
       )}
     >
