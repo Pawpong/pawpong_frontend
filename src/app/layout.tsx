@@ -2,7 +2,7 @@ import Gnb from "@/components/gnb/gnb";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Suspense } from "react";
-import "./globals.css";
+import "./global.css";
 
 const pretendard = localFont({
   src: "../assets/fonts/PretendardVariable.woff2",

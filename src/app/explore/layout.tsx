@@ -1,26 +1,19 @@
-// import {
-//   Sidebar,
-//   SidebarContent,
-//   SidebarFooter,
-//   SidebarGroup,
-//   SidebarHeader,
-// } from "@/components/ui/sidebar";
+import FilterSidebar from "@/components/filter-sidebar/filter-sidebar";
+import { SidebarProvider } from "@/components/filter-sidebar/sidebar-provider";
+import Container from "@/components/ui/container";
 import AnimalTabs from "./_components/animal-tabs";
 import FilterSortBar from "./_components/filter-sort-bar";
 
-export default function Layout() {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
+    <SidebarProvider>
       <AnimalTabs />
+
       <FilterSortBar />
-      {/* <Sidebar>
-        <SidebarHeader />
-        <SidebarContent>
-          <SidebarGroup />
-          <SidebarGroup />
-        </SidebarContent>
-        <SidebarFooter />
-      </Sidebar> */}
-    </div>
+      <Container className=" flex">
+        <FilterSidebar />
+        <div className="flex-1">{children}</div>
+      </Container>
+    </SidebarProvider>
   );
 }

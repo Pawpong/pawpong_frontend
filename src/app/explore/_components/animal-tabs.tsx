@@ -1,6 +1,8 @@
 "use client";
-import Cat from "@/assets/icons/cat.svg";
-import Dog from "@/assets/icons/dog.svg";
+
+import Cat from "@/assets/icons/cat";
+
+import Dog from "@/assets/icons/dog";
 import { Button } from "@/components/ui/button";
 import { useSegment } from "@/hooks/use-segment";
 import { cn } from "@/lib/utils";
@@ -28,7 +30,7 @@ export default function AnimalTabs() {
             <Button
               variant={"ghost"}
               className={cn(
-                "h-auto text-heading-3! text-grayscale-gray5 font-semibold -mx-4 -my-2 hover:bg-transparent flex-col gap-2 hover:text-primary",
+                "h-auto text-heading-3! text-grayscale-gray5 font-semibold -mx-2.5 -my-1.5 hover:bg-transparent flex-col gap-2 hover:text-primary",
                 {
                   "text-primary": active,
                 }

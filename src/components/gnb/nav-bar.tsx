@@ -1,13 +1,13 @@
 "use client";
 
-import LetterFillIcon from "@/assets/icons/letter-fill.svg";
-import LetterIcon from "@/assets/icons/letter.svg";
-import ProfileFillIcon from "@/assets/icons/profile-fill.svg";
-import ProfileIcon from "@/assets/icons/profile.svg";
-import SearchFillIcon from "@/assets/icons/search-fill.svg";
-import SearchIcon from "@/assets/icons/search.svg";
 import Link from "next/link";
 
+import Letter from "@/assets/icons/letter";
+import LetterFill from "@/assets/icons/letter-fill";
+import Profile from "@/assets/icons/profile";
+import ProfileFill from "@/assets/icons/profile-fill";
+import Search from "@/assets/icons/search";
+import SearchFill from "@/assets/icons/search-fill";
 import { useSegment } from "@/hooks/use-segment";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
@@ -16,20 +16,20 @@ const navItems = [
   {
     name: "탐색",
     href: "/explore",
-    icon: SearchIcon,
-    iconFill: SearchFillIcon,
+    icon: Search,
+    iconFill: SearchFill,
   },
   {
     name: "신청",
     href: "/application",
-    icon: LetterIcon,
-    iconFill: LetterFillIcon,
+    icon: Letter,
+    iconFill: LetterFill,
   },
   {
     name: "마이",
     href: "/profile",
-    icon: ProfileIcon,
-    iconFill: ProfileFillIcon,
+    icon: Profile,
+    iconFill: ProfileFill,
   },
 ];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import LogoIcon from "@/assets/logo/logo.svg";
+import Logo from "@/assets/logo/logo";
 import { Button } from "../ui/button";
 
 export default function LogoButton() {
@@ -12,7 +12,7 @@ export default function LogoButton() {
         location.reload();
       }}
     >
-      <LogoIcon />
+      <Logo />
     </Button>
   );
 }

@@ -1,0 +1,88 @@
+import React from "react";
+
+export default function LetterFill(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path
+        d="M17.538 9.59888H16.7462V10.3959H17.538V16.7461H18.335V8.01523H17.538V9.59888Z"
+        fill="currentColor"
+      />
+      <path
+        d="M16.7462 16.7462H17.538V17.538H16.7462V16.7462Z"
+        fill="currentColor"
+      />
+      <path
+        d="M16.7462 7.2182H17.538V8.01524H16.7462V7.2182Z"
+        fill="currentColor"
+      />
+      <path
+        d="M15.9543 16.7462H15.1573V17.538H4.83752V16.7462H4.04569V17.538H3.24866V18.335H16.7461V17.538H15.9543V16.7462Z"
+        fill="currentColor"
+      />
+      <path
+        d="M14.3654 15.9491H15.1572V16.7461H14.3654V15.9491Z"
+        fill="currentColor"
+      />
+      <path
+        d="M13.5684 15.1573H14.3655V15.9491H13.5684V15.1573Z"
+        fill="currentColor"
+      />
+      <path
+        d="M12.7766 14.3654H13.5684V15.1573H12.7766V14.3654Z"
+        fill="currentColor"
+      />
+      <path
+        d="M11.9848 13.5684H12.7766V14.3655H11.9848V13.5684Z"
+        fill="currentColor"
+      />
+      <path
+        d="M11.9848 2.45682H12.7766V3.24864H11.9848V2.45682Z"
+        fill="currentColor"
+      />
+      <path
+        d="M6.42676 4.82715H13.5684V4.44336H15.1572V11.9844H13.5684V12.7764H11.9844V13.5684H8.01562V12.7764H6.42676V11.9844H4.83789V4.44336H6.42676V4.82715ZM8.01562 8.01562H7.21777V9.59863H8.01562V10.3955H8.80664V11.1875H9.60449V11.9844H10.3955V11.1875H11.1875V10.3955H11.9844V9.59863H12.7764V8.01562H11.9844V7.21777H10.3955V8.01562H9.60449V7.21777H8.01562V8.01562Z"
+        fill="currentColor"
+      />
+      <path
+        d="M8.0152 1.66501H11.9847V2.45683H8.0152V1.66501Z"
+        fill="currentColor"
+      />
+      <path
+        d="M7.2182 13.5684H8.01524V14.3655H7.2182V13.5684Z"
+        fill="currentColor"
+      />
+      <path
+        d="M7.2182 2.45682H8.01524V3.24864H7.2182V2.45682Z"
+        fill="currentColor"
+      />
+      <path
+        d="M6.42639 14.3654H7.21822V15.1573H6.42639V14.3654Z"
+        fill="currentColor"
+      />
+      <path
+        d="M5.63458 15.1573H6.42641V15.9491H5.63458V15.1573Z"
+        fill="currentColor"
+      />
+      <path
+        d="M4.83752 15.9491H5.63456V16.7461H4.83752V15.9491Z"
+        fill="currentColor"
+      />
+      <path
+        d="M4.04569 10.3959H3.24866V11.1877H4.83752V4.83752H15.1573V11.1877H16.7461V10.3959H15.9543V7.2182H16.7461V6.42638H15.9543V4.04569H13.5684V3.24866H12.7766V4.04569H7.2182V3.24866H6.42638V4.04569H4.04569V6.42638H3.24866V7.2182H4.04569V10.3959Z"
+        fill="currentColor"
+      />
+      <path
+        d="M2.45685 16.7462H3.24867V17.538H2.45685V16.7462Z"
+        fill="currentColor"
+      />
+      <path
+        d="M2.45685 7.2182H3.24867V8.01524H2.45685V7.2182Z"
+        fill="currentColor"
+      />
+      <path
+        d="M2.4568 10.3959H3.24863V9.59888H2.4568V8.01523H1.66498V16.7461H2.4568V10.3959Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}

@@ -1,4 +1,4 @@
-import Alarm from "@/assets/icons/alarm.svg";
+import Alarm from "@/assets/icons/alarm";
 import { Button } from "../ui/button";
 export default function NoticeButton() {
   return (
