@@ -35,7 +35,6 @@ const navItems = [
 
 export default function NavBar() {
   const currNav = useSegment(0);
-  console.log(currNav);
 
   return (
     <div className="flex">
@@ -47,11 +46,13 @@ export default function NavBar() {
             <Button
               key={item.name}
               variant="ghost"
-              className={cn(" h-auto gap-1.5 has-[>svg]:px-5")}
+              className={cn(
+                " h-auto gap-1.5 has-[>svg]:px-5 text-body-s text-grayscale-gray6 hover:text-primary! "
+              )}
             >
               <Icon className="size-5" />
               <span
-                className={cn("text-body-s text-grayscale-gray6", {
+                className={cn({
                   "text-primary font-semibold": active,
                 })}
               >

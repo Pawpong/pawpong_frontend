@@ -10,7 +10,7 @@ export default function ToggleFilterSidebarButton() {
 
   return (
     <Button variant="secondary" size="icon" onClick={toggleSidebar}>
-      {isOpen ? <Close className="size-7" /> : <Filter className="size-7" />}
+      {isOpen ? <Close className="size-5" /> : <Filter className="size-7" />}
     </Button>
   );
 }

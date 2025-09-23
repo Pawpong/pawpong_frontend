@@ -20,7 +20,7 @@ export default function AnimalTabs() {
     <Container className="pt-6 md:pt-7 lg:pt-10 flex gap-5">
       {animalTabsItems.map((item) => {
         const active = currTab === item.href.split("/").at(-1);
-        console.log(active);
+
         return (
           <Link
             key={item.href}

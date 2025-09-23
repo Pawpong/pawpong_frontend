@@ -15,7 +15,7 @@ export default function LevelFilter() {
   return (
     <FilterSection>
       <FilterHeader>
-        <FilterTitle>지역</FilterTitle>
+        <FilterTitle>브리더 레벨</FilterTitle>
         <MinimizeButton />
       </FilterHeader>
       <FilterContent>

@@ -1,5 +1,6 @@
 "use client";
 
+import Close from "@/assets/icons/close";
 import Location from "@/assets/icons/location";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -45,11 +46,15 @@ export default function HeaderFilters() {
                   className: "border-primary hover:text-point-basic!  ",
                 })]: isActive,
               },
-              "py-2 px-3 text-body-xs h-auto gap-1 has-[>svg]:pl-2"
+              "py-2 px-3 text-body-xs h-auto gap-2",
+              { "pl-2!": filter.icon }
             )}
           >
-            {filter.icon && <filter.icon className="size-5" />}
-            {filter.label}
+            <div className="flex items-center gap-1">
+              {filter.icon && <filter.icon className="size-5" />}
+              {filter.label}
+            </div>
+            {isActive && <Close className="size-4" />}
           </Button>
         );
       })}
