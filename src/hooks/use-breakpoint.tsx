@@ -7,6 +7,9 @@ const BREAKPOINTS: Record<string, number> = {
   lg: 80, // 80rem -> 1280px
 };
 
+// 모바일 : useBreakpoint("md") -> false
+// 데스크탑 : useBreakpoint("md") -> true
+
 export function useBreakpoint(min: "sm" | "md" | "lg") {
   const [matches, setMatches] = React.useState<boolean | undefined>(undefined);
 

@@ -142,6 +142,6 @@ export const dogBreedFilters: Filter = {
 };
 
 export const filter = {
-  cat: [adoptableFilters, locationFilters, levelFilters, catBreedFilters],
-  dog: [adoptableFilters, locationFilters, levelFilters, dogBreedFilters],
+  cat: [adoptableFilters, catBreedFilters, locationFilters, levelFilters],
+  dog: [adoptableFilters, dogBreedFilters, locationFilters, levelFilters],
 };

@@ -100,6 +100,7 @@
   --text-caption-s--line-height: --spacing(2.75);
 
   --spacing-gutter: --spacing(3);
+  --spacing-padding: --spacing(5);
 }
 
 @layer theme {
@@ -135,6 +136,7 @@
       --text-caption-s--line-height: --spacing(3);
 
       --spacing-gutter: --spacing(4);
+      --spacing-padding: --spacing(8);
     }
   }
 }
@@ -172,6 +174,7 @@
       --text-caption-s--line-height: --spacing(3);
 
       --spacing-gutter: --spacing(6);
+      --spacing-padding: --spacing(12);
     }
   }
 }
