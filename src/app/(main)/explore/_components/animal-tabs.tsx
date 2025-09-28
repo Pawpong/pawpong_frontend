@@ -5,7 +5,7 @@ import Cat from "@/assets/icons/cat";
 import Dog from "@/assets/icons/dog";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/ui/container";
-import { useSegment } from "@/hooks/use-segment";
+import useAnimal from "@/hooks/use-animal";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -15,7 +15,7 @@ const animalTabsItems = [
 ];
 
 export default function AnimalTabs() {
-  const currTab = useSegment(1) || "cat";
+  const currTab = useAnimal();
 
   return (
     <Container className="pt-6 md:pt-7 lg:pt-10 flex gap-5">

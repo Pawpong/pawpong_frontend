@@ -2,6 +2,7 @@
 
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { cn } from "@/lib/utils";
+import { useFilterStore } from "@/stores/filter-store";
 import { Separator } from "../ui/separator";
 import BreedFilter from "./breed-filter";
 import ClearFilters from "./clear-filters";
@@ -13,6 +14,7 @@ import { useSidebar } from "./sidebar-provider";
 export default function FilterSidebar() {
   const { isOpen } = useSidebar();
   const isMobile = !useBreakpoint("md");
+  const { activeFilters, removeActiveFilter } = useFilterStore();
   return (
     isMobile || (
       <div
@@ -24,7 +26,10 @@ export default function FilterSidebar() {
         <div className="space-y-6 lg:pb-15 md:pb-15 pb-10 w-[calc(19.875rem-(--spacing(4)))]">
           <div className="space-y-8">
             <ClearFilters />
-            <CurrentFilters />
+            <CurrentFilters
+              selectedLeaves={activeFilters}
+              onRemove={removeActiveFilter}
+            />
           </div>
 
           <Separator />

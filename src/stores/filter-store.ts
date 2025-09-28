@@ -58,10 +58,13 @@ interface FilterState {
     animal: "cat" | "dog"
   ) => void;
   selectAllTempLeaves: (parentItem: Filter, shouldSelect: boolean) => void;
-
+  animal: "cat" | "dog"; // 1. animal 상태 추가
   applyTempFilters: () => void; // 임시 선택을 최종 필터에 적용
-  removeActiveFilter: (itemLabel: string, animal: "cat" | "dog") => void;
+  setAnimal: (animal: "cat" | "dog") => void; // 2. animal 설정 액션 추가
+  removeActiveFilter: (itemLabel: string) => void; // 3. animal 인자 제거
   clearAllFilters: () => void;
+
+  toggleActiveFilter: (filter: string) => void;
 }
 
 export const useFilterStore = create<FilterState>((set, get) => ({
@@ -69,7 +72,10 @@ export const useFilterStore = create<FilterState>((set, get) => ({
   activeFilters: [],
   tempSelectedLeaves: [],
   selectionPath: [],
+  animal: "cat", // 기본값 설정
 
+  // --- 액션 ---
+  setAnimal: (animal) => set({ animal }),
   // --- 액션 ---
   initModalState: () => {
     // 모달이 열릴 때, 현재 적용된 필터를 임시 선택 상태로 복사
@@ -156,21 +162,19 @@ export const useFilterStore = create<FilterState>((set, get) => ({
     // 임시 상태를 최종 상태로 적용
     set({ activeFilters: get().tempSelectedLeaves });
   },
-
-  removeActiveFilter: (itemLabel, animal) => {
-    // 사이드바에서 필터 제거 (복잡한 로직이 필요할 수 있으므로 분리)
+  removeActiveFilter: (itemLabel) => {
+    // get()을 사용해 스토어의 최신 animal 상태를 가져옵니다.
+    const animal = get().animal;
     const rootFilters = filterData[animal];
     const node = findNodeByLabel(itemLabel, rootFilters);
 
     set((state) => {
       let newActiveFilters = [...state.activeFilters];
       if (node && node.children) {
-        // 부모 노드 제거
         newActiveFilters = newActiveFilters.filter(
           (leaf) => leaf !== itemLabel
         );
       } else {
-        // 자식 노드 제거 (체크 해제 로직과 유사)
         const { parent, childrenLabels } = findParentAndChildren(
           itemLabel,
           rootFilters
@@ -183,7 +187,6 @@ export const useFilterStore = create<FilterState>((set, get) => ({
           newActiveFilters = newActiveFilters.filter((l) => l !== itemLabel);
         }
       }
-      // activeFilters와 tempSelectedLeaves를 동기화
       return {
         activeFilters: newActiveFilters,
         tempSelectedLeaves: newActiveFilters,
@@ -194,5 +197,20 @@ export const useFilterStore = create<FilterState>((set, get) => ({
   clearAllFilters: () => {
     // 모든 필터 상태 초기화
     set({ activeFilters: [], tempSelectedLeaves: [], selectionPath: [] });
+  },
+
+  toggleActiveFilter: (filterToToggle) => {
+    set((state) => {
+      const isActive = state.activeFilters.includes(filterToToggle);
+      const newActiveFilters = isActive
+        ? state.activeFilters.filter((f) => f !== filterToToggle) // 있으면 제거
+        : [...state.activeFilters, filterToToggle]; // 없으면 추가
+
+      // 모달과의 상태 일관성을 위해 tempSelectedLeaves도 함께 업데이트합니다.
+      return {
+        activeFilters: newActiveFilters,
+        tempSelectedLeaves: newActiveFilters,
+      };
+    });
   },
 }));

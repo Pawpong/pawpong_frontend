@@ -1,3 +1,8 @@
+// components/filter/breed-filter.tsx
+
+"use client"; // Zustand hook을 사용하기 위해 client 컴포넌트로 변경
+
+import { useFilterStore } from "@/stores/filter-store";
 import FilterContent from "./filter-content";
 import FilterHeader from "./filter-header";
 import FilterList from "./filter-list";
@@ -16,6 +21,9 @@ const breedFilterItems = [
 ];
 
 export default function BreedFilter() {
+  // 2. 스토어에서 상태와 액션을 가져옵니다.
+  const { activeFilters, toggleActiveFilter } = useFilterStore();
+
   return (
     <FilterSection>
       <FilterHeader>
@@ -25,7 +33,15 @@ export default function BreedFilter() {
       <FilterContent>
         <FilterList>
           {breedFilterItems.map((item) => (
-            <FilterListItem key={item.id}>{item.name}</FilterListItem>
+            <FilterListItem
+              key={item.id}
+              // 3. 스토어 상태를 기반으로 checked 여부 결정
+              checked={activeFilters.includes(item.name)}
+              // 4. 체크박스 상태 변경 시 스토어 액션 호출
+              onCheckedChange={() => toggleActiveFilter(item.name)}
+            >
+              {item.name}
+            </FilterListItem>
           ))}
         </FilterList>
         <MoreButton />

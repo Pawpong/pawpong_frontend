@@ -1,5 +1,6 @@
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -232,13 +233,15 @@ export default function FilterDialogTrigger({
           )}
           <div className="flex row justify-between items-center py-4 md:pt-4 md:pb-6 md:py-0">
             <ClearFilters onClick={clearAllFilters} />
-            <Button
-              onClick={handleApplyAndClose}
-              className="py-1.5 px-4 text-grayscale-white! w-16.5 text-sm leading-[140%] tracking-[-2%]"
-              type="submit"
-            >
-              설정
-            </Button>
+            <DialogClose asChild>
+              <Button
+                onClick={handleApplyAndClose}
+                className="py-1.5 px-4 text-grayscale-white! w-16.5 text-sm leading-[140%] tracking-[-2%]"
+                type="submit"
+              >
+                설정
+              </Button>
+            </DialogClose>
           </div>
         </DialogFooter>
       </DialogContent>
