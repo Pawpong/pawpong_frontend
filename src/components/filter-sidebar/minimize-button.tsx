@@ -14,7 +14,7 @@ export default function MinimizeButton() {
         variant="secondary"
         onClick={toggle}
       >
-        {!open ? <Minus /> : <Plus />}
+        {!open ? <Minus className="size-5" /> : <Plus className="size-5" />}
       </Button>
     </CollapsibleTrigger>
   );
