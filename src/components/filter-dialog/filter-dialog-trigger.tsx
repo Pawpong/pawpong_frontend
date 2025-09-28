@@ -67,7 +67,7 @@ export default function FilterDialogTrigger({
   };
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={(open) => open && initModalState()}>
       <DialogTrigger {...props} />
       <DialogContent className="p-0 gap-0  flex flex-col w-full rounded-none md:rounded-lg h-full md:w-150 md:h-150">
         <DialogHeader className="py-4 px-5 md:pt-6 md:px-6 pb-2.5 h-17 flex items-center flex-row">

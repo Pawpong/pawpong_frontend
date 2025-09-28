@@ -22,7 +22,7 @@ function createApi(): AxiosInstance {
         if (token && config.headers)
           config.headers.Authorization = `Bearer ${token}`;
       }
-    } catch (e) {
+    } catch {
       /* silent */
     }
     return config;
@@ -40,7 +40,11 @@ function createApi(): AxiosInstance {
 
       // 에러 메시지 포맷 통일해서 던지기
       const message =
-        (error.response?.data && (error.response.data as any).message) ||
+        (error.response?.data &&
+        typeof error.response.data === "object" &&
+        "message" in error.response.data
+          ? (error.response.data as { message?: string }).message
+          : undefined) ||
         error.message ||
         "Unknown error";
       return Promise.reject(new Error(message));
