@@ -13,5 +13,5 @@ export default function useAnimal(): "cat" | "dog" {
     setAnimal(animal);
     clearActiveFilters();
   }, [animal, setAnimal, clearActiveFilters]);
-  return (useSegment(1) as "cat" | "dog") || "cat";
+  return animal;
 }
