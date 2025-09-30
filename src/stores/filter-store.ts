@@ -196,7 +196,7 @@ export const useFilterStore = create<FilterState>((set, get) => ({
 
   clearAllFilters: () => {
     // 모든 필터 상태 초기화
-    set({ activeFilters: [], tempSelectedLeaves: [], selectionPath: [] });
+    set({ tempSelectedLeaves: [] });
   },
 
   toggleActiveFilter: (filterToToggle) => {

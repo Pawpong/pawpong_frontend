@@ -5,6 +5,7 @@ import * as React from "react";
 
 import Close from "@/assets/icons/close";
 import { cn } from "@/lib/utils";
+import CircleBadge from "../cirlce-badge";
 import { buttonVariants } from "./button";
 
 function Dialog({
@@ -51,9 +52,11 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  hasChange = false,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
+  hasChange?: boolean;
 }) {
   return (
     <DialogPortal data-slot="dialog-portal">
@@ -71,12 +74,14 @@ function DialogContent({
           <DialogPrimitive.Close
             data-slot="dialog-close"
             className={cn(
-              "ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0  size-9",
+              "ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0  size-9",
               buttonVariants({ variant: "secondary" })
             )}
           >
             <Close className="size-5 text-graysclae-gray-7" />
-
+            {hasChange && (
+              <CircleBadge className="absolute top-1.5 right-1.5" />
+            )}
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}

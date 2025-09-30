@@ -1,5 +1,7 @@
 "use client"; // 1. 클라이언트 컴포넌트로 변경
 
+import { filter } from "@/constants/filter";
+import { useSegment } from "@/hooks/use-segment";
 import { useFilterStore } from "@/stores/filter-store";
 import FilterContent from "./filter-content";
 import FilterHeader from "./filter-header";
@@ -20,7 +22,14 @@ const locationFilterItems = [
 
 export default function LocationFilter() {
   // 3. 스토어에서 상태와 액션을 가져옵니다.
-  const { activeFilters, toggleActiveFilter } = useFilterStore();
+  const activeFilters = useFilterStore((state) => state.activeFilters);
+  const toggleActiveFilter = useFilterStore(
+    (state) => state.toggleActiveFilter
+  );
+  const resetModalState = useFilterStore((state) => state.resetModalState);
+  const selectPath = useFilterStore((state) => state.selectPath);
+  const animal = (useSegment(1) as "cat" | "dog") || "cat";
+  const rootFilters = filter[animal];
 
   return (
     <FilterSection>
@@ -41,7 +50,12 @@ export default function LocationFilter() {
             </FilterListItem>
           ))}
         </FilterList>
-        <MoreButton />
+        <MoreButton
+          onClick={() => {
+            resetModalState();
+            selectPath(rootFilters[2], 0);
+          }}
+        />
       </FilterContent>
     </FilterSection>
   );

@@ -16,7 +16,9 @@ export default function FilterListItem({
 }: FilterListItemProps) {
   return (
     <Label className="py-2 pr-4 gap-2" {...props}>
-      <Checkbox checked={checked} onCheckedChange={onCheckedChange} />
+      <div className="size-5 flex items-center justify-center">
+        <Checkbox checked={checked} onCheckedChange={onCheckedChange} />
+      </div>
       {children}
     </Label>
   );

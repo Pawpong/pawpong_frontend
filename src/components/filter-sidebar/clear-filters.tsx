@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 export default function ClearFilters({
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { clearAllFilters } = useFilterStore();
+  const clearAllFilters = useFilterStore((state) => state.clearAllFilters);
   return (
     <Button
       variant="text"
