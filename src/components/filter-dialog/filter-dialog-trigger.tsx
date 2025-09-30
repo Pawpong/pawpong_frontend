@@ -46,7 +46,7 @@ export default function FilterDialogTrigger({
   const selectTempLeaf = useFilterStore((e) => e.selectTempLeaf);
   const selectAllTempLeaves = useFilterStore((e) => e.selectAllTempLeaves);
   const applyTempFilters = useFilterStore((e) => e.applyTempFilters);
-  const clearAllFilters = useFilterStore((e) => e.clearAllFilters);
+  const clearTempFilters = useFilterStore((e) => e.clearTempFilters);
   const activeFilters = useFilterStore((e) => e.activeFilters);
   const isMobile = useBreakpoint("md") === false;
 
@@ -245,7 +245,7 @@ export default function FilterDialogTrigger({
             </div>
           )}
           <div className="flex row justify-between items-center py-4 md:pt-4 md:pb-6 md:py-0 px-5">
-            <ClearFilters onClick={clearAllFilters} />
+            <ClearFilters onClick={clearTempFilters} />
             <DialogClose asChild>
               <Button
                 onClick={handleApplyAndClose}

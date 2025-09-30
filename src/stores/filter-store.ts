@@ -62,7 +62,8 @@ interface FilterState {
   applyTempFilters: () => void; // 임시 선택을 최종 필터에 적용
   setAnimal: (animal: "cat" | "dog") => void; // 2. animal 설정 액션 추가
   removeActiveFilter: (itemLabel: string) => void; // 3. animal 인자 제거
-  clearAllFilters: () => void;
+  clearTempFilters: () => void;
+  clearActiveFilters: () => void;
 
   toggleActiveFilter: (filter: string) => void;
 }
@@ -194,9 +195,14 @@ export const useFilterStore = create<FilterState>((set, get) => ({
     });
   },
 
-  clearAllFilters: () => {
+  clearTempFilters: () => {
     // 모든 필터 상태 초기화
     set({ tempSelectedLeaves: [] });
+  },
+
+  clearActiveFilters: () => {
+    // 모든 필터 상태 초기화
+    set({ activeFilters: [] });
   },
 
   toggleActiveFilter: (filterToToggle) => {

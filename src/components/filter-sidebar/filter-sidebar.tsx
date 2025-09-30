@@ -19,7 +19,9 @@ export default function FilterSidebar() {
   const removeActiveFilter = useFilterStore(
     (state) => state.removeActiveFilter
   );
-
+  const clearActiveFilters = useFilterStore(
+    (state) => state.clearActiveFilters
+  );
   return (
     isMobile || (
       <div
@@ -32,7 +34,7 @@ export default function FilterSidebar() {
           {activeFilters.length > 0 && (
             <div>
               <div className="space-y-8 pb-8">
-                <ClearFilters />
+                <ClearFilters onClick={clearActiveFilters} />
                 <CurrentFilters
                   selectedLeaves={activeFilters}
                   onRemove={removeActiveFilter}
