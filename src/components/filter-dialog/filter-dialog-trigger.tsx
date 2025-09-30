@@ -21,7 +21,7 @@ import CurrentFilters from "../filter-sidebar/current-filters";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 
 // Filter 타입 정의
@@ -222,16 +222,26 @@ export default function FilterDialogTrigger({
             );
           })}
         </div>
-        <DialogFooter className="pt-0 px-5 md:py-auto flex border-t flex-col">
+        <DialogFooter className="pt-0 px-0 md:py-auto flex border-t flex-col">
           {isMobile && tempSelectedLeaves.length > 0 && (
-            <div className="pt-3 pb-1.5">
-              <CurrentFilters
-                selectedLeaves={tempSelectedLeaves}
-                onRemove={(label) => selectTempLeaf(label, false, animal)}
+            <div className="relative w-full">
+              <ScrollArea className="pt-3 pb-1.5 w-full">
+                <CurrentFilters
+                  className="flex-nowrap px-5"
+                  selectedLeaves={tempSelectedLeaves}
+                  onRemove={(label) => selectTempLeaf(label, false, animal)}
+                />
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+
+              {/* 오른쪽 블러 오버레이 */}
+              <div
+                className="pointer-events-none absolute top-0 right-0 h-full w-5
+                  bg-gradient-to-l from-white to-transparent"
               />
             </div>
           )}
-          <div className="flex row justify-between items-center py-4 md:pt-4 md:pb-6 md:py-0">
+          <div className="flex row justify-between items-center py-4 md:pt-4 md:pb-6 md:py-0 px-5">
             <ClearFilters onClick={clearAllFilters} />
             <DialogClose asChild>
               <Button
