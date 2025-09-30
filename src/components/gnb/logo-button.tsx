@@ -7,12 +7,12 @@ export default function LogoButton() {
   return (
     <Button
       variant={"ghost"}
-      className="py-2 -mx-3 -my-2 h-auto has-[>svg]:px-2 [&_svg:not([class*='size-'])]:size-auto"
+      className="py-2 -mx-3 -my-2 h-auto has-[>svg]:px-2"
       onClick={() => {
         location.reload();
       }}
     >
-      <Logo />
+      <Logo className="w-20 h-auto text-primary" />
     </Button>
   );
 }
