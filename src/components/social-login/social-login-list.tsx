@@ -6,7 +6,8 @@ import Naver from "@/assets/logo/naver";
 import SocialLoginButton from "./social-login-button";
 import SocialLoginIcon from "./social-login-icon";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
 
 export default function SocialLoginList() {
   const socialLoginInfo = [
