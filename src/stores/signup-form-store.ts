@@ -29,6 +29,8 @@ interface SignupFormStore {
   // breeder info
   photo: File | null;
   setPhoto: (photo: File | null) => void;
+  photoPreview: string;
+  setPhotoPreview: (preview: string) => void;
 
   breederName: string;
   setBreederName: (name: string) => void;
@@ -91,6 +93,8 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
 
   photo: null,
   setPhoto: (photo: File | null) => set({ photo }),
+  photoPreview: "",
+  setPhotoPreview: (preview: string) => set({ photoPreview: preview }),
 
   breederName: "",
   setBreederName: (name: string) => set({ breederName: name }),

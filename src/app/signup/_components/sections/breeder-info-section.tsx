@@ -21,6 +21,8 @@ import useSignupFormStore from "@/stores/signup-form-store";
 export default function BreederInfoSection() {
   const photo = useSignupFormStore((state) => state.photo);
   const setPhoto = useSignupFormStore((state) => state.setPhoto);
+  const photoPreview = useSignupFormStore((state) => state.photoPreview);
+  const setPhotoPreview = useSignupFormStore((state) => state.setPhotoPreview);
   const breederName = useSignupFormStore((state) => state.breederName);
   const setBreederName = useSignupFormStore((state) => state.setBreederName);
   const breederDescription = useSignupFormStore(
@@ -51,12 +53,16 @@ export default function BreederInfoSection() {
               const input = document.createElement("input");
               input.type = "file";
               input.accept = "image/*";
-              input.onchange = (e) => {
-                const file = e.target.files[0];
+              input.onchange = (e: Event) => {
+                const target = e.target as HTMLInputElement;
+                const file = target.files?.[0];
                 if (file) {
+                  setPhoto(file);
                   const reader = new FileReader();
-                  reader.onload = (event) => {
-                    setPhoto(event.target.result);
+                  reader.onload = (event: ProgressEvent<FileReader>) => {
+                    if (event.target?.result) {
+                      setPhotoPreview(event.target.result as string);
+                    }
                   };
                   reader.readAsDataURL(file);
                 }
@@ -64,10 +70,10 @@ export default function BreederInfoSection() {
               input.click();
             }}
           >
-            {photo ? (
+            {photoPreview ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={photo}
+                src={photoPreview}
                 alt="Uploaded"
                 className="object-cover w-full h-full"
               />
