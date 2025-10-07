@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${pretendard.variable}  ${pretendard.className}`}
+      className={`${pretendard.variable}  ${pretendard.className} break-keep`}
     >
       <body
         className={`${pretendard.variable}  ${pretendard.className} antialiased`}

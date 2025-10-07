@@ -1,6 +1,5 @@
 "use client";
 
-import Apple from "@/assets/logo/apple";
 import Google from "@/assets/logo/google";
 import Kakao from "@/assets/logo/kakao";
 import Naver from "@/assets/logo/naver";
@@ -29,16 +28,16 @@ export default function SocialLoginList() {
       onClick: () => {},
     },
 
-    {
-      name: "애플로 시작하기",
-      icon: Apple,
-      className:
-        "bg-grayscale-black text-grayscale-white! hover:bg-grayscale-black/80",
-      onClick: () => {},
-    },
+    // {
+    //   name: "애플로 시작하기",
+    //   icon: Apple,
+    //   className:
+    //     "bg-grayscale-black text-grayscale-white! hover:bg-grayscale-black/80",
+    //   onClick: () => {},
+    // },
   ];
   return (
-    <div className="space-y-3 w-full col-span-4 col-start-2">
+    <div className="space-y-3 w-full col-span-5 md:col-span-6 md:col-start-2 lg:col-span-4 lg:col-start-2">
       {socialLoginInfo.map(({ name, icon: Icon, className, onClick }) => (
         <SocialLoginButton key={name} className={className} onClick={onClick}>
           <SocialLoginIcon className="size-4">

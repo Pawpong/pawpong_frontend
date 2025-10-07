@@ -55,6 +55,7 @@
   --color-secondary: #a0c8f4;
   --color-secondary-600: #77b2f3;
   --color-secondary-700: #4e9cf1;
+  --color-secondary-800: #277cf5;
   --color-tertiary: #f6f6ea;
   --color-tertiary-500: #f6f6ea;
   --color-tertiary-600: #eeebde;
@@ -114,7 +115,12 @@
 
   --spacing-gutter: --spacing(3);
   --spacing-padding: --spacing(5);
+
+  --default-span: 5;
+  --inner-span: 5;
+  --inner-start: 1;
 }
+/* 태블릿 */
 
 @layer theme {
   :root {
@@ -150,9 +156,15 @@
 
       --spacing-gutter: --spacing(4);
       --spacing-padding: --spacing(8);
+
+      --default-span: 8;
+      --inner-span: 6;
+      --inner-start: 2;
     }
   }
 }
+
+/* 데스크탑 */
 
 @layer theme {
   :root {
@@ -188,12 +200,16 @@
 
       --spacing-gutter: --spacing(6);
       --spacing-padding: --spacing(12);
+
+      --default-span: 6;
+      --inner-span: 4;
+      --inner-start: 2;
     }
   }
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.5rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
