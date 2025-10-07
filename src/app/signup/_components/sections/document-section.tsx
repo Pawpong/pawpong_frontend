@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import useSignupFormStore from "@/stores/signup-form-store";
 import DocumentSkipDialogTrigger from "../document-skip-dialog-trigger";
-import FileButton from "./file-button";
 import OathDialogTrigger from "../oath-dialog-trigger";
+import FileButton from "./file-button";
 
 const levelInfo = [
   {
@@ -101,23 +101,25 @@ export default function DocumentSection() {
               </>
             )}
           </div>
-          <div className="space-y-2.5">
-            <FileButton>고양이 브리더 인증 서류</FileButton>
-            <div className="text-grayscale-gray5 font-medium text-caption-s space-y-2">
-              <p>해당되는 서류를 하나 골라 첨부해 주세요</p>
-              {[
-                "TICA 또는 CFA 등록 확인서 (브리더 회원증/캐터리 등록증)",
-                "캣쇼 참가 증빙 자료 (참가 확인증, 수상 기록, 공식 프로그램 또는 카탈로그에 게재된 기록 등)",
-              ].map((e, i) => (
-                <div className="flex gap-1" key={i}>
-                  <div className="h-3 flex items-center">
-                    <div className="size-0.5 rounded-full bg-grayscale-gray5" />
+          {level === "elite" && (
+            <div className="space-y-2.5">
+              <FileButton>고양이 브리더 인증 서류</FileButton>
+              <div className="text-grayscale-gray5 font-medium text-caption-s space-y-2">
+                <p>해당되는 서류를 하나 골라 첨부해 주세요</p>
+                {[
+                  "TICA 또는 CFA 등록 확인서 (브리더 회원증/캐터리 등록증)",
+                  "캣쇼 참가 증빙 자료 (참가 확인증, 수상 기록, 공식 프로그램 또는 카탈로그에 게재된 기록 등)",
+                ].map((e, i) => (
+                  <div className="flex gap-1" key={i}>
+                    <div className="h-3 flex items-center">
+                      <div className="size-0.5 rounded-full bg-grayscale-gray5" />
+                    </div>
+                    {e}
                   </div>
-                  {e}
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </SignupFormItems>
 
