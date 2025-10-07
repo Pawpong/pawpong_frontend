@@ -54,6 +54,9 @@ interface SignupFormStore {
   flowIndex: number;
   nextFlowIndex: () => void;
   prevFlowIndex: () => void;
+
+  documents: Record<string, File | null>;
+  setDocuments: (name: string, file: File | null) => void;
 }
 
 const useSignupFormStore = create<SignupFormStore>((set) => ({
@@ -107,8 +110,8 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
   setBreederLocation: (location: string | null) =>
     set({ breederLocation: location }),
 
-  breeds: "",
-  setBreeds: (breeds: string) => set({ breeds: breeds }),
+  breeds: [],
+  setBreeds: (breeds: string[]) => set({ breeds }),
 
   level: "elite",
   setLevel: (level: "elite" | "new") => set({ level }),
@@ -124,6 +127,12 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
   prevFlowIndex: () =>
     set((state) => ({
       flowIndex: state.flowIndex - 1 < 0 ? 0 : state.flowIndex - 1,
+    })),
+
+  documents: {},
+  setDocuments: (name: string, file: File | null) =>
+    set((state) => ({
+      documents: { ...state.documents, [name]: file },
     })),
 }));
 

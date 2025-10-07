@@ -43,6 +43,7 @@ const levelInfo = [
 export default function DocumentSection() {
   const level = useSignupFormStore((e) => e.level);
   const setLevel = useSignupFormStore((e) => e.setLevel);
+  
   return (
     <SignupFormSection className="gap-15 md:gap-20 lg:gap-20">
       <SignupFormHeader>
@@ -81,7 +82,7 @@ export default function DocumentSection() {
         </div>
         <div className="space-y-8">
           <div className="space-y-2.5">
-            <FileButton>신분증 사본</FileButton>
+            <FileButton >신분증 사본</FileButton>
             <div className="text-secondary-700 font-medium text-caption-s">
               이름과 생년월일 이외에는 가려서 제출하시길 권장드립니다.
             </div>

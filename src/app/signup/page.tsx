@@ -27,6 +27,6 @@ export default function Page() {
   const flowIndex = useSignupFormStore((e) => e.flowIndex);
   const userType = useSignupFormStore((e) => e.userType);
   const CurrentSection = flowInfo[userType ?? "guest"][flowIndex];
-  return <CurrentSection />;
-  // return <DocumentSection />; // TODO: 나중에 지우기
+  // return <CurrentSection />;
+  return <DocumentSection />; // TODO: 나중에 지우기
 }
