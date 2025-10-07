@@ -32,10 +32,7 @@ export default function SignupComplete() {
         <Button variant={"tertiary"} className="py-3 px-4 w-full">
           홈으로
         </Button>
-        <Button
-          variant="link"
-          className="bg-grayscale-gray2 text-primary py-3 px-4 w-full"
-        >
+        <Button className="bg-grayscale-gray2 !text-primary py-3 px-4 w-full hover:bg-grayscale-gray3 hover:!text-primary">
           문의하기
         </Button>
       </SignupFormItems>
