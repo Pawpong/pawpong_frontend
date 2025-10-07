@@ -16,6 +16,19 @@ interface SignupFormStore {
   plan?: Plan;
   setPlan: (plan: Plan) => void;
 
+  // social login info
+  tempId: string;
+  setTempId: (tempId: string) => void;
+
+  provider: string;
+  setProvider: (provider: string) => void;
+
+  socialName: string;
+  setSocialName: (name: string) => void;
+
+  profileImage: string;
+  setProfileImage: (url: string) => void;
+
   // user info
   agreements: { term: boolean; privacy: boolean; marketing: boolean };
   setAgreements: (name: AgreementName, value: boolean) => void;
@@ -54,6 +67,7 @@ interface SignupFormStore {
   flowIndex: number;
   nextFlowIndex: () => void;
   prevFlowIndex: () => void;
+  resetFlowIndex: () => void;
 }
 
 const useSignupFormStore = create<SignupFormStore>((set) => ({
@@ -64,6 +78,19 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
   setAnimal: (animal: Animal) => set({ animal }),
 
   setPlan: (plan: Plan) => set({ plan }),
+
+  // social login info
+  tempId: "",
+  setTempId: (tempId: string) => set({ tempId }),
+
+  provider: "",
+  setProvider: (provider: string) => set({ provider }),
+
+  socialName: "",
+  setSocialName: (name: string) => set({ socialName: name }),
+
+  profileImage: "",
+  setProfileImage: (url: string) => set({ profileImage: url }),
 
   agreements: { term: false, privacy: false, marketing: false },
   setAgreements: (name, value) =>
@@ -125,6 +152,7 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
     set((state) => ({
       flowIndex: state.flowIndex - 1 < 0 ? 0 : state.flowIndex - 1,
     })),
+  resetFlowIndex: () => set({ flowIndex: 0 }),
 }));
 
 export default useSignupFormStore;
