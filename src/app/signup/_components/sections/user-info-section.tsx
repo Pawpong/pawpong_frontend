@@ -12,9 +12,19 @@ import SignupFormTitle from "@/components/signup-form-section/signup-form-title"
 import UndoButton from "@/components/signup-form-section/undo-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import {
+  checkEmailDuplicate,
+  sendVerificationCode,
+  verifyCode,
+} from "@/lib/auth";
 import useSignupFormStore, { AgreementName } from "@/stores/signup-form-store";
-import { sendVerificationCode, verifyCode } from "@/lib/auth";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const checkboxInfo: {
   name: AgreementName;
@@ -38,6 +48,7 @@ const checkboxInfo: {
 ];
 
 export default function UserInfoSection() {
+  const router = useRouter();
   const agreements = useSignupFormStore((e) => e.agreements);
   const setAgreements = useSignupFormStore((e) => e.setAgreements);
   const phoneNumber = useSignupFormStore((e) => e.phoneNumber);
@@ -57,14 +68,10 @@ export default function UserInfoSection() {
   const [isVerified, setIsVerified] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(180); // 3분 = 180초
+  const [timerActive, setTimerActive] = useState(false);
 
-  const hasUncheckedRequiredAgreements = checkboxInfo
-    .filter((e) => e.required)
-    .some((e) => !agreements[e.name]);
-
-  const isSocialLogin = !!tempId;
-
-  // Send verification code
+  // 인증번호 전송 시 타이머 시작
   const handleSendCode = async () => {
     if (phoneNumber.length !== 13) {
       alert("올바른 휴대폰 번호를 입력해주세요.");
@@ -76,17 +83,66 @@ export default function UserInfoSection() {
     try {
       await sendVerificationCode(phoneNumber);
       setIsCodeSent(true);
+      setTimerActive(true); // 타이머 시작
+      setTimeLeft(180); // 3분 초기화
       alert("인증번호가 발송되었습니다.");
     } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        alert("인증번호 발송에 실패했습니다.");
-      }
+      alert(error instanceof Error ? error.message : "인증번호 발송 실패");
     } finally {
       setIsSending(false);
     }
   };
+
+  // 1초마다 감소
+  useEffect(() => {
+    if (!timerActive) return;
+    if (timeLeft <= 0) {
+      setTimerActive(false);
+      alert("인증시간이 만료되었습니다.");
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timeLeft, timerActive]);
+
+  // mm:ss 포맷
+  const formatTime = (sec: number) => {
+    const m = Math.floor(sec / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = (sec % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  };
+  // Check email duplicate on mount for social login users
+  useEffect(() => {
+    const checkEmail = async () => {
+      if (email && tempId) {
+        try {
+          const isDuplicate = await checkEmailDuplicate(email);
+          if (isDuplicate) {
+            alert("이미 가입된 이메일입니다.\n로그인 페이지로 이동합니다.");
+            router.push("/login");
+          }
+        } catch (error) {
+          console.error("이메일 중복 확인 실패:", error);
+        }
+      }
+    };
+
+    checkEmail();
+  }, [email, tempId, router]);
+
+  const hasUncheckedRequiredAgreements = checkboxInfo
+    .filter((e) => e.required)
+    .some((e) => !agreements[e.name]);
+
+  const isSocialLogin = !!tempId;
+
+  // Send verification code
 
   // Verify code
   const handleVerifyCode = async () => {
@@ -175,28 +231,48 @@ export default function UserInfoSection() {
               disabled={phoneNumber.length !== 13 || isSending || isVerified}
               onClick={handleSendCode}
             >
-              {isSending ? "발송 중..." : isCodeSent ? "인증번호 재전송" : "인증번호 받기"}
+              {isSending
+                ? "발송 중..."
+                : isCodeSent
+                ? "인증번호 재전송"
+                : "인증번호 받기"}
             </Button>
           </div>
-          {isCodeSent && (
-            <div className="flex gap-3">
-              <Input
+
+          <div className="flex gap-3">
+            <InputGroup className="h-auto">
+              <InputGroupInput
                 placeholder="인증번호 (6자리)"
                 value={verificationCode}
                 onChange={(e) => setVerificationCode(e.target.value)}
                 disabled={isVerified}
                 maxLength={6}
               />
-              <Button
-                variant="tertiary"
-                className="px-4 py-3 whitespace-nowrap"
-                disabled={verificationCode.length !== 6 || isVerifying || isVerified}
-                onClick={handleVerifyCode}
+              <InputGroupAddon
+                align="inline-end"
+                className="text-sm text-grayscale-gray5 pr-3.5 pl-1"
               >
-                {isVerifying ? "확인 중..." : isVerified ? "인증 완료" : "인증 확인"}
-              </Button>
-            </div>
-          )}
+                {isCodeSent ? formatTime(timeLeft) : "03:00"}
+              </InputGroupAddon>
+            </InputGroup>
+            <Button
+              variant="tertiary"
+              className="px-4 py-3 whitespace-nowrap"
+              disabled={
+                verificationCode.length !== 6 ||
+                isVerifying ||
+                isVerified ||
+                timeLeft <= 0
+              }
+              onClick={handleVerifyCode}
+            >
+              {isVerifying
+                ? "확인 중..."
+                : isVerified
+                ? "인증 완료"
+                : "인증 확인"}
+            </Button>
+          </div>
         </div>
         <div className="space-y-1">
           <CheckboxFormList>

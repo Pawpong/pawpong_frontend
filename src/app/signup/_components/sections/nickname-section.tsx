@@ -8,7 +8,10 @@ import SignupFormTitle from "@/components/signup-form-section/signup-form-title"
 import UndoButton from "@/components/signup-form-section/undo-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { checkNicknameDuplicate, completeAdopterRegistration } from "@/lib/auth";
+import {
+  checkNicknameDuplicate,
+  completeAdopterRegistration,
+} from "@/lib/auth";
 import useSignupFormStore from "@/stores/signup-form-store";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -25,6 +28,7 @@ export default function NicknameSection() {
   const socialName = useSignupFormStore((e) => e.socialName);
   const provider = useSignupFormStore((e) => e.provider);
   const agreements = useSignupFormStore((e) => e.agreements);
+  const phoneNumber = useSignupFormStore((e) => e.phoneNumber);
 
   const [nicknameChecked, setNicknameChecked] = useState(false);
   const [nicknameAvailable, setNicknameAvailable] = useState(false);
@@ -106,6 +110,7 @@ export default function NicknameSection() {
       name: socialName,
       role: "adopter" as const,
       nickname,
+      phone: phoneNumber,
       marketingAgreed: agreements.marketing,
     };
 
@@ -151,6 +156,7 @@ export default function NicknameSection() {
               <div>Provider: {provider}</div>
               <div>Name: {socialName}</div>
               <div>Email: {email}</div>
+              <div>Phone: {phoneNumber}</div>
               <div>TempId: {tempId}</div>
               <div>Nickname: {nickname || "(미입력)"}</div>
               <div>Marketing: {agreements.marketing ? "동의" : "비동의"}</div>
@@ -167,14 +173,14 @@ export default function NicknameSection() {
             maxLength={10}
             disabled={submitting}
             className={
-              nicknameAvailable
-                ? "border-green-500 focus:border-green-500"
-                : ""
+              nicknameAvailable ? "border-green-500 focus:border-green-500" : ""
             }
           />
           <Button
             variant="tertiary"
-            disabled={checkingNickname || !nickname || nicknameAvailable || submitting}
+            disabled={
+              checkingNickname || !nickname || nicknameAvailable || submitting
+            }
             onClick={handleCheckNickname}
           >
             {checkingNickname ? "확인 중..." : "중복 검사"}
