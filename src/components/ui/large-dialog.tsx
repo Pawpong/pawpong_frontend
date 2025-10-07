@@ -60,7 +60,7 @@ function LargeDialogContent({
       {...props}
       showCloseButton={false}
       className={cn(
-        "max-w-150 rounded-[--spacing(4)] p-0 gap-0 max-h-full",
+        "max-w-150 rounded-[--spacing(4)] p-0 gap-0 max-h-full flex flex-col",
         className
       )}
     >

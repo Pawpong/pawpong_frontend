@@ -11,9 +11,9 @@ import UndoButton from "@/components/signup-form-section/undo-button";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import useSignupFormStore from "@/stores/signup-form-store";
-import DocumentSkipDialogTrigger from "./document-skip-dialog-trigger";
+import DocumentSkipDialogTrigger from "../document-skip-dialog-trigger";
 import FileButton from "./file-button";
-import OathDialogTrigger from "./oath-dialog-trigger";
+import OathDialogTrigger from "../oath-dialog-trigger";
 
 const levelInfo = [
   {

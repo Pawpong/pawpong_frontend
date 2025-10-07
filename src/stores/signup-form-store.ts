@@ -38,11 +38,11 @@ interface SignupFormStore {
   breederDescription: string;
   setBreederDescription: (description: string) => void;
 
-  breederLocation: string;
-  setBreederLocation: (location: string) => void;
+  breederLocation: string | null;
+  setBreederLocation: (location: string | null) => void;
 
-  breeds: string;
-  setBreeds: (breed: string) => void;
+  breeds: string[];
+  setBreeds: (breed: string[]) => void;
 
   // document
   level: "elite" | "new";
@@ -104,7 +104,8 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
     set({ breederDescription: description }),
 
   breederLocation: "",
-  setBreederLocation: (location: string) => set({ breederLocation: location }),
+  setBreederLocation: (location: string | null) =>
+    set({ breederLocation: location }),
 
   breeds: "",
   setBreeds: (breeds: string) => set({ breeds: breeds }),

@@ -17,9 +17,10 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group";
 import useSignupFormStore from "@/stores/signup-form-store";
+import BreedsSelectDialogTrigger from "../breeds-select-dialog-trigger";
+import LocationSelectDialogTrigger from "../location-select-dialog-trigger";
 
 export default function BreederInfoSection() {
-  const photo = useSignupFormStore((state) => state.photo);
   const setPhoto = useSignupFormStore((state) => state.setPhoto);
   const photoPreview = useSignupFormStore((state) => state.photoPreview);
   const setPhotoPreview = useSignupFormStore((state) => state.setPhotoPreview);
@@ -38,6 +39,7 @@ export default function BreederInfoSection() {
   const breeds = useSignupFormStore((state) => state.breeds);
   const setBreeds = useSignupFormStore((state) => state.setBreeds);
   const nextFlowIndex = useSignupFormStore((state) => state.nextFlowIndex);
+  const animal = useSignupFormStore((state) => state.animal);
   return (
     <SignupFormSection className="gap-15 md:gap-20 lg:gap-20">
       <SignupFormHeader>
@@ -112,16 +114,37 @@ export default function BreederInfoSection() {
               </InputGroupText>
             </InputGroupAddon>
           </InputGroup>
-
-          <Button variant="input" className="py-3 px-4 pr-3.5">
-            지역
-            <Arrow className="size-5" />
-          </Button>
-          <div className="space-y-2.5 w-full">
+          <LocationSelectDialogTrigger
+            onSubmitLocation={(value: string | null) => {
+              setBreederLocation(value);
+            }}
+            asChild
+          >
             <Button variant="input" className="py-3 px-4 pr-3.5">
-              품종
+              {breederLocation ? (
+                <span className="text-primary">{breederLocation}</span>
+              ) : (
+                <span>지역</span>
+              )}
               <Arrow className="size-5" />
             </Button>
+          </LocationSelectDialogTrigger>
+          <div className="space-y-2.5 w-full">
+            <BreedsSelectDialogTrigger
+              animal={animal!}
+              onSubmitBreeds={setBreeds}
+              asChild
+            >
+              <Button variant="input" className="py-3 px-4 pr-3.5">
+                {breeds.length > 0 ? (
+                  <span className="text-primary">{breeds.join(", ")}</span>
+                ) : (
+                  <span>품종</span>
+                )}
+
+                <Arrow className="size-5" />
+              </Button>
+            </BreedsSelectDialogTrigger>
             <div className="text-caption-s text-grayscale-gray5 font-medium">
               최대 다섯 가지 선택할 수 있어요
             </div>
