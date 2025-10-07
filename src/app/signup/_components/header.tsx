@@ -8,7 +8,7 @@ export default function Header() {
   return (
     <Container
       className="flex justify-between h-16 items-center"
-      wrapperClassName="sticky top-0 bg-tertiary-500 z-100"
+      wrapperClassName="sticky top-0 bg-tertiary-500 z-10"
     >
       <Button variant={"ghost"} className="w-20">
         <Logo className="text-primary h-6 shrink-0" />
