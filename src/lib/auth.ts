@@ -47,13 +47,14 @@ export interface AuthResponseDto {
   userInfo: any;
 }
 
+
 /**
  * Check email duplication
  */
 export const checkEmailDuplicate = async (email: string): Promise<boolean> => {
   try {
     const response = await apiClient.post("/api/auth/check-email", { email });
-    return response.data.item?.isDuplicate || false;
+    return response.data.data?.isDuplicate || false;
   } catch (error) {
     console.error("Email duplication check error:", error);
     throw new Error("Failed to check email duplication.");
@@ -70,7 +71,7 @@ export const checkNicknameDuplicate = async (
     const response = await apiClient.post("/api/auth/check-nickname", {
       nickname,
     });
-    return response.data.item?.isDuplicate || false;
+    return response.data.data?.isDuplicate || false;
   } catch (error) {
     console.error("Nickname duplication check error:", error);
     throw new Error("Failed to check nickname duplication.");
@@ -148,11 +149,11 @@ export const completeAdopterRegistration = async (
       marketingAgreed: data.marketingAgreed || false,
     });
 
-    if (!response.data.success || !response.data.item) {
+    if (!response.data.success || !response.data.data) {
       throw new Error("Registration failed.");
     }
 
-    return response.data.item;
+    return response.data.data;
   } catch (error: any) {
     console.error("Adopter registration error:", error);
     if (error.response?.data?.message) {
@@ -189,11 +190,11 @@ export const completeBreederRegistration = async (
       marketingAgreed: data.marketingAgreed,
     });
 
-    if (!response.data.success || !response.data.item) {
+    if (!response.data.success || !response.data.data) {
       throw new Error("Registration failed.");
     }
 
-    return response.data.item;
+    return response.data.data;
   } catch (error: any) {
     console.error("Breeder registration error:", error);
     if (error.response?.data?.message) {
@@ -205,3 +206,4 @@ export const completeBreederRegistration = async (
     throw new Error("Error occurred during registration.");
   }
 };
+
