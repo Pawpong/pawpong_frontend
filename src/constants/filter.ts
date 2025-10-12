@@ -69,20 +69,7 @@ export const catBreedFilters: Filter = {
     {
       label: "장모 고양이",
       value: "long_hair_cat",
-      children: [
-        { label: "아비시니안" },
-        { label: "아메리칸 숏헤어" },
-        { label: "뱅갈" },
-        { label: "브리티쉬 숏헤어 (블루/골드/실버/포인트 등)" },
-        { label: "데본 렉스" },
-        { label: "유러피언 버미즈" },
-        { label: "러시안 블루" },
-        { label: "스코티시 폴드" },
-        { label: "페르시안" },
-        { label: "터키시 앙고라" },
-        { label: "메인쿤" },
-        { label: "노르웨이 숲" },
-      ],
+      children: [{ label: "메인쿤" }, { label: "노르웨이 숲" }],
     },
     {
       label: "단모 고양이",

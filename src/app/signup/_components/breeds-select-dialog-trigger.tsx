@@ -35,7 +35,7 @@ export default function BreedsSelectDialogTrigger({
     animalFilter.children![0].label
   );
   const [selected, setSelected] = useState<string[]>([]);
-  
+
   return (
     <LargeDialog>
       <LargeDialogTrigger {...props} />
@@ -115,15 +115,24 @@ export default function BreedsSelectDialogTrigger({
                       checked={selected.includes(childItem.label)}
                       onCheckedChange={() =>
                         setSelected((prev) => {
-                          if (prev.includes(childItem.label)) {
+                          const isSelected = prev.includes(childItem.label);
+                          if (isSelected) {
+                            // 이미 선택된 항목이면 제거
                             return prev.filter(
                               (item) => item !== childItem.label
                             );
+                          } else {
+                            // 새로 선택하려는 항목이 5개 이상이면 막기
+                            if (prev.length >= 5) {
+                              // alert 대신 그냥 무시 가능
+                              return prev;
+                            }
+                            return [...prev, childItem.label];
                           }
-                          return [...prev, childItem.label];
                         })
                       }
                     />
+
                     <div className="whitespace-wrap">{childItem.label}</div>
                   </Label>
                 ))}
