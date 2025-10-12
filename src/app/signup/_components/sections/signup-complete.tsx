@@ -3,6 +3,7 @@ import SignupFormSection from "@/components/signup-form-section/signup-form-sect
 import { Button } from "@/components/ui/button";
 
 export default function SignupComplete() {
+  
   return (
     <SignupFormSection className="gap-8 md:gap-8 lg:gap-8">
       <div className="w-full max-w-100 aspect-[4/3] bg-accent" />

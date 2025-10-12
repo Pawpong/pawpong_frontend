@@ -119,13 +119,17 @@ export default function NicknameSection() {
     try {
       const result = await completeAdopterRegistration(requestData);
 
-      console.log("=== Registration Success ===", result);
+      // HttpOnly 쿠키에 저장
+      await fetch("/api/auth/set-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+        }),
+      });
 
-      // Save tokens
-      localStorage.setItem("accessToken", result.accessToken);
-      localStorage.setItem("refreshToken", result.refreshToken);
-
-      // Move to next step
+      // 다음 단계 진행
       nextFlowIndex();
     } catch (error) {
       console.error("=== Registration Error ===", error);

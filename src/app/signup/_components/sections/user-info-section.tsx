@@ -269,7 +269,13 @@ export default function UserInfoSection() {
                   placeholder="인증번호 (6자리)"
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value)}
-                  disabled={isSending || !isCodeSent}
+                  disabled={
+                    isSending ||
+                    !isCodeSent ||
+                    isVerifying ||
+                    isVerified ||
+                    timeLeft <= 0
+                  }
                   maxLength={6}
                 />
                 <InputGroupAddon
