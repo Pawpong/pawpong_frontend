@@ -64,6 +64,6 @@ export default function Page() {
   ]);
 
   const CurrentSection = flowInfo[userType ?? "guest"][flowIndex];
-  return <CurrentSection />;
-  // return <DocumentSection />; // TODO: 나중에 지우기
+  // return <CurrentSection />;
+  return <UserInfoSection />; // TODO: 나중에 지우기
 }
