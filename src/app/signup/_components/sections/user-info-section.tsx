@@ -1,5 +1,6 @@
 "use client";
 
+import Check from "@/assets/icons/check";
 import ErrorIcon from "@/assets/icons/error";
 import CheckboxForm from "@/components/signup-form-section/checkbox-form";
 import CheckboxFormList from "@/components/signup-form-section/checkbox-form-list";
@@ -22,9 +23,28 @@ import {
   sendVerificationCode,
   verifyCode,
 } from "@/lib/auth";
+import { cn } from "@/lib/utils";
 import useSignupFormStore, { AgreementName } from "@/stores/signup-form-store";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+const messages: Array<{ type: "success" | "error"; text: string }> = [
+  { type: "success", text: "휴대폰 번호 인증을 성공했어요" },
+  { type: "error", text: "인증번호가 정확한 지 확인해 주세요" },
+  { type: "error", text: "인증번호를 입력해 주세요" },
+  {
+    type: "error",
+    text: "유효시간이 지났어요! [인증번호 재전송]을 눌러주세요",
+  },
+];
+
+const messageTypes: Record<
+  "success" | "error",
+  { className: string; icon: React.FC<React.SVGProps<SVGSVGElement>> }
+> = {
+  success: { className: "text-status-success", icon: Check },
+  error: { className: "text-status-error", icon: ErrorIcon },
+};
 
 const checkboxInfo: {
   name: AgreementName;
@@ -56,6 +76,7 @@ export default function UserInfoSection() {
   const email = useSignupFormStore((e) => e.email);
   const setEmail = useSignupFormStore((e) => e.setEmail);
   const nextFlowIndex = useSignupFormStore((e) => e.nextFlowIndex);
+  const [messageIndex, setMessageIndex] = useState<number | null>(null);
 
   // Social login info
   const tempId = useSignupFormStore((e) => e.tempId);
@@ -85,7 +106,6 @@ export default function UserInfoSection() {
       setIsCodeSent(true);
       setTimerActive(true); // 타이머 시작
       setTimeLeft(180); // 3분 초기화
-      alert("인증번호가 발송되었습니다.");
     } catch (error) {
       alert(error instanceof Error ? error.message : "인증번호 발송 실패");
     } finally {
@@ -98,7 +118,7 @@ export default function UserInfoSection() {
     if (!timerActive) return;
     if (timeLeft <= 0) {
       setTimerActive(false);
-      alert("인증시간이 만료되었습니다.");
+      setMessageIndex(3);
       return;
     }
 
@@ -147,12 +167,11 @@ export default function UserInfoSection() {
   // Verify code
   const handleVerifyCode = async () => {
     if (!verificationCode) {
-      alert("인증번호를 입력해주세요.");
+      setMessageIndex(2);
       return;
     }
-
     if (verificationCode.length !== 6) {
-      alert("인증번호는 6자리입니다.");
+      setMessageIndex(1);
       return;
     }
 
@@ -161,12 +180,13 @@ export default function UserInfoSection() {
     try {
       await verifyCode(phoneNumber, verificationCode);
       setIsVerified(true);
-      alert("인증이 완료되었습니다!");
+      setTimerActive(false);
+      setMessageIndex(0);
     } catch (error) {
       if (error instanceof Error) {
-        alert(error.message);
+        setMessageIndex(1);
       } else {
-        alert("인증번호가 일치하지 않습니다.");
+        setMessageIndex(1);
       }
     } finally {
       setIsVerifying(false);
@@ -180,6 +200,10 @@ export default function UserInfoSection() {
     setIsVerified(false);
     setVerificationCode("");
   };
+  const Icon =
+    messageIndex !== null
+      ? messageTypes[messages[messageIndex].type].icon
+      : null;
 
   return (
     <SignupFormSection className="gap-15 md:gap-20 lg:gap-20">
@@ -227,7 +251,7 @@ export default function UserInfoSection() {
             />
             <Button
               variant="tertiary"
-              className="px-4 py-3 whitespace-nowrap"
+              className="px-4 py-3 whitespace-nowrap w-30"
               disabled={phoneNumber.length !== 13 || isSending || isVerified}
               onClick={handleSendCode}
             >
@@ -238,40 +262,55 @@ export default function UserInfoSection() {
                 : "인증번호 받기"}
             </Button>
           </div>
-
-          <div className="flex gap-3">
-            <InputGroup className="h-auto">
-              <InputGroupInput
-                placeholder="인증번호 (6자리)"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
-                disabled={isVerified}
-                maxLength={6}
-              />
-              <InputGroupAddon
-                align="inline-end"
-                className="text-sm text-grayscale-gray5 pr-3.5 pl-1"
+          <div className="space-y-2.5">
+            <div className="flex gap-3">
+              <InputGroup className="h-auto">
+                <InputGroupInput
+                  placeholder="인증번호 (6자리)"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                  disabled={isSending || !isCodeSent}
+                  maxLength={6}
+                />
+                <InputGroupAddon
+                  align="inline-end"
+                  className="text-sm text-grayscale-gray5 pr-3.5 pl-1"
+                >
+                  {isCodeSent ? formatTime(timeLeft) : "03:00"}
+                </InputGroupAddon>
+              </InputGroup>
+              <Button
+                variant="tertiary"
+                className="px-4 py-3 whitespace-nowrap w-30"
+                disabled={
+                  isSending ||
+                  !isCodeSent ||
+                  isVerifying ||
+                  isVerified ||
+                  timeLeft <= 0
+                }
+                onClick={handleVerifyCode}
               >
-                {isCodeSent ? formatTime(timeLeft) : "03:00"}
-              </InputGroupAddon>
-            </InputGroup>
-            <Button
-              variant="tertiary"
-              className="px-4 py-3 whitespace-nowrap"
-              disabled={
-                verificationCode.length !== 6 ||
-                isVerifying ||
-                isVerified ||
-                timeLeft <= 0
-              }
-              onClick={handleVerifyCode}
-            >
-              {isVerifying
-                ? "확인 중..."
-                : isVerified
-                ? "인증 완료"
-                : "인증 확인"}
-            </Button>
+                {isVerifying
+                  ? "확인 중..."
+                  : isVerified
+                  ? "인증 완료"
+                  : "인증 확인"}
+              </Button>
+            </div>
+
+            {messageIndex !== null && (
+              <div
+                className={cn(
+                  "text-caption-s font-medium flex items-center gap-0.5",
+                  messageTypes[messages[messageIndex].type].className,
+                  "flex items-center gap-1"
+                )}
+              >
+                {Icon && <Icon className="size-3" />}
+                {messages[messageIndex].text}
+              </div>
+            )}
           </div>
         </div>
         <div className="space-y-1">
