@@ -1,9 +1,9 @@
 import SignupFormItems from "@/components/signup-form-section/signup-form-items";
 import SignupFormSection from "@/components/signup-form-section/signup-form-section";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function SignupComplete() {
-  
   return (
     <SignupFormSection className="gap-8 md:gap-8 lg:gap-8">
       <div className="w-full max-w-100 aspect-[4/3] bg-accent" />
@@ -30,12 +30,16 @@ export default function SignupComplete() {
         </div>
       </div>
       <SignupFormItems className="flex flex-col gap-3">
-        <Button variant={"tertiary"} className="py-3 px-4 w-full">
-          홈으로
-        </Button>
-        <Button className="bg-grayscale-gray2 !text-primary py-3 px-4 w-full hover:bg-grayscale-gray3 hover:!text-primary">
-          문의하기
-        </Button>
+        <Link href="/">
+          <Button variant={"tertiary"} className="py-3 px-4 w-full">
+            홈으로
+          </Button>
+        </Link>
+        <Link href="/">
+          <Button className="bg-grayscale-gray2 !text-primary py-3 px-4 w-full hover:bg-grayscale-gray3 hover:!text-primary">
+            문의하기
+          </Button>
+        </Link>
       </SignupFormItems>
     </SignupFormSection>
   );

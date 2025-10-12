@@ -124,13 +124,14 @@ export default function BreederInfoSection() {
               onSubmitBreeds={setBreeds}
               asChild
             >
-              <Button variant="input" className="py-3 px-4 pr-3.5">
-                {breeds.length > 0 ? (
-                  <span className="text-primary">{breeds.join(", ")}</span>
-                ) : (
-                  <span>품종</span>
-                )}
-
+              <Button variant="input" className="py-3 px-4 pr-3.5 ">
+                <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
+                  {breeds.length > 0 ? (
+                    <span className="text-primary">{breeds.join("/")}</span>
+                  ) : (
+                    <span>품종</span>
+                  )}
+                </div>
                 <Arrow className="size-5" />
               </Button>
             </BreedsSelectDialogTrigger>
