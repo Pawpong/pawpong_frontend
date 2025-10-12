@@ -48,9 +48,6 @@ interface SignupFormStore {
   breederName: string;
   setBreederName: (name: string) => void;
 
-  breederDescription: string;
-  setBreederDescription: (description: string) => void;
-
   breederLocation: string | null;
   setBreederLocation: (location: string | null) => void;
 
@@ -128,10 +125,6 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
 
   breederName: "",
   setBreederName: (name: string) => set({ breederName: name }),
-
-  breederDescription: "",
-  setBreederDescription: (description: string) =>
-    set({ breederDescription: description }),
 
   breederLocation: "",
   setBreederLocation: (location: string | null) =>

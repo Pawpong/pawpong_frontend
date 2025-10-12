@@ -10,12 +10,6 @@ import SignupFormTitle from "@/components/signup-form-section/signup-form-title"
 import UndoButton from "@/components/signup-form-section/undo-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
-} from "@/components/ui/input-group";
 import useSignupFormStore from "@/stores/signup-form-store";
 import BreedsSelectDialogTrigger from "../breeds-select-dialog-trigger";
 import LocationSelectDialogTrigger from "../location-select-dialog-trigger";
@@ -26,12 +20,7 @@ export default function BreederInfoSection() {
   const setPhotoPreview = useSignupFormStore((state) => state.setPhotoPreview);
   const breederName = useSignupFormStore((state) => state.breederName);
   const setBreederName = useSignupFormStore((state) => state.setBreederName);
-  const breederDescription = useSignupFormStore(
-    (state) => state.breederDescription
-  );
-  const setBreederDescription = useSignupFormStore(
-    (state) => state.setBreederDescription
-  );
+
   const breederLocation = useSignupFormStore((state) => state.breederLocation);
   const setBreederLocation = useSignupFormStore(
     (state) => state.setBreederLocation
@@ -88,7 +77,7 @@ export default function BreederInfoSection() {
             value={breederName}
             onChange={(e) => setBreederName(e.target.value)}
           />
-          <InputGroup>
+          {/* <InputGroup>
             <InputGroupTextarea
               maxLength={1500}
               placeholder="소개"
@@ -113,7 +102,7 @@ export default function BreederInfoSection() {
                 </div>
               </InputGroupText>
             </InputGroupAddon>
-          </InputGroup>
+          </InputGroup> */}
           <LocationSelectDialogTrigger
             onSubmitLocation={(value: string | null) => {
               setBreederLocation(value);
