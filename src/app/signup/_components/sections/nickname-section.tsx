@@ -120,7 +120,7 @@ export default function NicknameSection() {
       const result = await completeAdopterRegistration(requestData);
 
       // HttpOnly 쿠키에 저장
-      await fetch("/api/auth/set-token", {
+      await fetch("/api/auth/set-cookie", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
