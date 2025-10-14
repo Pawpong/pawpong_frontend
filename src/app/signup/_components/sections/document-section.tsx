@@ -2,6 +2,9 @@
 
 import Crown from "@/assets/icons/crown";
 import Plant from "@/assets/icons/plant";
+import { OathDialog } from "@/components/oath/oath-dialog";
+import { OathLabel } from "@/components/oath/oath-label";
+import { Oath } from "@/components/oath/oath-provider";
 import SignupFormDescription from "@/components/signup-form-section/signup-form-description";
 import SignupFormHeader from "@/components/signup-form-section/signup-form-header";
 import SignupFormItems from "@/components/signup-form-section/signup-form-items";
@@ -9,15 +12,123 @@ import SignupFormSection from "@/components/signup-form-section/signup-form-sect
 import SignupFormTitle from "@/components/signup-form-section/signup-form-title";
 import UndoButton from "@/components/signup-form-section/undo-button";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import useSignupFormStore from "@/stores/signup-form-store";
-import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 import DocumentSkipDialogTrigger from "../document-skip-dialog-trigger";
-import OathDialogTrigger from "../oath-dialog-trigger";
 import FileButton from "./file-button";
 
+const oathInfo: Record<"elite" | "new", React.ReactNode> = {
+  elite: (
+    <>
+      <p>
+        본인은 <span className="text-primary">포퐁 플랫폼 브리더 회원</span>으로
+        입점함에 있어, 아래의 기준을 충실히 준수할 것을 서약합니다. 만약 이를
+        위반하거나 허위 사실이 적발될 경우, 플랫폼에서 즉시 퇴출될 수 있음을
+        이해하며 이에 동의합니다.
+      </p>
+      {[
+        <p key={0}>
+          본인은{" "}
+          <span className="text-primary">관할 지자체에 동물생산업 등록</span>을
+          완료하였으며, 관련 법규를 성실히 준수합니다.
+        </p>,
+        <p key={1}>
+          모든 분양 과정에서{" "}
+          <span className="text-primary">표준 입양계약서</span>를 작성합니다.
+        </p>,
+        <p key={2}>
+          <span className="text-primary">2종 이하 브리딩 원칙</span>을 지키며,
+          다품종 브리딩을 하지 않습니다.
+        </p>,
+        <p key={3}>
+          모든 아이들은{" "}
+          <span className="text-primary">중성화 완료 후 분양</span>하거나, 입양
+          계약서에 반드시 중성화 조항을 명시합니다.
+        </p>,
+        <p key={4}>
+          모든 아이들은{" "}
+          <span className="text-primary">3차 종합백신 완료 후</span> 분양합니다.
+        </p>,
+        <p key={5}>
+          <span className="text-primary">혈통서 발급</span>을 의무화하며, 공식
+          협회 발급 혈통서만 제공합니다.
+        </p>,
+        <p key={6}>
+          모든 아이들은 반드시{" "}
+          <span className="text-primary">생후 3개월 이후</span>에만 분양합니다.
+        </p>,
+        <p key={7}>
+          국내에서 진행되는 모든 분양은 반드시{" "}
+          <span className="text-primary">대면 분양</span>으로 진행하며,
+          비대면·택배 분양은 절대 하지 않습니다.
+        </p>,
+        <p key={8}>
+          분양 개체의 사회화, 건강, 복지를 최우선으로 하며, 무분별한 번식을 하지
+          않습니다.
+        </p>,
+        <p key={9}>
+          포퐁 플랫폼과 입양자에게{" "}
+          <span className="text-primary">
+            허위 사실 없이 투명하게 정보를 제공
+          </span>
+          합니다.
+        </p>,
+      ].map((e) => (
+        <div className="flex gap-2 items-start" key={e.key}>
+          <div className="h-5 flex items-center">
+            <div className="size-[3px] bg-grayscale-gray5 rounded-full " />
+          </div>
+          {e}
+        </div>
+      ))}
+    </>
+  ),
+  new: (
+    <>
+      <p>
+        본인은 <span className="text-primary">포퐁 플랫폼 브리더 회원</span>으로
+        입점함에 있어, 아래의 기준을 충실히 준수할 것을 서약합니다. 만약 이를
+        위반하거나 허위 사실이 적발될 경우, 플랫폼에서 즉시 퇴출될 수 있음을
+        이해하며 이에 동의합니다.
+      </p>
+      {[
+        <p key={0}>
+          본인은{" "}
+          <span className="text-primary">관할 지자체에 동물생산업 등록</span>을
+          아님을 확인합니다.
+        </p>,
+        <p key={1}>
+          모든 아이들은 반드시{" "}
+          <span className="text-primary">생후 3개월 이후</span>에만 분양합니다.
+        </p>,
+        <p key={2}>
+          국내에서 진행되는 모든 분양은 반드시{" "}
+          <span className="text-primary">대면 분양</span>으로 진행하며,
+          비대면·택배 분양은 절대 하지 않습니다.
+        </p>,
+        <p key={3}>
+          분양 개체의 사회화, 건강, 복지를 최우선으로 하며, 무분별한 번식을 하지
+          않습니다.
+        </p>,
+        <p key={4}>
+          포퐁 플랫폼과 입양자에게{" "}
+          <span className="text-primary">
+            허위 사실 없이 투명하게 정보를 제공
+          </span>
+          합니다.
+        </p>,
+      ].map((e) => (
+        <div className="flex gap-2 items-start" key={e.key}>
+          <div className="h-5 flex items-center">
+            <div className="size-[3px] bg-grayscale-gray5 rounded-full " />
+          </div>
+          {e}
+        </div>
+      ))}
+    </>
+  ),
+};
 const levelInfo = [
   {
     name: "elite",
@@ -46,7 +157,7 @@ const levelInfo = [
 export default function DocumentSection() {
   const level = useSignupFormStore((e) => e.level);
   const setLevel = useSignupFormStore((e) => e.setLevel);
-  const [check, setCheck] = useState(false);
+  const [checked, setChecked] = useState(false);
   return (
     <SignupFormSection className="gap-15 md:gap-20 lg:gap-20">
       <SignupFormHeader>
@@ -125,44 +236,32 @@ export default function DocumentSection() {
               </div>
             </div>
           )}
-          <OathDialogTrigger
-            className="cursor-pointer"
-            onAgree={() => {
-              setCheck(true);
-            }}
-            asChild
-            level={level}
-          >
-            <div className="flex items-center">
-              <div className="flex-1 flex items-center gap-2 py-2 pr-2.5 font-medium">
-                <div className="size-5 flex items-center justify-center">
-                  <Checkbox
-                    checked={check}
-                    onClick={(e) => {
-                      if (check === true) {
-                        e.stopPropagation();
-                        setCheck(false);
-                      }
-                    }}
-                  />
-                </div>
-                <span className="text-body-xs text-grayscale-gray6 select-none">
+
+          <Oath onCheckedChange={setChecked}>
+            <OathDialog
+              title={`${
+                level === "elite" ? "엘리트" : "뉴"
+              } 레벨 브리더 입점 서약서`}
+              content={
+                <>
+                  <p>
+                    본인은 포퐁 플랫폼 브리더 회원으로 입점함에 있어, 아래의
+                    기준을 충실히 준수할 것을 서약합니다. 만약 이를 위반하거나
+                    허위 사실이 적발될 경우, 플랫폼에서 즉시 퇴출될 수 있음을
+                    이해하며 이에 동의합니다.
+                  </p>
+                  {oathInfo[level]}
+                </>
+              }
+            >
+              <button className="w-full">
+                <OathLabel>
                   (필수) {level === "elite" ? "엘리트" : "뉴"} 레벨 브리더 입점
                   서약서
-                </span>
-              </div>
-
-              <Button
-                variant="ghost"
-                className="flex items-center gap-2.5 text-grayscale-gray5 text-body-xs"
-              >
-                <div>보기</div>
-                <div className="size-5 flex items-center justify-center">
-                  <ChevronRight className="size-4" />
-                </div>
-              </Button>
-            </div>
-          </OathDialogTrigger>
+                </OathLabel>
+              </button>
+            </OathDialog>
+          </Oath>
         </div>
       </SignupFormItems>
 
