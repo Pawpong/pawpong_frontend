@@ -126,6 +126,7 @@ export default function DocumentSection() {
             </div>
           )}
           <OathDialogTrigger
+            className="cursor-pointer"
             onAgree={() => {
               setCheck(true);
             }}
