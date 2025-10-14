@@ -36,7 +36,7 @@ export default function SignupComplete() {
           </Button>
         </Link>
         <Link href="/">
-          <Button className="bg-grayscale-gray2 !text-primary py-3 px-4 w-full hover:bg-grayscale-gray3 hover:!text-primary">
+          <Button className="bg-tertiary-700 !text-grayscale-gray6 py-3 px-4 w-full hover:bg-tertiary-800 hover:!text-grayscale-gray6">
             문의하기
           </Button>
         </Link>
