@@ -9,8 +9,11 @@ import SignupFormSection from "@/components/signup-form-section/signup-form-sect
 import SignupFormTitle from "@/components/signup-form-section/signup-form-title";
 import UndoButton from "@/components/signup-form-section/undo-button";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import useSignupFormStore from "@/stores/signup-form-store";
+import { ChevronRight } from "lucide-react";
+import { useState } from "react";
 import DocumentSkipDialogTrigger from "../document-skip-dialog-trigger";
 import OathDialogTrigger from "../oath-dialog-trigger";
 import FileButton from "./file-button";
@@ -43,13 +46,14 @@ const levelInfo = [
 export default function DocumentSection() {
   const level = useSignupFormStore((e) => e.level);
   const setLevel = useSignupFormStore((e) => e.setLevel);
-  
+  const [check, setCheck] = useState(false);
   return (
     <SignupFormSection className="gap-15 md:gap-20 lg:gap-20">
       <SignupFormHeader>
         <SignupFormTitle>브리더 입점 서류를 등록해 주세요</SignupFormTitle>
         <SignupFormDescription>
-          브리더 활동 경험에 따라 적합한 레벨을 선택해 서류를 업로드해주세요.
+          브리더 활동 경험에 따라 적합한 레벨을 선택해 <br />
+          서류를 업로드해주세요.
         </SignupFormDescription>
       </SignupFormHeader>
       <SignupFormItems className="gap-8">
@@ -82,7 +86,7 @@ export default function DocumentSection() {
         </div>
         <div className="space-y-8">
           <div className="space-y-2.5">
-            <FileButton >신분증 사본</FileButton>
+            <FileButton>신분증 사본</FileButton>
             <div className="text-secondary-700 font-medium text-caption-s">
               이름과 생년월일 이외에는 가려서 제출하시길 권장드립니다.
             </div>
@@ -121,21 +125,60 @@ export default function DocumentSection() {
               </div>
             </div>
           )}
+          <OathDialogTrigger
+            onAgree={() => {
+              setCheck(true);
+            }}
+            asChild
+            level={level}
+          >
+            <div className="flex items-center">
+              <div className="flex-1 flex items-center gap-2 py-2 pr-2.5 font-medium">
+                <div className="size-5 flex items-center justify-center">
+                  <Checkbox
+                    checked={check}
+                    onClick={(e) => {
+                      if (check === true) {
+                        e.stopPropagation();
+                        setCheck(false);
+                      }
+                    }}
+                  />
+                </div>
+                <span className="text-body-xs text-grayscale-gray6 select-none">
+                  (필수) {level === "elite" ? "엘리트" : "뉴"} 레벨 브리더 입점
+                  서약서
+                </span>
+              </div>
+
+              <Button
+                variant="ghost"
+                className="flex items-center gap-2.5 text-grayscale-gray5 text-body-xs"
+              >
+                <div>보기</div>
+                <div className="size-5 flex items-center justify-center">
+                  <ChevronRight className="size-4" />
+                </div>
+              </Button>
+            </div>
+          </OathDialogTrigger>
         </div>
       </SignupFormItems>
 
       <SignupFormItems className="gap-4 ">
         <div className="flex gap-3">
           <DocumentSkipDialogTrigger asChild>
-            <Button className="bg-grayscale-gray2 text-grayscale-gray5! py-3 px-4 hover:bg-grayscale-gray3 hover:text-primary!">
+            <Button
+              className="bg-tertiary-700 text-grayscale-gray6! py-3 px-4 hover:bg-tertiary-800 hover:text-grayscale-gray6!"
+              variant="tertiary"
+            >
               나중에 할래요
             </Button>
           </DocumentSkipDialogTrigger>
-          <OathDialogTrigger asChild level={level}>
-            <Button variant={"tertiary"} className="py-3 px-4 w-full flex-1">
-              제출
-            </Button>
-          </OathDialogTrigger>
+
+          <Button variant={"tertiary"} className="py-3 px-4 w-full flex-1">
+            제출
+          </Button>
         </div>
         <UndoButton />
       </SignupFormItems>

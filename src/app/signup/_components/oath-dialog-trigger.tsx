@@ -9,11 +9,10 @@ import {
   LargeDialogTitle,
   LargeDialogTrigger,
 } from "@/components/ui/large-dialog";
-import useSignupFormStore from "@/stores/signup-form-store";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import React from "react";
 
-const oathInfo = {
+const oathInfo: Record<"elite" | "new", React.ReactNode> = {
   elite: (
     <>
       <p>
@@ -126,12 +125,12 @@ const oathInfo = {
 };
 
 export default function OathDialogTrigger({
+  onAgree,
   level,
   ...props
-}: { level: "elite" | "new" } & React.ComponentProps<
+}: { onAgree: () => void; level: "elite" | "new" } & React.ComponentProps<
   typeof DialogPrimitive.Trigger
 >) {
-  const nextFlowIndex = useSignupFormStore((e) => e.nextFlowIndex);
   return (
     <LargeDialog>
       <LargeDialogTrigger {...props} />
@@ -139,17 +138,17 @@ export default function OathDialogTrigger({
         <LargeDialogHeader>
           <LargeDialogTitle>
             <div className="flex justify-between items-center">
-              엘리트 레벨 브리더 입점 서약서
+              {level === "elite" ? "엘리트" : "뉴"} 레벨 브리더 입점 서약서
               <LargeDialogClose asChild>
                 <Button variant="secondary" className="size-9">
-                  <Close className="size-5 text-grayscale-gray-7" />
+                  <Close className="size-5 text-grayscale-gray7" />
                 </Button>
               </LargeDialogClose>
             </div>
           </LargeDialogTitle>
         </LargeDialogHeader>
 
-        <div className="py-5 px-6 space-y-2 text-body-xs text-grayscale-gray5 overflow-auto">
+        <div className="sm:py-5 sm:px-6 space-y-2 text-body-xs text-grayscale-gray5 overflow-auto px-padding py-4 flex-1">
           <p>
             본인은 포퐁 플랫폼 브리더 회원으로 입점함에 있어, 아래의 기준을
             충실히 준수할 것을 서약합니다. 만약 이를 위반하거나 허위 사실이
@@ -162,9 +161,9 @@ export default function OathDialogTrigger({
         <LargeDialogFooter>
           <LargeDialogClose asChild>
             <Button
-              className="py-2 px-4 text-sm leading-[140%] tracking-[-2%] w-18 text-white!"
+              className="py-2 px-4 text-sm leading-[140%] tracking-[-2%] w-18 text-white! rounded-[--spacing(1)]"
               onClick={() => {
-                nextFlowIndex();
+                onAgree();
               }}
             >
               동의

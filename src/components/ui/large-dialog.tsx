@@ -60,7 +60,7 @@ function LargeDialogContent({
       {...props}
       showCloseButton={false}
       className={cn(
-        "max-w-150 rounded-[--spacing(4)] p-0 gap-0 max-h-full flex flex-col",
+        "max-w-150 rounded-none sm:rounded-[--spacing(4)] p-0 gap-0 h-full sm:h-auto sm:max-h-full flex flex-col",
         className
       )}
     >
@@ -75,7 +75,10 @@ function LargeDialogHeader({
 }: React.ComponentProps<"div">) {
   return (
     <DialogHeader
-      className={cn("text-left gap-1.5 pt-6 px-6 pb-2.5 border-b ", className)}
+      className={cn(
+        "text-left gap-1.5 sm:pt-6 sm:px-6 sm:pb-2.5 border-b py-4 px-padding",
+        className
+      )}
       {...props}
     >
       {props.children}
@@ -90,7 +93,7 @@ function LargeDialogFooter({
   return (
     <DialogFooter
       className={cn(
-        "flex justify-end gap-2 pt-4 px-6 pb-6 border-t",
+        "flex justify-end gap-2 sm:pt-4 sm:px-6 sm:pb-6 border-t py-4 px-padding",
         className
       )}
       {...props}

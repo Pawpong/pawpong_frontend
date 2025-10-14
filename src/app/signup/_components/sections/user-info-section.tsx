@@ -289,6 +289,7 @@ export default function UserInfoSection() {
                 variant="tertiary"
                 className="px-4 py-3 whitespace-nowrap w-30"
                 disabled={
+                  verificationCode.length === 0 ||
                   isSending ||
                   !isCodeSent ||
                   isVerifying ||
@@ -297,11 +298,7 @@ export default function UserInfoSection() {
                 }
                 onClick={handleVerifyCode}
               >
-                {isVerifying
-                  ? "확인 중..."
-                  : isVerified
-                  ? "인증 완료"
-                  : "인증 확인"}
+                {isVerifying ? "확인 중..." : isVerified ? "확인" : "확인"}
               </Button>
             </div>
 
