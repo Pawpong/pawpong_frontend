@@ -25,8 +25,11 @@ import {
 } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import useSignupFormStore, { AgreementName } from "@/stores/signup-form-store";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import PrivacyDialogTrigger from "../privacy-dialog-trigger";
+import TermDialogTrigger from "../term-dialog-trigger";
 
 const messages: Array<{ type: "success" | "error"; text: string }> = [
   { type: "success", text: "휴대폰 번호 인증을 성공했어요" },
@@ -50,19 +53,23 @@ const checkboxInfo: {
   name: AgreementName;
   label: string;
   required: boolean;
-  href?: string;
+  trigger?: React.ComponentType<
+    { onAgree: () => void } & React.ComponentProps<
+      typeof DialogPrimitive.Trigger
+    >
+  >;
 }[] = [
   {
     name: "term",
     label: "서비스 이용약관 동의",
     required: true,
-    href: "/terms",
+    trigger: TermDialogTrigger,
   },
   {
     name: "privacy",
     label: "개인정보 수집 및 이용 동의",
     required: true,
-    href: "/privacy",
+    trigger: PrivacyDialogTrigger,
   },
   { name: "marketing", label: "광고성 정보 수신 동의", required: false },
 ];
@@ -330,13 +337,13 @@ export default function UserInfoSection() {
                 );
               }}
             />
-            {checkboxInfo.map(({ name, label, required, href }) => (
+            {checkboxInfo.map(({ name, label, required, trigger }) => (
               <CheckboxForm
                 key={name}
                 label={`(${required ? "필수" : "선택"}) ${label}`}
                 onCheckedChange={(checked) => setAgreements(name, checked)}
                 checked={agreements[name]}
-                href={href}
+                trigger={trigger}
               />
             ))}
           </CheckboxFormList>

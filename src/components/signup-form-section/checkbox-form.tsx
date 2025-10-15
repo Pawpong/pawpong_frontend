@@ -1,5 +1,5 @@
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { ComponentProps } from "react";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
@@ -10,21 +10,31 @@ export default function CheckboxForm({
   checked,
   onCheckedChange,
   label,
-  href,
+  trigger,
 }: {
   label: string;
   checked: boolean;
-  href?: string;
   onCheckedChange: (checked: boolean) => void;
+  trigger?: React.ComponentType<
+    { onAgree: () => void } & React.ComponentProps<
+      typeof DialogPrimitive.Trigger
+    >
+  >;
 } & ComponentProps<"div">) {
+  const Trigger = trigger;
   return (
     <div className="py-2 flex items-center">
       <Label className="flex-1">
         <Checkbox checked={checked} onCheckedChange={onCheckedChange} />
         <CheckboxFormLabel>{label}</CheckboxFormLabel>
       </Label>
-      {href && (
-        <Link href={href}>
+      {Trigger && (
+        <Trigger
+          onAgree={() => {
+            onCheckedChange(true);
+          }}
+          asChild
+        >
           <Button
             variant="ghost"
             className="py-2 px-0 gap-1 text-grayscale-gray5 -mx-2.5 cursor-pointer -my-2"
@@ -32,7 +42,7 @@ export default function CheckboxForm({
             <span className="text-body-xs font-medium">보기</span>{" "}
             <ChevronRight className="size-3.5" />
           </Button>
-        </Link>
+        </Trigger>
       )}
     </div>
   );

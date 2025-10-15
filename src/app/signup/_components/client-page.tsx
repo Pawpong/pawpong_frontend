@@ -62,5 +62,5 @@ export default function ClientPage() {
 
   const CurrentSection = flowInfo[userType ?? "guest"][flowIndex];
   // return <CurrentSection />;
-  return <SignupComplete />; // TODO: 나중에 지우기
+  return <UserInfoSection />; // TODO: 나중에 지우기
 }
