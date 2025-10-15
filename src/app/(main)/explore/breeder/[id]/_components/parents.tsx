@@ -4,7 +4,7 @@ import BreederProfileSectionMore from "@/components/breeder-profile/breeder-prof
 import BreederProfileSectionTitle from "@/components/breeder-profile/breeder-profile-section-title";
 import AnimalProfile from "./animal-profile";
 
-export default function BreedingAnimals({
+export default function Parents({
   data,
 }: {
   data: {
@@ -20,9 +20,7 @@ export default function BreedingAnimals({
   return (
     <BreederProfileSection>
       <BreederProfileSectionHeader>
-        <BreederProfileSectionTitle>
-          분양 중인 아이들
-        </BreederProfileSectionTitle>
+        <BreederProfileSectionTitle>엄마 · 아빠</BreederProfileSectionTitle>
         <BreederProfileSectionMore />
       </BreederProfileSectionHeader>
       <div className="space-y-7 md:grid md:grid-cols-3 md:gap-gutter">

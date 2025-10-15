@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 
 // Tailwind 스타일 브레이크포인트 (px로 변환)

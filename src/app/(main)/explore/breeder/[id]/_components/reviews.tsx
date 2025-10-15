@@ -2,20 +2,12 @@ import BreederProfileSection from "@/components/breeder-profile/breeder-profile-
 import BreederProfileSectionHeader from "@/components/breeder-profile/breeder-profile-section-header";
 import BreederProfileSectionMore from "@/components/breeder-profile/breeder-profile-section-more";
 import BreederProfileSectionTitle from "@/components/breeder-profile/breeder-profile-section-title";
-import AnimalProfile from "./animal-profile";
+import Review from "./review";
 
-export default function BreedingAnimals({
+export default function Reviews({
   data,
 }: {
-  data: {
-    id: string;
-    avatarUrl: string;
-    name: string;
-    sex: "male" | "female";
-    birth: string;
-    price: string;
-    breed: string;
-  }[];
+  data: { id: string; nickname: string; date: string; content: string }[];
 }) {
   return (
     <BreederProfileSection>
@@ -25,18 +17,15 @@ export default function BreedingAnimals({
         </BreederProfileSectionTitle>
         <BreederProfileSectionMore />
       </BreederProfileSectionHeader>
-      <div className="space-y-7 md:grid md:grid-cols-3 md:gap-gutter">
+      <div className="space-y-8">
         {data.map(
           (e: {
             id: string;
-            avatarUrl: string;
-            name: string;
-            sex: "male" | "female";
-            birth: string;
-            price: string;
-            breed: string;
+            nickname: string;
+            date: string;
+            content: string;
           }) => (
-            <AnimalProfile key={e.id} data={e} />
+            <Review key={e.id} data={e} />
           )
         )}
       </div>
