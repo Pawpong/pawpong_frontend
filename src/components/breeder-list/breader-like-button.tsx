@@ -1,4 +1,4 @@
-import Paw from "@/assets/icons/paw";
+import PawShadow from "@/assets/icons/paw-shadow";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 
@@ -13,7 +13,7 @@ export default function BreederLikeButton({
       className={cn("text-grayscale-white size-8", className)}
       {...props}
     >
-      <Paw className="size-8" />
+      <PawShadow className="size-8" />
     </Button>
   );
 }

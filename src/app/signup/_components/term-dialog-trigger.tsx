@@ -121,7 +121,7 @@ export default function TermDialogTrigger({
           </LargeDialogTitle>
         </LargeDialogHeader>
 
-        <div className="sm:py-5 sm:px-6 space-y-5 text-body-xs text-grayscale-gray6 overflow-auto px-padding py-4 flex-1 ">
+        <div className="md:py-5 md:px-6 space-y-5 text-body-xs text-grayscale-gray6 overflow-auto px-padding py-4 flex-1 ">
           {contents}
         </div>
 

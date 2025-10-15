@@ -2,7 +2,13 @@ import Crown from "@/assets/icons/crown";
 import Plant from "@/assets/icons/plant";
 import { cn } from "@/lib/utils";
 
-export default function LevelBadge({ level }: { level: "elite" | "new" }) {
+export default function LevelBadge({
+  level,
+  className,
+}: {
+  level: "elite" | "new";
+  className?: string;
+}) {
   const levelInfo = {
     elite: {
       name: "Elite",
@@ -15,8 +21,9 @@ export default function LevelBadge({ level }: { level: "elite" | "new" }) {
   return (
     <div
       className={cn(
-        "py-1.5 px-3 gap-1.5 rounded-full flex items-center",
-        levelInfo[level].color
+        "py-1.5 px-3 gap-1.5 rounded-full flex items-center w-fit",
+        levelInfo[level].color,
+        className
       )}
     >
       <Icon className="size-4" />

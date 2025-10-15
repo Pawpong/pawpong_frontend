@@ -60,7 +60,7 @@ function LargeDialogContent({
       {...props}
       showCloseButton={false}
       className={cn(
-        "max-w-150 rounded-none sm:rounded-[--spacing(4)] p-0 gap-0 h-full sm:h-auto sm:max-h-full flex flex-col",
+        "max-w-150 rounded-none sm:rounded-[--spacing(4)] p-0 gap-0 h-full w-full md:w-auto md:h-auto md:max-h-full flex flex-col",
         className
       )}
     >
@@ -76,7 +76,7 @@ function LargeDialogHeader({
   return (
     <DialogHeader
       className={cn(
-        "text-left gap-1.5 sm:pt-6 sm:px-6 sm:pb-2.5 border-b py-4 px-padding",
+        "text-left gap-1.5 md:pt-6 md:px-6 md:pb-2.5 border-b py-4 px-padding",
         className
       )}
       {...props}
@@ -93,7 +93,7 @@ function LargeDialogFooter({
   return (
     <DialogFooter
       className={cn(
-        "flex justify-end gap-2 sm:pt-4 sm:px-6 sm:pb-6 border-t py-4 px-padding",
+        "flex justify-end gap-2 md:pt-4 md:px-6 md:pb-6 border-t py-4 px-padding",
         className
       )}
       {...props}

@@ -148,7 +148,7 @@ export default function OathDialogTrigger({
           </LargeDialogTitle>
         </LargeDialogHeader>
 
-        <div className="sm:py-5 sm:px-6 space-y-2 text-body-xs text-grayscale-gray5 overflow-auto px-padding py-4 flex-1">
+        <div className="md:py-5 md:px-6 space-y-2 text-body-xs text-grayscale-gray5 overflow-auto px-padding py-4 flex-1">
           <p>
             본인은 포퐁 플랫폼 브리더 회원으로 입점함에 있어, 아래의 기준을
             충실히 준수할 것을 서약합니다. 만약 이를 위반하거나 허위 사실이
