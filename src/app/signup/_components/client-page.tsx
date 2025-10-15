@@ -61,6 +61,6 @@ export default function ClientPage() {
   ]);
 
   const CurrentSection = flowInfo[userType ?? "guest"][flowIndex];
-  // return <CurrentSection />;
-  return <UserInfoSection />; // TODO: 나중에 지우기
+  return <CurrentSection />;
+  // return <BreederInfoSection />; // TODO: 나중에 지우기
 }

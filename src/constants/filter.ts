@@ -1,3 +1,5 @@
+import { KOREA_DISTRICTS } from "./districts";
+
 export type Filter = {
   label: string;
   value?: string;
@@ -11,48 +13,13 @@ export const adoptableFilters: Filter = {
 
 export const locationFilters: Filter = {
   label: "지역",
-  children: [
-    {
-      label: "서울특별시",
-      value: "seoul",
-      children: [{ label: "강남구" }, { label: "강동구" }, { label: "강서구" }],
-    },
-    {
-      label: "경기도",
-      value: "gyeonggi",
-      children: [{ label: "성남시" }, { label: "수원시" }, { label: "용인시" }],
-    },
-    {
-      label: "인천광역시",
-      value: "incheon",
-      children: [{ label: "남동구" }, { label: "부평구" }, { label: "연수구" }],
-    },
-    {
-      label: "부산광역시",
-      value: "busan",
-      children: [
-        { label: "해운대구" },
-        { label: "수영구" },
-        { label: "동래구" },
-      ],
-    },
-    {
-      label: "대구광역시",
-      value: "daegu",
-      children: [{ label: "수성구" }, { label: "중구" }, { label: "동구" }],
-    },
-    {
-      label: "광주광역시",
-      value: "gwangju",
-      children: [
-        { label: "광산구" },
-        { label: "남구" },
-        { label: "북구" },
-        { label: "서구" },
-        { label: "동구" },
-      ],
-    },
-  ],
+  children: KOREA_DISTRICTS.map((e) => ({
+    label: e.province,
+    value: e.province,
+    children: e.cities.map((city) => ({
+      label: city,
+    })),
+  })),
 };
 
 export const levelFilters: Filter = {
