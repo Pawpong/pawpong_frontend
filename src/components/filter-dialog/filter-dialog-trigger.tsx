@@ -249,7 +249,7 @@ export default function FilterDialogTrigger({
             <DialogClose asChild>
               <Button
                 onClick={handleApplyAndClose}
-                className="py-1.5 px-4 text-grayscale-white! w-16.5 text-sm leading-[140%] tracking-[-2%]"
+                className="rounded-[--spacing(1)] py-2 px-4 text-sm leading-[140%] tracking-[-2%] w-18 text-white!"
                 type="submit"
               >
                 설정

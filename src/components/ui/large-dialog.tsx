@@ -76,7 +76,7 @@ function LargeDialogHeader({
   return (
     <DialogHeader
       className={cn(
-        "text-left gap-1.5 md:pt-6 md:px-6 md:pb-2.5 border-b py-4 px-padding",
+        "text-left gap-1.5 md:pt-6 md:px-6 md:pb-2.5 border-b py-4 ",
         className
       )}
       {...props}

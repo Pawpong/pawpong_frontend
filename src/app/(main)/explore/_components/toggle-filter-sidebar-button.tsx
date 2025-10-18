@@ -2,7 +2,7 @@
 
 import Close from "@/assets/icons/close";
 import Filter from "@/assets/icons/filter";
-import CircleBadge from "@/components/cirlce-badge";
+import CircleBadge from "@/components/circle-badge";
 import FilterDialogTrigger from "@/components/filter-dialog/filter-dialog-trigger";
 import { useSidebar } from "@/components/filter-sidebar/sidebar-provider";
 

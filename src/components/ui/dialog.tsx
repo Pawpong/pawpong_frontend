@@ -5,7 +5,7 @@ import * as React from "react";
 
 import Close from "@/assets/icons/close";
 import { cn } from "@/lib/utils";
-import CircleBadge from "../cirlce-badge";
+import CircleBadge from "../circle-badge";
 import { buttonVariants } from "./button";
 
 function Dialog({

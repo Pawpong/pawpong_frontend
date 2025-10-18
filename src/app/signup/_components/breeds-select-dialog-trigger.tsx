@@ -39,7 +39,7 @@ export default function BreedsSelectDialogTrigger({
   return (
     <LargeDialog>
       <LargeDialogTrigger {...props} />
-      <LargeDialogContent className="h-full md:h-150">
+      <LargeDialogContent className="h-full md:size-150">
         <LargeDialogHeader className="p-0 md:pt-6 md:px-6 md:pb-2.5 gap-0">
           <LargeDialogTitle className="py-4 px-padding md:p-0">
             <div className="flex justify-between items-center">
