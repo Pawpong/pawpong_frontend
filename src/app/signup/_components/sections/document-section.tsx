@@ -153,12 +153,24 @@ export default function DocumentSection() {
 
       if (uploadedFiles.length > 0) {
         const files = uploadedFiles.map(([, file]) => file);
-        const types = uploadedFiles.map(([type]) => type);
+
+        // snake_case를 camelCase로 변환 (백엔드 API 형식에 맞춤)
+        const typeMapping: Record<string, string> = {
+          id_card: "idCard",
+          animal_production_license: "animalProductionLicense",
+          adoption_contract_sample: "adoptionContractSample",
+          pedigree: "recentAssociationDocument",
+          breeder_certification: "breederCertification",
+        };
+
+        const types = uploadedFiles.map(([type]) => typeMapping[type] || type);
 
         try {
-          const uploadResult = await uploadVerificationDocuments(files, types);
+          console.log("서류 업로드 시작 - level:", level, "files:", files.length, "types:", types);
+          const uploadResult = await uploadVerificationDocuments(files, types, level);
           documentUrls = uploadResult.allDocuments.map((doc) => doc.url);
           documentTypes = uploadResult.allDocuments.map((doc) => doc.type);
+          console.log("서류 업로드 완료 - URLs:", documentUrls.length);
         } catch (uploadError) {
           console.error("서류 업로드 실패:", uploadError);
           alert(
@@ -171,19 +183,27 @@ export default function DocumentSection() {
         }
       }
 
+      // breederLocation을 객체로 파싱 (예: "서울특별시 강남구" → { city: "서울특별시", district: "강남구" })
+      const [city = "", district = ""] = (breederLocation || "").split(" ");
+
       // 브리더 회원가입 API 호출
       const result = await registerBreeder({
         email,
         phoneNumber,
         breederName,
-        breederLocation: breederLocation || "",
+        breederLocation: {
+          city,
+          district,
+        },
         animal: animal || "cat",
         breeds,
         plan: plan || "basic",
         level,
-        termAgreed: agreements.term,
-        privacyAgreed: agreements.privacy,
-        marketingAgreed: agreements.marketing,
+        agreements: {
+          termsOfService: agreements.term,
+          privacyPolicy: agreements.privacy,
+          marketingConsent: agreements.marketing,
+        },
         tempId: tempId || undefined,
         provider: provider || undefined,
         profileImage: finalProfileImageUrl || undefined, // 최종 프로필 이미지 URL

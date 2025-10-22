@@ -1,50 +1,109 @@
 import apiClient from "./api";
 
-/** Adopter DTO */
+// ============================================
+// 공통 타입
+// ============================================
+
+/** 공통 API 응답 타입 */
+interface ApiResponse<T> {
+  success: boolean;
+  code: number;
+  data?: T;
+  message?: string;
+  error?: string;
+  timestamp: string;
+}
+
+/** 소셜 로그인 제공자 */
+export type SocialProvider = "google" | "naver" | "kakao";
+
+/** 사용자 역할 */
+export type UserRole = "adopter" | "breeder" | "admin";
+
+/** 계정 상태 */
+export type AccountStatus = "active" | "suspended" | "deleted";
+
+/** 브리더 레벨 */
+export type BreederLevel = "new" | "elite";
+
+/** 서류 타입 */
+export type DocumentType =
+  | "idCard" // 신분증 사본
+  | "animalProductionLicense" // 동물생산업 등록증
+  | "adoptionContractSample" // 표준 입양계약서 샘플
+  | "recentAssociationDocument" // 최근 발급한 협회 서류
+  | "breederCertification" // 고양이 브리더 인증 서류
+  | "ticaCfaDocument"; // TICA 또는 CFA 서류 (선택)
+
+// ============================================
+// 입양자 회원가입 관련
+// ============================================
+
+/** 입양자 회원가입 요청 DTO */
 export interface AdopterRegistrationDto {
+  /** 소셜 로그인 임시 ID */
   tempId: string;
-  email: string;
-  name: string;
+  /** 닉네임 */
   nickname: string;
-  phone?: string;
-  marketingAgreed?: boolean;
-}
-
-/** Breeder DTO */
-export interface BreederRegistrationDto {
-  tempId: string;
-  email: string;
-  name: string;
-  phone: string;
-  petType: string;
-  plan: string;
-  breederName: string;
-  introduction?: string;
-  city: string;
-  district: string;
-  breeds: string[];
-  level: string;
-  marketingAgreed: boolean;
-}
-
-/** 새로운 브리더 회원가입 DTO (신규 엔드포인트용) */
-export interface RegisterBreederDto {
-  email: string;
+  /** 전화번호 (010-1234-5678) */
   phoneNumber: string;
-  breederName: string;
-  breederLocation: string;
-  animal: string;
-  breeds: string[];
-  plan: string;
-  level: string;
-  termAgreed: boolean;
-  privacyAgreed: boolean;
-  marketingAgreed?: boolean;
-  tempId?: string;
-  provider?: string;
+  /** 프로필 이미지 CDN URL (선택) */
   profileImage?: string;
-  documentUrls?: string[]; // 업로드된 서류 URL 배열
-  documentTypes?: string[]; // 업로드된 서류 타입 배열
+}
+
+/** 입양자 회원가입 응답 DTO */
+export interface AdopterRegistrationResponseDto {
+  adopterId: string;
+  email: string;
+  nickname: string;
+  phoneNumber: string;
+  profileImage: string;
+  userRole: "adopter";
+  accountStatus: AccountStatus;
+  createdAt: string;
+  accessToken: string;
+  refreshToken: string;
+}
+
+// ============================================
+// 브리더 회원가입 관련
+// ============================================
+
+/** 브리더 회원가입 요청 DTO */
+export interface RegisterBreederDto {
+  // 기본 정보
+  email: string;
+  password?: string; // 일반 가입 시 필수
+  phoneNumber: string;
+  profileImage?: string; // CDN URL
+
+  // 소셜 로그인 정보 (소셜 가입 시)
+  tempId?: string;
+  provider?: SocialProvider;
+
+  // 브리더 정보
+  breederName: string;
+  breederLocation: {
+    city: string;
+    district: string;
+  };
+  breeds: string[];
+  animal: "cat" | "dog";
+
+  // 플랜 정보
+  plan: "basic" | "pro";
+
+  // 인증 정보 (선택)
+  level?: BreederLevel;
+  documentUrls?: string[];
+  documentTypes?: DocumentType[];
+
+  // 약관 동의
+  agreements: {
+    termsOfService: boolean;
+    privacyPolicy: boolean;
+    marketingConsent?: boolean;
+  };
 }
 
 /** 브리더 회원가입 응답 DTO */
@@ -52,29 +111,46 @@ export interface RegisterBreederResponseDto {
   breederId: string;
   email: string;
   breederName: string;
-  breederLocation: string;
-  animal: string;
-  breeds: string[];
-  plan: string;
-  level: string;
-  verificationStatus: string;
+  phoneNumber: string;
+  profileImage?: string;
+  userRole: "breeder";
+  accountStatus: AccountStatus;
+  plan: "basic" | "pro";
+  verificationStatus: "pending" | "approved" | "rejected";
   createdAt: string;
   accessToken: string;
-}
-
-/** Auth Response DTO */
-export interface AuthResponseDto {
-  accessToken: string;
   refreshToken: string;
-  userInfo: unknown;
 }
 
-/** 공통 API 응답 타입 */
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
+// ============================================
+// 파일 업로드 관련
+// ============================================
+
+/** 프로필 이미지 업로드 응답 DTO */
+export interface UploadProfileResponseDto {
+  cdnUrl: string;
+  fileName: string;
+  size: number;
 }
+
+/** 업로드된 인증 서류 정보 */
+export interface UploadedVerificationDocument {
+  type: DocumentType;
+  url: string;
+  filename: string;
+  size: number;
+  uploadedAt: string;
+}
+
+/** 인증 서류 업로드 응답 DTO */
+export interface VerificationDocumentsResponseDto {
+  uploadedDocuments: UploadedVerificationDocument[];
+  allDocuments: UploadedVerificationDocument[];
+}
+
+// ============================================
+// API 함수들
+// ============================================
 
 /** 이메일 중복 확인 */
 export const checkEmailDuplicate = async (email: string): Promise<boolean> => {
@@ -159,95 +235,40 @@ export const verifyCode = async (
   }
 };
 
-/** 입양자 회원가입 완료 */
-export const completeAdopterRegistration = async (
-  data: AdopterRegistrationDto
-): Promise<AuthResponseDto> => {
+/** 프로필 이미지 업로드 API */
+export const uploadProfileImage = async (file: File): Promise<string> => {
   try {
-    const response = await apiClient.post<ApiResponse<AuthResponseDto>>(
-      "/api/auth/social/complete",
-      {
-        tempId: data.tempId,
-        email: data.email,
-        name: data.name,
-        role: "adopter",
-        nickname: data.nickname,
-        phone: data.phone,
-        marketingAgreed: data.marketingAgreed ?? false,
-      }
-    );
+    // FormData 생성
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // multipart/form-data 요청
+    const response = await apiClient.post<
+      ApiResponse<UploadProfileResponseDto>
+    >("/api/auth/upload-breeder-profile", formData);
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Registration failed.");
+      throw new Error(
+        response.data.message ?? "Profile image upload failed."
+      );
     }
 
-    return response.data.data;
+    // CDN URL 반환
+    return response.data.data.cdnUrl;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Adopter registration error:", error.message);
+      console.error("Profile image upload error:", error.message);
       throw error;
     }
-    throw new Error("Unknown error during registration.");
+    throw new Error("Unknown error during profile image upload.");
   }
 };
-
-/** 브리더 회원가입 완료 (기존 - 소셜 로그인용) */
-export const completeBreederRegistration = async (
-  data: BreederRegistrationDto
-): Promise<AuthResponseDto> => {
-  try {
-    const response = await apiClient.post<ApiResponse<AuthResponseDto>>(
-      "/api/auth/social/complete",
-      {
-        tempId: data.tempId,
-        email: data.email,
-        name: data.name,
-        role: "breeder",
-        phone: data.phone,
-        petType: data.petType,
-        plan: data.plan,
-        breederName: data.breederName,
-        introduction: data.introduction,
-        city: data.city,
-        district: data.district,
-        breeds: data.breeds,
-        level: data.level,
-        marketingAgreed: data.marketingAgreed,
-      }
-    );
-
-    if (!response.data.success || !response.data.data) {
-      throw new Error("Registration failed.");
-    }
-
-    return response.data.data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Breeder registration error:", error.message);
-      throw error;
-    }
-    throw new Error("Unknown error during registration.");
-  }
-};
-
-/** 브리더 인증 서류 업로드 DTO */
-export interface UploadedVerificationDocument {
-  type: string;
-  url: string;
-  filename: string;
-  size: number;
-  uploadedAt: Date;
-}
-
-export interface VerificationDocumentsResponseDto {
-  uploadedDocuments: UploadedVerificationDocument[];
-  allDocuments: UploadedVerificationDocument[];
-}
 
 /** 브리더 인증 서류 업로드 API */
 export const uploadVerificationDocuments = async (
   files: File[],
-  types: string[]
+  types: DocumentType[],
+  level: BreederLevel
 ): Promise<VerificationDocumentsResponseDto> => {
   try {
     // FormData 생성
@@ -261,16 +282,16 @@ export const uploadVerificationDocuments = async (
     // types 배열을 JSON 문자열로 변환하여 추가
     formData.append("types", JSON.stringify(types));
 
+    // level 추가
+    formData.append("level", level);
+
     // multipart/form-data 요청
-    // ⚠️ Content-Type을 명시하지 않으면 axios가 자동으로 boundary를 포함한 올바른 헤더를 설정합니다
     const response = await apiClient.post<
       ApiResponse<VerificationDocumentsResponseDto>
-    >("/api/upload/verification-documents", formData);
+    >("/api/auth/upload-breeder-documents", formData);
 
     if (!response.data.success || !response.data.data) {
-      throw new Error(
-        response.data.message ?? "Document upload failed."
-      );
+      throw new Error(response.data.message ?? "Document upload failed.");
     }
 
     return response.data.data;
@@ -283,38 +304,32 @@ export const uploadVerificationDocuments = async (
   }
 };
 
-/** 프로필 이미지 업로드 API */
-export const uploadProfileImage = async (
-  file: File
-): Promise<string> => {
+/** 입양자 회원가입 완료 */
+export const completeAdopterRegistration = async (
+  data: AdopterRegistrationDto
+): Promise<AdopterRegistrationResponseDto> => {
   try {
-    // FormData 생성
-    const formData = new FormData();
-    formData.append("file", file);
-
-    // multipart/form-data 요청
     const response = await apiClient.post<
-      ApiResponse<{ url: string; filename: string; size: number }>
-    >("/api/upload/profile", formData);
+      ApiResponse<AdopterRegistrationResponseDto>
+    >("/api/auth/register/adopter", data);
 
     if (!response.data.success || !response.data.data) {
       throw new Error(
-        response.data.message ?? "Profile image upload failed."
+        response.data.error ?? response.data.message ?? "Registration failed."
       );
     }
 
-    // CDN URL 반환
-    return response.data.data.url;
+    return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Profile image upload error:", error.message);
+      console.error("Adopter registration error:", error.message);
       throw error;
     }
-    throw new Error("Unknown error during profile image upload.");
+    throw new Error("Unknown error during registration.");
   }
 };
 
-/** 새로운 브리더 회원가입 API (신규 엔드포인트) */
+/** 브리더 회원가입 완료 */
 export const registerBreeder = async (
   data: RegisterBreederDto
 ): Promise<RegisterBreederResponseDto> => {
@@ -325,7 +340,7 @@ export const registerBreeder = async (
 
     if (!response.data.success || !response.data.data) {
       throw new Error(
-        response.data.message ?? "Breeder registration failed."
+        response.data.error ?? response.data.message ?? "Breeder registration failed."
       );
     }
 
@@ -339,7 +354,11 @@ export const registerBreeder = async (
   }
 };
 
-/** 브리더 프로필 조회 API */
+// ============================================
+// 브리더 프로필 조회 관련
+// ============================================
+
+/** 브리더 프로필 조회 응답 DTO */
 export interface BreederProfileDto {
   breederId: string;
   email: string;
@@ -381,6 +400,7 @@ export interface BreederProfileDto {
   updatedAt: string;
 }
 
+/** 브리더 프로필 조회 API */
 export const getBreederProfile = async (): Promise<BreederProfileDto> => {
   try {
     const response = await apiClient.get<ApiResponse<BreederProfileDto>>(
