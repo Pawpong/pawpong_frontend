@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import useSignupFormStore from "@/stores/signup-form-store";
+import { registerBreeder, uploadVerificationDocuments, uploadProfileImage } from "@/lib/auth";
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 import DocumentSkipDialogTrigger from "../document-skip-dialog-trigger";
@@ -46,7 +47,174 @@ const levelInfo = [
 export default function DocumentSection() {
   const level = useSignupFormStore((e) => e.level);
   const setLevel = useSignupFormStore((e) => e.setLevel);
+  const nextFlowIndex = useSignupFormStore((e) => e.nextFlowIndex);
+
+  // 회원가입에 필요한 모든 정보 가져오기
+  const email = useSignupFormStore((e) => e.email);
+  const phoneNumber = useSignupFormStore((e) => e.phoneNumber);
+  const animal = useSignupFormStore((e) => e.animal);
+  const plan = useSignupFormStore((e) => e.plan);
+  const breederName = useSignupFormStore((e) => e.breederName);
+  const breederLocation = useSignupFormStore((e) => e.breederLocation);
+  const breeds = useSignupFormStore((e) => e.breeds);
+  const agreements = useSignupFormStore((e) => e.agreements);
+  const tempId = useSignupFormStore((e) => e.tempId);
+  const provider = useSignupFormStore((e) => e.provider);
+  const profileImage = useSignupFormStore((e) => e.profileImage);
+  const photo = useSignupFormStore((e) => e.photo); // 사용자가 직접 업로드한 프로필 이미지
+
   const [check, setCheck] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 서류 파일 저장 state
+  const [documentFiles, setDocumentFiles] = useState<{
+    id_card?: File;
+    animal_production_license?: File;
+    adoption_contract_sample?: File;
+    pedigree?: File;
+    breeder_certification?: File;
+  }>({});
+
+  // 파일 업로드 핸들러
+  const handleFileUpload = (type: string, file: File) => {
+    setDocumentFiles((prev) => ({
+      ...prev,
+      [type]: file,
+    }));
+  };
+
+  // 브리더 회원가입 API 호출
+  const handleSubmit = async () => {
+    if (!check) {
+      alert("서약서에 동의해주세요.");
+      return;
+    }
+
+    // 디버깅: 스토어 값 확인
+    console.log("=== 스토어 값 확인 ===");
+    console.log("email:", email);
+    console.log("phoneNumber:", phoneNumber);
+    console.log("breederName:", breederName);
+    console.log("breederLocation:", breederLocation);
+    console.log("animal:", animal);
+    console.log("plan:", plan);
+    console.log("breeds:", breeds);
+    console.log("level:", level);
+    console.log("tempId:", tempId);
+    console.log("provider:", provider);
+
+    if (!email || !phoneNumber || !breederName || !breederLocation) {
+      alert(
+        `필수 정보가 누락되었습니다.\n\n` +
+          `- 이메일: ${email || "❌ 없음"}\n` +
+          `- 전화번호: ${phoneNumber || "❌ 없음"}\n` +
+          `- 브리더명: ${breederName || "❌ 없음"}\n` +
+          `- 위치: ${breederLocation || "❌ 없음"}`
+      );
+      return;
+    }
+
+    if (!animal || !plan || !breeds || breeds.length === 0) {
+      alert("동물 종류, 플랜, 품종 정보가 필요합니다.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      let finalProfileImageUrl = profileImage; // 기본값: 소셜 로그인 프로필 이미지
+
+      // 사용자가 직접 업로드한 프로필 이미지가 있으면 우선 업로드
+      if (photo) {
+        try {
+          console.log("프로필 이미지 업로드 시작:", photo.name);
+          const uploadedProfileUrl = await uploadProfileImage(photo);
+          finalProfileImageUrl = uploadedProfileUrl;
+          console.log("프로필 이미지 업로드 완료:", uploadedProfileUrl);
+        } catch (uploadError) {
+          console.error("프로필 이미지 업로드 실패:", uploadError);
+          alert(
+            uploadError instanceof Error
+              ? `프로필 이미지 업로드 실패: ${uploadError.message}`
+              : "프로필 이미지 업로드에 실패했습니다."
+          );
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      let documentUrls: string[] | undefined = undefined;
+      let documentTypes: string[] | undefined = undefined;
+
+      // 서류 파일이 있으면 먼저 업로드
+      const uploadedFiles = Object.entries(documentFiles).filter(
+        ([, file]) => file !== undefined
+      ) as [string, File][];
+
+      if (uploadedFiles.length > 0) {
+        const files = uploadedFiles.map(([, file]) => file);
+        const types = uploadedFiles.map(([type]) => type);
+
+        try {
+          const uploadResult = await uploadVerificationDocuments(files, types);
+          documentUrls = uploadResult.allDocuments.map((doc) => doc.url);
+          documentTypes = uploadResult.allDocuments.map((doc) => doc.type);
+        } catch (uploadError) {
+          console.error("서류 업로드 실패:", uploadError);
+          alert(
+            uploadError instanceof Error
+              ? `서류 업로드 실패: ${uploadError.message}`
+              : "서류 업로드에 실패했습니다."
+          );
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      // 브리더 회원가입 API 호출
+      const result = await registerBreeder({
+        email,
+        phoneNumber,
+        breederName,
+        breederLocation: breederLocation || "",
+        animal: animal || "cat",
+        breeds,
+        plan: plan || "basic",
+        level,
+        termAgreed: agreements.term,
+        privacyAgreed: agreements.privacy,
+        marketingAgreed: agreements.marketing,
+        tempId: tempId || undefined,
+        provider: provider || undefined,
+        profileImage: finalProfileImageUrl || undefined, // 최종 프로필 이미지 URL
+        documentUrls, // 업로드된 서류 URL 전달
+        documentTypes, // 업로드된 서류 타입 전달
+      });
+
+      // 회원가입 성공 - 토큰 저장
+      if (result.accessToken) {
+        localStorage.setItem("access_token", result.accessToken);
+      }
+
+      // 다음 단계로 이동 (SignupComplete)
+      nextFlowIndex();
+    } catch (error) {
+      console.error("브리더 회원가입 실패:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "회원가입에 실패했습니다. 다시 시도해주세요."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // 나중에 하기 (서류 제출 skip)
+  const handleSkip = async () => {
+    await handleSubmit(); // 같은 API를 호출하되, 서류는 제출하지 않음
+  };
+
   return (
     <SignupFormSection className="gap-15 md:gap-20 lg:gap-20">
       <SignupFormHeader>
@@ -86,19 +254,39 @@ export default function DocumentSection() {
         </div>
         <div className="space-y-8">
           <div className="space-y-2.5">
-            <FileButton>신분증 사본</FileButton>
+            <FileButton
+              onUpload={(file) => handleFileUpload("id_card", file)}
+            >
+              신분증 사본
+            </FileButton>
             <div className="text-secondary-700 font-medium text-caption-s">
               이름과 생년월일 이외에는 가려서 제출하시길 권장드립니다.
             </div>
           </div>
           <div className="space-y-3">
-            <FileButton>동물생산업 등록증</FileButton>
+            <FileButton
+              onUpload={(file) =>
+                handleFileUpload("animal_production_license", file)
+              }
+            >
+              동물생산업 등록증
+            </FileButton>
             {level === "elite" && (
               <>
-                <FileButton>표준 입양계약서 샘플</FileButton>
+                <FileButton
+                  onUpload={(file) =>
+                    handleFileUpload("adoption_contract_sample", file)
+                  }
+                >
+                  표준 입양계약서 샘플
+                </FileButton>
 
                 <div className="space-y-2.5">
-                  <FileButton>최근 발급된 혈통서 사본</FileButton>
+                  <FileButton
+                    onUpload={(file) => handleFileUpload("pedigree", file)}
+                  >
+                    최근 발급된 혈통서 사본
+                  </FileButton>
                   <div className="text-grayscale-gray5 font-medium text-caption-s">
                     분양 예정인 개체의 혈통서를 첨부해 주세요
                   </div>
@@ -108,7 +296,13 @@ export default function DocumentSection() {
           </div>
           {level === "elite" && (
             <div className="space-y-2.5">
-              <FileButton>고양이 브리더 인증 서류</FileButton>
+              <FileButton
+                onUpload={(file) =>
+                  handleFileUpload("breeder_certification", file)
+                }
+              >
+                고양이 브리더 인증 서류
+              </FileButton>
               <div className="text-grayscale-gray5 font-medium text-caption-s space-y-2">
                 <p>해당되는 서류를 하나 골라 첨부해 주세요</p>
                 {[
@@ -172,13 +366,20 @@ export default function DocumentSection() {
             <Button
               className="bg-tertiary-700 text-grayscale-gray6! py-3 px-4 hover:bg-tertiary-800 hover:text-grayscale-gray6!"
               variant="tertiary"
+              onClick={handleSkip}
+              disabled={isSubmitting}
             >
               나중에 할래요
             </Button>
           </DocumentSkipDialogTrigger>
 
-          <Button variant={"tertiary"} className="py-3 px-4 w-full flex-1">
-            제출
+          <Button
+            variant={"tertiary"}
+            className="py-3 px-4 w-full flex-1"
+            onClick={handleSubmit}
+            disabled={isSubmitting || !check}
+          >
+            {isSubmitting ? "제출 중..." : "제출"}
           </Button>
         </div>
         <UndoButton />

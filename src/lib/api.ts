@@ -1,6 +1,6 @@
-import axios, { AxiosError, AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios"
 
-const BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+const BASE = process.env.NEXT_PUBLIC_API_BASE_URL
 
 function createApi(): AxiosInstance {
   const instance = axios.create({
@@ -11,22 +11,27 @@ function createApi(): AxiosInstance {
       Accept: "application/json",
     },
     timeout: 10000,
-  });
+  })
 
   // 요청 인터셉터 (예: Authorization 헤더 자동 삽입)
   instance.interceptors.request.use((config) => {
     try {
       // 클라이언트 전용: localStorage에서 토큰 읽기 (서버에서 실행될 때는 건너뜀)
       if (typeof window !== "undefined") {
-        const token = localStorage.getItem("access_token");
+        const token = localStorage.getItem("access_token")
         if (token && config.headers)
-          config.headers.Authorization = `Bearer ${token}`;
+          config.headers.Authorization = `Bearer ${token}`
+      }
+
+      // FormData인 경우 Content-Type 삭제 (브라우저가 자동으로 설정)
+      if (config.data instanceof FormData) {
+        delete config.headers["Content-Type"]
       }
     } catch {
       /* silent */
     }
-    return config;
-  });
+    return config
+  })
 
   // 응답 인터셉터 (공통 에러 처리 / 리프레시 토큰 로직 등)
   instance.interceptors.response.use(
@@ -46,13 +51,13 @@ function createApi(): AxiosInstance {
           ? (error.response.data as { message?: string }).message
           : undefined) ||
         error.message ||
-        "Unknown error";
-      return Promise.reject(new Error(message));
+        "Unknown error"
+      return Promise.reject(new Error(message))
     }
-  );
+  )
 
-  return instance;
+  return instance
 }
 
-const api = createApi();
-export default api;
+const api = createApi()
+export default api
