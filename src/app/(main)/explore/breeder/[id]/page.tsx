@@ -1,5 +1,4 @@
 import BreederProfile from "@/app/(main)/explore/breeder/[id]/_components/breeder-profile";
-
 import { Separator } from "@/components/ui/separator";
 import BreederDescription from "./_components/breeder-description";
 import BreedingAnimals from "./_components/breeding-animals";

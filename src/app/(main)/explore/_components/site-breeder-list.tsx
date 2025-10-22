@@ -1,3 +1,4 @@
+import AdoptionStatusBadge from "@/components/adoption-status-badge";
 import BreederDescription from "@/components/breeder-list/breader-description";
 import BreederLikeButton from "@/components/breeder-list/breader-like-button";
 import Breeder from "@/components/breeder-list/breeder";
@@ -87,6 +88,9 @@ export default function SiteBreederList() {
             <BreederImage src="/main-img-sample.png" />
             <div className="absolute top-0 right-0 p-3">
               <BreederLikeButton />
+            </div>
+            <div className="absolute bottom-0 right-0 p-3">
+              <AdoptionStatusBadge status="available" />
             </div>
           </div>
         </Breeder>

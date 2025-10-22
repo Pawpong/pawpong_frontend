@@ -117,20 +117,35 @@
 
 /* 피그마 디자인 토큰 : Color */
 @theme inline {
-  --color-primary: #4f3b2e;
+  /* Primary Colors */
+  --color-primary-500: #4f3b2e;
   --color-primary-600: #3f2f25;
-  --color-secondary: #a0c8f4;
+
+  /* Secondary Colors */
+  --color-secondary-100: #d9ebff;
+  --color-secondary-300: #c2ddfb;
+  --color-secondary-500: #a0c8f4;
   --color-secondary-600: #77b2f3;
   --color-secondary-700: #4e9cf1;
   --color-secondary-800: #277cf5;
-  --color-tertiary: #f6f6ea;
+  --color-secondary-900: #005df9;
+
+  /* Tertiary Colors */
   --color-tertiary-500: #f6f6ea;
   --color-tertiary-600: #eeebde;
   --color-tertiary-700: #e2dfd2;
-  --color-tertiary-800: #aba295;
+  --color-tertiary-800: #c7c0b4;
+
+  /* Status Colors */
   --color-status-disabled: #e1e1e1;
-  --color-status-error: #ff0000;
-  --color-status-success: #005df9;
+  --color-status-error-500: #ff453a;
+  --color-status-error-100: #ffeaeb;
+  --color-status-warning-500: #ff8f1c;
+  --color-status-warning-100: #ffebcf;
+  --color-status-success-500: #005df9;
+  --color-status-success-100: #d9ebff;
+
+  /* Grayscale Colors */
   --color-grayscale-black: #1f1f1f;
   --color-grayscale-gray7: #343434;
   --color-grayscale-gray6: #545454;
@@ -140,13 +155,36 @@
   --color-grayscale-gray2: #e1e1e1;
   --color-grayscale-gray1: #f5f5f5;
   --color-grayscale-white: #ffffff;
-  --color-point-basic: #a0c8f4;
-  --color-point-dark: #4e9cf1;
-  --color-branding-bg: #f6f6ea;
-  --color-level-elite: #ffba52;
-  --color-level-new: #34c759;
+
+  /* Alpha Colors */
+  --color-alpha-w-4: rgba(255, 255, 255, 0.04);
+  --color-alpha-w-40: rgba(255, 255, 255, 0.4);
+  --color-alpha-primary-80: rgba(79, 59, 46, 0.8);
+  --color-alpha-dimmer: rgba(0, 0, 0, 0.6);
+
+  /* Level Colors */
+  --color-level-elite-500: #ffba52;
+  --color-level-elite-100: rgba(255, 186, 82, 0.1);
+  --color-level-new-500: #34c759;
+  --color-level-new-100: rgba(52, 199, 89, 0.1);
+
+  /* Gender Colors */
   --color-gender-female-500: #ff2d55;
+  --color-gender-female-100: #ffeaeb;
   --color-gender-male-500: #0088ff;
+  --color-gender-male-100: #d9ebff;
+
+  /* Legacy aliases for backward compatibility */
+  --color-primary: var(--color-primary-500);
+  --color-secondary: var(--color-secondary-500);
+  --color-tertiary: var(--color-tertiary-500);
+  --color-status-error: var(--color-status-error-500);
+  --color-status-success: var(--color-status-success-500);
+  --color-point-basic: var(--color-secondary-500);
+  --color-point-dark: var(--color-secondary-700);
+  --color-branding-bg: var(--color-tertiary-500);
+  --color-level-elite: var(--color-level-elite-500);
+  --color-level-new: var(--color-level-new-500);
 }
 
 /* 피그마 디자인 토큰 : 반응형 */
