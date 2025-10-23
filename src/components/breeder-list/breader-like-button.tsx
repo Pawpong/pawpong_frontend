@@ -4,16 +4,22 @@ import Heart from "@/assets/icons/heart.svg";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import HeartFill from "@/assets/icons/heart-fill.svg";
-import { useState } from "react";
+import { useSavedStore } from "@/stores/saved-store";
+
+interface BreederLikeButtonProps {
+  className?: string;
+  breederId: string;
+}
 
 export default function BreederLikeButton({
   className,
-  ...props
-}: { className?: string } & React.ComponentProps<"button">) {
-  const [isLiked, setIsLiked] = useState(false);
+  breederId,
+}: BreederLikeButtonProps) {
+  const { isSaved, toggleSaved } = useSavedStore();
+  const isLiked = isSaved(breederId);
 
   const handleClick = () => {
-    setIsLiked(!isLiked);
+    toggleSaved(breederId);
   };
 
   return (
@@ -22,7 +28,6 @@ export default function BreederLikeButton({
       size="icon"
       className={cn("text-grayscale-white size-8 ", className)}
       onClick={handleClick}
-      {...props}
     >
       {isLiked ? (
         <HeartFill className="size-8 " />

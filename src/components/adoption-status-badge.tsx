@@ -35,7 +35,7 @@ const AdoptionStatusBadge = ({
     <div className={cn("inline-flex", className)}>
       <span
         className={cn(
-          "px-[0.625rem] py-[0.375rem] rounded text-[12px] sm:text-[14px] font-medium leading-[15px] sm:leading-[20px]",
+          "px-[0.625rem] py-[0.375rem] rounded text-body-xs leading-[var(--Typo-Line-height-Body-XS)] font-medium",
           config.bgColor,
           config.textColor
         )}

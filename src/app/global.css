@@ -42,6 +42,7 @@
 }
 
 :root {
+  --spacing: 4px;
   --radius: 0.5rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -119,6 +120,7 @@
 @theme inline {
   /* Primary Colors */
   /* Primary Colors */
+  --color-primary-500-basic: oklch(43.92% 0.052 58.68);
   --color-primary-500: oklch(44.1% 0.075 60.3);
   --color-primary-600: oklch(37.2% 0.068 61.1);
 
@@ -183,7 +185,7 @@
   --Typo-Size-Body-L: 20px;
   --Typo-Size-Body-M: 18px;
   --Typo-Size-Body-S: 16px;
-  --Typo-Size-Body-XS: 14px;
+  --Typo-Size-Body-XS: 12px;
   --Typo-Size-Caption: 12px;
 
   /* Typography Line Heights - Responsive (Mobile First) */
@@ -205,7 +207,7 @@
   --typo-size-body-l-mobile: 20px;
   --typo-size-body-m-mobile: 18px;
   --typo-size-body-s-mobile: 16px;
-  --typo-size-body-xs-mobile: 14px;
+  --typo-size-body-xs-mobile: 12px;
   --typo-size-caption-mobile: 12px;
 
   /* Typography Line Heights - Mobile (기본) - Legacy */
@@ -216,7 +218,7 @@
   --typo-line-height-body-l-mobile: 32px;
   --typo-line-height-body-m-mobile: 28px;
   --typo-line-height-body-s-mobile: 24px;
-  --typo-line-height-body-xs-mobile: 20px;
+  --typo-line-height-body-xs-mobile: 18px;
   --typo-line-height-caption-mobile: 12px;
 
   /* Typography Font Sizes - Tablet - Legacy */
@@ -249,7 +251,7 @@
   --typo-size-body-l-desktop: 18px;
   --typo-size-body-m-desktop: 16px;
   --typo-size-body-s-desktop: 14px;
-  --typo-size-body-xs-desktop: 12px;
+  --typo-size-body-xs-desktop: 14px;
   --typo-size-caption-desktop: 11px;
 
   /* Typography Line Heights - Desktop - Legacy */
@@ -346,7 +348,7 @@
       --Typo-Size-Body-L: 20px;
       --Typo-Size-Body-M: 18px;
       --Typo-Size-Body-S: 16px;
-      --Typo-Size-Body-XS: 14px;
+      --Typo-Size-Body-XS: 12px;
       --Typo-Size-Caption: 12px;
 
       --Typo-Line-height-Display: 56px;
@@ -369,7 +371,7 @@
       --Typo-Size-Body-L: 18px;
       --Typo-Size-Body-M: 16px;
       --Typo-Size-Body-S: 14px;
-      --Typo-Size-Body-XS: 12px;
+      --Typo-Size-Body-XS: 14px;
       --Typo-Size-Caption: 11px;
 
       --Typo-Line-height-Display: 44px;

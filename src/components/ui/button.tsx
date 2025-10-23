@@ -5,7 +5,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[--spacing(2)] text-body-s font-medium transition-all disabled:pointer-events-none [&_svg]:pointer-events-none  shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[--spacing(2)] text-body-xs font-medium transition-all disabled:pointer-events-none [&_svg]:pointer-events-none  shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
@@ -14,7 +14,8 @@ const buttonVariants = cva(
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
           "border bg-background hover:bg-branding-bg border-[#EEEBDE] hover:text-primary dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
-        secondary: "bg-branding-bg text-primary hover:bg-[#EEEBDE]",
+        secondary:
+          "bg-[var(--color-tertiary-500)] text-primary hover:bg-[#EEEBDE]",
         tertiary:
           "bg-secondary text-primary hover:bg-secondary-600 disabled:bg-status-disabled disabled:text-grayscale-gray4!",
         ghost: " hover:text-foreground!",
