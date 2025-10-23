@@ -42,6 +42,7 @@
 }
 
 :root {
+  --spacing: 4px;
   --radius: 0.5rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -117,39 +118,274 @@
 
 /* 피그마 디자인 토큰 : Color */
 @theme inline {
-  --color-primary: #4f3b2e;
-  --color-primary-600: #3f2f25;
-  --color-secondary: #a0c8f4;
-  --color-secondary-600: #77b2f3;
-  --color-secondary-700: #4e9cf1;
-  --color-secondary-800: #277cf5;
-  --color-tertiary: #f6f6ea;
-  --color-tertiary-500: #f6f6ea;
-  --color-tertiary-600: #eeebde;
-  --color-tertiary-700: #e2dfd2;
-  --color-tertiary-800: #aba295;
-  --color-status-disabled: #e1e1e1;
-  --color-status-error: #ff0000;
-  --color-status-success: #005df9;
-  --color-grayscale-black: #1f1f1f;
-  --color-grayscale-gray7: #343434;
-  --color-grayscale-gray6: #545454;
-  --color-grayscale-gray5: #888888;
-  --color-grayscale-gray4: #a0a0a0;
-  --color-grayscale-gray3: #cccccc;
-  --color-grayscale-gray2: #e1e1e1;
-  --color-grayscale-gray1: #f5f5f5;
-  --color-grayscale-white: #ffffff;
-  --color-point-basic: #a0c8f4;
-  --color-point-dark: #4e9cf1;
-  --color-branding-bg: #f6f6ea;
-  --color-level-elite: #ffba52;
-  --color-level-new: #34c759;
-  --color-gender-female-500: #ff2d55;
-  --color-gender-male-500: #0088ff;
+  /* Primary Colors */
+  /* Primary Colors */
+  --color-primary-500-basic: oklch(43.92% 0.052 58.68);
+  --color-primary-500: oklch(44.1% 0.075 60.3);
+  --color-primary-600: oklch(37.2% 0.068 61.1);
+
+  /* Secondary Colors */
+  --color-secondary-100: oklch(91.7% 0.071 259.9);
+  --color-secondary-300: oklch(87.1% 0.076 251.1);
+  --color-secondary-500: oklch(81.5% 0.091 240.5);
+  --color-secondary-600: oklch(75.3% 0.107 236.3);
+  --color-secondary-700: oklch(68.8% 0.122 231.9);
+  --color-secondary-800: oklch(62.4% 0.138 231.4);
+  --color-secondary-900: oklch(55.9% 0.154 230.9);
+
+  /* Tertiary Colors */
+  --color-tertiary-500: oklch(93.8% 0.016 98.2);
+  --color-tertiary-600: oklch(89.9% 0.022 96.4);
+  --color-tertiary-700: oklch(85.2% 0.024 94.6);
+  --color-tertiary-800: oklch(76.2% 0.032 91.1);
+
+  /* Status Colors */
+  --color-status-disabled: oklch(87.5% 0 0);
+  --color-status-error-500: oklch(63.5% 0.223 26.8);
+  --color-status-error-100: oklch(94.6% 0.032 22.4);
+  --color-status-warning-500: oklch(74.6% 0.183 65.7);
+  --color-status-warning-100: oklch(93.5% 0.045 78.3);
+  --color-status-success-500: oklch(55.9% 0.154 230.9);
+  --color-status-success-100: oklch(91.7% 0.071 259.9);
+
+  /* Grayscale Colors */
+  --color-grayscale-black: oklch(23.5% 0 0);
+  --color-grayscale-gray7: oklch(30.5% 0 0);
+  --color-grayscale-gray6: oklch(39.6% 0 0);
+  --color-grayscale-gray5: oklch(54.2% 0 0);
+  --color-grayscale-gray4: oklch(63.5% 0 0);
+  --color-grayscale-gray3: oklch(78.5% 0 0);
+  --color-grayscale-gray2: oklch(87.6% 0 0);
+  --color-grayscale-gray1: oklch(96.3% 0 0);
+  --color-grayscale-white: oklch(100% 0 0);
+
+  /* Alpha Colors */
+  --color-alpha-w-4: oklch(100% 0 0 / 0.04);
+  --color-alpha-w-40: oklch(100% 0 0 / 0.4);
+  --color-alpha-primary-80: oklch(44.1% 0.075 60.3 / 0.8);
+  --color-alpha-dimmer: oklch(0% 0 0 / 0.6);
+
+  /* Level Colors */
+  --color-level-elite-500: oklch(80.5% 0.179 79.2);
+  --color-level-elite-100: oklch(80.5% 0.179 79.2 / 0.1);
+  --color-level-new-500: oklch(73.5% 0.187 142.2);
+  --color-level-new-100: oklch(73.5% 0.187 142.2 / 0.1);
+
+  /* Gender Colors */
+  --color-gender-female-500: oklch(65.2% 0.259 17.4);
+  --color-gender-female-100: oklch(94.6% 0.032 22.4);
+  --color-gender-male-500: oklch(60.9% 0.152 255.5);
+  --color-gender-male-100: oklch(91.7% 0.071 259.9);
+
+  /* Typography Font Sizes - Responsive (Mobile First) */
+  --Typo-Size-Display: 48px;
+  --Typo-Size-Heading-1: 40px;
+  --Typo-Size-Heading-2: 32px;
+  --Typo-Size-Heading-3: 24px;
+  --Typo-Size-Body-L: 20px;
+  --Typo-Size-Body-M: 18px;
+  --Typo-Size-Body-S: 16px;
+  --Typo-Size-Body-XS: 12px;
+  --Typo-Size-Caption: 12px;
+
+  /* Typography Line Heights - Responsive (Mobile First) */
+  --Typo-Line-height-Display: 64px;
+  --Typo-Line-height-Heading-1: 60px;
+  --Typo-Line-height-Heading-2: 48px;
+  --Typo-Line-height-Heading-3: 36px;
+  --Typo-Line-height-Body-L: 32px;
+  --Typo-Line-height-Body-M: 28px;
+  --Typo-Line-height-Body-S: 24px;
+  --Typo-Line-height-Body-XS: 20px;
+  --Typo-Line-height-Caption: 12px;
+
+  /* Typography Font Sizes - Mobile (기본) - Legacy */
+  --typo-size-display-mobile: 48px;
+  --typo-size-heading1-mobile: 40px;
+  --typo-size-heading2-mobile: 32px;
+  --typo-size-heading3-mobile: 24px;
+  --typo-size-body-l-mobile: 20px;
+  --typo-size-body-m-mobile: 18px;
+  --typo-size-body-s-mobile: 16px;
+  --typo-size-body-xs-mobile: 12px;
+  --typo-size-caption-mobile: 12px;
+
+  /* Typography Line Heights - Mobile (기본) - Legacy */
+  --typo-line-height-display-mobile: 64px;
+  --typo-line-height-heading1-mobile: 60px;
+  --typo-line-height-heading2-mobile: 48px;
+  --typo-line-height-heading3-mobile: 36px;
+  --typo-line-height-body-l-mobile: 32px;
+  --typo-line-height-body-m-mobile: 28px;
+  --typo-line-height-body-s-mobile: 24px;
+  --typo-line-height-body-xs-mobile: 18px;
+  --typo-line-height-caption-mobile: 12px;
+
+  /* Typography Font Sizes - Tablet - Legacy */
+  --typo-size-display-tablet: 40px;
+  --typo-size-heading1-tablet: 32px;
+  --typo-size-heading2-tablet: 28px;
+  --typo-size-heading3-tablet: 20px;
+  --typo-size-body-l-tablet: 20px;
+  --typo-size-body-m-tablet: 18px;
+  --typo-size-body-s-tablet: 16px;
+  --typo-size-body-xs-tablet: 14px;
+  --typo-size-caption-tablet: 12px;
+
+  /* Typography Line Heights - Tablet - Legacy */
+  --typo-line-height-display-tablet: 56px;
+  --typo-line-height-heading1-tablet: 48px;
+  --typo-line-height-heading2-tablet: 40px;
+  --typo-line-height-heading3-tablet: 32px;
+  --typo-line-height-body-l-tablet: 32px;
+  --typo-line-height-body-m-tablet: 28px;
+  --typo-line-height-body-s-tablet: 24px;
+  --typo-line-height-body-xs-tablet: 20px;
+  --typo-line-height-caption-tablet: 12px;
+
+  /* Typography Font Sizes - Desktop - Legacy */
+  --typo-size-display-desktop: 32px;
+  --typo-size-heading1-desktop: 28px;
+  --typo-size-heading2-desktop: 24px;
+  --typo-size-heading3-desktop: 18px;
+  --typo-size-body-l-desktop: 18px;
+  --typo-size-body-m-desktop: 16px;
+  --typo-size-body-s-desktop: 14px;
+  --typo-size-body-xs-desktop: 14px;
+  --typo-size-caption-desktop: 11px;
+
+  /* Typography Line Heights - Desktop - Legacy */
+  --typo-line-height-display-desktop: 44px;
+  --typo-line-height-heading1-desktop: 40px;
+  --typo-line-height-heading2-desktop: 36px;
+  --typo-line-height-heading3-desktop: 28px;
+  --typo-line-height-body-l-desktop: 28px;
+  --typo-line-height-body-m-desktop: 24px;
+  --typo-line-height-body-s-desktop: 22px;
+  --typo-line-height-body-xs-desktop: 18px;
+  --typo-line-height-caption-desktop: 11px;
+
+  /* General Sizes */
+  --size-24: 24px;
+  --size-28: 28px;
+  --size-32: 32px;
+  --size-36: 36px;
+  --size-40: 40px;
+  --size-48: 48px;
+  --size-60: 60px;
+
+  /* Responsive Sizes */
+  --size-40-mobile: 40px;
+  --size-40-tablet: 28px;
+  --size-40-desktop: 24px;
+
+  --size-80-mobile: 80px;
+  --size-80-tablet: 60px;
+  --size-80-desktop: 40px;
+
+  --size-80-variant-mobile: 80px;
+  --size-80-variant-tablet: 80px;
+  --size-80-variant-desktop: 60px;
+
+  --size-120-mobile: 120px;
+  --size-120-tablet: 100px;
+  --size-120-desktop: 80px;
+
+  --size-160-mobile: 160px;
+  --size-160-tablet: 160px;
+  --size-160-desktop: 120px;
+
+  --size-200-mobile: 200px;
+  --size-200-tablet: 200px;
+  --size-200-desktop: 160px;
+
+  /* Layout Sizes */
+  --layout-gutter-mobile: 12px;
+  --layout-gutter-tablet: 16px;
+  --layout-gutter-desktop: 24px;
+
+  --layout-padding-mobile: 20px;
+  --layout-padding-tablet: 40px;
+  --layout-padding-desktop: 48px;
+
+  --layout-width-mobile: 393px;
+  --layout-width-tablet: 768px;
+  --layout-width-desktop: 1440px;
+
+  --layout-width-popup-mobile: 320px;
+  --layout-width-popup-tablet: 360px;
+  --layout-width-popup-desktop: 360px;
+
+  /* Radius Sizes */
+  --radius-4: 4px;
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+
+  /* Space Sizes */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
 }
 
 /* 피그마 디자인 토큰 : 반응형 */
+
+/* Typography Responsive Overrides */
+@layer theme {
+  :root {
+    @media (width >= 48rem) {
+      /* Tablet */
+      --Typo-Size-Display: 40px;
+      --Typo-Size-Heading-1: 32px;
+      --Typo-Size-Heading-2: 28px;
+      --Typo-Size-Heading-3: 20px;
+      --Typo-Size-Body-L: 20px;
+      --Typo-Size-Body-M: 18px;
+      --Typo-Size-Body-S: 16px;
+      --Typo-Size-Body-XS: 12px;
+      --Typo-Size-Caption: 12px;
+
+      --Typo-Line-height-Display: 56px;
+      --Typo-Line-height-Heading-1: 48px;
+      --Typo-Line-height-Heading-2: 40px;
+      --Typo-Line-height-Heading-3: 32px;
+      --Typo-Line-height-Body-L: 32px;
+      --Typo-Line-height-Body-M: 28px;
+      --Typo-Line-height-Body-S: 24px;
+      --Typo-Line-height-Body-XS: 20px;
+      --Typo-Line-height-Caption: 12px;
+    }
+
+    @media (width >= 80rem) {
+      /* Desktop */
+      --Typo-Size-Display: 32px;
+      --Typo-Size-Heading-1: 28px;
+      --Typo-Size-Heading-2: 24px;
+      --Typo-Size-Heading-3: 18px;
+      --Typo-Size-Body-L: 18px;
+      --Typo-Size-Body-M: 16px;
+      --Typo-Size-Body-S: 14px;
+      --Typo-Size-Body-XS: 14px;
+      --Typo-Size-Caption: 11px;
+
+      --Typo-Line-height-Display: 44px;
+      --Typo-Line-height-Heading-1: 40px;
+      --Typo-Line-height-Heading-2: 36px;
+      --Typo-Line-height-Heading-3: 28px;
+      --Typo-Line-height-Body-L: 28px;
+      --Typo-Line-height-Body-M: 24px;
+      --Typo-Line-height-Body-S: 22px;
+      --Typo-Line-height-Body-XS: 18px;
+      --Typo-Line-height-Caption: 11px;
+    }
+  }
+}
 
 /* 모바일 (기본) */
 @theme {
@@ -273,6 +509,173 @@
       --default-span: 6;
       --inner-span: 4;
       --inner-start: 2;
+    }
+  }
+}
+
+/* Typography Utility Classes */
+@layer utilities {
+  /* Display */
+  .text-display {
+    font-size: var(--typo-size-display-mobile);
+    line-height: var(--typo-line-height-display-mobile);
+    font-weight: 600;
+  }
+  @media (width >= 48rem) {
+    .text-display {
+      font-size: var(--typo-size-display-tablet);
+      line-height: var(--typo-line-height-display-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-display {
+      font-size: var(--typo-size-display-desktop);
+      line-height: var(--typo-line-height-display-desktop);
+    }
+  }
+
+  /* Heading 1 */
+  .text-heading-1 {
+    font-size: var(--typo-size-heading1-mobile);
+    line-height: var(--typo-line-height-heading1-mobile);
+    font-weight: 600;
+  }
+  @media (width >= 48rem) {
+    .text-heading-1 {
+      font-size: var(--typo-size-heading1-tablet);
+      line-height: var(--typo-line-height-heading1-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-heading-1 {
+      font-size: var(--typo-size-heading1-desktop);
+      line-height: var(--typo-line-height-heading1-desktop);
+    }
+  }
+
+  /* Heading 2 */
+  .text-heading-2 {
+    font-size: var(--typo-size-heading2-mobile);
+    line-height: var(--typo-line-height-heading2-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-heading-2 {
+      font-size: var(--typo-size-heading2-tablet);
+      line-height: var(--typo-line-height-heading2-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-heading-2 {
+      font-size: var(--typo-size-heading2-desktop);
+      line-height: var(--typo-line-height-heading2-desktop);
+    }
+  }
+
+  /* Heading 3 */
+  .text-heading-3 {
+    font-size: var(--typo-size-heading3-mobile);
+    line-height: var(--typo-line-height-heading3-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-heading-3 {
+      font-size: var(--typo-size-heading3-tablet);
+      line-height: var(--typo-line-height-heading3-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-heading-3 {
+      font-size: var(--typo-size-heading3-desktop);
+      line-height: var(--typo-line-height-heading3-desktop);
+    }
+  }
+
+  /* Body L */
+  .text-body-l {
+    font-size: var(--typo-size-body-l-mobile);
+    line-height: var(--typo-line-height-body-l-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-body-l {
+      font-size: var(--typo-size-body-l-tablet);
+      line-height: var(--typo-line-height-body-l-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-body-l {
+      font-size: var(--typo-size-body-l-desktop);
+      line-height: var(--typo-line-height-body-l-desktop);
+    }
+  }
+
+  /* Body M */
+  .text-body-m {
+    font-size: var(--typo-size-body-m-mobile);
+    line-height: var(--typo-line-height-body-m-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-body-m {
+      font-size: var(--typo-size-body-m-tablet);
+      line-height: var(--typo-line-height-body-m-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-body-m {
+      font-size: var(--typo-size-body-m-desktop);
+      line-height: var(--typo-line-height-body-m-desktop);
+    }
+  }
+
+  /* Body S */
+  .text-body-s {
+    font-size: var(--typo-size-body-s-mobile);
+    line-height: var(--typo-line-height-body-s-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-body-s {
+      font-size: var(--typo-size-body-s-tablet);
+      line-height: var(--typo-line-height-body-s-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-body-s {
+      font-size: var(--typo-size-body-s-desktop);
+      line-height: var(--typo-line-height-body-s-desktop);
+    }
+  }
+
+  /* Body XS */
+  .text-body-xs {
+    font-size: var(--typo-size-body-xs-mobile);
+    line-height: var(--typo-line-height-body-xs-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-body-xs {
+      font-size: var(--typo-size-body-xs-tablet);
+      line-height: var(--typo-line-height-body-xs-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-body-xs {
+      font-size: var(--typo-size-body-xs-desktop);
+      line-height: var(--typo-line-height-body-xs-desktop);
+    }
+  }
+
+  /* Caption */
+  .text-caption {
+    font-size: var(--typo-size-caption-mobile);
+    line-height: var(--typo-line-height-caption-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-caption {
+      font-size: var(--typo-size-caption-tablet);
+      line-height: var(--typo-line-height-caption-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-caption {
+      font-size: var(--typo-size-caption-desktop);
+      line-height: var(--typo-line-height-caption-desktop);
     }
   }
 }
