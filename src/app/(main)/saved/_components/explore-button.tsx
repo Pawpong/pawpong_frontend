@@ -1,15 +1,14 @@
 import ReadingGlasses from "@/assets/icons/reading-glasses.svg";
+import Link from "next/link";
 
-interface ExploreButtonProps {
-  onClick?: () => void;
-}
-
-const ExploreButton = ({ onClick }: ExploreButtonProps) => {
+const ExploreButton = () => {
   return (
-    <button className="button-explore" onClick={onClick}>
-      <ReadingGlasses />
-      브리더 탐색하기
-    </button>
+    <Link href="/explore">
+      <button className="button-explore">
+        <ReadingGlasses />
+        브리더 탐색하기
+      </button>
+    </Link>
   );
 };
 
