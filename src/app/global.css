@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
+@import "../styles//button.css";
 @custom-variant dark (&:is(.dark *));
 
 /* shadcn 기본 테마 설정 */
@@ -204,7 +204,7 @@
   --typo-size-heading1-mobile: 40px;
   --typo-size-heading2-mobile: 32px;
   --typo-size-heading3-mobile: 24px;
-  --typo-size-body-l-mobile: 20px;
+  --typo-size-body-l-mobile: 18px;
   --typo-size-body-m-mobile: 18px;
   --typo-size-body-s-mobile: 16px;
   --typo-size-body-xs-mobile: 12px;
@@ -332,6 +332,8 @@
   --space-12: 12px;
   --space-16: 16px;
   --space-20: 20px;
+  --space-28: 28px;
+  --space-40: 40px;
 }
 
 /* 피그마 디자인 토큰 : 반응형 */

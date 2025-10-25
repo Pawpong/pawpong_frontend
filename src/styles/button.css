@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@layer components {
+  .button-explore {
+    @apply flex items-center justify-center bg-[var(--color-grayscale-gray1)] text-[var(--color-grayscale-gray6)] gap-[var(--space-4)] rounded-full text-body-s font-medium py-[var(--space-10)] pr-[var(--space-20)] pl-[var(--space-12)];
+  }
+}
