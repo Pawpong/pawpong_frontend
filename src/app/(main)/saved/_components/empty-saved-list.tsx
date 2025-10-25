@@ -14,11 +14,3 @@ export default function EmptySavedList() {
     </div>
   );
 }
-// color: var(--Grayscale-Gray-5, #888);
-
-// /* Body/L (20,20,18)/SB */
-// font-family: Pretendard;
-// font-size: var(--Typo-Size-Body-L, 1.25rem);
-// font-style: normal;
-// font-weight: 600;
-// line-height: var(--Typo-Line-height-Body-L, 2rem); /* 160% */
