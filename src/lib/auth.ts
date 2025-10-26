@@ -236,16 +236,21 @@ export const verifyCode = async (
 };
 
 /** 프로필 이미지 업로드 API */
-export const uploadProfileImage = async (file: File): Promise<string> => {
+export const uploadProfileImage = async (file: File, tempId?: string): Promise<string> => {
   try {
     // FormData 생성
     const formData = new FormData();
     formData.append("file", file);
 
+    // tempId가 있으면 쿼리 파라미터로 추가
+    const url = tempId
+      ? `/api/auth/upload-breeder-profile?tempId=${encodeURIComponent(tempId)}`
+      : "/api/auth/upload-breeder-profile";
+
     // multipart/form-data 요청
     const response = await apiClient.post<
       ApiResponse<UploadProfileResponseDto>
-    >("/api/auth/upload-breeder-profile", formData);
+    >(url, formData);
 
     if (!response.data.success || !response.data.data) {
       throw new Error(
@@ -253,8 +258,9 @@ export const uploadProfileImage = async (file: File): Promise<string> => {
       );
     }
 
-    // CDN URL 반환
-    return response.data.data.cdnUrl;
+    // ⚠️ 중요: fileName 반환 (DB 저장용)
+    // cdnUrl은 미리보기용이고, 실제 DB에는 fileName을 저장해야 함
+    return response.data.data.fileName;
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("Profile image upload error:", error.message);
@@ -268,7 +274,8 @@ export const uploadProfileImage = async (file: File): Promise<string> => {
 export const uploadVerificationDocuments = async (
   files: File[],
   types: DocumentType[],
-  level: BreederLevel
+  level: BreederLevel,
+  tempId?: string
 ): Promise<VerificationDocumentsResponseDto> => {
   try {
     // FormData 생성
@@ -285,10 +292,15 @@ export const uploadVerificationDocuments = async (
     // level 추가
     formData.append("level", level);
 
+    // tempId가 있으면 쿼리 파라미터로 추가
+    const url = tempId
+      ? `/api/auth/upload-breeder-documents?tempId=${encodeURIComponent(tempId)}`
+      : "/api/auth/upload-breeder-documents";
+
     // multipart/form-data 요청
     const response = await apiClient.post<
       ApiResponse<VerificationDocumentsResponseDto>
-    >("/api/auth/upload-breeder-documents", formData);
+    >(url, formData);
 
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message ?? "Document upload failed.");

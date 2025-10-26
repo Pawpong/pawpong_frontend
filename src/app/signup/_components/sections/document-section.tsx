@@ -127,8 +127,8 @@ export default function DocumentSection() {
       // 사용자가 직접 업로드한 프로필 이미지가 있으면 우선 업로드
       if (photo) {
         try {
-          console.log("프로필 이미지 업로드 시작:", photo.name);
-          const uploadedProfileUrl = await uploadProfileImage(photo);
+          console.log("프로필 이미지 업로드 시작:", photo.name, "tempId:", tempId);
+          const uploadedProfileUrl = await uploadProfileImage(photo, tempId);
           finalProfileImageUrl = uploadedProfileUrl;
           console.log("프로필 이미지 업로드 완료:", uploadedProfileUrl);
         } catch (uploadError) {
@@ -166,11 +166,13 @@ export default function DocumentSection() {
         const types = uploadedFiles.map(([type]) => typeMapping[type] || type);
 
         try {
-          console.log("서류 업로드 시작 - level:", level, "files:", files.length, "types:", types);
-          const uploadResult = await uploadVerificationDocuments(files, types, level);
-          documentUrls = uploadResult.allDocuments.map((doc) => doc.url);
+          console.log("서류 업로드 시작 - level:", level, "files:", files.length, "types:", types, "tempId:", tempId);
+          const uploadResult = await uploadVerificationDocuments(files, types, level, tempId);
+          // ⚠️ 중요: filename 사용 (DB 저장용)
+          // url은 미리보기용 Signed URL이고, 실제 DB에는 filename을 저장해야 함
+          documentUrls = uploadResult.allDocuments.map((doc) => doc.filename);
           documentTypes = uploadResult.allDocuments.map((doc) => doc.type);
-          console.log("서류 업로드 완료 - URLs:", documentUrls.length);
+          console.log("서류 업로드 완료 - filenames:", documentUrls.length);
         } catch (uploadError) {
           console.error("서류 업로드 실패:", uploadError);
           alert(
@@ -187,6 +189,8 @@ export default function DocumentSection() {
       const [city = "", district = ""] = (breederLocation || "").split(" ");
 
       // 브리더 회원가입 API 호출
+      // tempId를 통해 업로드된 파일들이 자동으로 병합되므로
+      // documentUrls와 documentTypes는 선택사항
       const result = await registerBreeder({
         email,
         phoneNumber,
@@ -206,9 +210,9 @@ export default function DocumentSection() {
         },
         tempId: tempId || undefined,
         provider: provider || undefined,
-        profileImage: finalProfileImageUrl || undefined, // 최종 프로필 이미지 URL
-        documentUrls, // 업로드된 서류 URL 전달
-        documentTypes, // 업로드된 서류 타입 전달
+        // tempId를 통해 자동 병합되므로 선택사항
+        // profileImage는 전달하지 않음 (tempId로 자동 병합)
+        // documentUrls, documentTypes도 전달하지 않음 (tempId로 자동 병합)
       });
 
       // 회원가입 성공 - 토큰 저장
