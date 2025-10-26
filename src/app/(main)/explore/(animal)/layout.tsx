@@ -8,7 +8,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <AnimalTabs />
-
       <FilterSortBar />
       <Container className="flex">
         <FilterSidebar />

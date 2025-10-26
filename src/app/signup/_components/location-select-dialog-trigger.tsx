@@ -123,7 +123,7 @@ export default function LocationSelectDialogTrigger({
         <LargeDialogFooter>
           <LargeDialogClose asChild>
             <Button
-              className="py-2 px-4 text-sm leading-[140%] tracking-[-2%] w-18 text-white!"
+              className="py-2 px-4 text-sm leading-[140%] tracking-[-2%]  bg-[#A0C8F4] w-18 text-primary-500!"
               onClick={() => onSubmitLocation(selected)}
             >
               입력
