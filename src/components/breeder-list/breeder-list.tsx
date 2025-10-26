@@ -7,7 +7,7 @@ export default function BreederList({
   children: React.ReactNode[];
 }) {
   return (
-    <div className="lg:space-y-10 md:space-y-7 space-y-6">
+    <div className="flex flex-col space-y-6">
       {children.map((child, index) => (
         <Fragment key={index}>
           {child}

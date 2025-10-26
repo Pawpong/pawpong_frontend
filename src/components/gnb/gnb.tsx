@@ -6,16 +6,24 @@ import NavBar from "./nav-bar";
 import NavButton from "./nav-button";
 import NoticeButton from "./notice-button";
 
-export default function Gnb() {
+interface GnbProps {
+  variant?: "default" | "tertiary";
+}
+
+export default function Gnb({ variant = "default" }: GnbProps) {
   const isMd = useBreakpoint("md");
+  const bgClass = variant === "tertiary" ? "bg-tertiary-500" : "bg-background";
+
   return (
-    <Container className="h-16 flex items-center justify-between">
-      <LogoButton />
-      {isMd && <NavBar />}
-      <div className="flex gap-4 items-center">
-        <NoticeButton />
-        {!isMd && <NavButton />}
-      </div>
-    </Container>
+    <div className={bgClass}>
+      <Container className="h-16 flex items-center justify-between">
+        <LogoButton />
+        {isMd && <NavBar />}
+        <div className="flex gap-4 items-center">
+          <NoticeButton />
+          {!isMd && <NavButton />}
+        </div>
+      </Container>
+    </div>
   );
 }

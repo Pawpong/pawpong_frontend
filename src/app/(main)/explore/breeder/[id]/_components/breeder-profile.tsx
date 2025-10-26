@@ -32,7 +32,7 @@ export default function BreederProfile({
           <LevelBadge level={level} className="" />
         </div>
         <div className="space-y-3">
-          <div className="space-y-1.5 text-body-s text-grayscale-gray5">
+          <div className="text-body-s mb-2 text-grayscale-gray5">
             <div>{location}</div>
             <div>{priceRange}</div>
           </div>

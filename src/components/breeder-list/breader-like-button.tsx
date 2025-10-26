@@ -1,19 +1,39 @@
-import PawShadow from "@/assets/icons/paw-shadow";
+"use client";
+
+import Heart from "@/assets/icons/heart.svg";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
+import HeartFill from "@/assets/icons/heart-fill.svg";
+import { useSavedStore } from "@/stores/saved-store";
+
+interface BreederLikeButtonProps {
+  className?: string;
+  breederId: string;
+}
 
 export default function BreederLikeButton({
   className,
-  ...props
-}: { className?: string } & React.ComponentProps<"button">) {
+  breederId,
+}: BreederLikeButtonProps) {
+  const { isSaved, toggleSaved } = useSavedStore();
+  const isLiked = isSaved(breederId);
+
+  const handleClick = () => {
+    toggleSaved(breederId);
+  };
+
   return (
     <Button
       variant="ghost"
       size="icon"
-      className={cn("text-grayscale-white size-8", className)}
-      {...props}
+      className={cn("text-grayscale-white size-8 ", className)}
+      onClick={handleClick}
     >
-      <PawShadow className="size-8" />
+      {isLiked ? (
+        <HeartFill className="size-8 " />
+      ) : (
+        <Heart className="size-8 " />
+      )}
     </Button>
   );
 }

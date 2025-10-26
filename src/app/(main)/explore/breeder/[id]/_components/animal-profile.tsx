@@ -33,7 +33,7 @@ export default function AnimalProfile({
         />
       </div>
       <div className="space-y-3">
-        <div className="space-y-1.5">
+        <div className="gap-0.5 flex flex-col">
           <div className="flex items-center gap-0.5">
             <div className="text-body-m font-semibold text-primary">{name}</div>
 

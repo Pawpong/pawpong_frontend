@@ -12,10 +12,16 @@ export default function LevelBadge({
   const levelInfo = {
     elite: {
       name: "Elite",
-      color: "bg-level-elite/10 text-level-elite",
+      color:
+        "bg-[var(--color-level-elite-100)] text-[var(--color-level-elite-500)]",
       icon: Crown,
     },
-    new: { name: "New", color: "bg-level-new/10 text-level-new", icon: Plant },
+    new: {
+      name: "New",
+      color:
+        "bg-[var(--color-level-new-100)] text-[var(--color-level-new-500)]",
+      icon: Plant,
+    },
   };
   const Icon = levelInfo[level].icon;
   return (
@@ -27,7 +33,17 @@ export default function LevelBadge({
       )}
     >
       <Icon className="size-4" />
-      <span className="text-caption-s">{levelInfo[level].name}</span>
+      <span
+        className="text-[var(--Typo-Size-Caption)] leading-[var(--Typo-Line-height-Caption)] font-medium"
+        style={{
+          fontFamily: "Pretendard",
+          fontSize: "var(--Typo-Size-Caption, 0.75rem)",
+          lineHeight: "var(--Typo-Line-height-Caption, 0.75rem)",
+          fontWeight: 500,
+        }}
+      >
+        {levelInfo[level].name}
+      </span>
     </div>
   );
 }
