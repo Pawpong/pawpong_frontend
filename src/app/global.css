@@ -206,7 +206,7 @@
   --typo-size-heading3-mobile: 24px;
   --typo-size-body-l-mobile: 18px;
   --typo-size-body-m-mobile: 18px;
-  --typo-size-body-s-mobile: 16px;
+  --typo-size-body-s-mobile: 14px;
   --typo-size-body-xs-mobile: 12px;
   --typo-size-caption-mobile: 12px;
 
@@ -228,7 +228,7 @@
   --typo-size-heading3-tablet: 20px;
   --typo-size-body-l-tablet: 20px;
   --typo-size-body-m-tablet: 18px;
-  --typo-size-body-s-tablet: 16px;
+  --typo-size-body-s-tablet: 14px;
   --typo-size-body-xs-tablet: 14px;
   --typo-size-caption-tablet: 12px;
 
@@ -332,7 +332,9 @@
   --space-12: 12px;
   --space-16: 16px;
   --space-20: 20px;
+  --space-24: 24px;
   --space-28: 28px;
+  --space-32: 32px;
   --space-40: 40px;
 }
 
@@ -345,11 +347,12 @@
       /* Tablet */
       --Typo-Size-Display: 40px;
       --Typo-Size-Heading-1: 32px;
+
       --Typo-Size-Heading-2: 28px;
       --Typo-Size-Heading-3: 20px;
       --Typo-Size-Body-L: 20px;
       --Typo-Size-Body-M: 18px;
-      --Typo-Size-Body-S: 16px;
+      --Typo-Size-Body-S: 14px;
       --Typo-Size-Body-XS: 12px;
       --Typo-Size-Caption: 12px;
 

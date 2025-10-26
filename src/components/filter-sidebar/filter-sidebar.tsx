@@ -33,7 +33,7 @@ export default function FilterSidebar() {
         <div className="space-y-6 lg:pb-15 md:pb-15 pb-10 w-[calc(19.875rem-(--spacing(4)))] pt-3">
           {activeFilters.length > 0 && (
             <div>
-              <div className="space-y-8 pb-8">
+              <div className="space-y-8">
                 <ClearFilters onClick={clearActiveFilters} />
                 <CurrentFilters
                   selectedLeaves={activeFilters}

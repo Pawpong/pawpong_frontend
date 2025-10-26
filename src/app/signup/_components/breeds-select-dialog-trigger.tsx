@@ -1,6 +1,7 @@
 "use client";
 
 import Close from "@/assets/icons/close";
+import ClearFilters from "@/components/filter-sidebar/clear-filters";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DialogTrigger } from "@/components/ui/dialog";
@@ -35,6 +36,10 @@ export default function BreedsSelectDialogTrigger({
     animalFilter.children![0].label
   );
   const [selected, setSelected] = useState<string[]>([]);
+
+  const clearActiveFilters = () => {
+    setSelected([]);
+  };
 
   return (
     <LargeDialog>
@@ -140,9 +145,10 @@ export default function BreedsSelectDialogTrigger({
           </ScrollArea>
         </div>
         <LargeDialogFooter>
+          <ClearFilters onClick={clearActiveFilters} />
           <LargeDialogClose asChild>
             <Button
-              className="py-2 px-4 text-sm leading-[140%] tracking-[-2%] w-18 text-white!"
+              className="py-2 px-4 text-sm leading-[140%] tracking-[-2%] bg-[#A0C8F4] w-18 text-primary-500!"
               onClick={() => onSubmitBreeds(selected)}
             >
               입력
