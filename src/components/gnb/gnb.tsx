@@ -5,7 +5,6 @@ import LogoButton from "./logo-button";
 import NavBar from "./nav-bar";
 import NavButton from "./nav-button";
 import NoticeButton from "./notice-button";
-
 interface GnbProps {
   variant?: "default" | "tertiary";
 }
