@@ -24,7 +24,9 @@ const buttonVariants = cva(
         text: "text-body-xs text-grayscale-gray5! hover:text-primary!",
         category:
           "text-body-xs text-grayscale-gray6! bg-transparent hover:bg-[#F6F6EA]! rounded-sm w-full md:w-40 shrink-0 flex justify-start whitespace-wrap",
-
+        maleGender: "hover:bg-[var(--color-gender-male-100)]",
+        femaleGender: "hover:bg-[var(--color-gender-female-100)]",
+        addParent: "bg-tertiary-700 hover:bg-tertiary-800",
         input:
           "bg-white text-grayscale-gray4 hover:bg-white/90 justify-between w-full ",
       },
