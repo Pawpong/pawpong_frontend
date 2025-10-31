@@ -10,7 +10,12 @@ import PictureRemove from "@/assets/icons/picture-delete.svg";
 import Image from "next/image";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
-import BreedsSelectDialogTrigger from "@/app/signup/_components/breeds-select-dialog-trigger";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface ParentItem {
   id: string;
@@ -22,7 +27,11 @@ interface ParentItem {
   imageFile?: File;
 }
 
-export default function ParentsInfo() {
+export default function ParentsInfo({
+  selectedBreeds,
+}: {
+  selectedBreeds: string[];
+}) {
   const defaultParentId = useMemo(() => `parent-default-${Date.now()}`, []);
   const [parents, setParents] = useState<ParentItem[]>([
     {
@@ -33,7 +42,6 @@ export default function ParentsInfo() {
       gender: null,
     },
   ]);
-  const [animal] = useState<"dog" | "cat">("dog");
 
   const addParent = () => {
     const newParent: ParentItem = {
@@ -202,27 +210,57 @@ export default function ParentsInfo() {
               onChange={(e) =>
                 updateParent(parent.id, { birthDate: e.target.value })
               }
+              className="px-[var(--space-16)] py-[var(--space-12)]"
             />
-            <BreedsSelectDialogTrigger
-              animal={animal!}
-              onSubmitBreeds={(breeds) =>
-                updateParent(parent.id, { breed: breeds })
-              }
-              asChild
-            >
-              <Button variant="input" className="py-3 px-4 pr-3.5 ">
-                <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
-                  {parent.breed.length > 0 ? (
-                    <span className="text-[#4F3B2E]">
-                      {parent.breed.join("/")}
-                    </span>
-                  ) : (
-                    <span>품종</span>
-                  )}
-                </div>
-                <Arrow className="size-5 text-[#4F3B2E]" />
-              </Button>
-            </BreedsSelectDialogTrigger>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="input"
+                  size={undefined}
+                  className="!px-[var(--space-16)] !py-[var(--space-12)] w-full"
+                >
+                  <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
+                    {parent.breed.length > 0 ? (
+                      <span className="text-[#4F3B2E]">
+                        {parent.breed.join("/")}
+                      </span>
+                    ) : (
+                      <span className="text-grayscale-gray5">품종</span>
+                    )}
+                  </div>
+                  <Arrow className="size-5 text-[#4F3B2E]" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white p-1 rounded-lg min-w-[353px]"
+                align="start"
+                side="bottom"
+                sideOffset={4}
+                avoidCollisions={false}
+              >
+                {selectedBreeds.length > 0 ? (
+                  selectedBreeds.map((breed) => (
+                    <DropdownMenuItem
+                      key={breed}
+                      className={cn(
+                        "px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
+                      )}
+                      onClick={() => {
+                        updateParent(parent.id, {
+                          breed: parent.breed.includes(breed) ? [] : [breed],
+                        });
+                      }}
+                    >
+                      {breed}
+                    </DropdownMenuItem>
+                  ))
+                ) : (
+                  <div className="px-4 py-2 text-body-s text-grayscale-gray5">
+                    선택된 품종이 없습니다
+                  </div>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* 구분선 (마지막 항목이 아닐 때만) */}
             {index < parents.length - 1 && (

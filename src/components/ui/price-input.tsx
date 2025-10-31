@@ -23,7 +23,7 @@ export function PriceInput({
           type="text"
           placeholder={placeholder}
           data-slot="input"
-          className="file:text-foreground placeholder:text-grayscale-gray4 selection:bg-primary selection:text-primary-foreground bg-transparent font-medium text-body-s outline-none file:inline-flex file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 w-full"
+          className="file:text-foreground placeholder:text-grayscale-gray5 selection:bg-primary selection:text-primary-foreground bg-transparent font-medium text-body-s outline-none file:inline-flex file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:text-grayscale-gray4 w-full"
           {...props}
         />
       </div>

@@ -11,20 +11,17 @@ import BreedsSelectDialogTrigger from "@/app/signup/_components/breeds-select-di
 import { useState } from "react";
 import LocationSelectDialogTrigger from "@/app/signup/_components/location-select-dialog-trigger";
 import ImageEdit from "@/components/image-edit";
-import ErrorMessage from "@/components/error-message";
 import MinusIcon from "@/assets/icons/minus.svg";
-export default function ProfileBasicInfo() {
-  const messages: Array<{ type: "error"; text: string }> = [
-    { type: "error", text: "지역을 선택해 주세요" },
-    { type: "error", text: "최대 다섯 가지 선택할 수 있어요" },
-    {
-      type: "error",
-      text: "품종을 선택해 주세요",
-    },
-  ];
+export default function ProfileBasicInfo({
+  breeds,
+  setBreeds,
+}: {
+  breeds: string[];
+  setBreeds: (breeds: string[]) => void;
+}) {
   const [animal] = useState<"dog" | "cat">("dog");
-  const [breeds, setBreeds] = useState<string[]>([]);
   const [breederLocation, setBreederLocation] = useState<string | null>(null);
+  const [isCounselMode, setIsCounselMode] = useState(false);
   return (
     <div className="flex flex-col gap-8 items-start w-full">
       <div className="flex flex-col gap-3 items-center w-full">
@@ -41,7 +38,11 @@ export default function ProfileBasicInfo() {
           }}
           asChild
         >
-          <Button variant="input" className="py-3 px-4 pr-3.5">
+          <Button
+            variant="input"
+            size={undefined}
+            className="!px-[var(--space-16)] !py-[var(--space-12)]"
+          >
             {breederLocation ? (
               <span className="text-[#4F3B2E]">{breederLocation}</span>
             ) : (
@@ -62,7 +63,11 @@ export default function ProfileBasicInfo() {
             onSubmitBreeds={setBreeds}
             asChild
           >
-            <Button variant="input" className="py-3 px-4 pr-3.5 ">
+            <Button
+              variant="input"
+              size={undefined}
+              className="!px-[var(--space-16)] !py-[var(--space-12)]"
+            >
               <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
                 {breeds.length > 0 ? (
                   <span className="text-[#4F3B2E]">{breeds.join("/")}</span>
@@ -93,12 +98,23 @@ export default function ProfileBasicInfo() {
           <p className="leading-body-xs">입양 비용 범위</p>
         </div>
         <div className="flex gap-3 items-center relative w-full flex-nowrap">
-          <PriceInput placeholder="0" className="grow" />
+          <PriceInput
+            placeholder={isCounselMode ? "상담 후 공개" : "0"}
+            className="grow"
+            disabled={isCounselMode}
+          />
           <div className="overflow-hidden relative shrink-0 size-4">
             <MinusIcon className="size-4" />
           </div>
-          <PriceInput placeholder="0" className="grow" />
-          <button className="button-after-counsel  shrink-0 whitespace-nowrap">
+          <PriceInput
+            placeholder={isCounselMode ? "상담 후 공개" : "0"}
+            className="grow"
+            disabled={isCounselMode}
+          />
+          <button
+            onClick={() => setIsCounselMode(!isCounselMode)}
+            className="button-after-counsel shrink-0 whitespace-nowrap"
+          >
             상담 후 공개하기
           </button>
         </div>

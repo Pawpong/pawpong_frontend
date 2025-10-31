@@ -151,8 +151,8 @@
   /* Grayscale Colors */
   --color-grayscale-black: oklch(23.5% 0 0);
   --color-grayscale-gray7: oklch(30.5% 0 0);
-  --color-grayscale-gray6: oklch(39.6% 0 0);
-  --color-grayscale-gray5: oklch(54.2% 0 0);
+  --color-grayscale-gray6: #545454;
+  --color-grayscale-gray5: #888;
   --color-grayscale-gray4: oklch(63.5% 0 0);
   --color-grayscale-gray3: oklch(78.5% 0 0);
   --color-grayscale-gray2: oklch(87.6% 0 0);
