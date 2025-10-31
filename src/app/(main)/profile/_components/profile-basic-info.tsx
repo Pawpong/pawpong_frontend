@@ -84,7 +84,7 @@ export default function ProfileBasicInfo() {
         <div className="flex flex-col font-semibold justify-center min-w-full relative shrink-0 text-grayscale-gray6 text-body-xs w-min">
           <p className="leading-body-xs">대표 사진</p>
         </div>
-        <ImageEdit imageFiles={[]} maxCount={3} />
+        <ImageEdit maxCount={3} />
         {/* </div> */}
       </div>
       {/* 입양 비용 범위 */}
@@ -98,7 +98,7 @@ export default function ProfileBasicInfo() {
             <MinusIcon className="size-4" />
           </div>
           <PriceInput placeholder="0" className="grow" />
-          <button className="button-after-counsel ml-auto shrink-0 whitespace-nowrap">
+          <button className="button-after-counsel  shrink-0 whitespace-nowrap">
             상담 후 공개하기
           </button>
         </div>
