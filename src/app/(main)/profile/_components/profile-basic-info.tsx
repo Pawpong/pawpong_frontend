@@ -22,6 +22,8 @@ export default function ProfileBasicInfo({
   const [animal] = useState<"dog" | "cat">("dog");
   const [breederLocation, setBreederLocation] = useState<string | null>(null);
   const [isCounselMode, setIsCounselMode] = useState(false);
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
   return (
     <div className="flex flex-col gap-8 items-start w-full">
       <div className="flex flex-col gap-3 items-center w-full">
@@ -102,6 +104,8 @@ export default function ProfileBasicInfo({
             placeholder={isCounselMode ? "상담 후 공개" : "0"}
             className="grow"
             disabled={isCounselMode}
+            value={isCounselMode ? "" : minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
           />
           <div className="overflow-hidden relative shrink-0 size-4">
             <MinusIcon className="size-4" />
@@ -110,9 +114,18 @@ export default function ProfileBasicInfo({
             placeholder={isCounselMode ? "상담 후 공개" : "0"}
             className="grow"
             disabled={isCounselMode}
+            value={isCounselMode ? "" : maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
           />
           <button
-            onClick={() => setIsCounselMode(!isCounselMode)}
+            onClick={() => {
+              if (!isCounselMode) {
+                // 상담 후 공개 모드로 전환 시 값 초기화
+                setMinPrice("");
+                setMaxPrice("");
+              }
+              setIsCounselMode(!isCounselMode);
+            }}
             className="button-after-counsel shrink-0 whitespace-nowrap"
           >
             상담 후 공개하기
