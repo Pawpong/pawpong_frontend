@@ -7,39 +7,35 @@ interface TextareaProps extends React.ComponentProps<"textarea"> {
   placeholder?: string;
   maxLength?: number;
   showLength?: boolean;
+  currentLength?: number; // 외부에서 글자 수를 전달받을 수 있음
 }
 
 function Textarea({
   className,
   maxLength,
   showLength = true,
+  value: controlledValue,
+  onChange: controlledOnChange,
+  currentLength,
   ...props
 }: TextareaProps) {
-  const [value, setValue] = React.useState(
-    props.value || props.defaultValue || ""
+  const isControlled = controlledValue !== undefined;
+  const [uncontrolledValue, setUncontrolledValue] = React.useState(
+    props.defaultValue || ""
   );
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
+  const value = isControlled ? controlledValue : uncontrolledValue;
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
-    setValue(newValue);
-
-    // textarea 높이 자동 조정
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    e.target.style.height = "auto";
+    e.target.style.height = `${e.target.scrollHeight}px`;
+    if (!isControlled) {
+      setUncontrolledValue(newValue);
     }
-
-    props.onChange?.(e);
+    controlledOnChange?.(e);
   };
-
-  // 초기 높이 설정
-  React.useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-  }, []);
 
   return (
     <div className="bg-white rounded-lg w-full relative overflow-hidden">
@@ -57,7 +53,11 @@ function Textarea({
       />
       {showLength && maxLength && (
         <div className="absolute bottom-3 right-4 text-[14px] font-medium leading-[20px] text-right pointer-events-none">
-          <span className="text-[#4e9cf1]">{String(value).length}</span>
+          <span className="text-[#4e9cf1]">
+            {currentLength !== undefined
+              ? currentLength
+              : String(value || "").length}
+          </span>
           <span className="text-grayscale-gray5">/{maxLength}</span>
         </div>
       )}
