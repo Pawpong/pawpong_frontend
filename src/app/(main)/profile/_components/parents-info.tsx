@@ -8,7 +8,7 @@ import Plus from "@/assets/icons/plus.svg";
 import Female from "@/assets/icons/female.svg";
 import PictureRemove from "@/assets/icons/picture-delete.svg";
 import Image from "next/image";
-import { useState, useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -29,19 +29,53 @@ interface ParentItem {
 
 export default function ParentsInfo({
   selectedBreeds,
+  parents: externalParents,
+  setParents: setExternalParents,
 }: {
   selectedBreeds: string[];
+  parents: ParentItem[];
+  setParents: (parents: ParentItem[]) => void;
 }) {
   const defaultParentId = useMemo(() => `parent-default-${Date.now()}`, []);
-  const [parents, setParents] = useState<ParentItem[]>([
-    {
-      id: defaultParentId,
-      name: "",
-      birthDate: "",
-      breed: [],
-      gender: null,
-    },
-  ]);
+
+  // 외부 parents가 비어있으면 기본 항목 하나로 초기화 (최초 1회만)
+  useEffect(() => {
+    if (externalParents.length === 0) {
+      setExternalParents([
+        {
+          id: defaultParentId,
+          name: "",
+          birthDate: "",
+          breed: [],
+          gender: null,
+        },
+      ]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const parents =
+    externalParents.length > 0
+      ? externalParents
+      : [
+          {
+            id: defaultParentId,
+            name: "",
+            birthDate: "",
+            breed: [],
+            gender: null,
+          },
+        ];
+
+  const setParents = (
+    newParents: ParentItem[] | ((prev: ParentItem[]) => ParentItem[])
+  ) => {
+    if (typeof newParents === "function") {
+      setExternalParents(newParents(parents));
+    } else {
+      setExternalParents(newParents);
+    }
+  };
 
   const addParent = () => {
     const newParent: ParentItem = {
@@ -83,7 +117,7 @@ export default function ParentsInfo({
                     : `엄마 · 아빠 ${index + 1}`}
                 </p>
               </div>
-              {parent.id !== defaultParentId && (
+              {parents.length > 1 && (
                 <button
                   onClick={() => removeParent(parent.id)}
                   className="flex gap-1 items-center relative shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
@@ -218,6 +252,13 @@ export default function ParentsInfo({
                   variant="input"
                   size={undefined}
                   className="!px-[var(--space-16)] !py-[var(--space-12)] w-full"
+                  disabled={selectedBreeds.length === 0}
+                  onClick={(e) => {
+                    if (selectedBreeds.length === 0) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }
+                  }}
                 >
                   <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
                     {parent.breed.length > 0 ? (
