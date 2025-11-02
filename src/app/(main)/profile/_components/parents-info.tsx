@@ -183,9 +183,12 @@ export default function ParentsInfo({
                 >
                   <Male
                     className={cn(
-                      "size-7 group-hover:[&_path]:fill-gender-male-500",
-                      parent.gender === "male" &&
-                        "[&_path]:fill-gender-male-500"
+                      "size-7",
+                      !parent.gender && errors.parents?.[index]?.gender
+                        ? "[&_path]:!fill-red-500"
+                        : parent.gender === "male"
+                        ? "[&_path]:fill-gender-male-500 group-hover:[&_path]:fill-gender-male-500"
+                        : "group-hover:[&_path]:fill-gender-male-500"
                     )}
                   />
                 </Button>
@@ -204,9 +207,12 @@ export default function ParentsInfo({
                 >
                   <Female
                     className={cn(
-                      "size-7 group-hover:[&_path]:fill-gender-female-500",
-                      parent.gender === "female" &&
-                        "[&_path]:fill-gender-female-500"
+                      "size-7",
+                      !parent.gender && errors.parents?.[index]?.gender
+                        ? "[&_path]:!fill-red-500"
+                        : parent.gender === "female"
+                        ? "[&_path]:fill-gender-female-500 group-hover:[&_path]:fill-gender-female-500"
+                        : "group-hover:[&_path]:fill-gender-female-500"
                     )}
                   />
                 </Button>

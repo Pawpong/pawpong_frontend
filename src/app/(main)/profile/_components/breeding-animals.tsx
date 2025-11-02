@@ -206,7 +206,10 @@ export default function BreedingAnimals({
                       className={cn(
                         "size-7 group-hover:[&_path]:fill-gender-male-500",
                         animal.gender === "male" &&
-                          "[&_path]:fill-gender-male-500"
+                          "[&_path]:fill-gender-male-500",
+                        !animal.gender &&
+                          errors.animals?.[index]?.gender &&
+                          "[&_path]:fill-red-500"
                       )}
                     />
                   </Button>
@@ -227,7 +230,10 @@ export default function BreedingAnimals({
                       className={cn(
                         "size-7 group-hover:[&_path]:fill-gender-female-500",
                         animal.gender === "female" &&
-                          "[&_path]:fill-gender-female-500"
+                          "[&_path]:fill-gender-female-500",
+                        !animal.gender &&
+                          errors.animals?.[index]?.gender &&
+                          "[&_path]:fill-red-500"
                       )}
                     />
                   </Button>

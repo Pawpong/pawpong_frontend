@@ -10,6 +10,7 @@ export interface ParentValidationErrors {
   name?: string;
   breed?: string;
   birthDate?: string;
+  gender?: string;
 }
 
 export interface AnimalValidationErrors {
@@ -18,6 +19,7 @@ export interface AnimalValidationErrors {
   adoptionStatus?: string;
   price?: string;
   birthDate?: string;
+  gender?: string;
 }
 
 /**
@@ -116,6 +118,9 @@ export function validateParents(
     } else if (!isValidBirthDate(parent.birthDate)) {
       errors.birthDate = BREEDER_PROFILE_ERROR.BIRTH_DATE_INVALID;
     }
+    if (!parent.gender) {
+      errors.gender = BREEDER_PROFILE_ERROR.GENDER_REQUIRED;
+    }
 
     return Object.keys(errors).length > 0 ? errors : undefined;
   });
@@ -149,6 +154,9 @@ export function validateAnimals(
       errors.birthDate = BREEDER_PROFILE_ERROR.BIRTH_DATE_REQUIRED;
     } else if (!isValidBirthDate(animal.birthDate)) {
       errors.birthDate = BREEDER_PROFILE_ERROR.BIRTH_DATE_INVALID;
+    }
+    if (!animal.gender) {
+      errors.gender = BREEDER_PROFILE_ERROR.GENDER_REQUIRED;
     }
 
     return Object.keys(errors).length > 0 ? errors : undefined;
