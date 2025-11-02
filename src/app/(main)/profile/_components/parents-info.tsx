@@ -17,7 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext, Controller } from "react-hook-form";
 import type { ProfileFormData } from "@/stores/profile-store";
 import ErrorMessage from "@/components/error-message";
 import { BREEDER_PROFILE_ERROR } from "@/constants/errors/breeder-profile-error";
@@ -221,14 +221,27 @@ export default function ParentsInfo({
                 />
               )}
             </div>
-            <Input
-              placeholder="생년월일 (YYYYMMDD)"
-              value={parent.birthDate}
-              onChange={(e) =>
-                updateParent(index, { birthDate: e.target.value })
-              }
-              className="px-[var(--space-16)] py-[var(--space-12)]"
-            />
+            <div className="flex flex-col gap-[10px] w-full">
+              <Controller
+                name={`parents.${index}.birthDate`}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    placeholder="생년월일 (YYYYMMDD)"
+                    className="px-[var(--space-16)] py-[var(--space-12)]"
+                  />
+                )}
+              />
+              {errors.parents?.[index]?.birthDate && (
+                <ErrorMessage
+                  message={
+                    (errors.parents[index]?.birthDate?.message as string) ||
+                    BREEDER_PROFILE_ERROR.BIRTH_DATE_REQUIRED
+                  }
+                />
+              )}
+            </div>
             <div className="flex flex-col gap-[10px] w-full">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
