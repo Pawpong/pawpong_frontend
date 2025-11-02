@@ -2,12 +2,12 @@
 
 @layer components {
   .button-explore {
-    @apply flex items-center justify-center bg-[var(--color-grayscale-gray1)] text-[var(--color-grayscale-gray6)] gap-[var(--space-4)] rounded-full text-body-s font-medium py-[var(--space-10)] pr-[var(--space-20)] pl-[var(--space-12)];
+    @apply flex items-center justify-center bg-[var(--color-grayscale-gray1)] text-[var(--color-grayscale-gray6)] gap-[var(--space-4)] rounded-full text-body-s font-medium py-[var(--space-10)] pr-[var(--space-20)] pl-[var(--space-12)] cursor-pointer;
   }
   .button-after-counsel {
-    @apply flex items-center justify-center rounded-lg bg-tertiary-700 text-[var(--color-grayscale-gray6)] gap-[var(--space-4)] text-body-s font-semibold pt-[var(--space-12)] pb-[var(--space-12)] pr-[var(--space-16)]  pl-[var(--space-16)];
+    @apply flex items-center justify-center rounded-lg bg-tertiary-700 text-[var(--color-grayscale-gray6)] gap-[var(--space-4)] text-body-s font-semibold pt-[var(--space-12)] pb-[var(--space-12)] pr-[var(--space-16)]  pl-[var(--space-16)] cursor-pointer hover:bg-tertiary-800;
   }
   .button-gender {
-    @apply flex items-center justify-center rounded-lg bg-white text-[var(--color-grayscale-gray4)] gap-[var(--space-4)] text-body-s font-medium py-[var(--space-12)] pr-[var(--space-16)] pl-[var(--space-12)];
+    @apply flex items-center justify-center rounded-lg bg-white text-[var(--color-grayscale-gray4)] gap-[var(--space-4)] text-body-s font-medium py-[var(--space-12)] pr-[var(--space-16)] pl-[var(--space-12)] cursor-pointer;
   }
 }

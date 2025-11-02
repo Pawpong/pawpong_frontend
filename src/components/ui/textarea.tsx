@@ -47,7 +47,7 @@ function Textarea({
         ref={textareaRef}
         data-slot="textarea"
         className={cn(
-          "bg-transparent w-full min-h-[140px] h-auto px-4 pt-3 pb-8 text-body-s font-medium text-grayscale-gray5 placeholder:text-grayscale-gray5 focus:outline-none border-none resize-none overflow-hidden",
+          "bg-transparent w-full min-h-[140px] h-auto px-4 pt-3 pb-8 text-body-s font-medium text-primary-500-basic placeholder:text-grayscale-gray5 focus:outline-none border-none resize-none overflow-hidden",
           className
         )}
         maxLength={maxLength}

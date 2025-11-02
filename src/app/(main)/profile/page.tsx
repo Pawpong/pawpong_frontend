@@ -1,13 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import Container from "@/components/ui/container";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
+import { useState } from "react";
 import ProfileBasicInfo from "./_components/profile-basic-info";
 import ParentsInfo from "./_components/parents-info";
 import BreedingAnimals from "./_components/breeding-animals";
 
 export default function ProfilePage() {
   const isMdUp = useBreakpoint("md");
+  const [breeds, setBreeds] = useState<string[]>([]);
 
   return (
     <div className="min-h-screen flex w-full flex-col md:flex-row">
@@ -17,9 +18,9 @@ export default function ProfilePage() {
       <div className="w-full md:w-1/2 flex flex-col">
         <div className="flex flex-col gap-8 md:gap-20 items-center pb-20 py-14 px-8">
           {/* 프로필 기본 정보 */}
-          <ProfileBasicInfo />
+          <ProfileBasicInfo breeds={breeds} setBreeds={setBreeds} />
           {/* 엄마 아빠 정보 */}
-          <ParentsInfo />
+          <ParentsInfo selectedBreeds={breeds} />
           {/* 분양 중인 아이 */}
           <BreedingAnimals />
           {/* 탈퇴하기 링크 */}

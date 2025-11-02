@@ -28,7 +28,7 @@ const buttonVariants = cva(
         femaleGender: "hover:bg-[var(--color-gender-female-100)]",
         addParent: "bg-tertiary-700 hover:bg-tertiary-800",
         input:
-          "bg-white text-grayscale-gray4 hover:bg-white/90 justify-between w-full ",
+          "bg-white text-grayscale-gray4 hover:bg-white/90 justify-between w-full text-body-s",
       },
       size: {
         default: "px-2.5 py-1.5 has-[>svg]:px-3",
