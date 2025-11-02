@@ -161,13 +161,12 @@ export default function ParentsInfo({
             {/* 이름과 성별 */}
             <div className="flex flex-col gap-[10px] w-full">
               <div className="flex gap-3 items-start relative shrink-0 w-full">
-                <Input
-                  placeholder="이름"
-                  value={parent.name}
-                  onChange={(e) => {
-                    updateParent(index, { name: e.target.value });
-                    form.trigger(`parents.${index}.name`);
-                  }}
+                <Controller
+                  name={`parents.${index}.name`}
+                  control={control}
+                  render={({ field }) => (
+                    <Input {...field} placeholder="이름" />
+                  )}
                 />
                 <Button
                   variant="maleGender"
