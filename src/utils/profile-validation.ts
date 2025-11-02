@@ -9,6 +9,7 @@ export interface ValidationErrors {
 export interface ParentValidationErrors {
   name?: string;
   breed?: string;
+  birthDate?: string;
 }
 
 export interface AnimalValidationErrors {
@@ -16,6 +17,33 @@ export interface AnimalValidationErrors {
   breed?: string;
   adoptionStatus?: string;
   price?: string;
+  birthDate?: string;
+}
+
+/**
+ * 생년월일 형식 검증 (YYYYMMDD)
+ */
+function isValidBirthDate(birthDate: string): boolean {
+  if (!birthDate || birthDate.trim() === "") return false;
+
+  // 8자리 숫자인지 확인
+  const dateRegex = /^\d{8}$/;
+  if (!dateRegex.test(birthDate)) return false;
+
+  // 유효한 날짜
+  const year = parseInt(birthDate.substring(0, 4), 10);
+  const month = parseInt(birthDate.substring(4, 6), 10);
+  const day = parseInt(birthDate.substring(6, 8), 10);
+
+  if (month < 1 || month > 12) return false;
+  if (day < 1 || day > 31) return false;
+
+  const date = new Date(year, month - 1, day);
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
 }
 
 /**
@@ -83,6 +111,11 @@ export function validateParents(
     if (!parent.breed || parent.breed.length === 0) {
       errors.breed = BREEDER_PROFILE_ERROR.BREEDS_REQUIRED;
     }
+    if (!parent.birthDate || parent.birthDate.trim() === "") {
+      errors.birthDate = BREEDER_PROFILE_ERROR.BIRTH_DATE_REQUIRED;
+    } else if (!isValidBirthDate(parent.birthDate)) {
+      errors.birthDate = BREEDER_PROFILE_ERROR.BIRTH_DATE_INVALID;
+    }
 
     return Object.keys(errors).length > 0 ? errors : undefined;
   });
@@ -111,6 +144,11 @@ export function validateAnimals(
       (!animal.price || animal.price.trim() === "")
     ) {
       errors.price = BREEDER_PROFILE_ERROR.PRICE_REQUIRED;
+    }
+    if (!animal.birthDate || animal.birthDate.trim() === "") {
+      errors.birthDate = BREEDER_PROFILE_ERROR.BIRTH_DATE_REQUIRED;
+    } else if (!isValidBirthDate(animal.birthDate)) {
+      errors.birthDate = BREEDER_PROFILE_ERROR.BIRTH_DATE_INVALID;
     }
 
     return Object.keys(errors).length > 0 ? errors : undefined;
