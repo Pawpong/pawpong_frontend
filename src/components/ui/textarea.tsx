@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 interface TextareaProps extends React.ComponentProps<"textarea"> {
-  placeholder: string;
+  placeholder?: string;
   maxLength?: number;
   showLength?: boolean;
 }
