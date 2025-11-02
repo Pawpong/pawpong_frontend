@@ -7,4 +7,5 @@ export const BREEDER_PROFILE_ERROR = {
   STATUS_REQUIRED: "입양 상태를 선택해 주세요.",
   BIRTH_DATE_REQUIRED: "생년월일을 입력해 주세요.",
   BIRTH_DATE_INVALID: "8자리(YYYYMMDD) 형식으로 입력해 주세요",
+  GENDER_REQUIRED: "성별을 선택해 주세요.",
 };
