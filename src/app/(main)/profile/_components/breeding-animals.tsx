@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,7 +11,7 @@ import Plus from "@/assets/icons/plus.svg";
 import Female from "@/assets/icons/female.svg";
 import PictureRemove from "@/assets/icons/picture-delete.svg";
 import Image from "next/image";
-import { useState, useMemo } from "react";
+import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -18,57 +19,45 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-interface BreedingAnimalItem {
-  id: string;
-  name: string;
-  birthDate: string;
-  breed: string[];
-  gender: "male" | "female" | null;
-  imagePreview?: string;
-  imageFile?: File;
-  description: string;
-  adoptionStatus: string;
-  parent: string;
-  price: string;
-  isCounselMode: boolean;
-}
-
-interface ParentItem {
-  id: string;
-  name: string;
-  birthDate: string;
-  breed: string[];
-  gender: "male" | "female" | null;
-  imagePreview?: string;
-  imageFile?: File;
-}
+import { useFieldArray, useFormContext } from "react-hook-form";
+import type { ProfileFormData } from "@/stores/profile-store";
+import ErrorMessage from "@/components/error-message";
+import { BREEDER_PROFILE_ERROR } from "@/constants/errors/breeder-profile-error";
 
 export default function BreedingAnimals({
-  selectedBreeds,
-  parents,
+  form,
 }: {
-  selectedBreeds: string[];
-  parents: ParentItem[];
+  form: ReturnType<typeof useFormContext<ProfileFormData>>;
 }) {
-  const defaultAnimalId = useMemo(() => `animal-default-${Date.now()}`, []);
-  const [animals, setAnimals] = useState<BreedingAnimalItem[]>([
-    {
-      id: defaultAnimalId,
-      name: "",
-      birthDate: "",
-      breed: [],
-      gender: null,
-      description: "",
-      adoptionStatus: "",
-      parent: "",
-      price: "",
-      isCounselMode: false,
-    },
-  ]);
+  const { control, watch, formState } = form;
+  const { errors } = formState;
+  const selectedBreeds = watch("breeds");
+  const parents = watch("parents");
+  const { fields, append, remove, update } = useFieldArray({
+    control,
+    name: "animals",
+  });
+
+  useEffect(() => {
+    if (fields.length === 0) {
+      append({
+        id: `animal-${Date.now()}-${Math.random()}`,
+        name: "",
+        birthDate: "",
+        breed: [],
+        gender: null,
+        description: "",
+        adoptionStatus: "",
+        parent: "",
+        price: "",
+        isCounselMode: false,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const addAnimal = () => {
-    const newAnimal: BreedingAnimalItem = {
+    append({
       id: `animal-${Date.now()}-${Math.random()}`,
       name: "",
       birthDate: "",
@@ -79,20 +68,19 @@ export default function BreedingAnimals({
       parent: "",
       price: "",
       isCounselMode: false,
-    };
-    setAnimals([...animals, newAnimal]);
+    });
   };
 
-  const removeAnimal = (id: string) => {
-    setAnimals(animals.filter((animal) => animal.id !== id));
+  const removeAnimal = (index: number) => {
+    remove(index);
   };
 
-  const updateAnimal = (id: string, updates: Partial<BreedingAnimalItem>) => {
-    setAnimals(
-      animals.map((animal) =>
-        animal.id === id ? { ...animal, ...updates } : animal
-      )
-    );
+  const updateAnimal = (
+    index: number,
+    updates: Partial<ProfileFormData["animals"][0]>
+  ) => {
+    const current = fields[index];
+    update(index, { ...current, ...updates });
   };
 
   // 이름이 입력된 부모들만 필터링
@@ -104,22 +92,23 @@ export default function BreedingAnimals({
     <div className="flex flex-col gap-8 items-center w-full">
       {/* 분양 중인 아이 항목들 */}
       <div className="flex flex-col gap-3 items-start w-full">
-        {animals.map((animal, index) => (
+        {fields.map((animal, index) => (
           <div
             key={animal.id}
+            data-animal-index={index}
             className="flex flex-col gap-3 items-start w-full"
           >
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-col font-semibold justify-center relative shrink-0 text-grayscale-gray6 text-body-xs">
                 <p className="leading-body-xs">
-                  {animals.length === 1
+                  {fields.length === 1
                     ? "분양 중인 아이"
                     : `분양 중인 아이 ${index + 1}`}
                 </p>
               </div>
-              {animals.length > 1 && (
+              {fields.length > 1 && (
                 <button
-                  onClick={() => removeAnimal(animal.id)}
+                  onClick={() => removeAnimal(index)}
                   className="flex gap-1 items-center relative shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
                 >
                   <Trash />
@@ -145,7 +134,7 @@ export default function BreedingAnimals({
                       const reader = new FileReader();
                       reader.onload = (event: ProgressEvent<FileReader>) => {
                         if (event.target?.result) {
-                          updateAnimal(animal.id, {
+                          updateAnimal(index, {
                             imagePreview: event.target.result as string,
                             imageFile: file,
                           });
@@ -175,7 +164,7 @@ export default function BreedingAnimals({
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    updateAnimal(animal.id, {
+                    updateAnimal(index, {
                       imagePreview: undefined,
                       imageFile: undefined,
                     });
@@ -188,55 +177,68 @@ export default function BreedingAnimals({
             </div>
 
             {/* 이름과 성별 */}
-            <div className="flex gap-3 items-start relative shrink-0 w-full">
-              <Input
-                placeholder="이름"
-                value={animal.name}
-                onChange={(e) =>
-                  updateAnimal(animal.id, { name: e.target.value })
-                }
-              />
-              <Button
-                variant="maleGender"
-                className={cn(
-                  "bg-white hover:bg-white flex items-center justify-center px-4 py-3 relative rounded-lg shrink-0 size-12 group",
-                  animal.gender === "male" &&
-                    "bg-[var(--color-gender-male-100)] hover:bg-[var(--color-gender-male-100)]"
-                )}
-                onClick={() =>
-                  updateAnimal(animal.id, {
-                    gender: animal.gender === "male" ? null : "male",
-                  })
-                }
-              >
-                <Male
-                  className={cn(
-                    "size-7 group-hover:[&_path]:fill-gender-male-500",
-                    animal.gender === "male" && "[&_path]:fill-gender-male-500"
-                  )}
+            <div className="flex flex-col gap-[10px] w-full">
+              <div className="flex gap-3 items-start relative shrink-0 w-full">
+                <Input
+                  placeholder="이름"
+                  value={animal.name}
+                  onChange={(e) => {
+                    updateAnimal(index, { name: e.target.value });
+                    // 유효성 검사 트리거
+                    form.trigger(`animals.${index}.name`);
+                  }}
                 />
-              </Button>
-              <Button
-                variant="femaleGender"
-                className={cn(
-                  "bg-white hover:bg-white flex items-center justify-center px-4 py-3 relative rounded-lg shrink-0 size-12 group",
-                  animal.gender === "female" &&
-                    "bg-[var(--color-gender-female-100)] hover:bg-[var(--color-gender-female-100)]"
-                )}
-                onClick={() =>
-                  updateAnimal(animal.id, {
-                    gender: animal.gender === "female" ? null : "female",
-                  })
-                }
-              >
-                <Female
+                <Button
+                  variant="maleGender"
                   className={cn(
-                    "size-7 group-hover:[&_path]:fill-gender-female-500",
+                    "bg-white hover:bg-white flex items-center justify-center px-4 py-3 relative rounded-lg shrink-0 size-12 group",
+                    animal.gender === "male" &&
+                      "bg-[var(--color-gender-male-100)] hover:bg-[var(--color-gender-male-100)]"
+                  )}
+                  onClick={() =>
+                    updateAnimal(index, {
+                      gender: animal.gender === "male" ? null : "male",
+                    })
+                  }
+                >
+                  <Male
+                    className={cn(
+                      "size-7 group-hover:[&_path]:fill-gender-male-500",
+                      animal.gender === "male" &&
+                        "[&_path]:fill-gender-male-500"
+                    )}
+                  />
+                </Button>
+                <Button
+                  variant="femaleGender"
+                  className={cn(
+                    "bg-white hover:bg-white flex items-center justify-center px-4 py-3 relative rounded-lg shrink-0 size-12 group",
                     animal.gender === "female" &&
-                      "[&_path]:fill-gender-female-500"
+                      "bg-[var(--color-gender-female-100)] hover:bg-[var(--color-gender-female-100)]"
                   )}
+                  onClick={() =>
+                    updateAnimal(index, {
+                      gender: animal.gender === "female" ? null : "female",
+                    })
+                  }
+                >
+                  <Female
+                    className={cn(
+                      "size-7 group-hover:[&_path]:fill-gender-female-500",
+                      animal.gender === "female" &&
+                        "[&_path]:fill-gender-female-500"
+                    )}
+                  />
+                </Button>
+              </div>
+              {errors.animals?.[index]?.name && (
+                <ErrorMessage
+                  message={
+                    (errors.animals[index]?.name?.message as string) ||
+                    BREEDER_PROFILE_ERROR.NAME_REQUIRED
+                  }
                 />
-              </Button>
+              )}
             </div>
 
             {/* 생년월일 */}
@@ -244,7 +246,7 @@ export default function BreedingAnimals({
               placeholder="생년월일 (YYYYMMDD)"
               value={animal.birthDate}
               onChange={(e) =>
-                updateAnimal(animal.id, { birthDate: e.target.value })
+                updateAnimal(index, { birthDate: e.target.value })
               }
               className="px-[var(--space-16)] py-[var(--space-12)]"
             />
@@ -254,115 +256,138 @@ export default function BreedingAnimals({
               placeholder="아이의 성격과 특징에 대해 자유롭게 소개해주세요!"
               value={animal.description}
               onChange={(e) =>
-                updateAnimal(animal.id, { description: e.target.value })
+                updateAnimal(index, { description: e.target.value })
               }
               maxLength={800}
               showLength={true}
             />
 
             {/* 품종 선택 */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="input"
-                  size={undefined}
-                  className="!px-[var(--space-16)] !py-[var(--space-12)] w-full"
-                  disabled={selectedBreeds.length === 0}
-                  onClick={(e) => {
-                    if (selectedBreeds.length === 0) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }
-                  }}
+            <div className="space-y-2.5 w-full">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="input"
+                    size={undefined}
+                    className="!px-[var(--space-16)] !py-[var(--space-12)] w-full"
+                    disabled={selectedBreeds.length === 0}
+                    onClick={(e) => {
+                      if (selectedBreeds.length === 0) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }
+                    }}
+                  >
+                    <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
+                      {animal.breed.length > 0 ? (
+                        <span className="text-[#4F3B2E]">
+                          {animal.breed.join("/")}
+                        </span>
+                      ) : (
+                        <span className="text-grayscale-gray5">품종</span>
+                      )}
+                    </div>
+                    <Arrow className="size-5 text-[#4F3B2E]" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white p-1 rounded-lg min-w-[353px]"
+                  align="start"
+                  side="bottom"
+                  sideOffset={4}
+                  avoidCollisions={false}
                 >
-                  <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
-                    {animal.breed.length > 0 ? (
-                      <span className="text-[#4F3B2E]">
-                        {animal.breed.join("/")}
-                      </span>
-                    ) : (
-                      <span className="text-grayscale-gray5">품종</span>
-                    )}
-                  </div>
-                  <Arrow className="size-5 text-[#4F3B2E]" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white p-1 rounded-lg min-w-[353px]"
-                align="start"
-                side="bottom"
-                sideOffset={4}
-                avoidCollisions={false}
-              >
-                {selectedBreeds.length > 0 ? (
-                  selectedBreeds.map((breed) => (
+                  {selectedBreeds.length > 0 ? (
+                    selectedBreeds.map((breed) => (
+                      <DropdownMenuItem
+                        key={breed}
+                        className={cn(
+                          "px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
+                        )}
+                        onClick={() => {
+                          updateAnimal(index, {
+                            breed: animal.breed.includes(breed) ? [] : [breed],
+                          });
+                          form.trigger(`animals.${index}.breed`);
+                        }}
+                      >
+                        {breed}
+                      </DropdownMenuItem>
+                    ))
+                  ) : (
+                    <div className="px-4 py-2 text-body-s text-grayscale-gray5">
+                      선택된 품종이 없습니다
+                    </div>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {errors.animals?.[index]?.breed && (
+                <ErrorMessage
+                  message={
+                    (errors.animals[index]?.breed?.message as string) ||
+                    BREEDER_PROFILE_ERROR.BREEDS_REQUIRED
+                  }
+                />
+              )}
+            </div>
+
+            {/* 입양 상태 */}
+            <div className="space-y-2.5 w-full">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="input"
+                    size={undefined}
+                    className="!px-[var(--space-16)] !py-[var(--space-12)] w-full"
+                  >
+                    <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
+                      {animal.adoptionStatus ? (
+                        <span className="text-[#4F3B2E]">
+                          {animal.adoptionStatus}
+                        </span>
+                      ) : (
+                        <span className="text-grayscale-gray5">입양 상태</span>
+                      )}
+                    </div>
+                    <Arrow className="size-5 text-[#4F3B2E]" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white p-1 rounded-lg min-w-[353px]"
+                  align="start"
+                  side="bottom"
+                  sideOffset={4}
+                  avoidCollisions={false}
+                >
+                  {["입양 가능", "입양 예정", "입양 완료"].map((status) => (
                     <DropdownMenuItem
-                      key={breed}
+                      key={status}
                       className={cn(
                         "px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
                       )}
                       onClick={() => {
-                        updateAnimal(animal.id, {
-                          breed: animal.breed.includes(breed) ? [] : [breed],
+                        updateAnimal(index, {
+                          adoptionStatus:
+                            animal.adoptionStatus === status ? "" : status,
                         });
+                        form.trigger(`animals.${index}.adoptionStatus`);
                       }}
                     >
-                      {breed}
+                      {status}
                     </DropdownMenuItem>
-                  ))
-                ) : (
-                  <div className="px-4 py-2 text-body-s text-grayscale-gray5">
-                    선택된 품종이 없습니다
-                  </div>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* 입양 상태 */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="input"
-                  size={undefined}
-                  className="!px-[var(--space-16)] !py-[var(--space-12)] w-full"
-                >
-                  <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
-                    {animal.adoptionStatus ? (
-                      <span className="text-[#4F3B2E]">
-                        {animal.adoptionStatus}
-                      </span>
-                    ) : (
-                      <span className="text-grayscale-gray5">입양 상태</span>
-                    )}
-                  </div>
-                  <Arrow className="size-5 text-[#4F3B2E]" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white p-1 rounded-lg min-w-[353px]"
-                align="start"
-                side="bottom"
-                sideOffset={4}
-                avoidCollisions={false}
-              >
-                {["입양 가능", "입양 예정", "입양 완료"].map((status) => (
-                  <DropdownMenuItem
-                    key={status}
-                    className={cn(
-                      "px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
-                    )}
-                    onClick={() => {
-                      updateAnimal(animal.id, {
-                        adoptionStatus:
-                          animal.adoptionStatus === status ? "" : status,
-                      });
-                    }}
-                  >
-                    {status}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {errors.animals?.[index]?.adoptionStatus && (
+                <ErrorMessage
+                  message={
+                    (errors.animals[index]?.adoptionStatus
+                      ?.message as string) ||
+                    BREEDER_PROFILE_ERROR.STATUS_REQUIRED
+                  }
+                />
+              )}
+            </div>
 
             {/* 엄마 아빠 */}
             <DropdownMenu>
@@ -404,7 +429,7 @@ export default function BreedingAnimals({
                         "px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
                       )}
                       onClick={() => {
-                        updateAnimal(animal.id, {
+                        updateAnimal(index, {
                           parent:
                             animal.parent === parent.name ? "" : parent.name,
                         });
@@ -422,38 +447,50 @@ export default function BreedingAnimals({
             </DropdownMenu>
 
             {/* 입양 비용 */}
-            <div className="flex gap-3 items-center relative w-full flex-nowrap">
-              <PriceInput
-                placeholder={animal.isCounselMode ? "상담 후 공개" : "0"}
-                className="grow"
-                disabled={animal.isCounselMode}
-                value={animal.isCounselMode ? "" : animal.price}
-                onChange={(e) =>
-                  updateAnimal(animal.id, { price: e.target.value })
-                }
-              />
-              <button
-                onClick={() => {
-                  if (!animal.isCounselMode) {
-                    // 상담 후 공개 모드로 전환 시 값 초기화
-                    updateAnimal(animal.id, {
-                      price: "",
-                      isCounselMode: !animal.isCounselMode,
-                    });
-                  } else {
-                    updateAnimal(animal.id, {
-                      isCounselMode: !animal.isCounselMode,
-                    });
+            <div className="flex flex-col gap-[10px] w-full">
+              <div className="flex gap-3 items-center relative w-full flex-nowrap">
+                <PriceInput
+                  placeholder={animal.isCounselMode ? "상담 후 공개" : "0"}
+                  className="grow"
+                  disabled={animal.isCounselMode}
+                  value={animal.isCounselMode ? "" : animal.price}
+                  onChange={(e) => {
+                    updateAnimal(index, { price: e.target.value });
+                    form.trigger(`animals.${index}.price`);
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    if (!animal.isCounselMode) {
+                      // 상담 후 공개 모드로 전환 시 값 초기화
+                      updateAnimal(index, {
+                        price: "",
+                        isCounselMode: !animal.isCounselMode,
+                      });
+                    } else {
+                      updateAnimal(index, {
+                        isCounselMode: !animal.isCounselMode,
+                      });
+                    }
+                    form.trigger(`animals.${index}.price`);
+                  }}
+                  className="button-after-counsel shrink-0 whitespace-nowrap"
+                >
+                  상담 후 공개하기
+                </button>
+              </div>
+              {errors.animals?.[index]?.price && (
+                <ErrorMessage
+                  message={
+                    (errors.animals[index]?.price?.message as string) ||
+                    BREEDER_PROFILE_ERROR.PRICE_REQUIRED
                   }
-                }}
-                className="button-after-counsel shrink-0 whitespace-nowrap"
-              >
-                상담 후 공개하기
-              </button>
+                />
+              )}
             </div>
 
             {/* 구분선 (마지막 항목이 아닐 때만) */}
-            {index < animals.length - 1 && (
+            {index < fields.length - 1 && (
               <div className="pt-8 pb-8 w-full -mt-3">
                 <div className="h-px bg-grayscale-gray2 w-full" />
               </div>

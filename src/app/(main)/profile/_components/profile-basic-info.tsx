@@ -12,18 +12,23 @@ import { useState } from "react";
 import LocationSelectDialogTrigger from "@/app/signup/_components/location-select-dialog-trigger";
 import ImageEdit from "@/components/image-edit";
 import MinusIcon from "@/assets/icons/minus.svg";
+import { useFormContext, Controller } from "react-hook-form";
+import type { ProfileFormData } from "@/stores/profile-store";
+import ErrorMessage from "@/components/error-message";
+import { BREEDER_PROFILE_ERROR } from "@/constants/errors/breeder-profile-error";
+
 export default function ProfileBasicInfo({
-  breeds,
-  setBreeds,
+  form,
 }: {
-  breeds: string[];
-  setBreeds: (breeds: string[]) => void;
+  form: ReturnType<typeof useFormContext<ProfileFormData>>;
 }) {
   const [animal] = useState<"dog" | "cat">("dog");
-  const [breederLocation, setBreederLocation] = useState<string | null>(null);
-  const [isCounselMode, setIsCounselMode] = useState(false);
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
+  const { control, watch, setValue, formState } = form;
+  const { errors } = formState;
+
+  const breeds = watch("breeds");
+  const location = watch("location");
+  const isCounselMode = watch("isCounselMode");
   return (
     <div className="flex flex-col gap-8 items-start w-full">
       <div className="flex flex-col gap-3 items-center w-full">
@@ -31,56 +36,103 @@ export default function ProfileBasicInfo({
         <div className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group">
           <Camera className="size-7 group-hover:[&_path]:fill-[#4F3B2E]" />
         </div>
-        <Input placeholder="브리더명(상호명)" />
-        <Textarea placeholder="소개" maxLength={1500} showLength={true} />
+        <div className="flex flex-col gap-[10px] w-full">
+          <Controller
+            name="breederName"
+            control={control}
+            rules={{
+              required: BREEDER_PROFILE_ERROR.NAME_REQUIRED,
+            }}
+            render={({ field }) => (
+              <Input placeholder="브리더명(상호명)" {...field} />
+            )}
+          />
+          {errors.breederName && (
+            <ErrorMessage message={errors.breederName.message as string} />
+          )}
+        </div>
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <Textarea
+              placeholder="소개"
+              maxLength={1500}
+              showLength={true}
+              {...field}
+            />
+          )}
+        />
         {/* 위치 선택 */}
-        <LocationSelectDialogTrigger
-          onSubmitLocation={(value: string | null) => {
-            setBreederLocation(value);
-          }}
-          asChild
-        >
-          <Button
-            variant="input"
-            size={undefined}
-            className="!px-[var(--space-16)] !py-[var(--space-12)]"
-          >
-            {breederLocation ? (
-              <span className="text-[#4F3B2E]">{breederLocation}</span>
-            ) : (
-              <span>지역</span>
-            )}
-            {breederLocation && (
-              <DownArrow className="[&_path]:fill-[#4F3B2E]" />
-            )}
-            {!breederLocation && <DownArrow />}
-          </Button>
-        </LocationSelectDialogTrigger>
+        <Controller
+          name="location"
+          control={control}
+          render={() => (
+            <LocationSelectDialogTrigger
+              onSubmitLocation={(value: string | null) => {
+                setValue("location", value);
+              }}
+              asChild
+            >
+              <Button
+                variant="input"
+                size={undefined}
+                className="!px-[var(--space-16)] !py-[var(--space-12)]"
+              >
+                {location ? (
+                  <span className="text-[#4F3B2E]">{location}</span>
+                ) : (
+                  <span>지역</span>
+                )}
+                {location && <DownArrow className="[&_path]:fill-[#4F3B2E]" />}
+                {!location && <DownArrow />}
+              </Button>
+            </LocationSelectDialogTrigger>
+          )}
+        />
         {/* {!breederLocation && <ErrorMessage message={messages[0].text} />} */}
 
         {/* 품종 선택 */}
         <div className="space-y-2.5 w-full">
-          <BreedsSelectDialogTrigger
-            animal={animal!}
-            onSubmitBreeds={setBreeds}
-            asChild
-          >
-            <Button
-              variant="input"
-              size={undefined}
-              className="!px-[var(--space-16)] !py-[var(--space-12)]"
-            >
-              <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
-                {breeds.length > 0 ? (
-                  <span className="text-[#4F3B2E]">{breeds.join("/")}</span>
-                ) : (
-                  <span>품종</span>
-                )}
-              </div>
-              <Arrow className="size-5 text-[#4F3B2E]" />
-            </Button>
-          </BreedsSelectDialogTrigger>
-          {/* {breeds.length === 0 && <ErrorMessage message={messages[2].text} />} */}
+          <Controller
+            name="breeds"
+            control={control}
+            rules={{
+              validate: (value) => {
+                if (!value || value.length === 0) {
+                  return BREEDER_PROFILE_ERROR.BREEDS_REQUIRED;
+                }
+                return true;
+              },
+            }}
+            render={() => (
+              <BreedsSelectDialogTrigger
+                animal={animal!}
+                onSubmitBreeds={(newBreeds) => {
+                  setValue("breeds", newBreeds, { shouldValidate: true });
+                }}
+                asChild
+              >
+                <Button
+                  variant="input"
+                  size={undefined}
+                  className="!px-[var(--space-16)] !py-[var(--space-12)]"
+                >
+                  <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
+                    {breeds.length > 0 ? (
+                      <span className="text-[#4F3B2E]">{breeds.join("/")}</span>
+                    ) : (
+                      <span>품종</span>
+                    )}
+                  </div>
+                  <Arrow className="size-5 text-[#4F3B2E]" />
+                </Button>
+              </BreedsSelectDialogTrigger>
+            )}
+          />
+          {errors.breeds && (
+            <ErrorMessage message={errors.breeds.message as string} />
+          )}
           <div className="text-caption-s text-grayscale-gray5 font-medium">
             최대 다섯 가지 선택할 수 있어요
           </div>
@@ -91,7 +143,18 @@ export default function ProfileBasicInfo({
         <div className="flex flex-col font-semibold justify-center min-w-full relative shrink-0 text-grayscale-gray6 text-body-xs w-min">
           <p className="leading-body-xs">대표 사진</p>
         </div>
-        <ImageEdit maxCount={3} />
+        <Controller
+          name="representativePhotos"
+          control={control}
+          render={() => (
+            <ImageEdit
+              maxCount={3}
+              onFileChange={(files) => {
+                setValue("representativePhotos", files);
+              }}
+            />
+          )}
+        />
         {/* </div> */}
       </div>
       {/* 입양 비용 범위 */}
@@ -99,37 +162,76 @@ export default function ProfileBasicInfo({
         <div className="flex flex-col font-semibold justify-center min-w-full relative shrink-0 text-grayscale-gray6 text-body-xs w-min">
           <p className="leading-body-xs">입양 비용 범위</p>
         </div>
-        <div className="flex gap-3 items-center relative w-full flex-nowrap">
-          <PriceInput
-            placeholder={isCounselMode ? "상담 후 공개" : "0"}
-            className="grow"
-            disabled={isCounselMode}
-            value={isCounselMode ? "" : minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-          />
-          <div className="overflow-hidden relative shrink-0 size-4">
-            <MinusIcon className="size-4" />
+        <div className="flex flex-col gap-[10px] w-full">
+          <div className="flex gap-3 items-center relative w-full flex-nowrap">
+            <Controller
+              name="minPrice"
+              control={control}
+              rules={{
+                validate: (value) => {
+                  if (!isCounselMode && (!value || value.trim() === "")) {
+                    return BREEDER_PROFILE_ERROR.PRICE_REQUIRED;
+                  }
+                  return true;
+                },
+              }}
+              render={({ field }) => (
+                <PriceInput
+                  placeholder={isCounselMode ? "상담 후 공개" : "0"}
+                  className="grow"
+                  disabled={isCounselMode}
+                  value={isCounselMode ? "" : field.value}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                />
+              )}
+            />
+            <div className="overflow-hidden relative shrink-0 size-4">
+              <MinusIcon className="size-4" />
+            </div>
+            <Controller
+              name="maxPrice"
+              control={control}
+              rules={{
+                validate: (value) => {
+                  if (!isCounselMode && (!value || value.trim() === "")) {
+                    return BREEDER_PROFILE_ERROR.PRICE_REQUIRED;
+                  }
+                  return true;
+                },
+              }}
+              render={({ field }) => (
+                <PriceInput
+                  placeholder={isCounselMode ? "상담 후 공개" : "0"}
+                  className="grow"
+                  disabled={isCounselMode}
+                  value={isCounselMode ? "" : field.value}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                />
+              )}
+            />
+            <button
+              onClick={() => {
+                if (!isCounselMode) {
+                  // 상담 후 공개 모드로 전환 시 값 초기화
+                  setValue("minPrice", "", { shouldValidate: true });
+                  setValue("maxPrice", "", { shouldValidate: true });
+                }
+                setValue("isCounselMode", !isCounselMode, {
+                  shouldValidate: true,
+                });
+              }}
+              className="button-after-counsel shrink-0 whitespace-nowrap"
+            >
+              상담 후 공개하기
+            </button>
           </div>
-          <PriceInput
-            placeholder={isCounselMode ? "상담 후 공개" : "0"}
-            className="grow"
-            disabled={isCounselMode}
-            value={isCounselMode ? "" : maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-          />
-          <button
-            onClick={() => {
-              if (!isCounselMode) {
-                // 상담 후 공개 모드로 전환 시 값 초기화
-                setMinPrice("");
-                setMaxPrice("");
-              }
-              setIsCounselMode(!isCounselMode);
-            }}
-            className="button-after-counsel shrink-0 whitespace-nowrap"
-          >
-            상담 후 공개하기
-          </button>
+          {(errors.minPrice || errors.maxPrice) && (
+            <ErrorMessage message={BREEDER_PROFILE_ERROR.PRICE_REQUIRED} />
+          )}
         </div>
       </div>
 

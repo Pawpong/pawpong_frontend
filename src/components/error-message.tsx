@@ -6,7 +6,7 @@ interface ErrorMessageProps {
 
 export default function ErrorMessage({ message }: ErrorMessageProps) {
   return (
-    <div className="flex gap-0.5 text-status-error text-caption-s">
+    <div className="flex gap-0.5 text-status-error-500 text-caption-s">
       <div className="size-3 flex justify-center items-center">
         <ErrorIcon className="h-2.5 w-2.5" />
       </div>

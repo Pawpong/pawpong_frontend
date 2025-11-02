@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Camera from "@/assets/icons/camera.svg";
@@ -8,7 +9,7 @@ import Plus from "@/assets/icons/plus.svg";
 import Female from "@/assets/icons/female.svg";
 import PictureRemove from "@/assets/icons/picture-delete.svg";
 import Image from "next/image";
-import { useMemo, useEffect } from "react";
+import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -16,110 +17,80 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-interface ParentItem {
-  id: string;
-  name: string;
-  birthDate: string;
-  breed: string[];
-  gender: "male" | "female" | null;
-  imagePreview?: string;
-  imageFile?: File;
-}
+import { useFieldArray, useFormContext } from "react-hook-form";
+import type { ProfileFormData } from "@/stores/profile-store";
+import ErrorMessage from "@/components/error-message";
+import { BREEDER_PROFILE_ERROR } from "@/constants/errors/breeder-profile-error";
 
 export default function ParentsInfo({
-  selectedBreeds,
-  parents: externalParents,
-  setParents: setExternalParents,
+  form,
 }: {
-  selectedBreeds: string[];
-  parents: ParentItem[];
-  setParents: (parents: ParentItem[]) => void;
+  form: ReturnType<typeof useFormContext<ProfileFormData>>;
 }) {
-  const defaultParentId = useMemo(() => `parent-default-${Date.now()}`, []);
+  const { control, watch, formState } = form;
+  const { errors } = formState;
+  const selectedBreeds = watch("breeds");
+  const { fields, append, remove, update } = useFieldArray({
+    control,
+    name: "parents",
+  });
 
-  // 외부 parents가 비어있으면 기본 항목 하나로 초기화 (최초 1회만)
   useEffect(() => {
-    if (externalParents.length === 0) {
-      setExternalParents([
-        {
-          id: defaultParentId,
-          name: "",
-          birthDate: "",
-          breed: [],
-          gender: null,
-        },
-      ]);
+    if (fields.length === 0) {
+      append({
+        id: `parent-${Date.now()}-${Math.random()}`,
+        name: "",
+        birthDate: "",
+        breed: [],
+        gender: null,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const parents =
-    externalParents.length > 0
-      ? externalParents
-      : [
-          {
-            id: defaultParentId,
-            name: "",
-            birthDate: "",
-            breed: [],
-            gender: null,
-          },
-        ];
-
-  const setParents = (
-    newParents: ParentItem[] | ((prev: ParentItem[]) => ParentItem[])
-  ) => {
-    if (typeof newParents === "function") {
-      setExternalParents(newParents(parents));
-    } else {
-      setExternalParents(newParents);
-    }
-  };
-
   const addParent = () => {
-    const newParent: ParentItem = {
+    append({
       id: `parent-${Date.now()}-${Math.random()}`,
       name: "",
       birthDate: "",
       breed: [],
       gender: null,
-    };
-    setParents([...parents, newParent]);
+    });
   };
 
-  const removeParent = (id: string) => {
-    setParents(parents.filter((parent) => parent.id !== id));
+  const removeParent = (index: number) => {
+    remove(index);
   };
 
-  const updateParent = (id: string, updates: Partial<ParentItem>) => {
-    setParents(
-      parents.map((parent) =>
-        parent.id === id ? { ...parent, ...updates } : parent
-      )
-    );
+  const updateParent = (
+    index: number,
+    updates: Partial<ProfileFormData["parents"][0]>
+  ) => {
+    const current = fields[index];
+    update(index, { ...current, ...updates });
   };
 
   return (
     <div className="flex flex-col gap-8 items-center w-full">
       {/* 부모 항목들 */}
       <div className="flex flex-col gap-3 items-start w-full">
-        {parents.map((parent, index) => (
+        {fields.map((parent, index) => (
           <div
             key={parent.id}
+            data-parent-index={index}
             className="flex flex-col gap-3 items-start w-full"
           >
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-col font-semibold justify-center relative shrink-0 text-grayscale-gray6 text-body-xs">
                 <p className="leading-body-xs">
-                  {parents.length === 1
+                  {fields.length === 1
                     ? "엄마 · 아빠"
                     : `엄마 · 아빠 ${index + 1}`}
                 </p>
               </div>
-              {parents.length > 1 && (
+              {fields.length > 1 && (
                 <button
-                  onClick={() => removeParent(parent.id)}
+                  onClick={() => removeParent(index)}
                   className="flex gap-1 items-center relative shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
                 >
                   <Trash />
@@ -145,7 +116,7 @@ export default function ParentsInfo({
                       const reader = new FileReader();
                       reader.onload = (event: ProgressEvent<FileReader>) => {
                         if (event.target?.result) {
-                          updateParent(parent.id, {
+                          updateParent(index, {
                             imagePreview: event.target.result as string,
                             imageFile: file,
                           });
@@ -175,7 +146,7 @@ export default function ParentsInfo({
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    updateParent(parent.id, {
+                    updateParent(index, {
                       imagePreview: undefined,
                       imageFile: undefined,
                     });
@@ -188,123 +159,146 @@ export default function ParentsInfo({
             </div>
 
             {/* 이름과 성별 */}
-            <div className="flex gap-3 items-start relative shrink-0 w-full">
-              <Input
-                placeholder="이름"
-                value={parent.name}
-                onChange={(e) =>
-                  updateParent(parent.id, { name: e.target.value })
-                }
-              />
-              <Button
-                variant="maleGender"
-                className={cn(
-                  "bg-white hover:bg-white flex items-center justify-center px-4 py-3 relative rounded-lg shrink-0 size-12 group",
-                  parent.gender === "male" &&
-                    "bg-[var(--color-gender-male-100)] hover:bg-[var(--color-gender-male-100)]"
-                )}
-                onClick={() =>
-                  updateParent(parent.id, {
-                    gender: parent.gender === "male" ? null : "male",
-                  })
-                }
-              >
-                <Male
-                  className={cn(
-                    "size-7 group-hover:[&_path]:fill-gender-male-500",
-                    parent.gender === "male" && "[&_path]:fill-gender-male-500"
-                  )}
+            <div className="flex flex-col gap-[10px] w-full">
+              <div className="flex gap-3 items-start relative shrink-0 w-full">
+                <Input
+                  placeholder="이름"
+                  value={parent.name}
+                  onChange={(e) => {
+                    updateParent(index, { name: e.target.value });
+                    form.trigger(`parents.${index}.name`);
+                  }}
                 />
-              </Button>
-              <Button
-                variant="femaleGender"
-                className={cn(
-                  "bg-white hover:bg-white flex items-center justify-center px-4 py-3 relative rounded-lg shrink-0 size-12 group",
-                  parent.gender === "female" &&
-                    "bg-[var(--color-gender-female-100)] hover:bg-[var(--color-gender-female-100)]"
-                )}
-                onClick={() =>
-                  updateParent(parent.id, {
-                    gender: parent.gender === "female" ? null : "female",
-                  })
-                }
-              >
-                <Female
+                <Button
+                  variant="maleGender"
                   className={cn(
-                    "size-7 group-hover:[&_path]:fill-gender-female-500",
+                    "bg-white hover:bg-white flex items-center justify-center px-4 py-3 relative rounded-lg shrink-0 size-12 group",
+                    parent.gender === "male" &&
+                      "bg-[var(--color-gender-male-100)] hover:bg-[var(--color-gender-male-100)]"
+                  )}
+                  onClick={() =>
+                    updateParent(index, {
+                      gender: parent.gender === "male" ? null : "male",
+                    })
+                  }
+                >
+                  <Male
+                    className={cn(
+                      "size-7 group-hover:[&_path]:fill-gender-male-500",
+                      parent.gender === "male" &&
+                        "[&_path]:fill-gender-male-500"
+                    )}
+                  />
+                </Button>
+                <Button
+                  variant="femaleGender"
+                  className={cn(
+                    "bg-white hover:bg-white flex items-center justify-center px-4 py-3 relative rounded-lg shrink-0 size-12 group",
                     parent.gender === "female" &&
-                      "[&_path]:fill-gender-female-500"
+                      "bg-[var(--color-gender-female-100)] hover:bg-[var(--color-gender-female-100)]"
                   )}
+                  onClick={() =>
+                    updateParent(index, {
+                      gender: parent.gender === "female" ? null : "female",
+                    })
+                  }
+                >
+                  <Female
+                    className={cn(
+                      "size-7 group-hover:[&_path]:fill-gender-female-500",
+                      parent.gender === "female" &&
+                        "[&_path]:fill-gender-female-500"
+                    )}
+                  />
+                </Button>
+              </div>
+              {errors.parents?.[index]?.name && (
+                <ErrorMessage
+                  message={
+                    (errors.parents[index]?.name?.message as string) ||
+                    BREEDER_PROFILE_ERROR.NAME_REQUIRED
+                  }
                 />
-              </Button>
+              )}
             </div>
             <Input
               placeholder="생년월일 (YYYYMMDD)"
               value={parent.birthDate}
               onChange={(e) =>
-                updateParent(parent.id, { birthDate: e.target.value })
+                updateParent(index, { birthDate: e.target.value })
               }
               className="px-[var(--space-16)] py-[var(--space-12)]"
             />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="input"
-                  size={undefined}
-                  className="!px-[var(--space-16)] !py-[var(--space-12)] w-full"
-                  disabled={selectedBreeds.length === 0}
-                  onClick={(e) => {
-                    if (selectedBreeds.length === 0) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }
-                  }}
-                >
-                  <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
-                    {parent.breed.length > 0 ? (
-                      <span className="text-[#4F3B2E]">
-                        {parent.breed.join("/")}
-                      </span>
-                    ) : (
-                      <span className="text-grayscale-gray5">품종</span>
-                    )}
-                  </div>
-                  <Arrow className="size-5 text-[#4F3B2E]" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white p-1 rounded-lg min-w-[353px]"
-                align="start"
-                side="bottom"
-                sideOffset={4}
-                avoidCollisions={false}
-              >
-                {selectedBreeds.length > 0 ? (
-                  selectedBreeds.map((breed) => (
-                    <DropdownMenuItem
-                      key={breed}
-                      className={cn(
-                        "px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
+            <div className="flex flex-col gap-[10px] w-full">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="input"
+                    size={undefined}
+                    className="!px-[var(--space-16)] !py-[var(--space-12)] w-full"
+                    disabled={selectedBreeds.length === 0}
+                    onClick={(e) => {
+                      if (selectedBreeds.length === 0) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }
+                    }}
+                  >
+                    <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
+                      {parent.breed.length > 0 ? (
+                        <span className="text-[#4F3B2E]">
+                          {parent.breed.join("/")}
+                        </span>
+                      ) : (
+                        <span className="text-grayscale-gray5">품종</span>
                       )}
-                      onClick={() => {
-                        updateParent(parent.id, {
-                          breed: parent.breed.includes(breed) ? [] : [breed],
-                        });
-                      }}
-                    >
-                      {breed}
-                    </DropdownMenuItem>
-                  ))
-                ) : (
-                  <div className="px-4 py-2 text-body-s text-grayscale-gray5">
-                    선택된 품종이 없습니다
-                  </div>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                    </div>
+                    <Arrow className="size-5 text-[#4F3B2E]" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white p-1 rounded-lg min-w-[353px]"
+                  align="start"
+                  side="bottom"
+                  sideOffset={4}
+                  avoidCollisions={false}
+                >
+                  {selectedBreeds.length > 0 ? (
+                    selectedBreeds.map((breed) => (
+                      <DropdownMenuItem
+                        key={breed}
+                        className={cn(
+                          "px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
+                        )}
+                        onClick={() => {
+                          updateParent(index, {
+                            breed: parent.breed.includes(breed) ? [] : [breed],
+                          });
+                          form.trigger(`parents.${index}.breed`);
+                        }}
+                      >
+                        {breed}
+                      </DropdownMenuItem>
+                    ))
+                  ) : (
+                    <div className="px-4 py-2 text-body-s text-grayscale-gray5">
+                      선택된 품종이 없습니다
+                    </div>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {errors.parents?.[index]?.breed && (
+                <ErrorMessage
+                  message={
+                    (errors.parents[index]?.breed?.message as string) ||
+                    BREEDER_PROFILE_ERROR.BREEDS_REQUIRED
+                  }
+                />
+              )}
+            </div>
 
             {/* 구분선 (마지막 항목이 아닐 때만) */}
-            {index < parents.length - 1 && (
+            {index < fields.length - 1 && (
               <div className="pt-8 pb-8 w-full -mt-3">
                 <div className="h-px bg-grayscale-gray2 w-full" />
               </div>
