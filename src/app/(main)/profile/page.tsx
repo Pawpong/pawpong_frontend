@@ -64,7 +64,7 @@ export default function ProfilePage() {
         </div>
 
         {/* 수정하기 버튼 */}
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 px-8 w-full max-w-[424px] md:bottom-10 md:left-3/4 md:-translate-x-1/2 md:w-[424px]">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 px-8 w-full max-w-[424px] md:bottom-10 md:left-[calc(50%+20%)] md:-translate-x-1/2 md:w-[424px] md:px-0">
           <Button
             className="bg-status-disabled flex h-12 items-center justify-center min-w-20 px-4 py-3 rounded-lg w-full md:w-[424px]"
             onClick={handleEdit}
