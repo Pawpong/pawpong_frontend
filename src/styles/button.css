@@ -10,4 +10,7 @@
   .button-gender {
     @apply flex items-center justify-center rounded-lg bg-white text-[var(--color-grayscale-gray4)] gap-[var(--space-4)] text-body-s font-medium py-[var(--space-12)] pr-[var(--space-16)] pl-[var(--space-12)] cursor-pointer;
   }
+  .button-edit-default {
+    @apply bg-secondary-500 text-primary-500 disabled:bg-status-disabled disabled:text-grayscale-gray4 text-body-s text-center;
+  }
 }
