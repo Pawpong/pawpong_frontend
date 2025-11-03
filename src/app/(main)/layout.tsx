@@ -6,10 +6,12 @@ import { usePathname } from "next/navigation";
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isProfilePage = pathname === "/profile";
+  const isCounselFormPage = pathname === "/counselform";
+  const useTertiaryVariant = isProfilePage || isCounselFormPage;
 
   return (
     <Suspense>
-      <Gnb variant={isProfilePage ? "tertiary" : "default"} />
+      <Gnb variant={useTertiaryVariant ? "tertiary" : "default"} />
       {children}
     </Suspense>
   );

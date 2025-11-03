@@ -82,11 +82,13 @@ export function isFormEmpty(data: ProfileFormData): boolean {
   ];
   if (basicFields.some(hasValue)) return false;
 
-  // 부모/동물 정보 체크
+  // 부모/동물 정보 체크 (id 필드는 제외)
   const checkArrayItems = (items: unknown[]) =>
     items.some((item) =>
       typeof item === "object" && item !== null
-        ? Object.values(item).some(hasValue)
+        ? Object.entries(item).some(
+            ([key, value]) => key !== "id" && hasValue(value)
+          )
         : false
     );
 

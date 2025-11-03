@@ -253,7 +253,7 @@ export default function ParentsInfo({
                   <Button
                     variant="input"
                     size={undefined}
-                    className="!px-[var(--space-16)] !py-[var(--space-12)] w-full"
+                    className="!px-[var(--space-16)] !py-[var(--space-12)] w-full group"
                     disabled={selectedBreeds.length === 0}
                     onClick={(e) => {
                       if (selectedBreeds.length === 0) {
@@ -271,7 +271,7 @@ export default function ParentsInfo({
                         <span className="text-grayscale-gray5">품종</span>
                       )}
                     </div>
-                    <Arrow className="size-5 text-[#4F3B2E]" />
+                    <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
