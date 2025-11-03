@@ -11,7 +11,7 @@ import Plus from "@/assets/icons/plus.svg";
 import Female from "@/assets/icons/female.svg";
 import PictureRemove from "@/assets/icons/picture-delete.svg";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -33,6 +33,9 @@ export default function BreedingAnimals({
   const { errors } = formState;
   const selectedBreeds = watch("breeds");
   const parents = watch("parents");
+  const [focusedDescriptions, setFocusedDescriptions] = useState<{
+    [key: number]: boolean;
+  }>({});
   const { fields, append, remove, update } = useFieldArray({
     control,
     name: "animals",
@@ -280,8 +283,25 @@ export default function BreedingAnimals({
                     {...field}
                     placeholder="아이의 성격과 특징에 대해 자유롭게 소개해주세요!"
                     maxLength={800}
-                    showLength={true}
+                    showLength={
+                      focusedDescriptions[index] ||
+                      false ||
+                      (descriptionValue || "").length > 0
+                    }
                     currentLength={String(descriptionValue).length}
+                    onFocus={() => {
+                      setFocusedDescriptions((prev) => ({
+                        ...prev,
+                        [index]: true,
+                      }));
+                    }}
+                    onBlur={() => {
+                      setFocusedDescriptions((prev) => ({
+                        ...prev,
+                        [index]: false,
+                      }));
+                      field.onBlur();
+                    }}
                   />
                 )}
               />
@@ -293,7 +313,7 @@ export default function BreedingAnimals({
                     <Button
                       variant="input"
                       size={undefined}
-                      className="!px-[var(--space-16)] !py-[var(--space-12)] w-full"
+                      className="!px-[var(--space-16)] !py-[var(--space-12)] w-full group"
                       disabled={selectedBreeds.length === 0}
                       onClick={(e) => {
                         if (selectedBreeds.length === 0) {
@@ -311,11 +331,11 @@ export default function BreedingAnimals({
                           <span className="text-grayscale-gray5">품종</span>
                         )}
                       </div>
-                      <Arrow className="size-5 text-[#4F3B2E]" />
+                      <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
-                    className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white p-1 rounded-lg min-w-[353px]"
+                    className="w-[var(--radix-dropdown-menu-trigger-width)] rounded-lg min-w-[353px]"
                     align="start"
                     side="bottom"
                     sideOffset={4}
@@ -364,7 +384,7 @@ export default function BreedingAnimals({
                     <Button
                       variant="input"
                       size={undefined}
-                      className="!px-[var(--space-16)] !py-[var(--space-12)] w-full"
+                      className="!px-[var(--space-16)] !py-[var(--space-12)] w-full group"
                     >
                       <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
                         {animal.adoptionStatus ? (
@@ -377,7 +397,7 @@ export default function BreedingAnimals({
                           </span>
                         )}
                       </div>
-                      <Arrow className="size-5 text-[#4F3B2E]" />
+                      <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
@@ -423,7 +443,7 @@ export default function BreedingAnimals({
                   <Button
                     variant="input"
                     size={undefined}
-                    className="!px-[var(--space-16)] !py-[var(--space-12)] w-full"
+                    className="!px-[var(--space-16)] !py-[var(--space-12)] w-full group"
                     disabled={availableParents.length === 0}
                     onClick={(e) => {
                       if (availableParents.length === 0) {
@@ -441,7 +461,7 @@ export default function BreedingAnimals({
                         </span>
                       )}
                     </div>
-                    <Arrow className="size-5 text-[#4F3B2E]" />
+                    <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent

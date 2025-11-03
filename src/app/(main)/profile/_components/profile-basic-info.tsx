@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PriceInput } from "@/components/ui/price-input";
 import { Textarea } from "@/components/ui/textarea";
-import DownArrow from "@/assets/icons/down-arro.svg";
 // import Camera from "@/assets/icons/camera";
 import Camera from "@/assets/icons/camera.svg";
 import Arrow from "@/assets/icons/arrow";
@@ -23,12 +22,14 @@ export default function ProfileBasicInfo({
   form: ReturnType<typeof useFormContext<ProfileFormData>>;
 }) {
   const [animal] = useState<"dog" | "cat">("dog");
+  const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
   const { control, watch, setValue, formState } = form;
   const { errors } = formState;
 
   const breeds = watch("breeds");
   const location = watch("location");
   const isCounselMode = watch("isCounselMode");
+  const descriptionValue = watch("description");
   return (
     <div className="flex flex-col gap-8 items-start w-full">
       <div className="flex flex-col gap-3 items-center w-full">
@@ -58,8 +59,18 @@ export default function ProfileBasicInfo({
             <Textarea
               placeholder="소개"
               maxLength={1500}
-              showLength={true}
+              showLength={
+                isDescriptionFocused || (descriptionValue || "").length > 0
+              }
+              currentLength={String(descriptionValue || "").length}
               {...field}
+              onFocus={() => {
+                setIsDescriptionFocused(true);
+              }}
+              onBlur={() => {
+                setIsDescriptionFocused(false);
+                field.onBlur();
+              }}
             />
           )}
         />
@@ -77,15 +88,14 @@ export default function ProfileBasicInfo({
               <Button
                 variant="input"
                 size={undefined}
-                className="!px-[var(--space-16)] !py-[var(--space-12)]"
+                className="!px-[var(--space-16)] !py-[var(--space-12)] group"
               >
                 {location ? (
                   <span className="text-[#4F3B2E]">{location}</span>
                 ) : (
                   <span>지역</span>
                 )}
-                {location && <DownArrow className="[&_path]:fill-[#4F3B2E]" />}
-                {!location && <DownArrow />}
+                <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
               </Button>
             </LocationSelectDialogTrigger>
           )}
@@ -116,7 +126,7 @@ export default function ProfileBasicInfo({
                 <Button
                   variant="input"
                   size={undefined}
-                  className="!px-[var(--space-16)] !py-[var(--space-12)]"
+                  className="!px-[var(--space-16)] !py-[var(--space-12)] group"
                 >
                   <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
                     {breeds.length > 0 ? (
@@ -125,7 +135,7 @@ export default function ProfileBasicInfo({
                       <span>품종</span>
                     )}
                   </div>
-                  <Arrow className="size-5 text-[#4F3B2E]" />
+                  <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
                 </Button>
               </BreedsSelectDialogTrigger>
             )}
