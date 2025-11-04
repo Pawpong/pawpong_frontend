@@ -13,19 +13,20 @@ import Arrow from "@/assets/icons/arrow";
 import SmallDot from "@/assets/icons/small-dot.svg";
 import { useForm, FormProvider, Controller, useWatch } from "react-hook-form";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import LeftArrow from "@/assets/icons/left-arrow.svg";
+import useNavigationGuard from "@/hooks/use-navigation-guard";
 import {
   useCounselFormStore,
   type CounselFormData,
 } from "@/stores/counsel-form-store";
 import { useToast } from "@/hooks/use-toast";
-import { isFormComplete } from "@/utils/counsel-form-validation";
+import { isFormComplete, isFormEmpty } from "@/utils/counsel-form-validation";
+import ExitConfirmDialog from "@/components/exit-confirmation-dialog";
+import { useNavigationGuardContext } from "@/contexts/navigation-guard-context";
 
 export default function CounselFormPage() {
-  const router = useRouter();
   const isMdUp = useBreakpoint("md");
   const { toast } = useToast();
   const { setCounselFormData, counselFormData } = useCounselFormStore();
@@ -65,6 +66,30 @@ export default function CounselFormPage() {
   const formValues = useWatch({ control: form.control });
   const data = formValues || form.getValues();
   const isDisabled = !isFormComplete(data as CounselFormData);
+  const hasFormData = !isFormEmpty(data as CounselFormData);
+
+  // 네비게이션 가드 훅 사용
+  const {
+    showDialog: showNavigationDialog,
+    guardNavigation,
+    confirmNavigation: handleNavigationConfirm,
+    cancelNavigation: handleNavigationCancel,
+  } = useNavigationGuard({
+    hasData: hasFormData,
+  });
+
+  // Context에 guardNavigation 등록
+  const { setGuardNavigation } = useNavigationGuardContext() || {};
+  useEffect(() => {
+    if (setGuardNavigation) {
+      setGuardNavigation(guardNavigation);
+    }
+    return () => {
+      if (setGuardNavigation) {
+        setGuardNavigation(undefined);
+      }
+    };
+  }, [guardNavigation, setGuardNavigation]);
 
   const handleSubmit = async () => {
     const isValid = await form.trigger();
@@ -89,20 +114,19 @@ export default function CounselFormPage() {
   return (
     <FormProvider {...form}>
       <div className="sticky top-0 z-10 w-full py-6 bg-tertiary-500-basic">
-        <button
-          onClick={() => router.back()}
-          className="bg-primary-500-basic size-9 flex gap-2.5 items-center justify-center rounded-lg hover:bg-tertiary-600"
-        >
-          <LeftArrow />
-        </button>
+        <ExitConfirmDialog hasData={hasFormData}>
+          <button className="bg-primary-500-basic size-9 flex gap-2.5 items-center justify-center rounded-lg hover:bg-tertiary-600">
+            <LeftArrow />
+          </button>
+        </ExitConfirmDialog>
       </div>
       <div className="min-h-screen flex w-full flex-col md:flex-row">
         {/* 왼쪽 영역: md 이상에서만 표시 (배경 여백) */}
         {isMdUp && <div className="md:w-1/2" />}
 
         <div className="w-full md:w-1/2 flex flex-col">
-          <div className="flex w-full flex-col items-center pb-20 md:pb-24 px-5 md:px-4 lg:px-0.5">
-            <div className="flex flex-col gap-12 md:gap-8 w-full max-w-[648px]">
+          <div className="flex w-full flex-col items-center pb-20 md:pb-24  md:px-4 lg:px-0.5">
+            <div className="flex flex-col gap-12 md:gap-8 w-full">
               {/* 개인정보 동의 섹션 */}
               <div className="flex flex-col gap-3 items-start w-full">
                 <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
@@ -574,6 +598,21 @@ export default function CounselFormPage() {
           </div>
         </div>
       </div>
+
+      {/* GNB 네비게이션 이탈 모달 */}
+      {showNavigationDialog && (
+        <ExitConfirmDialog
+          hasData={hasFormData}
+          onConfirm={handleNavigationConfirm}
+          onCancel={handleNavigationCancel}
+          open={showNavigationDialog}
+          onOpenChange={(open) => {
+            if (!open) {
+              handleNavigationCancel();
+            }
+          }}
+        />
+      )}
     </FormProvider>
   );
 }
