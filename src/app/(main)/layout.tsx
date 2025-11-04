@@ -2,6 +2,7 @@
 import Gnb from "@/components/gnb/gnb";
 import { Suspense } from "react";
 import { usePathname } from "next/navigation";
+import { NavigationGuardProvider } from "@/contexts/navigation-guard-context";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -11,8 +12,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <Suspense>
-      <Gnb variant={useTertiaryVariant ? "tertiary" : "default"} />
-      {children}
+      <NavigationGuardProvider>
+        <Gnb variant={useTertiaryVariant ? "tertiary" : "default"} />
+        {children}
+      </NavigationGuardProvider>
     </Suspense>
   );
 }
