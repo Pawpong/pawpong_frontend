@@ -4,6 +4,7 @@ import LevelBadge from "@/components/level-badge";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Pencil from "@/assets/icons/pencil.svg";
+import ReviewDialog from "./review-dialog";
 
 interface ApplicationListItemProps {
   breederId: string;
@@ -15,6 +16,7 @@ interface ApplicationListItemProps {
 }
 
 export default function ApplicationListItem({
+  breederId,
   breederName,
   breederLevel,
   applicationDate,
@@ -53,28 +55,46 @@ export default function ApplicationListItem({
             {applicationDate}
           </p>
           {/* 후기 작성 버튼 */}
-          <Button
-            variant="ghost"
-            className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 md:hidden"
+          <ReviewDialog
+            breederId={breederId}
+            breederName={breederName}
+            breederLevel={breederLevel}
+            applicationDate={applicationDate}
+            profileImage={profileImage}
+            animalType={animalType}
           >
-            <span className="text-body-xs font-normal text-grayscale-gray6">
-              후기 작성
-            </span>
-            <Pencil className="size-4" />
-          </Button>
+            <Button
+              variant="ghost"
+              className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 md:hidden"
+            >
+              <span className="text-body-xs font-normal text-grayscale-gray6">
+                후기 작성
+              </span>
+              <Pencil className="size-4" />
+            </Button>
+          </ReviewDialog>
         </div>
       </div>
 
       {/* 후기 작성 버튼 (데스크톱) */}
-      <Button
-        variant="ghost"
-        className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 hidden md:flex"
+      <ReviewDialog
+        breederId={breederId}
+        breederName={breederName}
+        breederLevel={breederLevel}
+        applicationDate={applicationDate}
+        profileImage={profileImage}
+        animalType={animalType}
       >
-        <span className="text-body-xs font-normal text-grayscale-gray6">
-          후기 작성
-        </span>
-        <Pencil className="size-4" />
-      </Button>
+        <Button
+          variant="ghost"
+          className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 hidden md:flex"
+        >
+          <span className="text-body-xs font-normal text-grayscale-gray6">
+            후기 작성
+          </span>
+          <Pencil className="size-4" />
+        </Button>
+      </ReviewDialog>
     </div>
   );
 }

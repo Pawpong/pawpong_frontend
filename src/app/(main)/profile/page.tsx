@@ -113,7 +113,7 @@ export default function ProfilePage() {
         {isMdUp && <div className="md:w-1/2" />}
 
         <div className="w-full md:w-1/2 flex flex-col">
-          <div className="flex flex-col gap-8 md:gap-20 items-center pb-20 py-14 md:px-4 px-5 lg:px-0.5 ">
+          <div className="flex flex-col gap-8 md:gap-20 items-center pb-20 py-14  ">
             {/* 프로필 기본 정보 */}
             <ProfileBasicInfo form={form} />
             {/* 엄마 아빠 정보 */}

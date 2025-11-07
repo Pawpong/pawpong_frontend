@@ -121,8 +121,8 @@
   /* Primary Colors */
   /* Primary Colors */
   --color-primary-500-basic: #f6f6ea;
-  --color-primary-500: oklch(44.1% 0.075 60.3);
-  --color-primary-600: oklch(37.2% 0.068 61.1);
+  --color-primary-500: #4f3b2e;
+  --color-primary-600: #3f2f25;
 
   /* Secondary Colors */
   --color-secondary-100: oklch(91.7% 0.071 259.9);
@@ -691,5 +691,43 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* 스크롤바 스타일 커스터마이징 */
+@layer utilities {
+  .scrollbar-custom {
+    scrollbar-gutter: stable;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: var(--color-grayscale-gray2, #e1e1e1);
+    border-radius: 0.625rem;
+    border-top: 0.25rem solid transparent;
+    border-right: 0.25rem solid transparent;
+    border-bottom: 0.25rem solid transparent;
+    border-left: 0.125rem solid transparent;
+    background-clip: padding-box;
+    min-height: 40px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background: var(--color-grayscale-gray3, #cccccc);
+    background-clip: padding-box;
+  }
+
+  /* Firefox */
+  .scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-grayscale-gray2, #e1e1e1) transparent;
   }
 }

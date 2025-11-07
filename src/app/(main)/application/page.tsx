@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import ApplicationListItem from "./_components/application-list-item";
 import DownArrow from "@/assets/icons/long-down-arrow.svg";
 import { useApplications } from "./_hooks/use-applications";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
 
 const ApplicationPage = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useApplications();
-
-  // 모든 페이지의 데이터를 하나의 배열로 합치기
   const allApplications = data?.pages.flatMap((page) => page.data) ?? [];
+  const isMdUp = useBreakpoint("md");
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -54,7 +54,7 @@ const ApplicationPage = () => {
               {allApplications.map((item, index) => (
                 <div key={item.breederId} className="flex flex-col">
                   <ApplicationListItem {...item} />
-                  {index !== allApplications.length - 1 && (
+                  {(isMdUp ? index !== allApplications.length - 1 : true) && (
                     <Separator className="mt-7" />
                   )}
                 </div>
