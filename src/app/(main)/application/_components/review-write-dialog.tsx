@@ -10,8 +10,8 @@ import {
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import LevelBadge from "@/components/level-badge";
-import Image from "next/image";
+import ProfileImageWithBadge from "@/components/breeder/profile-image-with-badge";
+import BreederInfo from "@/components/breeder/breeder-info";
 import RightArrow from "@/assets/icons/right-arrow.svg";
 import Close from "@/assets/icons/close";
 import { cn } from "@/lib/utils";
@@ -69,35 +69,18 @@ export default function ReviewWriteDialog({
           {/* 브리더 정보 */}
           <div className="flex items-center justify-between w-full">
             <div className="flex gap-5 items-center grow">
-              {/* 프로필 이미지 */}
-              <div className="relative shrink-0 size-[68px] rounded-lg overflow-hidden">
-                <Image
-                  src={profileImage}
-                  alt={breederName}
-                  width={68}
-                  height={68}
-                  className="object-cover w-full h-full"
-                />
-                {/* 동물 타입 배지 */}
-                <div className="absolute bottom-0 left-0 right-0 bg-[var(--color-grayscale-gray1)] flex items-center justify-center py-1.5 px-1.5">
-                  <p className="text-caption font-medium text-grayscale-gray6 text-center">
-                    {animalType === "cat" ? "고양이" : "강아지"}
-                  </p>
-                </div>
-              </div>
-
-              {/* 브리더 정보 */}
-              <div className="flex flex-col gap-3 items-start grow">
-                <div className="flex gap-2 items-center">
-                  <p className="text-body-l font-semibold text-primary w-[70px]">
-                    {breederName}
-                  </p>
-                  <LevelBadge level={breederLevel} />
-                </div>
-                <p className="text-body-s font-normal text-grayscale-gray5 whitespace-nowrap">
-                  {applicationDate}
-                </p>
-              </div>
+              <ProfileImageWithBadge
+                src={profileImage}
+                alt={breederName}
+                animalType={animalType}
+                size={68}
+              />
+              <BreederInfo
+                breederName={breederName}
+                breederLevel={breederLevel}
+                applicationDate={applicationDate}
+                className="gap-3"
+              />
             </div>
             <Button className="gap-1 text-grayscale-gray5 text-body-xs h-auto p-0 has-[>svg]:px-0 hover:bg-transparent">
               <span>보기</span>
