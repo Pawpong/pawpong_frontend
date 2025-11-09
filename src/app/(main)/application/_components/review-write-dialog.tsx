@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -35,11 +36,19 @@ export default function ReviewWriteDialog({
   profileImage,
   animalType,
 }: ReviewWriteDialogProps) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"상담 후기" | "입양 후기">(
     "상담 후기"
   );
   const [reviewText, setReviewText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+
+  const handleSubmit = () => {
+    // TODO: 후기 작성 API 호출
+    // API 호출 후 다이얼로그 닫고 /myapplication으로 이동
+    onOpenChange(false);
+    router.push("/myapplication");
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -172,7 +181,9 @@ export default function ReviewWriteDialog({
 
         {/* 하단 버튼 */}
         <div className="bg-white flex gap-2.5 items-start justify-end overflow-clip pb-4 pt-4 px-5 md:pb-6 md:pt-4 md:px-6 shrink-0">
-          <button className="button-brown">후기 작성하기</button>
+          <button className="button-brown" onClick={handleSubmit}>
+            후기 작성하기
+          </button>
         </div>
       </DialogContent>
     </Dialog>
