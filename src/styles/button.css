@@ -14,6 +14,6 @@
     @apply bg-secondary-500 text-primary-500 disabled:bg-status-disabled disabled:text-grayscale-gray4 text-body-s text-center;
   }
   .button-brown {
-    @apply bg-primary-500 text-white text-body-s text-center rounded-md py-2 px-4 gap-1 items-center cursor-pointer hover:bg-primary-600;
+    @apply bg-primary-500 min-w-[4.5rem] text-white text-body-xs text-center rounded-md py-2 px-4 gap-1 items-center cursor-pointer hover:bg-primary-600;
   }
 }

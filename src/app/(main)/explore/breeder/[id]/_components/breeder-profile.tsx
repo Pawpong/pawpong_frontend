@@ -15,13 +15,13 @@ export default function BreederProfile({
 }) {
   return (
     <div className="flex gap-4 lg:w-51 lg:flex-col lg:gap-8">
-      <div className="size-33 md:size-40 lg:w-full aspect-square">
+      <div className="w-[8.25rem] h-[8.25rem] md:w-[10rem] md:h-[10rem] lg:w-[12.75rem] lg:h-[12.75rem] rounded-lg overflow-hidden shrink-0">
         <Image
           src={avatarUrl}
           alt={nickname}
-          width={132}
-          height={132}
-          className="object-cover w-full h-full rounded-lg"
+          width={204}
+          height={204}
+          className="object-cover w-full h-full rounded-[0.452rem]"
         />
       </div>
       <div className="flex-1 space-y-4 flex flex-col md:justify-between">
@@ -29,7 +29,7 @@ export default function BreederProfile({
           <span className="text-heading-3 text-primary font-semibold">
             {nickname}
           </span>
-          <LevelBadge level={level} className="" />
+          <LevelBadge level={level} />
         </div>
         <div className="space-y-3">
           <div className="text-body-s mb-2 text-grayscale-gray5">
@@ -40,7 +40,7 @@ export default function BreederProfile({
             {breeds.map((breed) => (
               <div
                 key={breed}
-                className="bg-tertiary py-1.5 px-2.5 rounded-[--spacing(1)] text-medium text-body-xs text-primary"
+                className="bg-tertiary-500 py-1.5 px-2.5 rounded-[--spacing(1)] text-medium text-body-xs text-primary"
               >
                 {breed}
               </div>

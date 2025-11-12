@@ -145,8 +145,8 @@
   --color-status-error-100: oklch(94.6% 0.032 22.4);
   --color-status-warning-500: oklch(74.6% 0.183 65.7);
   --color-status-warning-100: oklch(93.5% 0.045 78.3);
-  --color-status-success-500: oklch(55.9% 0.154 230.9);
-  --color-status-success-100: oklch(91.7% 0.071 259.9);
+  --color-status-success-500: #005df9;
+  --color-status-success-100: #d9ebff;
 
   /* Grayscale Colors */
   --color-grayscale-black: oklch(23.5% 0 0);
@@ -184,7 +184,7 @@
   --Typo-Size-Heading-3: 24px;
   --Typo-Size-Body-L: 20px;
   --Typo-Size-Body-M: 16px;
-  --Typo-Size-Body-S: 16px;
+  --Typo-Size-Body-S: 14px;
   --Typo-Size-Body-XS: 12px;
   --Typo-Size-Caption: 12px;
 
@@ -228,7 +228,7 @@
   --typo-size-heading3-tablet: 20px;
   --typo-size-body-l-tablet: 20px;
   --typo-size-body-m-tablet: 18px;
-  --typo-size-body-s-tablet: 14px;
+  --typo-size-body-s-tablet: 16px;
   --typo-size-body-xs-tablet: 14px;
   --typo-size-caption-tablet: 12px;
 
@@ -248,7 +248,7 @@
   --typo-size-heading1-desktop: 28px;
   --typo-size-heading2-desktop: 24px;
   --typo-size-heading3-desktop: 18px;
-  --typo-size-body-l-desktop: 18px;
+  --typo-size-body-l-desktop: 20px;
   --typo-size-body-m-desktop: 18px;
   --typo-size-body-s-desktop: 16px;
   --typo-size-body-xs-desktop: 14px;
@@ -352,7 +352,7 @@
       --Typo-Size-Heading-3: 20px;
       --Typo-Size-Body-L: 20px;
       --Typo-Size-Body-M: 18px;
-      --Typo-Size-Body-S: 14px;
+      --Typo-Size-Body-S: 16px;
       --Typo-Size-Body-XS: 12px;
       --Typo-Size-Caption: 12px;
 
