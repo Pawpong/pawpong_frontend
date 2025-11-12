@@ -4,7 +4,7 @@ import { useState } from "react";
 import SirenMuted from "@/assets/icons/siren-muted";
 import { Button } from "@/components/ui/button";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
-import ReportDialog from "./report-dialog";
+import ReportDialog from "@/components/report-dialog/report-dialog";
 
 export default function Review({
   data,
@@ -49,6 +49,7 @@ export default function Review({
       <ReportDialog
         open={isReportDialogOpen}
         onOpenChange={setIsReportDialogOpen}
+        type="review"
       />
     </>
   );

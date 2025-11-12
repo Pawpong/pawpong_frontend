@@ -2,9 +2,11 @@ export interface ReportReason {
   label: string;
   value: string;
 }
-export const reportTitle = "후기를 신고할까요?";
+
 export const reportDescription =
   "신고된 내용은 빠르게 검토해서 조치하겠습니다.";
+
+export const reportTitle = "후기를 신고할까요?";
 export const reportReasons: ReportReason[] = [
   {
     label: "허위 사실이나 과장된 내용을 포함하고 있어요.",
