@@ -12,10 +12,12 @@ import FilterTitle from "./filter-title";
 import MinimizeButton from "./minimize-button";
 import MoreButton from "./more-button";
 
-const levelFilterItems = [
-  { id: 1, name: "뉴 New" },
-  { id: 2, name: "엘리트 Elite" },
+// 하드코딩된 브리더 레벨 데이터 (더보기 전까지는 API 호출 안함)
+const BREEDER_LEVELS = [
+  { value: "elite", label: "엘리트", description: "인증된 전문 브리더" },
+  { value: "new", label: "뉴", description: "신규 브리더" },
 ];
+
 export default function LevelFilter() {
   // 스토어에서 상태와 액션을 가져옵니다.
   const activeFilters = useFilterStore((state) => state.activeFilters);
@@ -35,14 +37,14 @@ export default function LevelFilter() {
       </FilterHeader>
       <FilterContent>
         <FilterList>
-          {levelFilterItems.map((item) => (
+          {BREEDER_LEVELS.map((level) => (
             <FilterListItem
-              key={item.id}
+              key={level.value}
               // 스토어 상태와 액션을 자식 컴포넌트에 연결합니다.
-              checked={activeFilters.includes(item.name)}
-              onCheckedChange={() => toggleActiveFilter(item.name)}
+              checked={activeFilters.includes(level.label)}
+              onCheckedChange={() => toggleActiveFilter(level.label)}
             >
-              {item.name}
+              {level.label}
             </FilterListItem>
           ))}
         </FilterList>

@@ -47,9 +47,13 @@ interface FilterState {
   tempSelectedLeaves: string[];
   selectionPath: Filter[];
 
+  // API에서 가져온 필터 데이터 (모달용)
+  currentRootFilters: Filter[];
+
   // 액션 함수들
   initModalState: () => void; // 모달이 열릴 때 상태 초기화
   resetModalState: () => void; // animal 변경 시 모달 상태 리셋
+  setRootFilters: (filters: Filter[]) => void; // API 필터 데이터 설정
 
   selectPath: (item: Filter, columnIndex: number) => void;
   selectTempLeaf: (
@@ -73,10 +77,14 @@ export const useFilterStore = create<FilterState>((set, get) => ({
   activeFilters: [],
   tempSelectedLeaves: [],
   selectionPath: [],
+  currentRootFilters: [], // API 필터 데이터
   animal: "cat", // 기본값 설정
 
   // --- 액션 ---
   setAnimal: (animal) => set({ animal }),
+
+  setRootFilters: (filters) => set({ currentRootFilters: filters }),
+
   // --- 액션 ---
   initModalState: () => {
     // 모달이 열릴 때, 현재 적용된 필터를 임시 선택 상태로 복사
@@ -102,7 +110,10 @@ export const useFilterStore = create<FilterState>((set, get) => ({
   },
 
   selectTempLeaf: (itemLabel, checked, animal) => {
-    const rootFilters = filterData[animal];
+    // API 필터가 있으면 사용, 없으면 하드코딩된 데이터 사용 (사이드바용)
+    const rootFilters = get().currentRootFilters.length > 0
+      ? get().currentRootFilters
+      : filterData[animal];
     const { parent, childrenLabels } = findParentAndChildren(
       itemLabel,
       rootFilters

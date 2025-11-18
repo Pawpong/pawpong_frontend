@@ -16,11 +16,17 @@ import {
   LargeDialogTrigger,
 } from "@/components/ui/large-dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { catBreedFilters, dogBreedFilters } from "@/constants/filter";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { cn } from "@/lib/utils";
 import { Animal } from "@/stores/signup-form-store";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getBreeds } from "@/lib/breeds";
+
+interface BreedCategory {
+  category: string;
+  categoryDescription?: string;
+  breeds: string[];
+}
 
 export default function BreedsSelectDialogTrigger({
   animal,
@@ -31,15 +37,49 @@ export default function BreedsSelectDialogTrigger({
   onSubmitBreeds: (value: string[]) => void;
 } & React.ComponentProps<typeof DialogTrigger>) {
   const isMobile = useBreakpoint("md") === false;
-  const animalFilter = animal === "dog" ? dogBreedFilters : catBreedFilters;
-  const [selectedGroup, setSelectedGroup] = useState(
-    animalFilter.children![0].label
-  );
+  const [categories, setCategories] = useState<BreedCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedGroup, setSelectedGroup] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
+
+  // API에서 품종 데이터 가져오기
+  useEffect(() => {
+    const fetchBreeds = async () => {
+      try {
+        setLoading(true);
+        const response = await getBreeds(animal);
+        setCategories(response.categories);
+        if (response.categories.length > 0) {
+          setSelectedGroup(response.categories[0].category);
+        }
+      } catch (error) {
+        console.error("품종 데이터 로딩 실패:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBreeds();
+  }, [animal]);
 
   const clearActiveFilters = () => {
     setSelected([]);
   };
+
+  if (loading) {
+    return (
+      <LargeDialog>
+        <LargeDialogTrigger {...props} />
+        <LargeDialogContent className="h-full md:size-150">
+          <div className="flex items-center justify-center h-full">
+            <p className="text-grayscale-gray5">품종 데이터 로딩 중...</p>
+          </div>
+        </LargeDialogContent>
+      </LargeDialog>
+    );
+  }
+
+  const currentCategory = categories.find((cat) => cat.category === selectedGroup);
 
   return (
     <LargeDialog>
@@ -59,22 +99,22 @@ export default function BreedsSelectDialogTrigger({
           {isMobile && (
             <div className="overflow-auto w-full">
               <div className="flex gap-4 px-padding">
-                {animalFilter.children!.map(({ label }) => (
+                {categories.map(({ category }) => (
                   <Button
                     variant={"ghost"}
-                    key={label}
+                    key={category}
                     className={cn(
                       "flex-col gap-2 p-0 text-grayscale-gray5 font-semibold text-body-m",
                       {
-                        "text-primary": selectedGroup === label,
+                        "text-primary": selectedGroup === category,
                       }
                     )}
-                    onClick={() => setSelectedGroup(label)}
+                    onClick={() => setSelectedGroup(category)}
                   >
-                    {label}
+                    {category}
                     <div
                       className={cn("h-0.5 w-full bg-transparent", {
-                        "bg-primary": selectedGroup === label,
+                        "bg-primary": selectedGroup === category,
                       })}
                     />
                   </Button>
@@ -88,18 +128,18 @@ export default function BreedsSelectDialogTrigger({
           {!isMobile && (
             <ScrollArea className="h-full border-r">
               <div className="flex-shrink-0 py-2 pl-3.5 pr-3">
-                {animalFilter.children!.map(({ label }) => (
+                {categories.map(({ category }) => (
                   <Button
-                    key={label}
+                    key={category}
                     variant={"category"}
                     className={cn("py-2 px-2.5", {
-                      "bg-[#F6F6EA]": selectedGroup === label,
+                      "bg-[#F6F6EA]": selectedGroup === category,
                     })}
                     onClick={() => {
-                      setSelectedGroup(label);
+                      setSelectedGroup(category);
                     }}
                   >
-                    {label}
+                    {category}
                   </Button>
                 ))}
               </div>
@@ -109,38 +149,32 @@ export default function BreedsSelectDialogTrigger({
             <div
               className={cn("flex-shrink-0 py-2 pl-3.5 pr-3", " pl-5 pr-3.5")}
             >
-              {animalFilter
-                .children!.find((item) => item.label === selectedGroup)!
-                .children!.map((childItem) => (
-                  <Label
-                    key={childItem.label}
-                    className="py-2 pr-2.5 gap-2 text-body-xs text-grayscale-gray6 flex items-center"
-                  >
-                    <Checkbox
-                      checked={selected.includes(childItem.label)}
-                      onCheckedChange={() =>
-                        setSelected((prev) => {
-                          const isSelected = prev.includes(childItem.label);
-                          if (isSelected) {
-                            // 이미 선택된 항목이면 제거
-                            return prev.filter(
-                              (item) => item !== childItem.label
-                            );
-                          } else {
-                            // 새로 선택하려는 항목이 5개 이상이면 막기
-                            if (prev.length >= 5) {
-                              // alert 대신 그냥 무시 가능
-                              return prev;
-                            }
-                            return [...prev, childItem.label];
+              {currentCategory?.breeds.map((breed) => (
+                <Label
+                  key={breed}
+                  className="py-2 pr-2.5 gap-2 text-body-xs text-grayscale-gray6 flex items-center"
+                >
+                  <Checkbox
+                    checked={selected.includes(breed)}
+                    onCheckedChange={() =>
+                      setSelected((prev) => {
+                        const isSelected = prev.includes(breed);
+                        if (isSelected) {
+                          // 이미 선택된 항목이면 제거
+                          return prev.filter((item) => item !== breed);
+                        } else {
+                          // 새로 선택하려는 항목이 5개 이상이면 막기
+                          if (prev.length >= 5) {
+                            return prev;
                           }
-                        })
-                      }
-                    />
-
-                    <div className="whitespace-wrap">{childItem.label}</div>
-                  </Label>
-                ))}
+                          return [...prev, breed];
+                        }
+                      })
+                    }
+                  />
+                  <div className="whitespace-wrap">{breed}</div>
+                </Label>
+              ))}
             </div>
           </ScrollArea>
         </div>

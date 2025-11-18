@@ -1,4 +1,4 @@
-"use client"; // 1. 클라이언트 컴포넌트로 변경
+"use client";
 
 import { filter } from "@/constants/filter";
 import { useSegment } from "@/hooks/use-segment";
@@ -12,16 +12,16 @@ import FilterTitle from "./filter-title";
 import MinimizeButton from "./minimize-button";
 import MoreButton from "./more-button";
 
-const locationFilterItems = [
-  { id: 1, name: "경기도" },
-  { id: 2, name: "인천광역시" },
-  { id: 3, name: "강원도" },
-  { id: 4, name: "전라북도" },
-  { id: 5, name: "충청북도" },
+// 인기 지역 (하드코딩)
+const TOP_LOCATIONS = [
+  "서울특별시",
+  "부산광역시",
+  "경기도",
+  "인천광역시",
+  "대구광역시",
 ];
 
 export default function LocationFilter() {
-  // 3. 스토어에서 상태와 액션을 가져옵니다.
   const activeFilters = useFilterStore((state) => state.activeFilters);
   const toggleActiveFilter = useFilterStore(
     (state) => state.toggleActiveFilter
@@ -39,14 +39,13 @@ export default function LocationFilter() {
       </FilterHeader>
       <FilterContent>
         <FilterList>
-          {locationFilterItems.map((item) => (
+          {TOP_LOCATIONS.map((location, index) => (
             <FilterListItem
-              key={item.id}
-              // 4. 스토어 상태와 액션을 자식 컴포넌트에 연결합니다.
-              checked={activeFilters.includes(item.name)}
-              onCheckedChange={() => toggleActiveFilter(item.name)}
+              key={`${location}-${index}`}
+              checked={activeFilters.includes(location)}
+              onCheckedChange={() => toggleActiveFilter(location)}
             >
-              {item.name}
+              {location}
             </FilterListItem>
           ))}
         </FilterList>

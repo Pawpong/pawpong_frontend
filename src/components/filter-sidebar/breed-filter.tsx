@@ -1,6 +1,4 @@
-// components/filter/breed-filter.tsx
-
-"use client"; // Zustand hook을 사용하기 위해 client 컴포넌트로 변경
+"use client";
 
 import { filter } from "@/constants/filter";
 import { useSegment } from "@/hooks/use-segment";
@@ -14,16 +12,25 @@ import FilterTitle from "./filter-title";
 import MinimizeButton from "./minimize-button";
 import MoreButton from "./more-button";
 
-const breedFilterItems = [
-  { id: 1, name: "시베리안(트래디셔널, 네바마스커레이드)" },
-  { id: 2, name: "브리티쉬 롱헤어" },
-  { id: 3, name: "메인쿤" },
-  { id: 4, name: "노르웨이숲" },
-  { id: 5, name: "랙돌" },
+// 강아지 인기 품종 (하드코딩)
+const TOP_DOG_BREEDS = [
+  "말티즈",
+  "푸들",
+  "웰시코기",
+  "시바견",
+  "골든 리트리버",
+];
+
+// 고양이 인기 품종 (하드코딩)
+const TOP_CAT_BREEDS = [
+  "시베리안",
+  "브리티쉬 롱헤어",
+  "아비시니안",
+  "아메리칸 숏헤어",
+  "뱅갈",
 ];
 
 export default function BreedFilter() {
-  // 2. 스토어에서 상태와 액션을 가져옵니다.
   const activeFilters = useFilterStore((state) => state.activeFilters);
   const toggleActiveFilter = useFilterStore(
     (state) => state.toggleActiveFilter
@@ -33,6 +40,9 @@ export default function BreedFilter() {
   const animal = (useSegment(1) as "cat" | "dog") || "cat";
   const rootFilters = filter[animal];
 
+  // 동물 타입에 따라 상위 품종 선택
+  const topBreeds = animal === "dog" ? TOP_DOG_BREEDS : TOP_CAT_BREEDS;
+
   return (
     <FilterSection>
       <FilterHeader>
@@ -41,15 +51,13 @@ export default function BreedFilter() {
       </FilterHeader>
       <FilterContent>
         <FilterList>
-          {breedFilterItems.map((item) => (
+          {topBreeds.map((breed, index) => (
             <FilterListItem
-              key={item.id}
-              // 3. 스토어 상태를 기반으로 checked 여부 결정
-              checked={activeFilters.includes(item.name)}
-              // 4. 체크박스 상태 변경 시 스토어 액션 호출
-              onCheckedChange={() => toggleActiveFilter(item.name)}
+              key={`${breed}-${index}`}
+              checked={activeFilters.includes(breed)}
+              onCheckedChange={() => toggleActiveFilter(breed)}
             >
-              {item.name}
+              {breed}
             </FilterListItem>
           ))}
         </FilterList>

@@ -123,6 +123,7 @@ export const exploreBreeders = async (
     // 백엔드 API 스펙에 맞게 요청 데이터 구성
     const requestBody = {
       petType: params.petType || "dog", // 필수 필드, 기본값 'dog'
+      breeds: params.breeds, // 품종 필터
       dogSize: params.dogSize,
       catFurLength: params.catFurLength,
       province: params.province,
