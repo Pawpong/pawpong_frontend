@@ -13,18 +13,11 @@ function createApi(): AxiosInstance {
     timeout: 10000,
   });
 
-  // 요청 인터셉터 (예: Authorization 헤더 자동 삽입)
+  // 요청 인터셉터
+  // HTTP-only 쿠키를 사용하므로 Authorization 헤더 설정 불필요
+  // withCredentials: true로 브라우저가 자동으로 쿠키를 전송함
   instance.interceptors.request.use((config) => {
-    try {
-      // 클라이언트 전용: localStorage에서 토큰 읽기 (서버에서 실행될 때는 건너뜀)
-      if (typeof window !== "undefined") {
-        const token = localStorage.getItem("access_token");
-        if (token && config.headers)
-          config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch {
-      /* silent */
-    }
+    // 필요한 경우 여기에 다른 요청 전처리 로직 추가
     return config;
   });
 

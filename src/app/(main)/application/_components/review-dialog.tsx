@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import ReviewWriteDialog from "./review-write-dialog";
 
 interface ReviewDialogProps {
+  applicationId: string;
   breederId: string;
   breederName: string;
   breederLevel: "elite" | "new";
@@ -34,6 +35,7 @@ interface ReviewDialogProps {
 }
 
 export default function ReviewDialog({
+  applicationId,
   breederName,
   breederLevel,
   applicationDate,
@@ -423,6 +425,7 @@ export default function ReviewDialog({
 
       {/* 후기 작성 다이얼로그 */}
       <ReviewWriteDialog
+        applicationId={applicationId}
         open={showReviewWriteDialog}
         onOpenChange={setShowReviewWriteDialog}
         breederName={breederName}

@@ -9,9 +9,10 @@ import ReportDialog from "@/components/report-dialog/report-dialog";
 
 interface HeaderProps {
   breederNickname: string;
+  breederId?: string;
 }
 
-export default function Header({ breederNickname }: HeaderProps) {
+export default function Header({ breederNickname, breederId }: HeaderProps) {
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
 
   return (
@@ -39,6 +40,7 @@ export default function Header({ breederNickname }: HeaderProps) {
         onOpenChange={setIsReportDialogOpen}
         type="breeder"
         breederNickname={breederNickname}
+        breederId={breederId}
       />
     </>
   );

@@ -7,6 +7,7 @@ import Pencil from "@/assets/icons/pencil.svg";
 import ReviewDialog from "./review-dialog";
 
 interface ApplicationListItemProps {
+  applicationId: string;
   breederId: string;
   breederName: string;
   breederLevel: "elite" | "new";
@@ -16,6 +17,7 @@ interface ApplicationListItemProps {
 }
 
 export default function ApplicationListItem({
+  applicationId,
   breederId,
   breederName,
   breederLevel,
@@ -42,6 +44,7 @@ export default function ApplicationListItem({
           </p>
           {/* 후기 작성 버튼 */}
           <ReviewDialog
+            applicationId={applicationId}
             breederId={breederId}
             breederName={breederName}
             breederLevel={breederLevel}
@@ -64,6 +67,7 @@ export default function ApplicationListItem({
 
       {/* 후기 작성 버튼 (데스크톱) */}
       <ReviewDialog
+        applicationId={applicationId}
         breederId={breederId}
         breederName={breederName}
         breederLevel={breederLevel}

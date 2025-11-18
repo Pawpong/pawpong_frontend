@@ -16,65 +16,47 @@ import BreederLikeButton from "@/components/breeder-list/breader-like-button";
 import AdoptionStatusBadge from "@/components/adoption-status-badge";
 import LevelBadge from "@/components/level-badge";
 import GrayDot from "@/assets/icons/gray-dot.svg";
-import { useSavedStore } from "@/stores/saved-store";
 import BreederList from "@/components/breeder-list/breeder-list";
 import Container from "@/components/ui/container";
 import EmptySavedList from "./empty-saved-list";
-
-// SiteBreederList와 동일한 데이터 사용
-const breederListInfo = [
-  {
-    id: "1",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite" as const,
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "available" as const,
-  },
-  {
-    id: "2",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite" as const,
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "reserved" as const,
-  },
-  {
-    id: "3",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite" as const,
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "completed" as const,
-  },
-  {
-    id: "4",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite" as const,
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "available" as const,
-  },
-];
+import { useFavorites } from "../_hooks/use-favorites";
 
 export default function SavedList() {
-  const { savedBreederIds } = useSavedStore();
+  const { data, isLoading, error } = useFavorites(1, 20);
 
-  const savedBreeders = breederListInfo.filter((breeder) =>
-    savedBreederIds.includes(breeder.id)
-  );
+  if (isLoading) {
+    return (
+      <Container>
+        <div className="flex-1 @container">
+          <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">
+            찜한 브리더
+          </div>
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-grayscale-500">즐겨찾기 목록을 불러오는 중...</div>
+          </div>
+        </div>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <div className="flex-1 @container">
+          <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">
+            찜한 브리더
+          </div>
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-red-500">
+              즐겨찾기 목록을 불러오는 데 실패했습니다.
+            </div>
+          </div>
+        </div>
+      </Container>
+    );
+  }
+
+  const savedBreeders = data?.breeders || [];
 
   return (
     <Container>
@@ -87,7 +69,7 @@ export default function SavedList() {
         ) : (
           <BreederList>
             {savedBreeders.map((breeder, index) => (
-              <Breeder key={index}>
+              <Breeder key={breeder.id || index}>
                 <BreederProfile>
                   <BreederHeader>
                     <BreederAvatar src={breeder.avatar} />
@@ -112,9 +94,12 @@ export default function SavedList() {
                   </BreederContent>
                 </BreederProfile>
                 <div className="relative">
-                  <BreederImage src="/main-img-sample.png" />
+                  <BreederImage src={breeder.image} />
                   <div className="absolute top-0 right-0 p-3">
-                    <BreederLikeButton breederId={breeder.id} />
+                    <BreederLikeButton
+                      breederId={breeder.id}
+                      initialIsFavorited={true}
+                    />
                   </div>
                   <div className="absolute bottom-0 right-0 p-3">
                     <AdoptionStatusBadge status={breeder.status} />

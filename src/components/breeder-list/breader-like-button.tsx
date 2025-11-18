@@ -4,22 +4,29 @@ import Heart from "@/assets/icons/heart.svg";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import HeartFill from "@/assets/icons/heart-fill.svg";
-import { useSavedStore } from "@/stores/saved-store";
+import { useToggleFavorite } from "@/app/(main)/saved/_hooks/use-favorites";
+import { useState } from "react";
 
 interface BreederLikeButtonProps {
   className?: string;
   breederId: string;
+  initialIsFavorited?: boolean;
 }
 
 export default function BreederLikeButton({
   className,
   breederId,
+  initialIsFavorited = false,
 }: BreederLikeButtonProps) {
-  const { isSaved, toggleSaved } = useSavedStore();
-  const isLiked = isSaved(breederId);
+  const [isLiked, setIsLiked] = useState(initialIsFavorited);
+  const { toggle, isLoading } = useToggleFavorite();
 
   const handleClick = () => {
-    toggleSaved(breederId);
+    // 낙관적 업데이트 (Optimistic UI)
+    setIsLiked(!isLiked);
+
+    // API 호출
+    toggle(breederId, isLiked);
   };
 
   return (
@@ -28,6 +35,7 @@ export default function BreederLikeButton({
       size="icon"
       className={cn("text-grayscale-white size-8 ", className)}
       onClick={handleClick}
+      disabled={isLoading}
     >
       {isLiked ? (
         <HeartFill className="size-8 " />

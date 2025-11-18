@@ -25,11 +25,20 @@ import { useToast } from "@/hooks/use-toast";
 import { isFormComplete, isFormEmpty } from "@/utils/counsel-form-validation";
 import ExitConfirmDialog from "@/components/exit-confirmation-dialog";
 import { useNavigationGuardContext } from "@/contexts/navigation-guard-context";
+import { useCreateApplication } from "./_hooks/use-application";
+import { useSearchParams, useRouter } from "next/navigation";
+import type { ApplicationCreateRequest } from "@/lib/application";
 
 export default function CounselFormPage() {
   const isMdUp = useBreakpoint("md");
   const { toast } = useToast();
-  const { setCounselFormData, counselFormData } = useCounselFormStore();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const breederId = searchParams.get("breederId") || "";
+  const petId = searchParams.get("petId") || undefined;
+
+  const { setCounselFormData, counselFormData, clearCounselFormData } = useCounselFormStore();
+  const createApplicationMutation = useCreateApplication();
   const [isIntroductionFocused, setIsIntroductionFocused] = useState(false);
   const [isLivingSpaceFocused, setIsLivingSpaceFocused] = useState(false);
   const [isPreviousPetsFocused, setIsPreviousPetsFocused] = useState(false);
@@ -95,12 +104,60 @@ export default function CounselFormPage() {
     const isValid = await form.trigger();
     const formData = form.getValues();
 
-    if (isValid) {
-      setCounselFormData(formData);
+    if (!isValid) {
+      toast({
+        title: "입력 정보를 확인해주세요.",
+      });
+      return;
+    }
+
+    if (!breederId) {
+      toast({
+        title: "브리더 정보가 없습니다.",
+        description: "브리더 페이지에서 다시 시도해주세요.",
+      });
+      return;
+    }
+
+    // 프론트엔드 폼 데이터를 백엔드 API 요청 형식으로 변환
+    const applicationData: ApplicationCreateRequest = {
+      breederId,
+      petId,
+      privacyConsent: formData.privacyAgreement,
+      selfIntroduction: formData.introduction,
+      familyMembers: formData.familyMembers,
+      allFamilyConsent: formData.familyAgreement,
+      allergyTestInfo: formData.allergyCheck,
+      timeAwayFromHome: formData.awayTime,
+      livingSpaceDescription: formData.livingSpace,
+      previousPetExperience: formData.previousPets,
+      canProvideBasicCare: formData.basicCare,
+      canAffordMedicalExpenses: formData.medicalExpense,
+      neuteringConsent: formData.neuteringAgreement,
+      preferredPetDescription: formData.interestedAnimalDetails || undefined,
+      desiredAdoptionTiming: formData.adoptionTiming || undefined,
+      additionalNotes: formData.additionalMessage || undefined,
+    };
+
+    try {
+      const result = await createApplicationMutation.mutateAsync(applicationData);
+
+      // 성공 시 저장된 폼 데이터 삭제
+      clearCounselFormData();
+
       toast({
         title: "상담 신청이 완료되었습니다.",
+        description: result.message,
       });
-      // TODO: API 호출
+
+      // 신청 목록 페이지로 이동
+      router.push("/myapplication");
+    } catch (error) {
+      console.error("Application submission error:", error);
+      toast({
+        title: "상담 신청에 실패했습니다.",
+        description: error instanceof Error ? error.message : "다시 시도해주세요.",
+      });
     }
   };
 

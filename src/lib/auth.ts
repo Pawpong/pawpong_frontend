@@ -13,6 +13,7 @@ export interface AdopterRegistrationDto {
 /** Breeder DTO */
 export interface BreederRegistrationDto {
   tempId: string;
+  provider: string; // ✅ provider 필드 추가
   email: string;
   name: string;
   phone: string;
@@ -156,6 +157,50 @@ export const completeAdopterRegistration = async (
   }
 };
 
+/** 브리더 서류 업로드 */
+export const uploadBreederDocuments = async (
+  tempId: string,
+  files: { type: string; file: File }[],
+  level: "new" | "elite"
+): Promise<{ documentUrls: string[] }> => {
+  try {
+    const formData = new FormData();
+
+    // 파일들 추가
+    files.forEach(({ file }) => {
+      formData.append("files", file);
+    });
+
+    // 타입들을 JSON 배열 문자열로 변환하여 전송
+    const types = files.map(({ type }) => type);
+    formData.append("types", JSON.stringify(types));
+
+    // 레벨 추가
+    formData.append("level", level);
+
+    const response = await apiClient.post<
+      ApiResponse<{ documentUrls: string[] }>
+    >("/api/auth/upload-breeder-documents", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      params: { tempId }, // ✅ tempId는 query parameter로 전송
+    });
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error("Document upload failed.");
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Document upload error:", error.message);
+      throw error;
+    }
+    throw new Error("Unknown error during document upload.");
+  }
+};
+
 /** 브리더 회원가입 완료 */
 export const completeBreederRegistration = async (
   data: BreederRegistrationDto
@@ -165,6 +210,7 @@ export const completeBreederRegistration = async (
       "/api/auth/social/complete",
       {
         tempId: data.tempId,
+        provider: data.provider, // ✅ provider 추가
         email: data.email,
         name: data.name,
         role: "breeder",

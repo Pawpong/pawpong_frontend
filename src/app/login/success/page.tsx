@@ -16,9 +16,9 @@ export default async function LoginSuccessPage({
 
   console.log("로그인 성공:", { accessToken, refreshToken });
 
-  // Route Handler 호출
+  // Route Handler 호출 (프론트엔드 API 라우트)
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/set-cookie`,
+    `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/auth/set-cookie`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

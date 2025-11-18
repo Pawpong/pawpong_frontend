@@ -1,9 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import {
-  allApplicationMockData,
-  catApplicationMockData,
-  dogApplicationMockData,
-} from "../_mocks/application-mock-data";
+import { getMyApplications, type ApplicationListItemDto } from "@/lib/application";
 
 export interface ApplicationItem {
   breederId: string;
@@ -12,6 +8,10 @@ export interface ApplicationItem {
   applicationDate: string;
   profileImage: string;
   animalType: "cat" | "dog";
+  applicationId: string;
+  petId?: string;
+  petBreed?: string;
+  status: "consultation_pending" | "consultation_completed" | "adoption_approved" | "adoption_rejected";
 }
 
 interface ApplicationsResponse {
@@ -21,30 +21,31 @@ interface ApplicationsResponse {
 
 const PAGE_SIZE = 10;
 
+/**
+ * 백엔드 DTO를 프론트엔드 ApplicationItem으로 변환
+ */
+const mapDtoToApplicationItem = (dto: ApplicationListItemDto): ApplicationItem => ({
+  applicationId: dto.applicationId,
+  breederId: dto.breederId,
+  breederName: dto.breederName,
+  breederLevel: dto.breederLevel,
+  applicationDate: dto.applicationDate,
+  profileImage: dto.profileImage || "/avatar-sample.png",
+  animalType: dto.animalType,
+  petId: dto.petId,
+  petBreed: dto.petBreed,
+  status: dto.status,
+});
+
 const fetchApplications = async (
   page: number,
   animalType?: "cat" | "dog"
 ): Promise<ApplicationsResponse> => {
-  // TODO: API 연동 시 아래 주석 해제
-  // const response = await api.get(`/applications`, {
-  //   params: { page, limit: PAGE_SIZE, animalType },
-  // });
-  // return response.data;
-
-  // 목 데이터
-  const data =
-    animalType === "cat"
-      ? catApplicationMockData
-      : animalType === "dog"
-      ? dogApplicationMockData
-      : allApplicationMockData;
-
-  const startIndex = (page - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
+  const result = await getMyApplications(page, PAGE_SIZE, animalType);
 
   return {
-    data: data.slice(startIndex, endIndex),
-    hasMore: endIndex < data.length,
+    data: result.applications.map(mapDtoToApplicationItem),
+    hasMore: result.pagination.hasNextPage,
   };
 };
 

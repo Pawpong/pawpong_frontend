@@ -1,3 +1,5 @@
+"use client";
+
 import AdoptionStatusBadge from "@/components/adoption-status-badge";
 import BreederDescription from "@/components/breeder-list/breader-description";
 import BreederLikeButton from "@/components/breeder-list/breader-like-button";
@@ -15,69 +17,53 @@ import BreederTags from "@/components/breeder-list/breeder-tags";
 import LevelBadge from "@/components/level-badge";
 import { Button } from "@/components/ui/button";
 import GrayDot from "@/assets/icons/gray-dot.svg";
-
-const breederListInfo: {
-  id: string;
-  avatar: string;
-  name: string;
-  level: "elite" | "new";
-  location: string;
-  price: string;
-  tags: string[];
-  image: string;
-  status: "available" | "reserved" | "completed";
-}[] = [
-  {
-    id: "1",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite",
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "available",
-  },
-  {
-    id: "2",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite",
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "reserved",
-  },
-  {
-    id: "3",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite",
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "completed",
-  },
-  {
-    id: "4",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite",
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "available",
-  },
-];
+import { useBreeders } from "../_hooks/use-breeders";
+import { usePathname } from "next/navigation";
 
 export default function SiteBreederList() {
+  const pathname = usePathname();
+
+  // URL 경로에서 petType 자동 감지
+  const petType = pathname.includes("/cat") ? "cat" : "dog";
+
+  const { data, isLoading, error } = useBreeders({
+    petType, // URL 경로에 따라 자동으로 설정
+    page: 1,
+    limit: 20,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-grayscale-500">브리더 목록을 불러오는 중...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-red-500">
+          브리더 목록을 불러오는 데 실패했습니다.
+        </div>
+      </div>
+    );
+  }
+
+  const breeders = data?.breeders || [];
+
+  if (breeders.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-grayscale-500">브리더가 없습니다.</div>
+      </div>
+    );
+  }
+
   return (
     <BreederList>
-      {breederListInfo.map((breeder, index) => (
-        <Breeder key={index}>
+      {breeders.map((breeder, index) => (
+        <Breeder key={breeder.id || index}>
           <BreederProfile>
             <BreederHeader>
               <BreederAvatar src={breeder.avatar} />
@@ -102,9 +88,12 @@ export default function SiteBreederList() {
             </BreederContent>
           </BreederProfile>
           <div className="relative">
-            <BreederImage src="/main-img-sample.png" />
+            <BreederImage src={breeder.image} />
             <div className="absolute top-0 right-0 p-3">
-              <BreederLikeButton breederId={breeder.id} />
+              <BreederLikeButton
+                breederId={breeder.id}
+                initialIsFavorited={breeder.isFavorited || false}
+              />
             </div>
             <div className="absolute bottom-0 right-0 p-3">
               <AdoptionStatusBadge status={breeder.status} />

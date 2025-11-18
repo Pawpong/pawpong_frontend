@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { useMemo } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import ProfileBasicInfo from "./_components/profile-basic-info";
 import ParentsInfo from "./_components/parents-info";
 import BreedingAnimals from "./_components/breeding-animals";
@@ -16,11 +16,18 @@ import {
   setFormErrors,
   scrollToFirstError,
 } from "@/utils/profile-validation";
+import { useBreederProfile, useUpdateBreederProfile } from "./_hooks/use-breeder-profile";
+import { syncParentPets, syncAvailablePets } from "@/utils/profile-sync";
 
 export default function ProfilePage() {
   const isMdUp = useBreakpoint("md");
-  const { toast } = useToast();
+  const { toast} = useToast();
   const { setProfileData, profileData } = useProfileStore();
+  const { data: apiProfileData, isLoading } = useBreederProfile();
+  const updateProfileMutation = useUpdateBreederProfile();
+
+  // 원본 API 데이터를 저장 (변경사항 비교용)
+  const originalDataRef = useRef<any>(null);
 
   const defaultParentId = useMemo(() => `parent-default-${Date.now()}`, []);
   const defaultAnimalId = useMemo(() => `animal-default-${Date.now()}`, []);
@@ -62,6 +69,70 @@ export default function ProfilePage() {
     mode: "onBlur",
   });
 
+  // API 데이터로 폼 초기화
+  useEffect(() => {
+    if (apiProfileData && !profileData) {
+      // 원본 데이터 저장
+      originalDataRef.current = apiProfileData;
+
+      const locationParts = apiProfileData.profileInfo?.locationInfo;
+      const locationString = locationParts
+        ? `${locationParts.cityName} ${locationParts.districtName}`
+        : null;
+
+      form.reset({
+        breederName: apiProfileData.breederName || "",
+        description: apiProfileData.profileInfo?.profileDescription || "",
+        location: locationString,
+        breeds: apiProfileData.profileInfo?.specializationAreas || [],
+        representativePhotos: apiProfileData.profileInfo?.profilePhotos || [],
+        minPrice: apiProfileData.profileInfo?.priceRangeInfo?.minPrice?.toString() || "",
+        maxPrice: apiProfileData.profileInfo?.priceRangeInfo?.maxPrice?.toString() || "",
+        isCounselMode: false,
+        parents: apiProfileData.parentPetInfo?.length > 0
+          ? apiProfileData.parentPetInfo.map((pet: any) => ({
+              id: pet.petId,
+              name: pet.name,
+              birthDate: pet.birthDate,
+              breed: [pet.breed],
+              gender: pet.gender,
+            }))
+          : [{
+              id: defaultParentId,
+              name: "",
+              birthDate: "",
+              breed: [],
+              gender: null,
+            }],
+        animals: apiProfileData.availablePetInfo?.length > 0
+          ? apiProfileData.availablePetInfo.map((pet: any) => ({
+              id: pet.petId,
+              name: pet.name,
+              birthDate: pet.birthDate,
+              breed: [pet.breed],
+              gender: pet.gender,
+              description: pet.description || "",
+              adoptionStatus: pet.status || "",
+              parent: "",
+              price: pet.price?.toString() || "",
+              isCounselMode: false,
+            }))
+          : [{
+              id: defaultAnimalId,
+              name: "",
+              birthDate: "",
+              breed: [],
+              gender: null,
+              description: "",
+              adoptionStatus: "",
+              parent: "",
+              price: "",
+              isCounselMode: false,
+            }],
+      });
+    }
+  }, [apiProfileData, profileData, form, defaultParentId, defaultAnimalId]);
+
   // 폼 값들을 watch하여 실시간으로 disabled 상태 체크
   const formValues = useWatch({ control: form.control });
   const data = formValues || form.getValues();
@@ -97,14 +168,63 @@ export default function ProfilePage() {
       return;
     }
 
-    // 모든 validation 통과 시 저장
+    // 모든 validation 통과 시 API 호출
     if (isValid) {
-      setProfileData(formData);
-      toast({
-        title: "프로필이 수정되었습니다.",
-      });
+      try {
+        // 1. 기본 프로필 정보 업데이트
+        const locationParts = formData.location?.split(" ") || [];
+        const locationInfo = locationParts.length >= 2
+          ? {
+              cityName: locationParts[0],
+              districtName: locationParts.slice(1).join(" "),
+            }
+          : undefined;
+
+        const updateData = {
+          profileDescription: formData.description || undefined,
+          locationInfo,
+          profilePhotos: Array.isArray(formData.representativePhotos)
+            ? formData.representativePhotos.filter((p): p is string => typeof p === "string")
+            : undefined,
+          priceRangeInfo: formData.minPrice && formData.maxPrice
+            ? {
+                minimumPrice: parseInt(formData.minPrice),
+                maximumPrice: parseInt(formData.maxPrice),
+              }
+            : undefined,
+          specializationTypes: formData.breeds?.length > 0 ? formData.breeds : undefined,
+        };
+
+        await updateProfileMutation.mutateAsync(updateData);
+
+        // 2. 부모견 변경사항 동기화
+        const originalParents = originalDataRef.current?.parentPetInfo || [];
+        await syncParentPets(originalParents, formData.parents);
+
+        // 3. 분양 개체 변경사항 동기화
+        const originalAnimals = originalDataRef.current?.availablePetInfo || [];
+        await syncAvailablePets(originalAnimals, formData.animals);
+
+        setProfileData(formData);
+        toast({
+          title: "프로필이 수정되었습니다.",
+        });
+      } catch (error) {
+        toast({
+          title: "프로필 수정에 실패했습니다.",
+          description: error instanceof Error ? error.message : "다시 시도해주세요.",
+        });
+      }
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
+      </div>
+    );
+  }
 
   return (
     <FormProvider {...form}>

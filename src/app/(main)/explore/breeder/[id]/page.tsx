@@ -1,3 +1,5 @@
+"use client";
+
 import BreederProfile from "@/app/(main)/explore/breeder/[id]/_components/breeder-profile";
 import { Separator } from "@/components/ui/separator";
 import BreederDescription from "./_components/breeder-description";
@@ -6,105 +8,128 @@ import EnvPhotos from "./_components/env-photos";
 import Parents from "./_components/parents";
 import Reviews from "./_components/reviews";
 import Header from "../_components/header";
+import {
+  useBreederProfile,
+  useBreederPets,
+  useParentPets,
+  useBreederReviews,
+} from "./_hooks/use-breeder-detail";
 
-export default function Page() {
-  const breederNickname = "범과 같이";
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function Page({ params }: PageProps) {
+  const breederId = params.id;
+
+  const { data: profileData, isLoading: isProfileLoading } = useBreederProfile(breederId);
+  const { data: petsData, isLoading: isPetsLoading } = useBreederPets(breederId);
+  const { data: parentPetsData, isLoading: isParentPetsLoading } = useParentPets(breederId);
+  const { data: reviewsData, isLoading: isReviewsLoading } = useBreederReviews(breederId);
+
+  if (isProfileLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
+      </div>
+    );
+  }
+
+  if (!profileData) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <p className="text-body-s text-grayscale-gray5">브리더 정보를 찾을 수 없습니다.</p>
+      </div>
+    );
+  }
+
+  // 프로필 데이터 매핑
+  const breederProfileData = {
+    avatarUrl: profileData.profileImageFileName || "/avatar-sample.png",
+    nickname: profileData.breederName,
+    level: "elite" as const, // 백엔드 DTO에 level 정보가 없으므로 기본값 사용
+    location: `${profileData.profileInfo?.locationInfo?.cityName || ""} ${profileData.profileInfo?.locationInfo?.districtName || ""}`.trim(),
+    priceRange: profileData.profileInfo?.priceRangeInfo
+      ? `${profileData.profileInfo.priceRangeInfo.minPrice.toLocaleString()} - ${profileData.profileInfo.priceRangeInfo.maxPrice.toLocaleString()}원`
+      : "상담 후 결정",
+    breeds: profileData.profileInfo?.specializationAreas || [],
+  };
+
+  // 환경 사진
+  const envPhotos = profileData.profileInfo?.profilePhotos || [];
+
+  // 브리더 소개
+  const breederDescription = profileData.profileInfo?.profileDescription || "";
+
+  // 분양 가능 개체 매핑
+  const breedingAnimals = (petsData?.items || []).map((pet: any) => ({
+    id: pet.petId,
+    avatarUrl: pet.mainPhoto || "/animal-sample.png",
+    name: pet.name,
+    sex: pet.gender,
+    birth: pet.birthDate,
+    price: `${pet.price.toLocaleString()}원`,
+    breed: pet.breed,
+  }));
+
+  // 부모견/부모묘 매핑
+  const parentPets = (parentPetsData?.items || []).map((pet: any) => ({
+    id: pet.petId,
+    avatarUrl: pet.photoUrl || "/animal-sample.png",
+    name: pet.name,
+    sex: pet.gender,
+    birth: pet.birthDate,
+    price: "", // 부모견은 가격이 없음
+    breed: pet.breed,
+  }));
+
+  // 후기 매핑
+  const reviews = (reviewsData?.items || []).map((review: any) => ({
+    id: review.reviewId,
+    nickname: review.adopterNickname || "익명",
+    date: new Date(review.createdAt).toISOString().split("T")[0],
+    content: review.content,
+  }));
 
   return (
     <>
-      <Header breederNickname={breederNickname} />
+      <Header breederNickname={profileData.breederName} breederId={breederId} />
       <div className="pt-4 lg:flex lg:gap-24.5 space-y-10 md:space-y-15 pb-10 md:pb-15 lg:lg-80">
         <div>
-          <BreederProfile
-            data={{
-              avatarUrl: "/avatar-sample.png",
-              nickname: "범과 같이",
-              level: "elite",
-              location: "경기도 용인시",
-              priceRange: "500,000 - 1,000,000원",
-              breeds: ["메인쿤", "러시안 블루", "샴"],
-            }}
-          />
+          <BreederProfile data={breederProfileData} />
         </div>
-        <div className="space-y-12 ">
-          <EnvPhotos photos={["/login-image.png", "/main-img-sample.png"]} />
-          <Separator className="md:my-12" />
+        <div className="space-y-12">
+          {envPhotos.length > 0 && (
+            <>
+              <EnvPhotos photos={envPhotos} />
+              <Separator className="md:my-12" />
+            </>
+          )}
 
-          <BreederDescription
-            data={
-              "이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다."
-            }
-          />
-          <Separator className="md:my-12" />
-          <BreedingAnimals
-            data={[
-              {
-                id: "1",
-                avatarUrl: "/animal-sample.png",
-                name: "루시",
-                sex: "male",
-                birth: "2020-01-01",
-                price: "500,000원",
-                breed: "메인쿤",
-              },
-              {
-                id: "2",
-                avatarUrl: "/animal-sample.png",
-                name: "코코",
-                sex: "female",
-                birth: "2021-01-01",
-                price: "600,000원",
-                breed: "러시안 블루",
-              },
-            ]}
-          />
-          <Separator className="md:my-12" />
-          <Parents
-            data={[
-              {
-                id: "1",
-                avatarUrl: "/animal-sample.png",
-                name: "루시",
-                sex: "male",
-                birth: "2020-01-01",
-                price: "500,000원",
-                breed: "메인쿤",
-              },
-              {
-                id: "2",
-                avatarUrl: "/animal-sample.png",
-                name: "코코",
-                sex: "female",
-                birth: "2021-01-01",
-                price: "600,000원",
-                breed: "러시안 블루",
-              },
-            ]}
-          />
+          {breederDescription && (
+            <>
+              <BreederDescription data={breederDescription} />
+              <Separator className="md:my-12" />
+            </>
+          )}
 
-          <Separator className="md:my-12" />
-          <Reviews
-            data={[
-              {
-                id: "1",
-                nickname: "냥집사",
-                date: "2023-10-01",
-                content: "정말 좋은 브리더님이세요!",
-              },
-              {
-                id: "2",
-                nickname: "펫러버",
-                date: "2023-09-15",
-                content: "아이들이 건강하게 잘 자라고 있어요.",
-              },
-              {
-                id: "3",
-                nickname: "고양이매니아",
-                date: "2023-08-20",
-                content: "분양 과정이 매우 친절했습니다.",
-              },
-            ]}
-          />
+          {!isPetsLoading && breedingAnimals.length > 0 && (
+            <>
+              <BreedingAnimals data={breedingAnimals} />
+              <Separator className="md:my-12" />
+            </>
+          )}
+
+          {!isParentPetsLoading && parentPets.length > 0 && (
+            <>
+              <Parents data={parentPets} />
+              <Separator className="md:my-12" />
+            </>
+          )}
+
+          {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} />}
         </div>
       </div>
     </>

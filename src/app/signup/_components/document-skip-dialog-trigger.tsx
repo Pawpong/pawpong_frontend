@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { DialogDescription } from "@/components/ui/dialog";
 import {
@@ -12,10 +14,26 @@ import {
 import useSignupFormStore from "@/stores/signup-form-store";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import React from "react";
-export default function DocumentSkipDialogTrigger(
-  props: React.ComponentProps<typeof DialogPrimitive.Trigger>
-) {
+
+interface DocumentSkipDialogTriggerProps
+  extends React.ComponentProps<typeof DialogPrimitive.Trigger> {
+  onSkip?: () => void | Promise<void>;
+}
+
+export default function DocumentSkipDialogTrigger({
+  onSkip,
+  ...props
+}: DocumentSkipDialogTriggerProps) {
   const nextFlowIndex = useSignupFormStore((e) => e.nextFlowIndex);
+
+  const handleSkip = async () => {
+    if (onSkip) {
+      await onSkip();
+    } else {
+      nextFlowIndex();
+    }
+  };
+
   return (
     <SimpleDialog>
       <SimpleDialogTrigger {...props} />
@@ -35,9 +53,7 @@ export default function DocumentSkipDialogTrigger(
             <Button
               variant="tertiary"
               className="px-4 py-3 text-body-s"
-              onClick={() => {
-                nextFlowIndex();
-              }}
+              onClick={handleSkip}
             >
               나중에 제출
             </Button>

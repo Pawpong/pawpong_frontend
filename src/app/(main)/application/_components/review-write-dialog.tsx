@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
@@ -16,10 +17,13 @@ import BreederInfo from "@/components/breeder/breeder-info";
 import RightArrow from "@/assets/icons/right-arrow.svg";
 import Close from "@/assets/icons/close";
 import { cn } from "@/lib/utils";
+import { createReview } from "@/lib/review";
+import { useToast } from "@/hooks/use-toast";
 
 interface ReviewWriteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  applicationId: string;
   breederName: string;
   breederLevel: "elite" | "new";
   applicationDate: string;
@@ -30,6 +34,7 @@ interface ReviewWriteDialogProps {
 export default function ReviewWriteDialog({
   open,
   onOpenChange,
+  applicationId,
   breederName,
   breederLevel,
   applicationDate,
@@ -37,17 +42,48 @@ export default function ReviewWriteDialog({
   animalType,
 }: ReviewWriteDialogProps) {
   const router = useRouter();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<"상담 후기" | "입양 후기">(
     "상담 후기"
   );
   const [reviewText, setReviewText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
+  const createReviewMutation = useMutation({
+    mutationFn: createReview,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-reviews"] });
+      queryClient.invalidateQueries({ queryKey: ["applications"] });
+      toast({
+        title: "후기가 작성되었습니다.",
+      });
+      onOpenChange(false);
+      router.push("/myapplication");
+    },
+    onError: (error) => {
+      toast({
+        title: "후기 작성에 실패했습니다.",
+        description: error instanceof Error ? error.message : "다시 시도해주세요.",
+      });
+    },
+  });
+
   const handleSubmit = () => {
-    // TODO: 후기 작성 API 호출
-    // API 호출 후 다이얼로그 닫고 /myapplication으로 이동
-    onOpenChange(false);
-    router.push("/myapplication");
+    if (!reviewText.trim()) {
+      toast({
+        title: "후기 내용을 입력해주세요.",
+      });
+      return;
+    }
+
+    const reviewType = activeTab === "상담 후기" ? "consultation" : "adoption";
+
+    createReviewMutation.mutate({
+      applicationId,
+      reviewType,
+      content: reviewText,
+    });
   };
 
   return (

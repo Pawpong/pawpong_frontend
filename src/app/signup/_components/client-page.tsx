@@ -1,6 +1,6 @@
 "use client";
 import useSignupFormStore, { UserType } from "@/stores/signup-form-store";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import AnimalSection from "./sections/animal-section";
 import BreederInfoSection from "./sections/breeder-info-section";
@@ -23,6 +23,7 @@ const flowInfo: Record<UserType, React.ComponentType[]> = {
   ],
 };
 export default function ClientPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const flowIndex = useSignupFormStore((e) => e.flowIndex);
   const userType = useSignupFormStore((e) => e.userType);
@@ -42,6 +43,18 @@ export default function ClientPage() {
     const profileImage = searchParams.get("profileImage");
 
     if (tempId) {
+      // 이미 로그인되어 있는지 확인 (쿠키에 accessToken이 있는지)
+      const cookies = document.cookie.split(";");
+      const hasAccessToken = cookies.some((cookie) =>
+        cookie.trim().startsWith("accessToken=")
+      );
+
+      if (hasAccessToken) {
+        alert("이미 로그인되어 있습니다. 탐색 페이지로 이동합니다.");
+        router.push("/explore");
+        return;
+      }
+
       setTempId(tempId);
       setProvider(provider || "");
       setEmail(email || "");
@@ -58,6 +71,7 @@ export default function ClientPage() {
     setSocialName,
     setProfileImage,
     resetFlowIndex,
+    router,
   ]);
 
   const CurrentSection = flowInfo[userType ?? "guest"][flowIndex];
