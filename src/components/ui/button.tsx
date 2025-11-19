@@ -30,6 +30,7 @@ const buttonVariants = cva(
         addParent: "bg-tertiary-700 hover:bg-tertiary-800",
         input:
           "bg-white text-grayscale-gray4 hover:bg-white/90 justify-between w-full text-body-s",
+        counsel: "bg-secondary-500 hover:bg-secondary-600",
       },
       size: {
         default: "px-2.5 py-1.5 has-[>svg]:px-3",

@@ -1,5 +1,10 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import LevelBadge from "../../../../../../components/level-badge";
+import { useCounselFormStore } from "@/stores/counsel-form-store";
 
 export default function BreederProfile({
   data: { avatarUrl, nickname, level, location, priceRange, breeds },
@@ -13,40 +18,58 @@ export default function BreederProfile({
     breeds: string[];
   };
 }) {
+  const router = useRouter();
+  const { clearCounselFormData } = useCounselFormStore();
+
+  const handleCounselClick = () => {
+    clearCounselFormData();
+    router.push("/counselform");
+  };
+
   return (
-    <div className="flex gap-4 lg:w-51 lg:flex-col lg:gap-8">
-      <div className="w-[8.25rem] h-[8.25rem] md:w-[10rem] md:h-[10rem] lg:w-[12.75rem] lg:h-[12.75rem] rounded-lg overflow-hidden shrink-0">
-        <Image
-          src={avatarUrl}
-          alt={nickname}
-          width={204}
-          height={204}
-          className="object-cover w-full h-full rounded-[0.452rem]"
-        />
-      </div>
-      <div className="flex-1 space-y-4 flex flex-col md:justify-between">
-        <div className="flex items-center flex-wrap gap-2">
-          <span className="text-heading-3 text-primary font-semibold">
-            {nickname}
-          </span>
-          <LevelBadge level={level} />
+    <div className="flex flex-col gap-4 lg:w-51">
+      <div className="flex gap-4 lg:flex-col lg:gap-8">
+        <div className="w-[8.25rem] h-[8.25rem] md:w-[10rem] md:h-[10rem] lg:w-[12.75rem] lg:h-[12.75rem] rounded-lg overflow-hidden shrink-0">
+          <Image
+            src={avatarUrl}
+            alt={nickname}
+            width={204}
+            height={204}
+            className="object-cover w-full h-full rounded-[0.452rem]"
+          />
         </div>
-        <div className="space-y-3">
-          <div className="text-body-s mb-2 text-grayscale-gray5">
-            <div>{location}</div>
-            <div>{priceRange}</div>
+        <div className="flex-1 space-y-4 flex flex-col md:justify-between">
+          <div className="flex items-center flex-wrap gap-2">
+            <span className="text-heading-3 text-primary font-semibold">
+              {nickname}
+            </span>
+            <LevelBadge level={level} />
           </div>
-          <div className="flex flex-wrap gap-2">
-            {breeds.map((breed) => (
-              <div
-                key={breed}
-                className="bg-tertiary-500 py-1.5 px-2.5 rounded-[--spacing(1)] text-medium text-body-xs text-primary"
-              >
-                {breed}
-              </div>
-            ))}
+          <div className="space-y-3">
+            <div className="text-body-s mb-2 text-grayscale-gray5">
+              <div>{location}</div>
+              <div>{priceRange}</div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {breeds.map((breed) => (
+                <div
+                  key={breed}
+                  className="bg-tertiary-500 py-1.5 px-2.5 rounded-[--spacing(1)] text-medium text-body-xs text-primary"
+                >
+                  {breed}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+        <Button
+          variant="counsel"
+          className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"
+          type="button"
+          onClick={handleCounselClick}
+        >
+          상담 신청하기
+        </Button>
       </div>
     </div>
   );
