@@ -1,20 +1,72 @@
-import { generalUserFAQ } from "@/constants/faq";
-import ArrowRight from "@/assets/icons/arrow-right";
-import Link from "next/link";
+"use client";
+
+import { useEffect, useState } from "react";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
+import { getAdopterFaqs, type FaqDto } from "@/lib/home";
 import BreederProfileSectionHeader from "@/components/breeder-profile/breeder-profile-section-header";
 import BreederProfileSectionTitle from "@/components/breeder-profile/breeder-profile-section-title";
 import BreederProfileSectionMore from "@/components/breeder-profile/breeder-profile-section-more";
 
 const FAQ = () => {
   const isMd = useBreakpoint("md");
-  const leftColumn = generalUserFAQ.slice(
-    0,
-    Math.ceil(generalUserFAQ.length / 2)
-  );
-  const rightColumn = generalUserFAQ.slice(
-    Math.ceil(generalUserFAQ.length / 2)
-  );
+  const [faqs, setFaqs] = useState<FaqDto[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getAdopterFaqs();
+        setFaqs(data);
+        setError(null);
+      } catch (err) {
+        console.error("FAQ 조회 실패:", err);
+        setError("FAQ를 불러오는데 실패했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFaqs();
+  }, []);
+
+  const leftColumn = faqs.slice(0, Math.ceil(faqs.length / 2));
+  const rightColumn = faqs.slice(Math.ceil(faqs.length / 2));
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-7">
+        <BreederProfileSectionHeader>
+          <BreederProfileSectionTitle>
+            자주 묻는 질문
+          </BreederProfileSectionTitle>
+          <BreederProfileSectionMore />
+        </BreederProfileSectionHeader>
+        <div className="h-40 flex items-center justify-center">
+          <p className="text-body-m text-gray-400">FAQ 로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || faqs.length === 0) {
+    return (
+      <div className="flex flex-col gap-7">
+        <BreederProfileSectionHeader>
+          <BreederProfileSectionTitle>
+            자주 묻는 질문
+          </BreederProfileSectionTitle>
+          <BreederProfileSectionMore />
+        </BreederProfileSectionHeader>
+        <div className="h-40 flex items-center justify-center">
+          <p className="text-body-m text-gray-400">
+            {error || "표시할 FAQ가 없습니다."}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-7">
@@ -25,8 +77,8 @@ const FAQ = () => {
       {/* 모바일: 모든 질문을 하나의 열로 */}
       {!isMd && (
         <div className="flex flex-col">
-          {generalUserFAQ.map((item, index) => (
-            <div key={index}>
+          {faqs.map((item) => (
+            <div key={item.faqId}>
               <div className="h-px bg-[#e4e7ec] w-full" />
               <div className="py-5">
                 <p className="text-body-m font-medium text-primary-500">
@@ -44,8 +96,8 @@ const FAQ = () => {
         <div className="grid md:grid-cols-2 gap-x-6">
           {/* 왼쪽 열 */}
           <div className="flex flex-col">
-            {leftColumn.map((item, index) => (
-              <div key={index}>
+            {leftColumn.map((item) => (
+              <div key={item.faqId}>
                 <div className="h-px bg-[#e4e7ec] w-full" />
                 <div className="py-5">
                   <p className="text-body-m font-medium text-primary">
@@ -59,8 +111,8 @@ const FAQ = () => {
 
           {/* 오른쪽 열 */}
           <div className="flex flex-col">
-            {rightColumn.map((item, index) => (
-              <div key={index}>
+            {rightColumn.map((item) => (
+              <div key={item.faqId}>
                 <div className="h-px bg-[#e4e7ec] w-full" />
                 <div className="py-5">
                   <p className="text-body-m font-medium text-primary">

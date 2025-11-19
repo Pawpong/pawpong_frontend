@@ -1,5 +1,4 @@
-"use client";
-
+import Link from "next/link";
 import AdoptionStatusBadge from "@/components/adoption-status-badge";
 import BreederDescription from "@/components/breeder-list/breader-description";
 import BreederLikeButton from "@/components/breeder-list/breader-like-button";
@@ -69,44 +68,47 @@ export default function SiteBreederList() {
 
   return (
     <BreederList>
-      {breeders.map((breeder, index) => (
-        <Breeder key={breeder.id || index}>
-          <BreederProfile>
-            <BreederHeader>
-              <BreederAvatar src={breeder.avatar} />
-              <div className="flex items-center gap-2">
-                <BreederName>{breeder.name}</BreederName>
-                <LevelBadge level={breeder.level} />
+      {breederListInfo.map((breeder) => (
+        <Link
+          key={breeder.id}
+          href={`/explore/breeder/${breeder.id}`}
+          className="block"
+        >
+          <Breeder>
+            <BreederProfile>
+              <BreederHeader>
+                <BreederAvatar src={breeder.avatar} />
+                <div className="flex items-center gap-2">
+                  <BreederName>{breeder.name}</BreederName>
+                  <LevelBadge level={breeder.level} />
+                </div>
+              </BreederHeader>
+              <BreederContent>
+                <BreederDescription>
+                  <BreederLocation>{breeder.location}</BreederLocation>
+                  <GrayDot className="block sm:hidden lg:block align-middle" />
+                  <BreederPrice>{breeder.price}</BreederPrice>
+                </BreederDescription>
+                <BreederTags>
+                  {breeder.tags.map((tag, idx) => (
+                    <Button variant="secondary" key={idx}>
+                      {tag}
+                    </Button>
+                  ))}
+                </BreederTags>
+              </BreederContent>
+            </BreederProfile>
+            <div className="relative">
+              <BreederImage src={breeder.image} />
+              <div className="absolute top-0 right-0 p-3">
+                <BreederLikeButton breederId={breeder.id} />
               </div>
-            </BreederHeader>
-            <BreederContent>
-              <BreederDescription>
-                <BreederLocation>{breeder.location}</BreederLocation>
-                <GrayDot className="block sm:hidden lg:block align-middle" />
-                <BreederPrice>{breeder.price}</BreederPrice>
-              </BreederDescription>
-              <BreederTags>
-                {breeder.tags.map((tag, idx) => (
-                  <Button variant="secondary" key={idx}>
-                    {tag}
-                  </Button>
-                ))}
-              </BreederTags>
-            </BreederContent>
-          </BreederProfile>
-          <div className="relative">
-            <BreederImage src={breeder.image} />
-            <div className="absolute top-0 right-0 p-3">
-              <BreederLikeButton
-                breederId={breeder.id}
-                initialIsFavorited={breeder.isFavorited || false}
-              />
+              <div className="absolute bottom-0 right-0 p-3">
+                <AdoptionStatusBadge status={breeder.status} />
+              </div>
             </div>
-            <div className="absolute bottom-0 right-0 p-3">
-              <AdoptionStatusBadge status={breeder.status} />
-            </div>
-          </div>
-        </Breeder>
+          </Breeder>
+        </Link>
       ))}
     </BreederList>
   );
