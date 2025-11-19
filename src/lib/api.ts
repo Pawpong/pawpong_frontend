@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 
-const BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+// trailing slash 제거하여 이중 슬래시 방지
+const BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, "") || "";
 
 function createApi(): AxiosInstance {
   const instance = axios.create({

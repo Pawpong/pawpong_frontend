@@ -7,8 +7,10 @@ import SocialLoginButton from "./social-login-button";
 import SocialLoginIcon from "./social-login-icon";
 import { useRouter } from "next/navigation";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
+// trailing slash 제거하여 이중 슬래시 방지
+const API_BASE_URL = (
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080"
+).replace(/\/+$/, "");
 
 export default function SocialLoginList() {
   const router = useRouter();
