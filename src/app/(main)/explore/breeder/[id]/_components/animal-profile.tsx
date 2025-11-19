@@ -1,5 +1,6 @@
 import Female from "@/assets/icons/female";
 import Male from "@/assets/icons/male";
+import AdoptionStatusBadge from "@/components/adoption-status-badge";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
@@ -9,7 +10,7 @@ const sexInfo = {
 };
 
 export default function AnimalProfile({
-  data: { avatarUrl, name, sex, birth, price, breed },
+  data: { avatarUrl, name, sex, birth, price, breed, status },
 }: {
   data: {
     avatarUrl: string;
@@ -18,24 +19,32 @@ export default function AnimalProfile({
     birth: string;
     price: string;
     breed: string;
+    status?: "available" | "reserved" | "completed";
   };
 }) {
   const Icon = sexInfo[sex].icon;
   return (
     <div className="space-y-4">
-      <div className="aspect-square overflow-hidden rounded-[--spacing(4)]">
+      <div className="relative aspect-square overflow-hidden rounded-lg">
         <Image
           src={avatarUrl}
           alt={`${name}의 사진`}
           width={200}
           height={200}
-          className="w-full h-full object-cover" // ✅ 핵심
+          className="w-full h-full object-cover"
         />
+        {status && (
+          <div className="absolute top-3 left-3">
+            <AdoptionStatusBadge status={status} />
+          </div>
+        )}
       </div>
-      <div className="space-y-3">
-        <div className="gap-0.5 flex flex-col">
-          <div className="flex items-center gap-0.5">
-            <div className="text-body-m font-semibold text-primary">{name}</div>
+      <div className="space-y-3 mt-3">
+        <div className="gap-1.5 flex flex-col">
+          <div className="flex items-center gap-1.5">
+            <div className="text-body-m font-semibold text-primary-500">
+              {name}
+            </div>
 
             <Icon className={cn("size-5", sexInfo[sex].className)} />
           </div>
@@ -43,7 +52,7 @@ export default function AnimalProfile({
           <div className="text-body-s text-grayscale-gray5">{birth}</div>
           <div className="text-body-s text-grayscale-gray5">{price}</div>
         </div>
-        <div className="rounded-[--spacing(1)] bg-tertiary py-1.5 px-2.5 w-fit">
+        <div className="rounded bg-tertiary-500 py-1.5 px-2.5 w-fit text-body-xs font-medium text-primary-500">
           {breed}
         </div>
       </div>

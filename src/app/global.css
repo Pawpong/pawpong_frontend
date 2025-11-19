@@ -156,7 +156,7 @@
   --color-grayscale-gray4: oklch(63.5% 0 0);
   --color-grayscale-gray3: #cccccc;
   --color-grayscale-gray2: #e1e1e1;
-  --color-grayscale-gray1: oklch(96.3% 0 0);
+  --color-grayscale-gray1: #f5f5f5;
   --color-grayscale-white: oklch(100% 0 0);
 
   /* Alpha Colors */
@@ -203,7 +203,7 @@
   --typo-size-display-mobile: 48px;
   --typo-size-heading1-mobile: 40px;
   --typo-size-heading2-mobile: 32px;
-  --typo-size-heading3-mobile: 24px;
+  --typo-size-heading3-mobile: 18px;
   --typo-size-body-l-mobile: 18px;
   --typo-size-body-m-mobile: 16px;
   --typo-size-body-s-mobile: 14px;
@@ -247,7 +247,7 @@
   --typo-size-display-desktop: 32px;
   --typo-size-heading1-desktop: 28px;
   --typo-size-heading2-desktop: 24px;
-  --typo-size-heading3-desktop: 18px;
+  --typo-size-heading3-desktop: 24px;
   --typo-size-body-l-desktop: 20px;
   --typo-size-body-m-desktop: 18px;
   --typo-size-body-s-desktop: 16px;
