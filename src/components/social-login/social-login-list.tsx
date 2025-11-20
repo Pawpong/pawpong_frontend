@@ -38,7 +38,7 @@ export default function SocialLoginList() {
     },
   ];
   return (
-    <div className="space-y-3 w-full col-span-5 md:col-span-6 md:col-start-2 lg:col-span-4 lg:col-start-2">
+    <div className="space-y-3 w-full">
       {socialLoginInfo.map(({ name, icon: Icon, className, onClick }) => (
         <SocialLoginButton key={name} className={className} onClick={onClick}>
           <SocialLoginIcon className="size-4">
