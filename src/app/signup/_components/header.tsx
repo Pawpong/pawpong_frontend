@@ -1,27 +1,23 @@
-import Close from "@/assets/icons/close";
+import Close from "@/assets/icons/close-primary.svg";
 import Logo from "@/assets/logo/logo";
 import { Button } from "@/components/ui/button";
-import Container from "@/components/ui/container";
 import Link from "next/link";
 
 export default function Header() {
   return (
-    <Container
-      className="flex justify-between h-16 items-center"
-      wrapperClassName="sticky top-0 bg-tertiary-500 z-10"
-    >
+    <div className="flex justify-between h-16 items-center pl-[1.125rem] pr-5 md:pl-10 md:pr-[2.375rem] lg:pl-12 lg:pr-12 sticky top-0">
       <Button variant={"ghost"} className="w-20">
-        <Logo className="text-primary h-6 shrink-0" />
+        <Logo className="text-primary-500 h-6 shrink-0" />
       </Button>
       <Link href="/">
         <Button
           size="icon"
           variant={"ghost"}
-          className="text-primary size-6 hover:text-primary-600! cursor-pointer"
+          className="text-primary size-6 cursor-pointer"
         >
-          <Close className="size-3.75" />
+          <Close />
         </Button>
       </Link>
-    </Container>
+    </div>
   );
 }
