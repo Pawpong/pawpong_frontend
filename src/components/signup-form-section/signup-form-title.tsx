@@ -8,7 +8,7 @@ export default function SignupFormTitle({
   return (
     <div
       className={cn(
-        "col-span-(--default-span) flex justify-center text-heading-2 font-semibold text-primary",
+        "col-span-(--default-span) flex justify-center text-heading-2 font-semibold text-primary-500 mt-[6rem]",
         className
       )}
       {...props}

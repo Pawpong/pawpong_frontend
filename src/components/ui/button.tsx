@@ -17,7 +17,7 @@ const buttonVariants = cva(
         secondary:
           "bg-[var(--color-tertiary-500)] text-primary hover:bg-[#EEEBDE]",
         tertiary:
-          "bg-secondary text-primary hover:bg-secondary-600 disabled:bg-status-disabled disabled:text-grayscale-gray4!",
+          "bg-secondary-500 text-primary-500 hover:bg-secondary-600 disabled:bg-status-disabled disabled:text-grayscale-gray4!",
         //더보기 >
         ghost: "hover:text-primary-500",
         link: "text-primary underline-offset-4 hover:underline",
