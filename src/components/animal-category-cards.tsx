@@ -106,7 +106,7 @@ export default function AnimalCategoryCards({
       className={cn(
         "flex",
         !className && layout === "horizontal" ? "flex-row" : "flex-col",
-
+        "gap-3",
         className
       )}
     >
