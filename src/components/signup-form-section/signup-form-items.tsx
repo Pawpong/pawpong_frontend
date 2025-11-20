@@ -11,7 +11,7 @@ export default function SignupFormItems({
       <GridContainer>
         <div
           className={cn(
-            "col-span-(--inner-span) col-start-(--inner-start) flex flex-col gap-3 ",
+            "col-span-(--inner-span) col-start-(--inner-start) flex flex-col gap-3",
             className
           )}
         >
