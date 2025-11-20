@@ -128,6 +128,7 @@
   --color-secondary-100: oklch(91.7% 0.071 259.9);
   --color-secondary-300: oklch(87.1% 0.076 251.1);
   --color-secondary-500: #a0c8f4;
+  --color-secondary-500-basic: #a0c8f4;
   --color-secondary-600: #77b2f3;
   --color-secondary-700: oklch(68.8% 0.122 231.9);
   --color-secondary-800: oklch(62.4% 0.138 231.4);
