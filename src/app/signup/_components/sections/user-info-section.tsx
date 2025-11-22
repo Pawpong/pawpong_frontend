@@ -1,6 +1,6 @@
 "use client";
 
-import Check from "@/assets/icons/check";
+import Check from "@/assets/icons/check-blue.svg";
 import ErrorIcon from "@/assets/icons/error";
 import CheckboxForm from "@/components/signup-form-section/checkbox-form";
 import CheckboxFormList from "@/components/signup-form-section/checkbox-form-list";
@@ -45,7 +45,7 @@ const messageTypes: Record<
   "success" | "error",
   { className: string; icon: React.FC<React.SVGProps<SVGSVGElement>> }
 > = {
-  success: { className: "text-status-success", icon: Check },
+  success: { className: "text-status-success-500", icon: Check },
   error: { className: "text-status-error", icon: ErrorIcon },
 };
 
@@ -98,6 +98,10 @@ export default function UserInfoSection() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [timeLeft, setTimeLeft] = useState(180); // 3분 = 180초
   const [timerActive, setTimerActive] = useState(false);
+  const [showAgreementError, setShowAgreementError] = useState(false);
+  const [showEmailError, setShowEmailError] = useState(false);
+  const [showPhoneError, setShowPhoneError] = useState(false);
+  const [showVerificationError, setShowVerificationError] = useState(false);
 
   // 인증번호 전송 시 타이머 시작
   const handleSendCode = async () => {
@@ -238,75 +242,114 @@ export default function UserInfoSection() {
           </div>
         )}
 
-        <Input
-          placeholder="이메일"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={isSocialLogin}
-          className={isSocialLogin ? "bg-gray-100" : ""}
-        />
+        <div className="gap-2.5 flex flex-col">
+          <Input
+            placeholder="이메일"
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setShowEmailError(false);
+            }}
+            disabled={isSocialLogin}
+            className={isSocialLogin ? "bg-gray-100" : ""}
+          />
+          {showEmailError && !email && (
+            <div className="flex items-center gap-0.5">
+              <ErrorIcon className="size-3 shrink-0" />
+              <p className="text-caption font-medium text-status-error-500">
+                이메일을 입력해 주세요.
+              </p>
+            </div>
+          )}
+        </div>
         <div className="space-y-3">
-          <div className="flex gap-3">
-            <Input
-              placeholder="휴대폰 번호 (010-1234-5678)"
-              className="flex-1"
-              type="tel"
-              value={phoneNumber}
-              onChange={(e) => handlePhoneChange(e.target.value)}
-              disabled={isVerified}
-            />
-            <Button
-              variant="tertiary"
-              className="px-4 py-3 whitespace-nowrap w-30"
-              disabled={phoneNumber.length !== 13 || isSending || isVerified}
-              onClick={handleSendCode}
-            >
-              {isSending
-                ? "발송 중..."
-                : isCodeSent
-                ? "인증번호 재전송"
-                : "인증번호 받기"}
-            </Button>
+          <div className="flex flex-col gap-2.5">
+            <div className="flex gap-3">
+              <Input
+                placeholder="휴대폰 번호"
+                className="flex-1"
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => {
+                  handlePhoneChange(e.target.value);
+                  setShowPhoneError(false);
+                }}
+                disabled={isVerified}
+              />
+              <Button
+                variant="tertiary"
+                className="px-4 py-3 whitespace-nowrap w-30 text-body-s"
+                disabled={phoneNumber.length !== 13 || isSending || isVerified}
+                onClick={handleSendCode}
+              >
+                {isSending
+                  ? "발송 중..."
+                  : isCodeSent
+                  ? "인증번호 재전송"
+                  : "인증번호 받기"}
+              </Button>
+            </div>
+            {showPhoneError && !phoneNumber && (
+              <div className="flex items-center gap-0.5">
+                <ErrorIcon className="size-3 shrink-0" />
+                <p className="text-caption font-medium text-status-error-500">
+                  휴대폰 번호를 입력해 주세요.
+                </p>
+              </div>
+            )}
           </div>
           <div className="space-y-2.5">
-            <div className="flex gap-3">
-              <InputGroup className="h-auto">
-                <InputGroupInput
-                  placeholder="인증번호 (6자리)"
-                  value={verificationCode}
-                  onChange={(e) => setVerificationCode(e.target.value)}
+            <div className="flex flex-col gap-2.5">
+              <div className="flex gap-3">
+                <InputGroup className="h-auto">
+                  <InputGroupInput
+                    placeholder="인증번호 (6자리)"
+                    value={verificationCode}
+                    onChange={(e) => {
+                      setVerificationCode(e.target.value);
+                      setShowVerificationError(false);
+                    }}
+                    disabled={
+                      isSending ||
+                      !isCodeSent ||
+                      isVerifying ||
+                      isVerified ||
+                      timeLeft <= 0
+                    }
+                    maxLength={6}
+                  />
+                  <InputGroupAddon
+                    align="inline-end"
+                    className="text-sm text-grayscale-gray5 pr-3.5 pl-1"
+                  >
+                    {isCodeSent ? formatTime(timeLeft) : "03:00"}
+                  </InputGroupAddon>
+                </InputGroup>
+                <Button
+                  variant="tertiary"
+                  className="px-4 py-3 whitespace-nowrap w-30 text-body-s"
                   disabled={
+                    verificationCode.length === 0 ||
                     isSending ||
                     !isCodeSent ||
                     isVerifying ||
                     isVerified ||
                     timeLeft <= 0
                   }
-                  maxLength={6}
-                />
-                <InputGroupAddon
-                  align="inline-end"
-                  className="text-sm text-grayscale-gray5 pr-3.5 pl-1"
+                  onClick={handleVerifyCode}
                 >
-                  {isCodeSent ? formatTime(timeLeft) : "03:00"}
-                </InputGroupAddon>
-              </InputGroup>
-              <Button
-                variant="tertiary"
-                className="px-4 py-3 whitespace-nowrap w-30"
-                disabled={
-                  verificationCode.length === 0 ||
-                  isSending ||
-                  !isCodeSent ||
-                  isVerifying ||
-                  isVerified ||
-                  timeLeft <= 0
-                }
-                onClick={handleVerifyCode}
-              >
-                {isVerifying ? "확인 중..." : isVerified ? "확인" : "확인"}
-              </Button>
+                  {isVerifying ? "확인 중..." : isVerified ? "확인" : "확인"}
+                </Button>
+              </div>
+              {showVerificationError && !isVerified && (
+                <div className="flex items-center gap-0.5">
+                  <ErrorIcon className="size-3 shrink-0" />
+                  <p className="text-caption font-medium text-status-error-500">
+                    인증번호를 입력해 주세요.
+                  </p>
+                </div>
+              )}
             </div>
 
             {messageIndex !== null && (
@@ -323,7 +366,7 @@ export default function UserInfoSection() {
             )}
           </div>
         </div>
-        <div className="space-y-1">
+        <div className="flex flex-col gap-2.5">
           <CheckboxFormList>
             <CheckboxForm
               label="전체 약관 동의"
@@ -347,22 +390,59 @@ export default function UserInfoSection() {
               />
             ))}
           </CheckboxFormList>
-          {checkboxInfo
-            .filter((e) => e.required)
-            .some((e) => !agreements[e.name]) && (
-            <div className="flex gap-0.5 text-status-error text-caption-s">
-              <div className="size-3 flex justify-center items-center">
-                <ErrorIcon className="h-2.5 w-2.5 " />
+          {showAgreementError &&
+            checkboxInfo
+              .filter((e) => e.required)
+              .some((e) => !agreements[e.name]) && (
+              <div className="flex items-center gap-0.5">
+                <ErrorIcon className="size-3 shrink-0" />
+                <p className="text-caption font-medium text-status-error-500">
+                  필수 약관에 동의해 주세요.
+                </p>
               </div>
-              <span>필수 약관에 동의해 주세요.</span>
-            </div>
-          )}
+            )}
         </div>
         <div className="flex flex-col gap-4">
           <NextButton
             onClick={() => {
-              if (hasUncheckedRequiredAgreements) return;
-              nextFlowIndex();
+              let hasError = false;
+
+              // 이메일 검증 (소셜 로그인이 아닌 경우만)
+              if (!isSocialLogin && !email) {
+                setShowEmailError(true);
+                hasError = true;
+              } else {
+                setShowEmailError(false);
+              }
+
+              // 전화번호 검증
+              if (!phoneNumber) {
+                setShowPhoneError(true);
+                hasError = true;
+              } else {
+                setShowPhoneError(false);
+              }
+
+              // 인증번호 검증
+              if (!isVerified) {
+                setShowVerificationError(true);
+                hasError = true;
+              } else {
+                setShowVerificationError(false);
+              }
+
+              // 필수 약관 검증
+              if (hasUncheckedRequiredAgreements) {
+                setShowAgreementError(true);
+                hasError = true;
+              } else {
+                setShowAgreementError(false);
+              }
+
+              // 모든 검증 통과 시 다음 단계로
+              if (!hasError) {
+                nextFlowIndex();
+              }
             }}
           />
           <UndoButton />
