@@ -191,15 +191,15 @@
   --Typo-Size-Caption: 12px;
 
   /* Typography Line Heights - Responsive (Mobile First) */
-  --Typo-Line-height-Display: 64px;
-  --Typo-Line-height-Heading-1: 60px;
-  --Typo-Line-height-Heading-2: 48px;
-  --Typo-Line-height-Heading-3: 36px;
-  --Typo-Line-height-Body-L: 32px;
-  --Typo-Line-height-Body-M: 28px;
-  --Typo-Line-height-Body-S: 24px;
-  --Typo-Line-height-Body-XS: 20px;
-  --Typo-Line-height-Caption: 12px;
+  --Typo-Line-height-Display: 44px;
+  --Typo-Line-height-Heading-1: 40px;
+  --Typo-Line-height-Heading-2: 36px;
+  --Typo-Line-height-Heading-3: 28px;
+  --Typo-Line-height-Body-L: 28px;
+  --Typo-Line-height-Body-M: 24px;
+  --Typo-Line-height-Body-S: 22px;
+  --Typo-Line-height-Body-XS: 18px;
+  --Typo-Line-height-Caption: 11px;
 
   /* Typography Font Sizes - Mobile (기본) - Legacy */
   --typo-size-display-mobile: 48px;
@@ -213,15 +213,15 @@
   --typo-size-caption-mobile: 12px;
 
   /* Typography Line Heights - Mobile (기본) - Legacy */
-  --typo-line-height-display-mobile: 64px;
-  --typo-line-height-heading1-mobile: 60px;
-  --typo-line-height-heading2-mobile: 48px;
-  --typo-line-height-heading3-mobile: 36px;
-  --typo-line-height-body-l-mobile: 32px;
-  --typo-line-height-body-m-mobile: 28px;
-  --typo-line-height-body-s-mobile: 24px;
-  --typo-line-height-body-xs-mobile: 20px;
-  --typo-line-height-caption-mobile: 12px;
+  --typo-line-height-display-mobile: 44px;
+  --typo-line-height-heading1-mobile: 40px;
+  --typo-line-height-heading2-mobile: 36px;
+  --typo-line-height-heading3-mobile: 28px;
+  --typo-line-height-body-l-mobile: 28px;
+  --typo-line-height-body-m-mobile: 24px;
+  --typo-line-height-body-s-mobile: 22px;
+  --typo-line-height-body-xs-mobile: 18px;
+  --typo-line-height-caption-mobile: 11px;
 
   /* Typography Font Sizes - Tablet - Legacy */
   --typo-size-display-tablet: 40px;
@@ -257,15 +257,15 @@
   --typo-size-caption-desktop: 11px;
 
   /* Typography Line Heights - Desktop - Legacy */
-  --typo-line-height-display-desktop: 44px;
-  --typo-line-height-heading1-desktop: 40px;
-  --typo-line-height-heading2-desktop: 36px;
-  --typo-line-height-heading3-desktop: 28px;
+  --typo-line-height-display-desktop: 64px;
+  --typo-line-height-heading1-desktop: 60px;
+  --typo-line-height-heading2-desktop: 48px;
+  --typo-line-height-heading3-desktop: 36px;
   --typo-line-height-body-l-desktop: 32px;
-  --typo-line-height-body-m-desktop: 24px;
-  --typo-line-height-body-s-desktop: 22px;
+  --typo-line-height-body-m-desktop: 28px;
+  --typo-line-height-body-s-desktop: 24px;
   --typo-line-height-body-xs-desktop: 20px;
-  --typo-line-height-caption-desktop: 11px;
+  --typo-line-height-caption-desktop: 12px;
 
   /* General Sizes */
   --size-24: 24px;
@@ -381,16 +381,15 @@
       --Typo-Size-Body-XS: 14px;
       --Typo-Size-Caption: 11px;
 
-      --Typo-Line-height-Display: 44px;
-      --Typo-Line-height-Heading-1: 40px;
-      --Typo-Line-height-Heading-2: 36px;
-      --Typo-Line-height-Heading-3: 28px;
+      --Typo-Line-height-Display: 64px;
+      --Typo-Line-height-Heading-1: 60px;
+      --Typo-Line-height-Heading-2: 48px;
+      --Typo-Line-height-Heading-3: 36px;
       --Typo-Line-height-Body-L: 32px;
-
-      --Typo-Line-height-Body-M: 24px;
-      --Typo-Line-height-Body-S: 22px;
+      --Typo-Line-height-Body-M: 28px;
+      --Typo-Line-height-Body-S: 24px;
       --Typo-Line-height-Body-XS: 20px;
-      --Typo-Line-height-Caption: 11px;
+      --Typo-Line-height-Caption: 12px;
     }
   }
 }

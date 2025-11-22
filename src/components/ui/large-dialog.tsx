@@ -76,7 +76,7 @@ function LargeDialogHeader({
   return (
     <DialogHeader
       className={cn(
-        "text-left gap-1.5 md:pt-6 md:px-6 md:pb-2.5 border-b py-4 ",
+        "text-left gap-1.5 border-b py-4 px-5 md:pt-6 md:px-6 md:pb-2.5",
         className
       )}
       {...props}
@@ -93,7 +93,7 @@ function LargeDialogFooter({
   return (
     <DialogFooter
       className={cn(
-        "flex justify-between gap-2 md:pt-4 md:px-6 md:pb-6 border-t py-4 px-padding",
+        "flex justify-between gap-2 md:pt-4 md:px-6 md:pb-6 border-t py-4 px-padding ",
         className
       )}
       {...props}

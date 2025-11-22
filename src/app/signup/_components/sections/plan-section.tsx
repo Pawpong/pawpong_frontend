@@ -27,7 +27,7 @@ const planInfo: Array<{
       "엄마·아빠 / 분양 중인 아이 등록",
       "입양 상담 신청 간편 관리",
     ],
-    className: "bg-secondary hover:bg-secondary-600 text-primary!",
+    className: "bg-secondary-500 hover:bg-secondary-600 text-primary-500",
     src: "/images/basic.png",
     isFree: true,
   },
@@ -35,7 +35,7 @@ const planInfo: Array<{
     name: "pro",
     label: "Pro",
     description: ["comming soon"],
-    className: "bg-status-disabled hover:bg-tertiary-600 text-grayscale-gray4!",
+    className: "bg-status-disabled hover:bg-tertiary-600 text-grayscale-gray4",
     src: "/images/pro.png",
     isFree: false,
     disabled: true,
@@ -47,7 +47,7 @@ export default function PlanSection() {
   const nextFlowIndex = useSignupFormStore((e) => e.nextFlowIndex);
   return (
     <SignupFormSection>
-      <SignupFormTitle>회원 유형을 선택해 주세요</SignupFormTitle>
+      <SignupFormTitle>원하는 플랜을 선택해 주세요</SignupFormTitle>
       <SignupFormItems>
         {planInfo.map(
           ({ name, label, description, src, className, disabled, isFree }) => (
@@ -67,7 +67,7 @@ export default function PlanSection() {
                 <div className="text-body-l font-semibold flex gap-1.5 items-center">
                   {label}
                   {isFree && (
-                    <span className="rounded-full bg-primary text-secondary text-caption-s font-medium py-0.5 px-1.5">
+                    <span className="rounded-full bg-primary-500 text-secondary-500 text-caption-s font-medium py-0.5 px-1.5">
                       Free
                     </span>
                   )}
