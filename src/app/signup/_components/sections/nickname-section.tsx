@@ -15,6 +15,7 @@ import {
 import useSignupFormStore from "@/stores/signup-form-store";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Check from "@/assets/icons/check-blue.svg";
 
 export default function NicknameSection() {
   const router = useRouter();
@@ -168,33 +169,40 @@ export default function NicknameSection() {
           </div>
         )}
 
-        <div className="flex gap-3">
-          <Input
-            placeholder="닉네임 (2-10자, 한글/영문/숫자)"
-            value={nickname}
-            onChange={(e) => handleNicknameChange(e.target.value)}
-            minLength={2}
-            maxLength={10}
-            disabled={submitting}
-            className={
-              nicknameAvailable ? "border-green-500 focus:border-green-500" : ""
-            }
-          />
-          <Button
-            variant="tertiary"
-            disabled={
-              checkingNickname || !nickname || nicknameAvailable || submitting
-            }
-            onClick={handleCheckNickname}
-          >
-            {checkingNickname ? "확인 중..." : "중복 검사"}
-          </Button>
+        <div className="flex flex-col gap-[10px]">
+          <div className="flex gap-3">
+            <Input
+              placeholder="닉네임 (2-10자, 한글/영문/숫자)"
+              value={nickname}
+              onChange={(e) => handleNicknameChange(e.target.value)}
+              minLength={2}
+              maxLength={10}
+              disabled={submitting}
+              className={
+                nicknameAvailable
+                  ? "border-green-500 focus:border-green-500"
+                  : ""
+              }
+            />
+            <Button
+              variant="tertiary"
+              disabled={
+                checkingNickname || !nickname || nicknameAvailable || submitting
+              }
+              onClick={handleCheckNickname}
+            >
+              {checkingNickname ? "확인 중..." : "중복 검사"}
+            </Button>
+          </div>
+          {nicknameAvailable && (
+            <div className="flex items-center gap-2.5">
+              <Check className="size-3 shrink-0" />
+              <p className="text-caption font-medium text-status-success-500">
+                사용할 수 있는 닉네임이에요
+              </p>
+            </div>
+          )}
         </div>
-        {nicknameAvailable && (
-          <p className="text-[12px] text-green-600 -mt-4">
-            ✓ 사용 가능한 닉네임입니다.
-          </p>
-        )}
         <div className="flex flex-col gap-4">
           <NextButton
             disabled={!nicknameAvailable || submitting}

@@ -18,13 +18,13 @@ const animalInfo: AnimalCategoryCard[] = [
   {
     name: "cat",
     label: "고양이",
-    className: "bg-primary hover:bg-primary-600 text-tertiary-500",
+    className: "bg-primary-500 hover:bg-primary-600 text-tertiary-500",
     src: "/images/cat.png",
   },
   {
     name: "dog",
     label: "강아지",
-    className: "bg-secondary hover:bg-secondary-600 text-primary!",
+    className: "bg-secondary-500-basic hover:bg-secondary-600 text-primary-500",
     src: "/images/dog.png",
   },
 ];
@@ -106,7 +106,7 @@ export default function AnimalCategoryCards({
       className={cn(
         "flex",
         !className && layout === "horizontal" ? "flex-row" : "flex-col",
-
+        "gap-3",
         className
       )}
     >

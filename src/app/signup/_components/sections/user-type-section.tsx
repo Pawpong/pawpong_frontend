@@ -19,13 +19,13 @@ const userTypeInfo: Array<{
     name: "guest",
     label: "일반",
     description: ["새로운 반려동물을 가족으로", "맞이하고 싶은 보호자예요."],
-    className: "bg-secondary hover:bg-secondary-600",
+    className: "bg-secondary-500 hover:bg-secondary-600",
     src: "/images/guest.png",
   },
   {
     name: "breeder",
     label: "브리더",
-    description: ["반려동물을 책임감 있게 돌보는", "전문가예요."],
+    description: ["반려동물을 책임감 있게", "돌보는 전문가예요."],
     className: "bg-white hover:bg-tertiary-600",
     src: "/images/breeder.png",
   },
@@ -43,7 +43,7 @@ export default function UserTypeSection() {
           <Button
             key={name}
             className={cn(
-              "w-full justify-between py-7 px-8  rounded-2xl",
+              "w-full justify-between items-start py-7 px-8  rounded-2xl",
               className
             )}
             onClick={() => {
@@ -52,10 +52,10 @@ export default function UserTypeSection() {
             }}
           >
             <div className="space-y-1 text-left">
-              <div className="text-body-l text-primary font-semibold">
+              <div className="text-body-l text-primary-500 font-semibold">
                 {label}
               </div>
-              <div className="text-body-xs text-primary/80 font-medium">
+              <div className="text-body-xs text-alpha-primary-80 font-medium">
                 {description.map((line, index) => (
                   <div key={index}>{line}</div>
                 ))}

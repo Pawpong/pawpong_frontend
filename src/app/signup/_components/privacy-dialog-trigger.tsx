@@ -9,6 +9,7 @@ import {
   LargeDialogTitle,
   LargeDialogTrigger,
 } from "@/components/ui/large-dialog";
+import { privacyContents } from "@/constants/privacy";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import React from "react";
 
@@ -26,7 +27,7 @@ export default function PrivacyDialogTrigger({
         <LargeDialogHeader>
           <LargeDialogTitle>
             <div className="flex justify-between items-center">
-              개인정보 수집 및 이용
+              포퐁 개인정보처리방침
               <LargeDialogClose asChild>
                 <Button variant="secondary" className="size-9">
                   <Close className="size-5 text-grayscale-gray7" />
@@ -36,14 +37,15 @@ export default function PrivacyDialogTrigger({
           </LargeDialogTitle>
         </LargeDialogHeader>
 
-        <div className="md:py-5 md:px-6 space-y-5 text-body-xs text-grayscale-gray6 overflow-auto px-padding py-4 flex-1 ">
-          음음음
+        <div className="md:py-5 md:px-6 space-y-[20px] text-body-xs text-grayscale-gray6 overflow-auto px-padding py-4 flex-1">
+          {privacyContents}
         </div>
 
-        <LargeDialogFooter>
+        <LargeDialogFooter className="justify-end">
           <LargeDialogClose asChild>
             <Button
-              className="py-2 px-4 text-sm leading-[140%] tracking-[-2%] w-18 text-white! rounded-[--spacing(1)]"
+              variant="tertiary"
+              className="py-2 px-4 text-sm leading-[140%] tracking-[-2%] w-18  rounded-[--spacing(1)]"
               onClick={() => {
                 onAgree();
               }}
