@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import BreederProfile from "@/app/(main)/explore/breeder/[id]/_components/breeder-profile";
 import { Separator } from "@/components/ui/separator";
 import BreederDescription from "./_components/breeder-description";
@@ -16,13 +17,13 @@ import {
 } from "./_hooks/use-breeder-detail";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function Page({ params }: PageProps) {
-  const breederId = params.id;
+  const { id: breederId } = use(params);
 
   const { data: profileData, isLoading: isProfileLoading } = useBreederProfile(breederId);
   const { data: petsData, isLoading: isPetsLoading } = useBreederPets(breederId);

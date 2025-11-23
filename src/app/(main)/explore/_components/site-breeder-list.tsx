@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import AdoptionStatusBadge from "@/components/adoption-status-badge";
 import BreederDescription from "@/components/breeder-list/breader-description";
@@ -68,7 +70,7 @@ export default function SiteBreederList() {
 
   return (
     <BreederList>
-      {breederListInfo.map((breeder) => (
+      {breeders.map((breeder) => (
         <Link
           key={breeder.id}
           href={`/explore/breeder/${breeder.id}`}
@@ -77,7 +79,7 @@ export default function SiteBreederList() {
           <Breeder>
             <BreederProfile>
               <BreederHeader>
-                <BreederAvatar src={breeder.avatar} />
+                <BreederAvatar src={breeder.image} />
                 <div className="flex items-center gap-2">
                   <BreederName>{breeder.name}</BreederName>
                   <LevelBadge level={breeder.level} />
@@ -90,7 +92,7 @@ export default function SiteBreederList() {
                   <BreederPrice>{breeder.price}</BreederPrice>
                 </BreederDescription>
                 <BreederTags>
-                  {breeder.tags.map((tag, idx) => (
+                  {breeder.tags.map((tag: string, idx: number) => (
                     <Button variant="secondary" key={idx}>
                       {tag}
                     </Button>

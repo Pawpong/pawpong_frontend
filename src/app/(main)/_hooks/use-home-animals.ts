@@ -1,7 +1,7 @@
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { exploreBreeders, type Breeder } from "@/lib/breeder";
+import { getAvailablePets, type AvailablePetDto } from "@/lib/home";
 import type { HomeAnimalData } from "../_types/home-animal.types";
 
 const PAGE_SIZE = 9;
@@ -11,30 +11,30 @@ interface HomeAnimalsResponse {
   hasMore: boolean;
 }
 
-const fetchHomeAnimals = async (page: number): Promise<HomeAnimalsResponse> => {
+/**
+ * 홈 화면에 표시할 분양 가능한 반려동물 목록을 조회합니다.
+ * 백엔드 API: GET /api/home/available-pets
+ */
+const fetchHomeAnimals = async (): Promise<HomeAnimalsResponse> => {
   try {
-    const response = await exploreBreeders({
-      page,
-      limit: PAGE_SIZE,
-      isAdoptionAvailable: true, // 분양 가능한 브리더만 표시
-    });
+    const response = await getAvailablePets(PAGE_SIZE);
 
-    // 프론트엔드 Breeder 타입을 HomeAnimalData 타입으로 변환
-    // 참고: 현재 백엔드는 브리더 정보를 반환하므로, 동물 개체 정보가 없음
-    const data: HomeAnimalData[] = response.breeders.map((breeder: Breeder) => ({
-      id: breeder.id,
-      avatarUrl: breeder.image,
-      name: breeder.name,
-      sex: "male", // 브리더 API에는 개별 동물 정보가 없어 기본값 사용
-      birth: "상담 시 확인", // 브리더 API에는 개별 동물 정보가 없어 기본값 사용
-      price: breeder.price,
-      breed: breeder.tags[0] || "",
-      status: breeder.status,
+    // 백엔드 AvailablePetDto를 프론트엔드 HomeAnimalData 타입으로 변환
+    const data: HomeAnimalData[] = response.map((pet: AvailablePetDto) => ({
+      id: pet.breederId, // 브리더 ID를 사용 (브리더 프로필로 연결)
+      avatarUrl: pet.mainPhoto,
+      name: pet.name,
+      sex: "male", // 백엔드 API에 성별 정보가 없어 기본값 사용
+      birth: `${pet.ageInMonths}개월`, // 개월수를 birth로 표시
+      price: pet.price.toLocaleString("ko-KR") + "원", // 숫자를 한국 통화 형식 문자열로 변환
+      breed: pet.breed,
+      status: "available" as const, // 분양 가능 상태
     }));
 
+    // available-pets API는 페이지네이션이 없으므로 hasMore는 항상 false
     return {
       data,
-      hasMore: response.pagination.hasNextPage,
+      hasMore: false,
     };
   } catch (error) {
     console.error("홈 동물 목록 조회 실패:", error);
@@ -48,9 +48,9 @@ const fetchHomeAnimals = async (page: number): Promise<HomeAnimalsResponse> => {
 export const useHomeAnimals = () => {
   return useInfiniteQuery({
     queryKey: ["home-animals"],
-    queryFn: ({ pageParam }) => fetchHomeAnimals(pageParam),
-    getNextPageParam: (lastPage, allPages) =>
-      lastPage.hasMore ? allPages.length + 1 : undefined,
+    queryFn: () => fetchHomeAnimals(),
+    getNextPageParam: (lastPage) =>
+      lastPage.hasMore ? undefined : undefined, // available-pets API는 페이지네이션이 없음
     initialPageParam: 1,
   });
 };
