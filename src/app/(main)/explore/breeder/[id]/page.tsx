@@ -40,16 +40,16 @@ export default function Page() {
             }}
           />
         </div>
-        <div className="space-y-12 ">
+        <div className="space-y-12 mt-10 md:mt-0">
           <EnvPhotos photos={["/login-image.png", "/main-img-sample.png"]} />
-          <Separator className="md:my-12" />
+          <Separator className="my-12" />
 
           <BreederDescription
             data={
               "이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다."
             }
           />
-          <Separator className="md:my-12" />
+          <Separator className="my-12" />
           <BreedingAnimals
             data={[
               {
@@ -72,7 +72,7 @@ export default function Page() {
               },
             ]}
           />
-          <Separator className="md:my-12" />
+          <Separator className="my-12" />
           <Parents
             data={[
               {
@@ -96,7 +96,7 @@ export default function Page() {
             ]}
           />
 
-          <Separator className="md:my-12" />
+          <Separator className="my-12" />
           <Reviews
             data={[
               {
@@ -109,7 +109,8 @@ export default function Page() {
                 id: "2",
                 nickname: "펫러버",
                 date: "2023-09-15",
-                content: "아이들이 건강하게 잘 자라고 있어요.",
+                content:
+                  "아이들이 건강하게 잘 자라고 있어요.분양 과정이 매우 친절했습니다.분양 과정이 매우 친절했습니다.분양 과정이 매우 친절했습니다.분양 과정이 매우 친절했습니다.분양 과정이 매우 친절했습니다.",
               },
               {
                 id: "3",
