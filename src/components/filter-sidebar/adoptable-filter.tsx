@@ -2,24 +2,17 @@
 
 "use client"; // Zustand hook을 사용하기 위해 client 컴포넌트로 변경
 
-import { filter } from "@/constants/filter";
-import { useSegment } from "@/hooks/use-segment";
 import { useFilterStore } from "@/stores/filter-store";
 import FilterContent from "./filter-content";
 import FilterList from "./filter-list";
 import FilterListItem from "./filter-list-item";
 import FilterSection from "./filter-section";
-import MoreButton from "./more-button";
 
 export default function AdoptableFilter() {
   const activeFilters = useFilterStore((state) => state.activeFilters);
   const toggleActiveFilter = useFilterStore(
     (state) => state.toggleActiveFilter
   );
-  const resetModalState = useFilterStore((state) => state.resetModalState);
-  const selectPath = useFilterStore((state) => state.selectPath);
-  const animal = (useSegment(1) as "cat" | "dog") || "cat";
-  const rootFilters = filter[animal];
   return (
     <FilterSection>
       <FilterContent>
@@ -33,12 +26,6 @@ export default function AdoptableFilter() {
             입양 가능
           </FilterListItem>
         </FilterList>
-        <MoreButton
-          onClick={() => {
-            resetModalState();
-            selectPath(rootFilters[0], 0);
-          }}
-        />
       </FilterContent>
     </FilterSection>
   );
