@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   LargeDialog,
   LargeDialogClose,
@@ -19,8 +19,10 @@ import RequestStatusBadge from "./request-status-badge";
 import SmallDot from "@/assets/icons/small-dot.svg";
 import ErrorIcon from "@/assets/icons/error-gray.svg";
 import type { CounselFormData } from "@/stores/counsel-form-store";
+import { useUpdateApplicationStatus } from "../_hooks/use-received-applications";
 
 interface ReceivedApplicationDialogProps {
+  id: string;
   applicantNickname: string;
   animalInfo: string;
   status: "before" | "done";
@@ -30,24 +32,43 @@ interface ReceivedApplicationDialogProps {
 }
 
 export default function ReceivedApplicationDialog({
+  id,
   applicantNickname,
-  status,
+  status: initialStatus,
   applicationDate,
   formData,
   children,
 }: ReceivedApplicationDialogProps) {
   const [open, setOpen] = useState(false);
+  const [status, setStatus] = useState<"before" | "done">(initialStatus);
+  const updateStatusMutation = useUpdateApplicationStatus();
+
+  useEffect(() => {
+    setStatus(initialStatus);
+  }, [initialStatus]);
 
   const handleCompleteCounsel = () => {
-    // TODO: API 호출 - 상담 완료 처리
-    console.log("상담 완료 처리");
-    setOpen(false);
+    updateStatusMutation.mutate(
+      { id, status: "done" },
+      {
+        onSuccess: () => {
+          setStatus("done");
+          setOpen(false);
+        },
+      }
+    );
   };
 
   const handleCancelComplete = () => {
-    // TODO: API 호출 - 완료 취소 처리
-    console.log("완료 취소 처리");
-    setOpen(false);
+    updateStatusMutation.mutate(
+      { id, status: "before" },
+      {
+        onSuccess: () => {
+          setStatus("before");
+          setOpen(false);
+        },
+      }
+    );
   };
 
   return (
@@ -102,7 +123,6 @@ export default function ReceivedApplicationDialog({
                     동의합니다
                   </span>
                 </label>
-                <div className="h-px bg-grayscale-gray2 w-full" />
                 <div className="flex flex-col gap-2 pl-1.5">
                   <div className="flex gap-1 items-start">
                     <SmallDot />
@@ -388,7 +408,7 @@ export default function ReceivedApplicationDialog({
                 </div>
               </div>
               <button
-                className="button-brown leading-[140%]  "
+                className="button-brown leading-[140%]"
                 onClick={handleCompleteCounsel}
               >
                 상담 완료
