@@ -45,7 +45,9 @@ const ServiceIntroBanner = () => {
           </button>
         </div>
 
-        <Banner />
+        <div className="absolute top-[64%] left-1/2 transform -translate-x-1/2 ">
+          <Banner />
+        </div>
       </div>
     );
   }
