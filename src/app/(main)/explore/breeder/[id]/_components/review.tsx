@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import SirenMuted from "@/assets/icons/siren-muted";
+import SirenMuted from "@/assets/icons/siren-muted.svg";
 import { Button } from "@/components/ui/button";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import ReportDialog from "@/components/report-dialog/report-dialog";
@@ -16,7 +16,7 @@ export default function Review({
 
   return (
     <>
-      <div className="space-y-2">
+      <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="text-body-s font-semibold text-grayscale-gray5">
@@ -42,7 +42,7 @@ export default function Review({
             입양 후기・{data.date}
           </div>
         )}
-        <div className="font-medium text-body-m text-primary">
+        <div className="font-medium text-body-m text-primary-500">
           {data.content}
         </div>
       </div>
