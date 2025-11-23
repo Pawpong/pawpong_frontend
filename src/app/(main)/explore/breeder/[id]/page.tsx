@@ -48,21 +48,21 @@ export default function Page({ params }: PageProps) {
 
   // 프로필 데이터 매핑
   const breederProfileData = {
-    avatarUrl: profileData.profileImageFileName || "/avatar-sample.png",
+    avatarUrl: profileData.profileImage || "/avatar-sample.png",
     nickname: profileData.breederName,
-    level: "elite" as const, // 백엔드 DTO에 level 정보가 없으므로 기본값 사용
-    location: `${profileData.profileInfo?.locationInfo?.cityName || ""} ${profileData.profileInfo?.locationInfo?.districtName || ""}`.trim(),
-    priceRange: profileData.profileInfo?.priceRangeInfo
-      ? `${profileData.profileInfo.priceRangeInfo.minPrice.toLocaleString()} - ${profileData.profileInfo.priceRangeInfo.maxPrice.toLocaleString()}원`
+    level: profileData.breederLevel || "new",
+    location: profileData.location || "",
+    priceRange: profileData.priceRange
+      ? `${profileData.priceRange.min?.toLocaleString()} - ${profileData.priceRange.max?.toLocaleString()}원`
       : "상담 후 결정",
-    breeds: profileData.profileInfo?.specializationAreas || [],
+    breeds: profileData.detailBreed ? [profileData.detailBreed] : [],
   };
 
   // 환경 사진
-  const envPhotos = profileData.profileInfo?.profilePhotos || [];
+  const envPhotos = profileData.representativePhotos || [];
 
   // 브리더 소개
-  const breederDescription = profileData.profileInfo?.profileDescription || "";
+  const breederDescription = profileData.description || "";
 
   // 분양 가능 개체 매핑
   const breedingAnimals = (petsData?.items || []).map((pet: any) => ({
@@ -87,12 +87,30 @@ export default function Page({ params }: PageProps) {
   }));
 
   // 후기 매핑
-  const reviews = (reviewsData?.items || []).map((review: any) => ({
-    id: review.reviewId,
-    nickname: review.adopterNickname || "익명",
-    date: new Date(review.createdAt).toISOString().split("T")[0],
-    content: review.content,
-  }));
+  const reviews = (reviewsData?.items || []).map((review: any) => {
+    // 날짜 필드: 백엔드에서 writtenAt을 반환
+    const dateString = review.writtenAt || review.createdAt;
+    let formattedDate = "";
+
+    if (dateString) {
+      try {
+        const date = new Date(dateString);
+        // 유효한 날짜인지 확인
+        if (!isNaN(date.getTime())) {
+          formattedDate = date.toISOString().split("T")[0];
+        }
+      } catch (error) {
+        console.error("Invalid date format:", dateString, error);
+      }
+    }
+
+    return {
+      id: review.reviewId,
+      nickname: review.adopterName || review.adopterNickname || "익명",
+      date: formattedDate || "날짜 없음",
+      content: review.content,
+    };
+  });
 
   return (
     <>

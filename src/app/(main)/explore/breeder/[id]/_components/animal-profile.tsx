@@ -23,11 +23,23 @@ export default function AnimalProfile({
   };
 }) {
   const Icon = sexInfo[sex].icon;
+
+  // 이미지 URL 검증 및 폴백 처리
+  const getValidImageUrl = (url: string) => {
+    if (!url) return "/animal-sample.png";
+    // http:// 또는 https://로 시작하면 그대로 사용
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+    // 상대 경로인 경우 플레이스홀더 사용 (실제 이미지 파일이 없으므로)
+    return "/animal-sample.png";
+  };
+
   return (
     <div className="space-y-4">
       <div className="relative aspect-square overflow-hidden rounded-lg">
         <Image
-          src={avatarUrl}
+          src={getValidImageUrl(avatarUrl)}
           alt={`${name}의 사진`}
           width={200}
           height={200}
