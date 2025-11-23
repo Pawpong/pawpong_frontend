@@ -55,6 +55,7 @@ export default function ReceivedApplicationsPage() {
               {allApplications.map((item) => (
                 <ReceivedApplicationListItem
                   key={item.id}
+                  id={item.id}
                   applicantNickname={item.applicantNickname}
                   animalInfo={item.animalInfo}
                   status={item.status}
