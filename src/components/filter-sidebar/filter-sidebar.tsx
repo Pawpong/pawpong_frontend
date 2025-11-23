@@ -33,23 +33,23 @@ export default function FilterSidebar() {
         <div className="space-y-6 lg:pb-15 md:pb-15 pb-10 w-[calc(19.875rem-(--spacing(4)))] pt-3">
           {activeFilters.length > 0 && (
             <div>
-              <div className="space-y-8">
-                <ClearFilters onClick={clearActiveFilters} />
-                <CurrentFilters
-                  selectedLeaves={activeFilters}
-                  onRemove={removeActiveFilter}
-                />
-              </div>
-              <Separator />
+              <ClearFilters onClick={clearActiveFilters} />
+              <CurrentFilters
+                selectedLeaves={activeFilters}
+                onRemove={removeActiveFilter}
+                className="mt-8 "
+              />
+
+              <Separator className="mt-8 mb-6" />
             </div>
           )}
 
           <AdoptableFilter />
-          <Separator />
+          <Separator className="my-6" />
           <BreedFilter />
-          <Separator />
+          <Separator className="my-6" />
           <LocationFilter />
-          <Separator />
+          <Separator className="my-6" />
           <LevelFilter />
         </div>
       </div>

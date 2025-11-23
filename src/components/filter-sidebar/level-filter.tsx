@@ -1,7 +1,5 @@
-"use client"; // 클라이언트 컴포넌트로 변경
+"use client";
 
-import { filter } from "@/constants/filter";
-import { useSegment } from "@/hooks/use-segment";
 import { useFilterStore } from "@/stores/filter-store";
 import FilterContent from "./filter-content";
 import FilterHeader from "./filter-header";
@@ -10,7 +8,6 @@ import FilterListItem from "./filter-list-item";
 import FilterSection from "./filter-section";
 import FilterTitle from "./filter-title";
 import MinimizeButton from "./minimize-button";
-import MoreButton from "./more-button";
 
 const levelFilterItems = [
   { id: 1, name: "뉴 New" },
@@ -22,10 +19,6 @@ export default function LevelFilter() {
   const toggleActiveFilter = useFilterStore(
     (state) => state.toggleActiveFilter
   );
-  const resetModalState = useFilterStore((state) => state.resetModalState);
-  const selectPath = useFilterStore((state) => state.selectPath);
-  const animal = (useSegment(1) as "cat" | "dog") || "cat";
-  const rootFilters = filter[animal];
 
   return (
     <FilterSection>
@@ -46,12 +39,6 @@ export default function LevelFilter() {
             </FilterListItem>
           ))}
         </FilterList>
-        <MoreButton
-          onClick={() => {
-            resetModalState();
-            selectPath(rootFilters[3], 0);
-          }}
-        />
       </FilterContent>
     </FilterSection>
   );
