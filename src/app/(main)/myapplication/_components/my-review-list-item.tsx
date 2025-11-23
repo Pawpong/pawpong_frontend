@@ -48,6 +48,7 @@ export default function MyReviewListItem({
               className="gap-0"
               hideDate={true}
             />
+
             <ReviewDialog
               breederId={breederId}
               breederName={breederName}

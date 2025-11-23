@@ -39,7 +39,10 @@ export default function NavBar({ navVariant = "default" }: NavBarProps) {
   return (
     <div className="flex">
       {navConfig.map((item) => {
-        const active = currNav === item.href.slice(1);
+        const isApplicationMenu = item.href === "/application";
+        const active = isApplicationMenu
+          ? currNav === "application" || currNav === "receivedApplications"
+          : currNav === item.href.slice(1);
         const Icon = active ? item.iconFill : item.icon;
         const hasChildren = Boolean(item.children?.length);
 
