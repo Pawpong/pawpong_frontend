@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 const animalTabsItems = [
-  { name: "고양이", href: "/explore/cat", icon: Cat },
   { name: "강아지", href: "/explore/dog", icon: Dog },
+  { name: "고양이", href: "/explore/cat", icon: Cat },
 ];
 
 export default function AnimalTabs() {
