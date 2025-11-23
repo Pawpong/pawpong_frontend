@@ -151,6 +151,18 @@ export default function Page({ params }: PageProps) {
           {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} />}
         </div>
       </div>
+      {!isLg && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2  w-full max-w-[22.0625rem]">
+          <Button
+            variant="counsel"
+            className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"
+            type="button"
+            onClick={handleCounselClick}
+          >
+            상담 신청하기
+          </Button>
+        </div>
+      )}
     </>
   );
 }

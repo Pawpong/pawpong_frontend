@@ -74,9 +74,6 @@ export default function ReviewDialog({
             </div>
           </div>
 
-          {/* 구분선 */}
-          <div className="h-px bg-grayscale-gray2 w-full" />
-
           {/* 스크롤 가능한 콘텐츠 영역 */}
           <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-9 min-h-0 overflow-y-auto pl-6 pr-2 pt-6 pb-10 scrollbar-custom">
             {/* 브리더 정보 */}
@@ -102,7 +99,9 @@ export default function ReviewDialog({
             </div>
 
             {/* 구분선 */}
-            <div className="h-px bg-grayscale-gray2 w-full" />
+            <div className="w-full flex flex-col">
+              <div className="h-px bg-grayscale-gray2 w-full" />
+            </div>
 
             {/* 폼 내용 */}
             <div className="flex flex-col gap-12 md:gap-8 w-full">

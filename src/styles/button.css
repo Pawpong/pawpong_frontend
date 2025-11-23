@@ -16,4 +16,8 @@
   .button-brown {
     @apply bg-primary-500 min-w-[4.5rem] text-white text-body-xs text-center rounded-md py-2 px-4 gap-1 items-center cursor-pointer hover:bg-primary-600;
   }
+  /* 상담완료 */
+  .button-disabled {
+    @apply bg-grayscale-gray2 text-grayscale-gray4   rounded-sm  cursor-not-allowed;
+  }
 }

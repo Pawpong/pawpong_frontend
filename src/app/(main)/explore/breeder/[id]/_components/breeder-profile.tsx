@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import LevelBadge from "../../../../../../components/level-badge";
 import { useCounselFormStore } from "@/stores/counsel-form-store";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
 
 export default function BreederProfile({
   data: { avatarUrl, nickname, level, location, priceRange, breeds },
@@ -20,6 +21,7 @@ export default function BreederProfile({
 }) {
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
+  const isLg = useBreakpoint("lg");
 
   const handleCounselClick = () => {
     clearCounselFormData();
@@ -62,14 +64,17 @@ export default function BreederProfile({
             </div>
           </div>
         </div>
-        <Button
-          variant="counsel"
-          className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"
-          type="button"
-          onClick={handleCounselClick}
-        >
-          상담 신청하기
-        </Button>
+        {/* 데스크탑(lg)에서만 버튼 표시 */}
+        {isLg && (
+          <Button
+            variant="counsel"
+            className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"
+            type="button"
+            onClick={handleCounselClick}
+          >
+            상담 신청하기
+          </Button>
+        )}
       </div>
     </div>
   );

@@ -93,7 +93,7 @@ function LargeDialogFooter({
   return (
     <DialogFooter
       className={cn(
-        "flex justify-between gap-2 md:pt-4 md:px-6 md:pb-6 border-t py-4 px-padding ",
+        "flex justify-between gap-2 border-t py-4 px-5 md:pt-4 md:px-6 md:pb-6",
         className
       )}
       {...props}
