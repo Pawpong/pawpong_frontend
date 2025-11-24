@@ -6,7 +6,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "냥 1번째",
     breederLevel: "elite",
     applicationDate: "2024. 01. 15.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "cat",
     reviewType: "입양 후기",
     reviewContent:
@@ -18,7 +18,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "멍 1번째",
     breederLevel: "new",
     applicationDate: "2024. 01. 18.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "dog",
     reviewType: "상담 후기",
     reviewContent:
@@ -30,7 +30,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "냥 2번째",
     breederLevel: "elite",
     applicationDate: "2024. 02. 05.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "cat",
     reviewType: "입양 후기",
     reviewContent:
@@ -42,7 +42,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "멍 2번째",
     breederLevel: "new",
     applicationDate: "2024. 02. 10.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "dog",
     reviewType: "상담 후기",
     reviewContent:
@@ -54,7 +54,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "냥 3번째",
     breederLevel: "elite",
     applicationDate: "2024. 02. 20.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "cat",
     reviewType: "입양 후기",
     reviewContent:
@@ -66,7 +66,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "멍 3번째",
     breederLevel: "new",
     applicationDate: "2024. 03. 05.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "dog",
     reviewType: "상담 후기",
     reviewContent:
@@ -78,7 +78,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "냥 4번째",
     breederLevel: "elite",
     applicationDate: "2024. 03. 12.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "cat",
     reviewType: "입양 후기",
     reviewContent:
@@ -90,7 +90,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "멍 4번째",
     breederLevel: "new",
     applicationDate: "2024. 03. 18.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "dog",
     reviewType: "상담 후기",
     reviewContent:
@@ -102,7 +102,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "냥 5번째",
     breederLevel: "elite",
     applicationDate: "2024. 04. 01.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "cat",
     reviewType: "입양 후기",
     reviewContent:
@@ -114,7 +114,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "멍 5번째",
     breederLevel: "new",
     applicationDate: "2024. 04. 08.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "dog",
     reviewType: "상담 후기",
     reviewContent:
@@ -126,7 +126,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "냥 6번째",
     breederLevel: "elite",
     applicationDate: "2024. 04. 15.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "cat",
     reviewType: "입양 후기",
     reviewContent:
@@ -138,7 +138,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "멍 6번째",
     breederLevel: "new",
     applicationDate: "2024. 04. 20.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "dog",
     reviewType: "상담 후기",
     reviewContent:
@@ -150,7 +150,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "냥 7번째",
     breederLevel: "elite",
     applicationDate: "2024. 05. 03.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "cat",
     reviewType: "입양 후기",
     reviewContent:
@@ -162,7 +162,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "멍 7번째",
     breederLevel: "new",
     applicationDate: "2024. 05. 10.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "dog",
     reviewType: "상담 후기",
     reviewContent:
@@ -174,7 +174,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "냥 8번째",
     breederLevel: "elite",
     applicationDate: "2024. 05. 18.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "cat",
     reviewType: "입양 후기",
     reviewContent:
@@ -186,7 +186,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "멍 8번째",
     breederLevel: "new",
     applicationDate: "2024. 05. 22.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "dog",
     reviewType: "상담 후기",
     reviewContent:
@@ -198,7 +198,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "냥 9번째",
     breederLevel: "elite",
     applicationDate: "2024. 06. 01.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "cat",
     reviewType: "입양 후기",
     reviewContent:
@@ -210,7 +210,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "멍 9번째",
     breederLevel: "new",
     applicationDate: "2024. 06. 08.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "dog",
     reviewType: "상담 후기",
     reviewContent:
@@ -222,7 +222,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "냥 10번째",
     breederLevel: "elite",
     applicationDate: "2024. 06. 15.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "cat",
     reviewType: "입양 후기",
     reviewContent:
@@ -234,7 +234,7 @@ export const myReviewMockData: MyReviewItem[] = [
     breederName: "멍 10번째",
     breederLevel: "new",
     applicationDate: "2024. 06. 20.",
-    profileImage: "/avatar-sample.png",
+    profileImage: "",
     animalType: "dog",
     reviewType: "상담 후기",
     reviewContent:

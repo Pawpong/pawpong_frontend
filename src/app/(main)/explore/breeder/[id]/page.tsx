@@ -12,9 +12,10 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useCounselFormStore } from "@/stores/counsel-form-store";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
+import { BREEDER_DETAIL_MOCK } from "@/app/(main)/explore/_mocks/explore-mock-data";
 
 export default function Page() {
-  const breederNickname = "범과 같이";
+  const breederNickname = BREEDER_DETAIL_MOCK.nickname;
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
   const isLg = useBreakpoint("lg");
@@ -29,97 +30,20 @@ export default function Page() {
       <Header breederNickname={breederNickname} />
       <div className="pt-4 lg:flex lg:gap-24.5 space-y-10 md:space-y-15 pb-10 md:pb-15 lg:lg-80">
         <div>
-          <BreederProfile
-            data={{
-              avatarUrl: "/avatar-sample.png",
-              nickname: "범과 같이",
-              level: "elite",
-              location: "경기도 용인시",
-              priceRange: "500,000 - 1,000,000원",
-              breeds: ["메인쿤", "러시안 블루", "샴"],
-            }}
-          />
+          <BreederProfile data={BREEDER_DETAIL_MOCK.profile} />
         </div>
         <div className="space-y-12 mt-10 md:mt-0">
-          <EnvPhotos photos={["/login-image.png", "/main-img-sample.png"]} />
+          <EnvPhotos photos={BREEDER_DETAIL_MOCK.envPhotos} />
           <Separator className="my-12" />
 
-          <BreederDescription
-            data={
-              "이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다.이곳은 브리더에 대한 설명입니다."
-            }
-          />
+          <BreederDescription data={BREEDER_DETAIL_MOCK.description} />
           <Separator className="my-12" />
-          <BreedingAnimals
-            data={[
-              {
-                id: "1",
-                avatarUrl: "/animal-sample.png",
-                name: "루시",
-                sex: "male",
-                birth: "2020-01-01",
-                price: "500,000원",
-                breed: "메인쿤",
-              },
-              {
-                id: "2",
-                avatarUrl: "/animal-sample.png",
-                name: "코코",
-                sex: "female",
-                birth: "2021-01-01",
-                price: "600,000원",
-                breed: "러시안 블루",
-              },
-            ]}
-          />
+          <BreedingAnimals data={BREEDER_DETAIL_MOCK.breedingAnimals} />
           <Separator className="my-12" />
-          <Parents
-            data={[
-              {
-                id: "1",
-                avatarUrl: "/animal-sample.png",
-                name: "루시",
-                sex: "male",
-                birth: "2020-01-01",
-                price: "500,000원",
-                breed: "메인쿤",
-              },
-              {
-                id: "2",
-                avatarUrl: "/animal-sample.png",
-                name: "코코",
-                sex: "female",
-                birth: "2021-01-01",
-                price: "600,000원",
-                breed: "러시안 블루",
-              },
-            ]}
-          />
+          <Parents data={BREEDER_DETAIL_MOCK.parents} />
 
           <Separator className="my-12" />
-          <Reviews
-            data={[
-              {
-                id: "1",
-                nickname: "냥집사",
-                date: "2023-10-01",
-                content: "정말 좋은 브리더님이세요!",
-              },
-              {
-                id: "2",
-                nickname: "펫러버",
-                date: "2023-09-15",
-                content:
-                  "아이들이 건강하게 잘 자라고 있어요.분양 과정이 매우 친절했습니다.분양 과정이 매우 친절했습니다.분양 과정이 매우 친절했습니다.분양 과정이 매우 친절했습니다.분양 과정이 매우 친절했습니다.",
-              },
-              {
-                id: "3",
-                nickname: "고양이매니아",
-                date: "2023-08-20",
-                content: "분양 과정이 매우 친절했습니다.",
-              },
-            ]}
-          />
+          <Reviews data={BREEDER_DETAIL_MOCK.reviews} />
         </div>
       </div>
       {!isLg && (
