@@ -16,68 +16,12 @@ import BreederTags from "@/components/breeder-list/breeder-tags";
 import LevelBadge from "@/components/level-badge";
 import { Button } from "@/components/ui/button";
 import GrayDot from "@/assets/icons/gray-dot.svg";
-
-const breederListInfo: {
-  id: string;
-  avatar: string;
-  name: string;
-  level: "elite" | "new";
-  location: string;
-  price: string;
-  tags: string[];
-  image: string;
-  status: "available" | "reserved" | "completed";
-}[] = [
-  {
-    id: "1",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite",
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "available",
-  },
-  {
-    id: "2",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite",
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "reserved",
-  },
-  {
-    id: "3",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite",
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "completed",
-  },
-  {
-    id: "4",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite",
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "available",
-  },
-];
+import { BREEDER_LIST_MOCK } from "@/app/(main)/explore/_mocks/explore-mock-data";
 
 export default function SiteBreederList() {
   return (
     <BreederList>
-      {breederListInfo.map((breeder) => (
+      {BREEDER_LIST_MOCK.map((breeder) => (
         <Link
           key={breeder.id}
           href={`/explore/breeder/${breeder.id}`}
@@ -86,7 +30,7 @@ export default function SiteBreederList() {
           <Breeder>
             <BreederProfile>
               <BreederHeader>
-                <BreederAvatar src={breeder.avatar} />
+                <BreederAvatar src={breeder.avatar} animal={breeder.animal} />
                 <div className="flex items-center gap-2">
                   <BreederName>{breeder.name}</BreederName>
                   <LevelBadge level={breeder.level} />
