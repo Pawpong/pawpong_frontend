@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import HeartFill from "@/assets/icons/heart-fill.svg";
 import { useSavedStore } from "@/stores/saved-store";
+import { useEffect, useState } from "react";
 
 interface BreederLikeButtonProps {
   className?: string;
@@ -16,7 +17,13 @@ export default function BreederLikeButton({
   breederId,
 }: BreederLikeButtonProps) {
   const { isSaved, toggleSaved } = useSavedStore();
-  const isLiked = isSaved(breederId);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  const isLiked = isHydrated ? isSaved(breederId) : false;
 
   const handleClick = () => {
     toggleSaved(breederId);
