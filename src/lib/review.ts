@@ -23,6 +23,8 @@ interface PaginationResponse<T> {
 /** 내 후기 아이템 DTO (백엔드 응답) */
 export interface MyReviewItemDto {
   reviewId: string;
+  applicationId: string | null;
+  breederId: string | null;
   breederNickname: string;
   breederProfileImage: string | null;
   breederLevel: string;

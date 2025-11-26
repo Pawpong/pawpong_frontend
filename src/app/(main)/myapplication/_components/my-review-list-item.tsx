@@ -7,6 +7,7 @@ import RightArrow from "@/assets/icons/right-arrow.svg";
 import ReviewDialog from "../../application/_components/review-dialog";
 
 interface MyReviewListItemProps {
+  applicationId: string | null;
   breederId: string;
   breederName: string;
   breederLevel: "elite" | "new";
@@ -19,6 +20,7 @@ interface MyReviewListItemProps {
 }
 
 export default function MyReviewListItem({
+  applicationId,
   breederId,
   breederName,
   breederLevel,
@@ -50,6 +52,7 @@ export default function MyReviewListItem({
             />
 
             <ReviewDialog
+              applicationId={applicationId || ""}
               breederId={breederId}
               breederName={breederName}
               breederLevel={breederLevel}

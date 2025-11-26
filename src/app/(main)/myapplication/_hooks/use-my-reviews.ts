@@ -3,6 +3,7 @@ import { getMyReviews, type MyReviewItemDto } from "@/lib/review";
 
 export interface MyReviewItem {
   reviewId: string;
+  applicationId: string | null;
   breederId: string;
   breederName: string;
   breederLevel: "elite" | "new";
@@ -43,7 +44,8 @@ const mapDtoToMyReviewItem = (dto: MyReviewItemDto): MyReviewItem => {
 
   return {
     reviewId: dto.reviewId,
-    breederId: "", // 백엔드 DTO에 없음
+    applicationId: dto.applicationId,
+    breederId: dto.breederId || "",
     breederName: dto.breederNickname,
     breederLevel: dto.breederLevel === "gold" || dto.breederLevel === "platinum" ? "elite" : "new",
     applicationDate: formatDate(dto.writtenAt), // 작성일을 신청일로 사용

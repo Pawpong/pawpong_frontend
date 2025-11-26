@@ -122,3 +122,64 @@ export const getMyApplications = async (
     throw new Error("Unknown error during applications fetch");
   }
 };
+
+/** 입양 신청 상세 응답 (백엔드 응답) */
+export interface ApplicationDetailDto {
+  applicationId: string;
+  breederId: string;
+  breederName: string;
+  petId?: string;
+  petName?: string;
+  status: string;
+  standardResponses: {
+    privacyConsent: boolean;
+    selfIntroduction: string;
+    familyMembers: string;
+    allFamilyConsent: boolean;
+    allergyTestInfo: string;
+    timeAwayFromHome: string;
+    livingSpaceDescription: string;
+    previousPetExperience: string;
+    canProvideBasicCare: boolean;
+    canAffordMedicalExpenses: boolean;
+    neuteringConsent: boolean;
+    preferredPetDescription?: string;
+    desiredAdoptionTiming?: string;
+    additionalNotes?: string;
+  };
+  customResponses: Array<{
+    questionId: string;
+    questionLabel: string;
+    questionType: string;
+    answer: string;
+  }>;
+  appliedAt: string;
+  processedAt?: string;
+  breederNotes?: string;
+}
+
+/**
+ * 입양 신청 상세 조회
+ * GET /api/adopter/applications/:id
+ */
+export const getApplicationDetail = async (
+  applicationId: string
+): Promise<ApplicationDetailDto> => {
+  try {
+    const response = await apiClient.get<ApiResponse<ApplicationDetailDto>>(
+      `/api/adopter/applications/${applicationId}`
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error("Failed to fetch application detail");
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Fetch application detail error:", error.message);
+      throw error;
+    }
+    throw new Error("Unknown error during application detail fetch");
+  }
+};
