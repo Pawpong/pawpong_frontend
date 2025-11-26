@@ -12,12 +12,10 @@ export default function Reviews({
   return (
     <BreederProfileSection>
       <BreederProfileSectionHeader>
-        <BreederProfileSectionTitle>
-          분양 중인 아이들
-        </BreederProfileSectionTitle>
+        <BreederProfileSectionTitle>후기</BreederProfileSectionTitle>
         <BreederProfileSectionMore />
       </BreederProfileSectionHeader>
-      <div className="space-y-8">
+      <div className="flex flex-col gap-8">
         {data.map(
           (e: {
             id: string;

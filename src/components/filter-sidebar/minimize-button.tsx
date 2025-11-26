@@ -4,8 +4,16 @@ import { Button } from "../ui/button";
 import { CollapsibleTrigger } from "../ui/collapsible";
 import { useCollapsible } from "./collapsible-provider";
 
-export default function MinimizeButton() {
+interface MinimizeButtonProps {
+  inverted?: boolean;
+}
+
+export default function MinimizeButton({
+  inverted = false,
+}: MinimizeButtonProps) {
   const { open, toggle } = useCollapsible();
+  const showMinus = inverted ? open : !open;
+
   return (
     <CollapsibleTrigger asChild>
       <Button
@@ -14,7 +22,7 @@ export default function MinimizeButton() {
         variant="secondary"
         onClick={toggle}
       >
-        {!open ? <Minus className="size-5" /> : <Plus className="size-5" />}
+        {showMinus ? <Minus className="size-5" /> : <Plus className="size-5" />}
       </Button>
     </CollapsibleTrigger>
   );

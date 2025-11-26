@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import type { CounselFormData } from "@/stores/counsel-form-store";
 
 interface ReceivedApplicationListItemProps {
+  id: string;
   applicantNickname: string;
   animalInfo: string;
   status: "before" | "done";
@@ -13,6 +14,7 @@ interface ReceivedApplicationListItemProps {
 }
 
 export default function ReceivedApplicationListItem({
+  id,
   applicantNickname,
   animalInfo,
   status,
@@ -22,6 +24,7 @@ export default function ReceivedApplicationListItem({
 }: ReceivedApplicationListItemProps) {
   return (
     <ReceivedApplicationDialog
+      id={id}
       applicantNickname={applicantNickname}
       animalInfo={animalInfo}
       status={status}

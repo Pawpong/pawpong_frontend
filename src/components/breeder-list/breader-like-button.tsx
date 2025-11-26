@@ -21,7 +21,10 @@ export default function BreederLikeButton({
   const [isLiked, setIsLiked] = useState(initialIsFavorited);
   const { toggle, isLoading } = useToggleFavorite();
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     // 낙관적 업데이트 (Optimistic UI)
     setIsLiked(!isLiked);
 

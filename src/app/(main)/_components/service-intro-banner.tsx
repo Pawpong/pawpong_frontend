@@ -32,7 +32,7 @@ const ServiceIntroBanner = () => {
   // 패드 (md 이상, lg 미만)
   if (isMd && !isLg) {
     return (
-      <div className="bg-tertiary-500 rounded-2xl flex flex-col h-[17.3125rem] overflow-hidden">
+      <div className="bg-tertiary-500 rounded-2xl flex flex-col h-[17.3125rem] overflow-hidden relative">
         <div className="flex flex-row justify-between items-start shrink-0 px-7 pt-7">
           <h2 className="text-body-l font-semibold text-primary whitespace-nowrap">
             믿을 수 있는 브리더,
@@ -44,8 +44,7 @@ const ServiceIntroBanner = () => {
             <ArrowRight className="size-7 rotate-180" />
           </button>
         </div>
-
-        <div className="absolute top-[64%] left-1/2 transform -translate-x-1/2 ">
+        <div className="absolute top-[34%] left-1/2 transform -translate-x-1/2 ">
           <Banner />
         </div>
       </div>

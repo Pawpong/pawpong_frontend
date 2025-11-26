@@ -9,6 +9,10 @@ import EnvPhotos from "./_components/env-photos";
 import Parents from "./_components/parents";
 import Reviews from "./_components/reviews";
 import Header from "../_components/header";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useCounselFormStore } from "@/stores/counsel-form-store";
+import { useBreakpoint } from "@/hooks/use-breakpoint";
 import {
   useBreederProfile,
   useBreederPets,
@@ -24,11 +28,19 @@ interface PageProps {
 
 export default function Page({ params }: PageProps) {
   const { id: breederId } = use(params);
+  const router = useRouter();
+  const { clearCounselFormData } = useCounselFormStore();
+  const isLg = useBreakpoint("lg");
 
   const { data: profileData, isLoading: isProfileLoading } = useBreederProfile(breederId);
   const { data: petsData, isLoading: isPetsLoading } = useBreederPets(breederId);
   const { data: parentPetsData, isLoading: isParentPetsLoading } = useParentPets(breederId);
   const { data: reviewsData, isLoading: isReviewsLoading } = useBreederReviews(breederId);
+
+  const handleCounselClick = () => {
+    clearCounselFormData();
+    router.push(`/counsel/${breederId}`);
+  };
 
   if (isProfileLoading) {
     return (
@@ -56,6 +68,7 @@ export default function Page({ params }: PageProps) {
       ? `${profileData.priceRange.min?.toLocaleString()} - ${profileData.priceRange.max?.toLocaleString()}원`
       : "상담 후 결정",
     breeds: profileData.detailBreed ? [profileData.detailBreed] : [],
+    animal: (profileData.petType as "cat" | "dog") || "dog",
   };
 
   // 환경 사진
@@ -75,8 +88,9 @@ export default function Page({ params }: PageProps) {
     breed: pet.breed,
   }));
 
-  // 부모견/부모묘 매핑
-  const parentPets = (parentPetsData?.items || []).map((pet: any) => ({
+  // 부모견/부모묘 매핑 - 백엔드가 배열을 직접 반환하는 경우 처리
+  const parentPetsArray = Array.isArray(parentPetsData) ? parentPetsData : (parentPetsData?.items || []);
+  const parentPets = parentPetsArray.map((pet: any) => ({
     id: pet.petId,
     avatarUrl: pet.photoUrl || "/animal-sample.png",
     name: pet.name,
@@ -119,32 +133,32 @@ export default function Page({ params }: PageProps) {
         <div>
           <BreederProfile data={breederProfileData} />
         </div>
-        <div className="space-y-12">
+        <div className="space-y-12 mt-10 md:mt-0">
           {envPhotos.length > 0 && (
             <>
               <EnvPhotos photos={envPhotos} />
-              <Separator className="md:my-12" />
+              <Separator className="my-12" />
             </>
           )}
 
           {breederDescription && (
             <>
               <BreederDescription data={breederDescription} />
-              <Separator className="md:my-12" />
+              <Separator className="my-12" />
             </>
           )}
 
           {!isPetsLoading && breedingAnimals.length > 0 && (
             <>
               <BreedingAnimals data={breedingAnimals} />
-              <Separator className="md:my-12" />
+              <Separator className="my-12" />
             </>
           )}
 
           {!isParentPetsLoading && parentPets.length > 0 && (
             <>
               <Parents data={parentPets} />
-              <Separator className="md:my-12" />
+              <Separator className="my-12" />
             </>
           )}
 

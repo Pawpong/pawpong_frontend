@@ -10,17 +10,17 @@ interface GnbProps {
 }
 
 export default function Gnb({ variant = "default" }: GnbProps) {
-  const isMd = useBreakpoint("md");
+  const isLg = useBreakpoint("lg");
   const bgClass = variant === "tertiary" ? "bg-tertiary-500" : "bg-background";
 
   return (
     <div className={bgClass}>
       <Container className="h-16 flex items-center justify-between">
         <LogoButton />
-        {isMd && <NavBar />}
+        {isLg && <NavBar />}
         <div className="flex gap-4 items-center">
           <NoticeButton />
-          {!isMd && <NavButton />}
+          {!isLg && <NavButton />}
         </div>
       </Container>
     </div>

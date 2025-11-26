@@ -33,8 +33,8 @@ export const NAV_ITEMS: NavItem[] = [
     icon: Search,
     iconFill: SearchFill,
     children: [
-      { name: "고양이", href: "/explore/cat", icon: Cat },
       { name: "강아지", href: "/explore/dog", icon: Dog },
+      { name: "고양이", href: "/explore/cat", icon: Cat },
     ],
   },
   {
