@@ -23,9 +23,9 @@ export default function EmailSettingsSection({
         <Switch
           checked={marketingAgreed}
           onCheckedChange={onMarketingAgreedChange}
+          className="data-[state=checked]:bg-primary-500 data-[state=checked]:border-primary-500"
         />
       </div>
     </div>
   );
 }
-
