@@ -40,11 +40,21 @@ export default function NavBar({ navVariant = "default" }: NavBarProps) {
     <div className="flex">
       {navConfig.map((item) => {
         const isApplicationMenu = item.href === "/application";
+        const hasChildren = Boolean(item.children?.length);
+
+        // children이 있는 경우, children 중 하나가 활성화되어 있으면 부모도 활성화
+        const isChildActive = hasChildren
+          ? item.children?.some((child) => currNav === child.href.slice(1)) ??
+            false
+          : false;
+
         const active = isApplicationMenu
           ? currNav === "application" || currNav === "receivedApplications"
+          : hasChildren
+          ? currNav === item.href.slice(1) || isChildActive
           : currNav === item.href.slice(1);
+
         const Icon = active ? item.iconFill : item.icon;
-        const hasChildren = Boolean(item.children?.length);
 
         if (!hasChildren) {
           return (
