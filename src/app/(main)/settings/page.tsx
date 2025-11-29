@@ -9,12 +9,13 @@ import WithdrawSection from "./_components/withdraw-section";
 
 export default function SettingsPage() {
   const [marketingAgreed, setMarketingAgreed] = useState(true);
-  const [nickname] = useState("포포퐁");
+  const [nickname, setNickname] = useState("포포퐁");
   const [email] = useState("example@gmail.com");
 
-  const handleNicknameEdit = () => {
-    // TODO: 닉네임 수정 로직 구현
-    console.log("닉네임 수정");
+  const handleNicknameEdit = (newNickname: string) => {
+    // TODO: 실제 API 호출로 닉네임 업데이트
+    setNickname(newNickname);
+    console.log("닉네임 수정:", newNickname);
   };
 
   const handleWithdraw = () => {
