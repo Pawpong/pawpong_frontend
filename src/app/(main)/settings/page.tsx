@@ -6,11 +6,13 @@ import SocialLoginSection from "./_components/social-login-section";
 import NicknameSection from "./_components/nickname-section";
 import EmailSettingsSection from "./_components/email-settings-section";
 import WithdrawSection from "./_components/withdraw-section";
+import WithdrawDialog from "./_components/withdraw-dialog";
 
 export default function SettingsPage() {
   const [marketingAgreed, setMarketingAgreed] = useState(true);
   const [nickname, setNickname] = useState("포포퐁");
   const [email] = useState("example@gmail.com");
+  const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
 
   const handleNicknameEdit = (newNickname: string) => {
     // TODO: 실제 API 호출로 닉네임 업데이트
@@ -19,8 +21,16 @@ export default function SettingsPage() {
   };
 
   const handleWithdraw = () => {
-    // TODO: 탈퇴 로직 구현
-    console.log("탈퇴하기");
+    setWithdrawDialogOpen(true);
+  };
+
+  const handleWithdrawConfirm = (reason: string, otherReason?: string) => {
+    // TODO: 실제 API 호출로 탈퇴 처리
+    console.log("탈퇴 이유:", reason);
+    if (otherReason) {
+      console.log("기타 사유:", otherReason);
+    }
+    // 탈퇴 처리 후 로그아웃 또는 리다이렉트
   };
 
   return (
@@ -60,6 +70,13 @@ export default function SettingsPage() {
           <WithdrawSection onWithdraw={handleWithdraw} />
         </div>
       </div>
+
+      {/* 탈퇴 다이얼로그 */}
+      <WithdrawDialog
+        open={withdrawDialogOpen}
+        onOpenChange={setWithdrawDialogOpen}
+        onConfirm={handleWithdrawConfirm}
+      />
     </div>
   );
 }
