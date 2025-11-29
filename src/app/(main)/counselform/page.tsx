@@ -63,7 +63,6 @@ export default function CounselFormPage() {
       previousPets: "",
       basicCare: false,
       medicalExpense: false,
-      neuteringAgreement: false,
       interestedAnimal: "",
       interestedAnimalDetails: "",
       adoptionTiming: "",
@@ -133,7 +132,6 @@ export default function CounselFormPage() {
       previousPetExperience: formData.previousPets,
       canProvideBasicCare: formData.basicCare,
       canAffordMedicalExpenses: formData.medicalExpense,
-      neuteringConsent: formData.neuteringAgreement,
       preferredPetDescription: formData.interestedAnimalDetails || undefined,
       desiredAdoptionTiming: formData.adoptionTiming || undefined,
       additionalNotes: formData.additionalMessage || undefined,
@@ -488,28 +486,6 @@ export default function CounselFormPage() {
                       />
                       <span className="text-body-s font-medium text-grayscale-gray6">
                         네
-                      </span>
-                    </label>
-                  )}
-                />
-              </div>
-
-              <div className="flex flex-col gap-3 items-start w-full">
-                <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                  모든 아이들은 중성화 후 분양되거나, 입양 후 중성화를 진행해야
-                  합니다. 동의하십니까?
-                </h2>
-                <Controller
-                  name="neuteringAgreement"
-                  control={form.control}
-                  render={({ field }) => (
-                    <label className="bg-white flex gap-2 h-12 w-full items-center px-4 py-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity">
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                      <span className="text-body-s font-medium text-grayscale-gray6">
-                        동의합니다
                       </span>
                     </label>
                   )}

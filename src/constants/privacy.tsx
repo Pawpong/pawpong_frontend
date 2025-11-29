@@ -33,7 +33,6 @@ export const privacyContents = [
           </li>
           <li className="ms-[42px]">희망 입양 시기</li>
           <li className="ms-[42px]">가족 동의 여부, 알레르기 검사 여부</li>
-          <li className="ms-[42px]">중성화 동의 여부</li>
           <li className="ms-[42px]">기타 문의사항</li>
         </ul>
       </li>

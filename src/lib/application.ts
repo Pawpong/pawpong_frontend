@@ -14,7 +14,6 @@ export interface ApplicationCreateRequest {
   previousPetExperience: string;
   canProvideBasicCare: boolean;
   canAffordMedicalExpenses: boolean;
-  neuteringConsent: boolean;
   preferredPetDescription?: string;
   desiredAdoptionTiming?: string;
   additionalNotes?: string;
@@ -142,7 +141,6 @@ export interface ApplicationDetailDto {
     previousPetExperience: string;
     canProvideBasicCare: boolean;
     canAffordMedicalExpenses: boolean;
-    neuteringConsent: boolean;
     preferredPetDescription?: string;
     desiredAdoptionTiming?: string;
     additionalNotes?: string;

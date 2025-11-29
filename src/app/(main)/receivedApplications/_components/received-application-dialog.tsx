@@ -306,21 +306,6 @@ export default function ReceivedApplicationDialog({
                 </span>
               </label>
             </div>
-            <div className="flex flex-col gap-3 w-full">
-              <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                모든 아이들은 중성화 후 분양되거나, 입양 후 중성화를 진행해야
-                합니다. 동의하십니까?
-              </h2>
-              <label className="bg-white flex gap-2 h-12 w-full items-center px-4 py-2 rounded-lg cursor-pointer">
-                <Checkbox
-                  checked={formData?.neuteringAgreement || false}
-                  disabled
-                />
-                <span className="text-body-s font-medium text-grayscale-gray6">
-                  동의합니다
-                </span>
-              </label>
-            </div>
           </div>
 
           {/* 구분선 */}

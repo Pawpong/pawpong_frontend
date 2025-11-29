@@ -37,31 +37,26 @@ const oathInfo: Record<"elite" | "new", React.ReactNode> = {
         </p>,
         <p key={3}>
           모든 아이들은{" "}
-          <span className="text-primary">중성화 완료 후 분양</span>하거나, 입양
-          계약서에 반드시 중성화 조항을 명시합니다.
-        </p>,
-        <p key={4}>
-          모든 아이들은{" "}
           <span className="text-primary">3차 종합백신 완료 후</span> 분양합니다.
         </p>,
-        <p key={5}>
+        <p key={4}>
           <span className="text-primary">혈통서 발급</span>을 의무화하며, 공식
           협회 발급 혈통서만 제공합니다.
         </p>,
-        <p key={6}>
+        <p key={5}>
           모든 아이들은 반드시{" "}
           <span className="text-primary">생후 3개월 이후</span>에만 분양합니다.
         </p>,
-        <p key={7}>
+        <p key={6}>
           국내에서 진행되는 모든 분양은 반드시{" "}
           <span className="text-primary">대면 분양</span>으로 진행하며,
           비대면·택배 분양은 절대 하지 않습니다.
         </p>,
-        <p key={8}>
+        <p key={7}>
           분양 개체의 사회화, 건강, 복지를 최우선으로 하며, 무분별한 번식을 하지
           않습니다.
         </p>,
-        <p key={9}>
+        <p key={8}>
           포퐁 플랫폼과 입양자에게{" "}
           <span className="text-primary">
             허위 사실 없이 투명하게 정보를 제공

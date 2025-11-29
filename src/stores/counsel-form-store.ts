@@ -26,7 +26,6 @@ export interface CounselFormData {
   // 케어 관련
   basicCare: boolean;
   medicalExpense: boolean;
-  neuteringAgreement: boolean;
 
   // 선택 사항
   interestedAnimal: string;
