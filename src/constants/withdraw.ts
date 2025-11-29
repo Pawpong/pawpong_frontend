@@ -33,3 +33,30 @@ export const withdrawReasons: WithdrawReason[] = [
     value: "other",
   },
 ];
+
+export const breederWithdrawReasons: WithdrawReason[] = [
+  {
+    label: "입양 문의가 잘 오지 않았어요.",
+    value: "no_inquiry",
+  },
+  {
+    label: "운영이 생각보다 번거롭거나 시간이 부족해요.",
+    value: "time_consuming",
+  },
+  {
+    label: "브리더 심사나 검증 절차가 어려웠어요.",
+    value: "verification_difficult",
+  },
+  {
+    label: "수익 구조나 서비스 정책이 잘 맞지 않아요.",
+    value: "policy_mismatch",
+  },
+  {
+    label: "사용하기 불편했어요. (UI/기능 등)",
+    value: "uncomfortable_ui",
+  },
+  {
+    label: "다른 이유로 탈퇴하고 싶어요.",
+    value: "other",
+  },
+];

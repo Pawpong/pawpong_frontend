@@ -17,6 +17,7 @@ import RadioActive from "@/assets/icons/radio-active.svg";
 import RadioInactive from "@/assets/icons/radio-inactive.svg";
 import {
   withdrawReasons,
+  breederWithdrawReasons,
   withdrawTitle,
   withdrawDescription,
 } from "@/constants/withdraw";
@@ -26,12 +27,14 @@ interface WithdrawDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: (reason: string, otherReason?: string) => void;
+  userType?: "adopter" | "breeder";
 }
 
 export default function WithdrawDialog({
   open,
   onOpenChange,
   onConfirm,
+  userType = "adopter",
 }: WithdrawDialogProps) {
   const [selectedReason, setSelectedReason] = useState<string | null>(null);
   const [otherReasonText, setOtherReasonText] = useState<string>("");
@@ -40,6 +43,8 @@ export default function WithdrawDialog({
     useState(false);
 
   const isOtherSelected = selectedReason === "other";
+  const isBreeder = userType === "breeder";
+  const reasons = isBreeder ? breederWithdrawReasons : withdrawReasons;
 
   // 다이얼로그가 열릴 때 초기화
   useEffect(() => {
@@ -61,8 +66,8 @@ export default function WithdrawDialog({
 
   const handleReasonSelect = (reason: string) => {
     setSelectedReason(reason);
-    if (reason === "already_adopted") {
-      // 입양 완료 다이얼로그 열기
+    // 일반 사용자이고 "이미 입양을 마쳤어요" 선택 시 입양 완료 다이얼로그 열기
+    if (!isBreeder && reason === "already_adopted") {
       setIsAdoptionCompleteDialogOpen(true);
     }
   };
@@ -132,7 +137,7 @@ export default function WithdrawDialog({
 
             {/* Radio List */}
             <div className="flex flex-col gap-0">
-              {withdrawReasons.map((reason) => {
+              {reasons.map((reason) => {
                 const isOther = reason.value === "other";
                 return (
                   <div
