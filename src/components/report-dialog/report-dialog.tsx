@@ -125,7 +125,7 @@ export default function ReportDialog({
     <>
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent
-          className="max-w-[24.5625rem] sm:max-w-[37.5rem] w-full p-0 gap-0 overflow-hidden !rounded-2xl"
+          className="max-w-[24.5625rem] sm:max-w-[37.5rem] w-full p-0 gap-0 overflow-hidden rounded-2xl"
           showCloseButton={false}
         >
           {/* 상단 헤더 */}
