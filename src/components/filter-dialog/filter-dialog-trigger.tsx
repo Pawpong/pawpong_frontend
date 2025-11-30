@@ -99,7 +99,7 @@ export default function FilterDialogTrigger({
                   {filterGroup.label}
                   <div
                     className={cn("h-0.5 w-full bg-transparent", {
-                      "bg-primary": isTabSelected,
+                      "bg-primary-500": isTabSelected,
                     })}
                   />
                 </Button>
