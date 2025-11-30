@@ -405,6 +405,8 @@ export default function UserInfoSection() {
         <div className="flex flex-col gap-4">
           <NextButton
             onClick={() => {
+              // 기존 검증 로직 주석처리
+              /*
               let hasError = false;
 
               // 이메일 검증 (소셜 로그인이 아닌 경우만)
@@ -443,6 +445,10 @@ export default function UserInfoSection() {
               if (!hasError) {
                 nextFlowIndex();
               }
+              */
+
+              // 바로 다음 단계로 이동
+              nextFlowIndex();
             }}
           />
           <UndoButton />

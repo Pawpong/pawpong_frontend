@@ -74,7 +74,7 @@ export default function BreedsSelectDialogTrigger({
                     {label}
                     <div
                       className={cn("h-0.5 w-full bg-transparent", {
-                        "bg-primary": selectedGroup === label,
+                        "bg-primary-500": selectedGroup === label,
                       })}
                     />
                   </Button>

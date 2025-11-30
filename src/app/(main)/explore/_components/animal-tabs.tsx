@@ -43,7 +43,7 @@ export default function AnimalTabs() {
               </div>
               <div
                 className={cn("h-[2px] bg-transparent w-full", {
-                  "bg-primary!": active,
+                  "bg-primary-500!": active,
                 })}
               />
             </Button>
