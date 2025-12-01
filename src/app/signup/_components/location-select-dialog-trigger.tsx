@@ -103,7 +103,7 @@ export default function LocationSelectDialogTrigger({
                     {city}
                     <div
                       className={cn("h-0.5 w-full bg-transparent", {
-                        "bg-primary": selectedGroup === city,
+                        "bg-primary-500": selectedGroup === city,
                       })}
                     />
                   </Button>

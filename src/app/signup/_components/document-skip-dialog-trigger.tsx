@@ -59,7 +59,9 @@ export default function DocumentSkipDialogTrigger({
             </Button>
           </SimpleDialogClose>
           <SimpleDialogClose asChild>
-            <Button className="px-4 py-3 text-body-s">이어서 작성</Button>
+            <Button className="px-4 py-3 text-body-s bg-primary-500">
+              이어서 작성
+            </Button>
           </SimpleDialogClose>
         </SimpleDialogFooter>
       </SimpleDialogContent>
