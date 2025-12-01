@@ -7,6 +7,7 @@ import ParentsInfo from "./_components/parents-info";
 import BreedingAnimals from "./_components/breeding-animals";
 import { useToast } from "@/hooks/use-toast";
 import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useProfileStore, type ProfileFormData } from "@/stores/profile-store";
 import { useWatch } from "react-hook-form";
 import {
@@ -16,6 +17,7 @@ import {
   setFormErrors,
   scrollToFirstError,
 } from "@/utils/profile-validation";
+import { profileFormSchema } from "./profile-schema";
 
 export default function ProfilePage() {
   const isMdUp = useBreakpoint("md");
@@ -26,6 +28,7 @@ export default function ProfilePage() {
   const defaultAnimalId = useMemo(() => `animal-default-${Date.now()}`, []);
 
   const form = useForm<ProfileFormData>({
+    resolver: zodResolver(profileFormSchema),
     defaultValues: profileData || {
       breederName: "",
       description: "",
@@ -62,7 +65,6 @@ export default function ProfilePage() {
     mode: "onBlur",
   });
 
-  // 폼 값들을 watch하여 실시간으로 disabled 상태 체크
   const formValues = useWatch({ control: form.control });
   const data = formValues || form.getValues();
   const isDisabled = isFormEmpty(data as ProfileFormData);

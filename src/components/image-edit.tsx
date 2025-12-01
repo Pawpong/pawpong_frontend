@@ -57,6 +57,7 @@ export default function ImageEdit({
   };
 
   const currentStatus = imageFiles.length > 0 ? "Filled" : status;
+  const isError = currentStatus === "Error";
 
   return (
     <div className="flex gap-2">
@@ -73,25 +74,27 @@ export default function ImageEdit({
       <div
         className={cn(
           "bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group",
-          "pb-2.5 pt-2 px-0",
-          {
-            "bg-gray-50": currentStatus === "Hover",
-            "bg-white": currentStatus === "Filled",
-            "bg-red-50": currentStatus === "Error",
-          },
+          "pb-2.5 pt-2 px-0 border border-transparent",
+          currentStatus === "Hover" && "bg-gray-50",
+          isError && "",
           className
         )}
         onClick={handleClick}
       >
         <Camera
           className={cn("size-7 transition-colors", {
-            "group-hover:[&_path]:fill-[#4F3B2E]": currentStatus === "Default",
-            "[&_path]:fill-red-500": currentStatus === "Error",
+            "group-hover:[&_path]:fill-[#4F3B2E]": !isError,
+            "[&_path]:fill-status-error-500": isError,
           })}
         />
 
         {limit === "on" && (
-          <div className="text-caption-s text-grayscale-gray5 font-medium">
+          <div
+            className={cn(
+              "text-caption-s font-medium",
+              isError ? "text-status-error-500" : "text-grayscale-gray5"
+            )}
+          >
             {imageFiles.length}/{maxCount}
           </div>
         )}

@@ -25,6 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 import { isFormComplete, isFormEmpty } from "@/utils/counsel-form-validation";
 import ExitConfirmDialog from "@/components/exit-confirmation-dialog";
 import { useNavigationGuardContext } from "@/contexts/navigation-guard-context";
+import { formatPhoneNumber } from "@/utils/phone";
 
 export default function CounselFormPage() {
   const isMdUp = useBreakpoint("md");
@@ -39,27 +40,34 @@ export default function CounselFormPage() {
     isInterestedAnimalDetailsFocused,
     setIsInterestedAnimalDetailsFocused,
   ] = useState(false);
+  const defaultCounselValues: CounselFormData = counselFormData
+    ? {
+        ...counselFormData,
+        phone: formatPhoneNumber(counselFormData.phone),
+      }
+    : {
+        privacyAgreement: false,
+        name: "",
+        phone: "",
+        email: "",
+        introduction: "",
+        familyMembers: "",
+        familyAgreement: false,
+        allergyCheck: "",
+        awayTime: "",
+        livingSpace: "",
+        previousPets: "",
+        basicCare: false,
+        medicalExpense: false,
+        neuteringAgreement: false,
+        interestedAnimal: "",
+        interestedAnimalDetails: "",
+        adoptionTiming: "",
+        additionalMessage: "",
+      };
+
   const form = useForm<CounselFormData>({
-    defaultValues: counselFormData || {
-      privacyAgreement: false,
-      name: "",
-      phone: "",
-      email: "",
-      introduction: "",
-      familyMembers: "",
-      familyAgreement: false,
-      allergyCheck: "",
-      awayTime: "",
-      livingSpace: "",
-      previousPets: "",
-      basicCare: false,
-      medicalExpense: false,
-      neuteringAgreement: false,
-      interestedAnimal: "",
-      interestedAnimalDetails: "",
-      adoptionTiming: "",
-      additionalMessage: "",
-    },
+    defaultValues: defaultCounselValues,
     mode: "onBlur",
   });
 
@@ -96,7 +104,10 @@ export default function CounselFormPage() {
     const formData = form.getValues();
 
     if (isValid) {
-      setCounselFormData(formData);
+      setCounselFormData({
+        ...formData,
+        phone: formatPhoneNumber(formData.phone),
+      });
       toast({
         title: "상담 신청이 완료되었습니다.",
       });
@@ -191,7 +202,12 @@ export default function CounselFormPage() {
                     <Input
                       {...field}
                       placeholder="휴대폰 번호"
+                      inputMode="numeric"
+                      maxLength={13}
                       className="overflow-hidden text-ellipsis whitespace-nowrap"
+                      onChange={(e) =>
+                        field.onChange(formatPhoneNumber(e.target.value))
+                      }
                     />
                   )}
                 />
