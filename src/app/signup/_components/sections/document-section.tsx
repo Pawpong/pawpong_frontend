@@ -18,6 +18,14 @@ import DocumentSkipDialogTrigger from "../document-skip-dialog-trigger";
 import OathDialogTrigger from "../oath-dialog-trigger";
 import FileButton from "./file-button";
 
+const DOCUMENT_KEYS = {
+  ID_CARD: "idCard",
+  BUSINESS_LICENSE: "businessLicense",
+  CONTRACT_SAMPLE: "contractSample",
+  BREEDER_DOG: "breederDogCertificate",
+  BREEDER_CAT: "breederCatCertificate",
+} as const;
+
 const levelInfo = [
   {
     name: "elite",
@@ -47,7 +55,20 @@ export default function DocumentSection() {
   const level = useSignupFormStore((e) => e.level);
   const setLevel = useSignupFormStore((e) => e.setLevel);
   const animal = useSignupFormStore((e) => e.animal);
+  const documents = useSignupFormStore((e) => e.documents);
+  const setDocuments = useSignupFormStore((e) => e.setDocuments);
   const [check, setCheck] = useState(false);
+
+  const handleFileUpload = (key: string) => (file: File) => {
+    setDocuments(key, file);
+  };
+
+  const handleFileDelete = (key: string) => () => {
+    setDocuments(key, null);
+  };
+
+  const breederDocKey =
+    animal === "dog" ? DOCUMENT_KEYS.BREEDER_DOG : DOCUMENT_KEYS.BREEDER_CAT;
   return (
     <SignupFormSection className="gap-15 md:gap-20 lg:gap-20">
       <SignupFormHeader>
@@ -89,7 +110,13 @@ export default function DocumentSection() {
         <div className="flex flex-col gap-8 w-full">
           {/* 신분증 사본 - info 있음 */}
           <div className="flex flex-col gap-2.5">
-            <FileButton>신분증 사본</FileButton>
+            <FileButton
+              file={documents[DOCUMENT_KEYS.ID_CARD] ?? null}
+              onUpload={handleFileUpload(DOCUMENT_KEYS.ID_CARD)}
+              onDelete={handleFileDelete(DOCUMENT_KEYS.ID_CARD)}
+            >
+              신분증 사본
+            </FileButton>
             <div className="text-secondary-700 font-medium text-caption">
               이름과 생년월일 이외에는 가려서 제출하시는 걸 권장드려요.
             </div>
@@ -97,14 +124,32 @@ export default function DocumentSection() {
 
           {/* 동물생산업 등록증, 표준 입양계약서 샘플*/}
           <div className="flex flex-col gap-3">
-            <FileButton>동물생산업 등록증</FileButton>
-            {level === "elite" && <FileButton>표준 입양계약서 샘플</FileButton>}
+            <FileButton
+              file={documents[DOCUMENT_KEYS.BUSINESS_LICENSE] ?? null}
+              onUpload={handleFileUpload(DOCUMENT_KEYS.BUSINESS_LICENSE)}
+              onDelete={handleFileDelete(DOCUMENT_KEYS.BUSINESS_LICENSE)}
+            >
+              동물생산업 등록증
+            </FileButton>
+            {level === "elite" && (
+              <FileButton
+                file={documents[DOCUMENT_KEYS.CONTRACT_SAMPLE] ?? null}
+                onUpload={handleFileUpload(DOCUMENT_KEYS.CONTRACT_SAMPLE)}
+                onDelete={handleFileDelete(DOCUMENT_KEYS.CONTRACT_SAMPLE)}
+              >
+                표준 입양계약서 샘플
+              </FileButton>
+            )}
           </div>
 
           {/* 브리더 인증 서류 - info 있음 (elite만) */}
           {level === "elite" && (
             <div className="flex flex-col gap-2.5">
-              <FileButton>
+              <FileButton
+                file={documents[breederDocKey] ?? null}
+                onUpload={handleFileUpload(breederDocKey)}
+                onDelete={handleFileDelete(breederDocKey)}
+              >
                 {animal === "dog"
                   ? "강아지 브리더 인증 서류"
                   : "고양이 브리더 인증 서류"}
