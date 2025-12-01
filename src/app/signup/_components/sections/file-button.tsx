@@ -48,7 +48,6 @@ export default function FileButton({
       <div
         className={cn(
           "bg-white rounded-lg px-4 py-3 flex items-center gap-2 group cursor-pointer",
-          !fileName && "border border-grayscale-gray3",
           className
         )}
         onClick={handleClick}

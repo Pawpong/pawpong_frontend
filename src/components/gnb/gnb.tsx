@@ -7,9 +7,13 @@ import NavButton from "./nav-button";
 import NoticeButton from "./notice-button";
 interface GnbProps {
   variant?: "default" | "tertiary";
+  navVariant?: "default" | "breeder";
 }
 
-export default function Gnb({ variant = "default" }: GnbProps) {
+export default function Gnb({
+  variant = "default",
+  navVariant = "breeder",
+}: GnbProps) {
   const isLg = useBreakpoint("lg");
   const bgClass = variant === "tertiary" ? "bg-tertiary-500" : "bg-background";
 
@@ -17,10 +21,10 @@ export default function Gnb({ variant = "default" }: GnbProps) {
     <div className={bgClass}>
       <Container className="h-16 flex items-center justify-between">
         <LogoButton />
-        {isLg && <NavBar />}
+        {isLg && <NavBar navVariant={navVariant} />}
         <div className="flex gap-4 items-center">
           <NoticeButton />
-          {!isLg && <NavButton />}
+          {!isLg && <NavButton navVariant={navVariant} />}
         </div>
       </Container>
     </div>
