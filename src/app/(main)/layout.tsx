@@ -15,7 +15,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <QueryProvider>
       <Suspense>
         <NavigationGuardProvider>
-          <Gnb variant={useTertiaryVariant ? "tertiary" : "default"} />
+          <Gnb
+            variant={useTertiaryVariant ? "tertiary" : "default"}
+            navVariant="breeder"
+          />
           {children}
         </NavigationGuardProvider>
       </Suspense>
