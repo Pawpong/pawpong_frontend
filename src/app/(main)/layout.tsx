@@ -8,8 +8,10 @@ import { QueryProvider } from "@/providers/query-provider";
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isProfilePage = pathname === "/profile";
+  const isProfileDocumentsPage = pathname === "/profile/documents";
   const isCounselFormPage = pathname === "/counselform";
-  const useTertiaryVariant = isProfilePage || isCounselFormPage;
+  const useTertiaryVariant =
+    isProfilePage || isProfileDocumentsPage || isCounselFormPage;
 
   return (
     <QueryProvider>
