@@ -14,7 +14,6 @@ import MinusIcon from "@/assets/icons/minus.svg";
 import { useFormContext, Controller } from "react-hook-form";
 import type { ProfileFormData } from "@/stores/profile-store";
 import ErrorMessage from "@/components/error-message";
-import { BREEDER_PROFILE_ERROR } from "@/constants/errors/breeder-profile-error";
 
 export default function ProfileBasicInfo({
   form,
@@ -23,13 +22,12 @@ export default function ProfileBasicInfo({
 }) {
   const [animal] = useState<"dog" | "cat">("dog");
   const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
-  const { control, watch, setValue, formState } = form;
+  const { control, watch, setValue, formState, trigger } = form;
   const { errors } = formState;
 
-  const breeds = watch("breeds");
-  const location = watch("location");
   const isCounselMode = watch("isCounselMode");
   const descriptionValue = watch("description");
+  const normalizeNumber = (value: string) => value.replace(/\D/g, "");
   return (
     <div className="flex flex-col gap-8 items-start w-full">
       <div className="flex flex-col gap-3 items-center w-full">
@@ -41,9 +39,6 @@ export default function ProfileBasicInfo({
           <Controller
             name="breederName"
             control={control}
-            rules={{
-              required: BREEDER_PROFILE_ERROR.NAME_REQUIRED,
-            }}
             render={({ field }) => (
               <Input placeholder="브리더명(상호명)" {...field} />
             )}
@@ -75,51 +70,49 @@ export default function ProfileBasicInfo({
           )}
         />
         {/* 위치 선택 */}
-        <Controller
-          name="location"
-          control={control}
-          render={() => (
-            <LocationSelectDialogTrigger
-              onSubmitLocation={(value: string | null) => {
-                setValue("location", value);
-              }}
-              asChild
-            >
-              <Button
-                variant="input"
-                size={undefined}
-                className="!px-[var(--space-16)] !py-[var(--space-12)] group"
+        <div className="flex flex-col gap-2.5 w-full">
+          <Controller
+            name="location"
+            control={control}
+            render={({ field }) => (
+              <LocationSelectDialogTrigger
+                onSubmitLocation={(value: string | null) => {
+                  field.onChange(value);
+                  trigger("location");
+                }}
+                asChild
               >
-                {location ? (
-                  <span className="text-[#4F3B2E]">{location}</span>
-                ) : (
-                  <span>지역</span>
-                )}
-                <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
-              </Button>
-            </LocationSelectDialogTrigger>
+                <Button
+                  variant="input"
+                  size={undefined}
+                  className="!px-[var(--space-16)] !py-[var(--space-12)] group"
+                >
+                  {field.value ? (
+                    <span className="text-[#4F3B2E]">{field.value}</span>
+                  ) : (
+                    <span>지역</span>
+                  )}
+                  <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
+                </Button>
+              </LocationSelectDialogTrigger>
+            )}
+          />
+          {errors.location && (
+            <ErrorMessage message={errors.location.message as string} />
           )}
-        />
-        {/* {!breederLocation && <ErrorMessage message={messages[0].text} />} */}
+        </div>
 
         {/* 품종 선택 */}
         <div className="space-y-2.5 w-full">
           <Controller
             name="breeds"
             control={control}
-            rules={{
-              validate: (value) => {
-                if (!value || value.length === 0) {
-                  return BREEDER_PROFILE_ERROR.BREEDS_REQUIRED;
-                }
-                return true;
-              },
-            }}
-            render={() => (
+            render={({ field }) => (
               <BreedsSelectDialogTrigger
                 animal={animal!}
                 onSubmitBreeds={(newBreeds) => {
-                  setValue("breeds", newBreeds, { shouldValidate: true });
+                  field.onChange(newBreeds);
+                  trigger("breeds");
                 }}
                 asChild
               >
@@ -129,8 +122,10 @@ export default function ProfileBasicInfo({
                   className="!px-[var(--space-16)] !py-[var(--space-12)] group"
                 >
                   <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
-                    {breeds.length > 0 ? (
-                      <span className="text-[#4F3B2E]">{breeds.join("/")}</span>
+                    {field.value && field.value.length > 0 ? (
+                      <span className="text-[#4F3B2E]">
+                        {field.value.join("/")}
+                      </span>
                     ) : (
                       <span>품종</span>
                     )}
@@ -156,16 +151,17 @@ export default function ProfileBasicInfo({
         <Controller
           name="representativePhotos"
           control={control}
-          render={() => (
+          render={({ field }) => (
             <ImageEdit
               maxCount={3}
+              status={errors.representativePhotos ? "Error" : "Default"}
               onFileChange={(files) => {
-                setValue("representativePhotos", files);
+                field.onChange(files);
+                trigger("representativePhotos");
               }}
             />
           )}
         />
-        {/* </div> */}
       </div>
       {/* 입양 비용 범위 */}
       <div className="flex flex-col gap-3 items-start w-full">
@@ -177,22 +173,16 @@ export default function ProfileBasicInfo({
             <Controller
               name="minPrice"
               control={control}
-              rules={{
-                validate: (value) => {
-                  if (!isCounselMode && (!value || value.trim() === "")) {
-                    return BREEDER_PROFILE_ERROR.PRICE_REQUIRED;
-                  }
-                  return true;
-                },
-              }}
               render={({ field }) => (
                 <PriceInput
                   placeholder={isCounselMode ? "상담 후 공개" : "0"}
                   className="grow"
+                  inputMode="numeric"
                   disabled={isCounselMode}
                   value={isCounselMode ? "" : field.value}
                   onChange={(e) => {
-                    field.onChange(e);
+                    const digits = normalizeNumber(e.target.value);
+                    field.onChange(digits);
                   }}
                 />
               )}
@@ -203,22 +193,16 @@ export default function ProfileBasicInfo({
             <Controller
               name="maxPrice"
               control={control}
-              rules={{
-                validate: (value) => {
-                  if (!isCounselMode && (!value || value.trim() === "")) {
-                    return BREEDER_PROFILE_ERROR.PRICE_REQUIRED;
-                  }
-                  return true;
-                },
-              }}
               render={({ field }) => (
                 <PriceInput
                   placeholder={isCounselMode ? "상담 후 공개" : "0"}
                   className="grow"
+                  inputMode="numeric"
                   disabled={isCounselMode}
                   value={isCounselMode ? "" : field.value}
                   onChange={(e) => {
-                    field.onChange(e);
+                    const digits = normalizeNumber(e.target.value);
+                    field.onChange(digits);
                   }}
                 />
               )}
@@ -240,7 +224,7 @@ export default function ProfileBasicInfo({
             </button>
           </div>
           {(errors.minPrice || errors.maxPrice) && (
-            <ErrorMessage message={BREEDER_PROFILE_ERROR.PRICE_REQUIRED} />
+            <ErrorMessage message="입양 비용 범위를 입력해 주세요" />
           )}
         </div>
       </div>

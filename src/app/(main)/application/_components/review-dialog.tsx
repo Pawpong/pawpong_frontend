@@ -22,6 +22,7 @@ import { useCounselFormStore } from "@/stores/counsel-form-store";
 import Arrow from "@/assets/icons/arrow";
 import { cn } from "@/lib/utils";
 import ReviewWriteDialog from "./review-write-dialog";
+import { formatPhoneNumber } from "@/utils/phone";
 
 interface ReviewDialogProps {
   breederId: string;
@@ -150,7 +151,11 @@ export default function ReviewDialog({
                   className="overflow-hidden text-ellipsis whitespace-nowrap"
                 />
                 <Input
-                  value={counselFormData?.phone || ""}
+                  value={
+                    counselFormData?.phone
+                      ? formatPhoneNumber(counselFormData.phone)
+                      : ""
+                  }
                   readOnly
                   placeholder="휴대폰 번호"
                   className="overflow-hidden text-ellipsis whitespace-nowrap"
