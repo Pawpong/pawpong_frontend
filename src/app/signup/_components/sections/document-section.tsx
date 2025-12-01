@@ -9,7 +9,6 @@ import UndoButton from "@/components/signup-form-section/undo-button";
 import { Button } from "@/components/ui/button";
 import DocumentFormContent from "@/components/document-form/document-form-content";
 import useSignupFormStore from "@/stores/signup-form-store";
-import { useState } from "react";
 import DocumentSkipDialogTrigger from "../document-skip-dialog-trigger";
 import type { Level } from "@/components/document-form/document-constants";
 
@@ -19,7 +18,8 @@ export default function DocumentSection() {
   const animal = useSignupFormStore((e) => e.animal);
   const documents = useSignupFormStore((e) => e.documents);
   const setDocuments = useSignupFormStore((e) => e.setDocuments);
-  const [oathChecked, setOathChecked] = useState(false);
+  const oathChecked = useSignupFormStore((e) => e.oathChecked);
+  const setOathChecked = useSignupFormStore((e) => e.setOathChecked);
 
   const handleFileUpload = (key: string) => (file: File) => {
     setDocuments(key, file);

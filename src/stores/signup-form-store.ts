@@ -59,6 +59,9 @@ interface SignupFormStore {
   level: "elite" | "new";
   setLevel: (level: "elite" | "new") => void;
 
+  oathChecked: boolean;
+  setOathChecked: (checked: boolean) => void;
+
   nickname: string;
   setNickname: (nickname: string) => void;
 
@@ -125,6 +128,9 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
 
   level: "elite",
   setLevel: (level: "elite" | "new") => set({ level }),
+
+  oathChecked: false,
+  setOathChecked: (checked: boolean) => set({ oathChecked: checked }),
 
   nickname: "",
   setNickname: (nickname: string) => set({ nickname }),
