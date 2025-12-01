@@ -157,13 +157,19 @@ export default function BreederInfoSection() {
                   }}
                   asChild
                 >
-                  <Button variant="input" className="py-3 px-4 pr-3.5">
+                  <Button variant="input" className="py-3 px-4 pr-3.5 group">
                     {field.value ? (
-                      <span className="text-primary">{field.value}</span>
+                      <span className="text-primary-500">{field.value}</span>
                     ) : (
-                      <span>지역</span>
+                      <span className="group-hover:text-primary-500">지역</span>
                     )}
-                    <Arrow className="size-5" />
+                    <Arrow
+                      className={`size-5 [&_path]:fill-current ${
+                        field.value
+                          ? "text-primary-500"
+                          : "group-hover:text-primary-500"
+                      }`}
+                    />
                   </Button>
                 </LocationSelectDialogTrigger>
               )}
@@ -189,17 +195,25 @@ export default function BreederInfoSection() {
                   }}
                   asChild
                 >
-                  <Button variant="input" className="py-3 px-4 pr-3.5 ">
+                  <Button variant="input" className="py-3 px-4 pr-3.5 group">
                     <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
                       {field.value && field.value.length > 0 ? (
-                        <span className="text-primary">
+                        <span className="text-primary-500">
                           {field.value.join("/")}
                         </span>
                       ) : (
-                        <span>품종</span>
+                        <span className="group-hover:text-primary-500">
+                          품종
+                        </span>
                       )}
                     </div>
-                    <Arrow className="size-5" />
+                    <Arrow
+                      className={`size-5 [&_path]:fill-current ${
+                        field.value && field.value.length > 0
+                          ? "text-primary-500"
+                          : "group-hover:text-primary-500"
+                      }`}
+                    />
                   </Button>
                 </BreedsSelectDialogTrigger>
               )}
