@@ -238,6 +238,7 @@ export default function BreederInfoSection() {
           <UndoButton />
         </div>
       </SignupFormItems>
+      
     </SignupFormSection>
   );
 }
