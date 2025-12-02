@@ -3,7 +3,7 @@ import { MyReviewItem } from "../_hooks/use-my-reviews";
 export const myReviewMockData: MyReviewItem[] = [
   {
     breederId: "1",
-    breederName: "냥 1번째",
+    breederName: "냥 1번째쨰쨰 1번째쨰쨰 1번째쨰쨰",
     breederLevel: "elite",
     applicationDate: "2024. 01. 15.",
     profileImage: "",
