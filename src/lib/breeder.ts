@@ -406,3 +406,112 @@ export const removeFavorite = async (breederId: string): Promise<void> => {
     throw new Error("Unknown error during remove favorite");
   }
 };
+
+/** 개체 상세 응답 DTO (백엔드 응답) */
+export interface PetDetailDto {
+  petId: string;
+  name: string;
+  breed: string;
+  breedKo: string;
+  birthDate: string;
+  gender: "male" | "female";
+  price: number;
+  status: "available" | "reserved" | "adopted";
+  description?: string;
+  photos: string[];
+  vaccinations: Array<{
+    name: string;
+    date: string;
+    veterinarian?: string;
+  }>;
+  healthRecords: Array<{
+    date: string;
+    type: string;
+    description: string;
+    veterinarian?: string;
+  }>;
+  parentInfo?: {
+    father?: {
+      name: string;
+      breed: string;
+      photos?: string[];
+    };
+    mother?: {
+      name: string;
+      breed: string;
+      photos?: string[];
+    };
+  };
+  availableFrom?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * 개체 상세 조회
+ * GET /api/breeder/:id/pet/:petId
+ */
+export const getPetDetail = async (
+  breederId: string,
+  petId: string
+): Promise<PetDetailDto> => {
+  try {
+    const response = await apiClient.get<ApiResponse<PetDetailDto>>(
+      `/api/breeder/${breederId}/pet/${petId}`
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error("Failed to fetch pet detail");
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Pet detail error:", error.message);
+      throw error;
+    }
+    throw new Error("Unknown error during pet detail fetch");
+  }
+};
+
+/** 입양 신청 폼 응답 DTO (백엔드 응답) */
+export interface ApplicationFormDto {
+  breederId: string;
+  breederName: string;
+  customQuestions: Array<{
+    questionId: string;
+    questionLabel: string;
+    questionType: "text" | "textarea" | "radio" | "checkbox" | "select";
+    options?: string[];
+    required: boolean;
+    order: number;
+  }>;
+  requiredDocuments: string[];
+  additionalNotes?: string;
+}
+
+/**
+ * 입양 신청 폼 구조 조회
+ * GET /api/breeder/:id/application-form
+ */
+export const getApplicationForm = async (
+  breederId: string
+): Promise<ApplicationFormDto> => {
+  try {
+    const response = await apiClient.get<ApiResponse<ApplicationFormDto>>(
+      `/api/breeder/${breederId}/application-form`
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error("Failed to fetch application form");
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Application form error:", error.message);
+      throw error;
+    }
+    throw new Error("Unknown error during application form fetch");
+  }
+};

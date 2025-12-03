@@ -18,8 +18,6 @@ export default function NicknameSection({
 
   const handleSave = (newNickname: string) => {
     onEdit?.(newNickname);
-    // TODO: 실제 API 호출로 닉네임 업데이트
-    console.log("닉네임 수정:", newNickname);
   };
 
   return (

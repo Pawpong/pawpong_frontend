@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { formatPhoneNumber } from "@/utils/phone";
 
 // usertype 타입 정의
 export type UserType = "guest" | "breeder";
@@ -58,6 +59,9 @@ interface SignupFormStore {
   level: "elite" | "new";
   setLevel: (level: "elite" | "new") => void;
 
+  oathChecked: boolean;
+  setOathChecked: (checked: boolean) => void;
+
   nickname: string;
   setNickname: (nickname: string) => void;
 
@@ -100,19 +104,8 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
     }),
   phoneNumber: "",
   setPhoneNumber: (phoneNumber: string) => {
-    let value = phoneNumber.replace(/[^0-9]/g, ""); // 숫자만 남김
-
-    // 010-1234-5678 형태로 자동 포맷팅
-    if (value.length < 4) {
-      value = value;
-    } else if (value.length < 8) {
-      value = value.slice(0, 3) + "-" + value.slice(3);
-    } else {
-      value =
-        value.slice(0, 3) + "-" + value.slice(3, 7) + "-" + value.slice(7, 11);
-    }
-
-    set({ phoneNumber: value });
+    const formatted = formatPhoneNumber(phoneNumber);
+    set({ phoneNumber: formatted });
   },
 
   email: "",
@@ -135,6 +128,9 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
 
   level: "elite",
   setLevel: (level: "elite" | "new") => set({ level }),
+
+  oathChecked: false,
+  setOathChecked: (checked: boolean) => set({ oathChecked: checked }),
 
   nickname: "",
   setNickname: (nickname: string) => set({ nickname }),

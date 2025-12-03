@@ -29,7 +29,7 @@ export default function HomeBreederGrid() {
           {animals.map((animal) => (
             <Link
               key={animal.id}
-              href={`/explore/breeder/${animal.id}`}
+              href={`/explore/breeder/${animal.breederId}`}
               className="block"
             >
               <AnimalProfile data={animal} />

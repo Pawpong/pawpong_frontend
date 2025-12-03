@@ -124,10 +124,13 @@ const oathInfo: Record<"elite" | "new", React.ReactNode> = {
 export default function OathDialogTrigger({
   onAgree,
   level,
+  isReadOnly = false,
   ...props
-}: { onAgree: () => void; level: "elite" | "new" } & React.ComponentProps<
-  typeof DialogPrimitive.Trigger
->) {
+}: {
+  onAgree: () => void;
+  level: "elite" | "new";
+  isReadOnly?: boolean;
+} & React.ComponentProps<typeof DialogPrimitive.Trigger>) {
   return (
     <LargeDialog>
       <LargeDialogTrigger {...props} />
@@ -157,8 +160,11 @@ export default function OathDialogTrigger({
               variant="tertiary"
               className="py-2 px-4 text-sm leading-[140%] text-primary-500 tracking-[-2%] w-18  rounded-[--spacing(1)]"
               onClick={() => {
-                onAgree();
+                if (!isReadOnly) {
+                  onAgree();
+                }
               }}
+              disabled={isReadOnly}
             >
               동의
             </Button>

@@ -25,6 +25,7 @@ import {
   getApplicationDetail,
   type ApplicationDetailDto,
 } from "@/lib/application";
+import { formatPhoneNumber } from "@/utils/phone";
 
 interface ReviewDialogProps {
   applicationId: string;

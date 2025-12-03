@@ -20,6 +20,7 @@ import SmallDot from "@/assets/icons/small-dot.svg";
 import ErrorIcon from "@/assets/icons/error-gray.svg";
 import type { CounselFormData } from "@/stores/counsel-form-store";
 import { useUpdateApplicationStatus } from "../_hooks/use-received-applications";
+import { formatPhoneNumber } from "@/utils/phone";
 
 interface ReceivedApplicationDialogProps {
   id: string;
@@ -153,7 +154,7 @@ export default function ReceivedApplicationDialog({
                 className="overflow-hidden text-ellipsis whitespace-nowrap"
               />
               <Input
-                value={formData?.phone || ""}
+                value={formData?.phone ? formatPhoneNumber(formData.phone) : ""}
                 readOnly
                 placeholder="휴대폰 번호"
                 className="overflow-hidden text-ellipsis whitespace-nowrap"

@@ -4,7 +4,11 @@ import {
   useQueryClient,
   InfiniteData,
 } from "@tanstack/react-query";
-import { receivedApplicationMockData } from "../_mocks/received-application-mock-data";
+import {
+  getReceivedApplications,
+  updateApplicationStatus as updateApplicationStatusApi,
+  type ReceivedApplicationItemDto
+} from "@/lib/breeder-management";
 
 export interface ReceivedApplicationItem {
   id: string;
@@ -21,23 +25,44 @@ interface ReceivedApplicationsResponse {
 
 const PAGE_SIZE = 10;
 
+/**
+ * 백엔드 DTO를 프론트엔드 ReceivedApplicationItem으로 변환
+ */
+const mapDtoToReceivedApplication = (dto: ReceivedApplicationItemDto): ReceivedApplicationItem => {
+  // 백엔드 상태를 프론트엔드 상태로 매핑
+  const statusMap: Record<string, "before" | "done"> = {
+    consultation_pending: "before",
+    consultation_completed: "done",
+    adoption_approved: "done",
+    adoption_rejected: "done",
+  };
+
+  return {
+    id: dto.applicationId,
+    applicantNickname: dto.adopterName,
+    animalInfo: dto.petName || "반려동물 정보 없음",
+    status: statusMap[dto.status] || "before",
+    applicationDate: new Date(dto.appliedAt).toISOString().split("T")[0],
+  };
+};
+
 const fetchReceivedApplications = async (
   page: number
 ): Promise<ReceivedApplicationsResponse> => {
-  // TODO: API 연동 시 아래 주석 해제
-  // const response = await api.get(`/breeder/applications`, {
-  //   params: { page, limit: PAGE_SIZE },
-  // });
-  // return response.data;
+  try {
+    const result = await getReceivedApplications(page, PAGE_SIZE);
 
-  // 목 데이터
-  const startIndex = (page - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-
-  return {
-    data: receivedApplicationMockData.slice(startIndex, endIndex),
-    hasMore: endIndex < receivedApplicationMockData.length,
-  };
+    return {
+      data: result.applications.map(mapDtoToReceivedApplication),
+      hasMore: result.pagination.hasNextPage,
+    };
+  } catch (error) {
+    console.error("받은 신청 목록 조회 실패:", error);
+    return {
+      data: [],
+      hasMore: false,
+    };
+  }
 };
 
 export function useReceivedApplications() {
@@ -61,10 +86,16 @@ export function useUpdateApplicationStatus() {
       id: string;
       status: "before" | "done";
     }) => {
-      // TODO: API 연동 시 아래 주석 해제
-      // await api.patch(`/breeder/applications/${id}/status`, { status });
+      // 프론트엔드 상태를 백엔드 상태로 매핑
+      const backendStatus = status === "before"
+        ? "consultation_pending"
+        : "consultation_completed";
 
-      return Promise.resolve({ id, status });
+      await updateApplicationStatusApi(id, {
+        newStatus: backendStatus as any,
+      });
+
+      return { id, status };
     },
     onSuccess: ({ id, status }) => {
       // 쿼리 캐시 업데이트

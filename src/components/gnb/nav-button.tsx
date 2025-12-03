@@ -5,7 +5,11 @@ import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import MobileNavMenu from "./mobile-nav-menu";
 
-export default function NavButton() {
+interface NavButtonProps {
+  navVariant?: "default" | "breeder";
+}
+
+export default function NavButton({ navVariant = "breeder" }: NavButtonProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -17,7 +21,7 @@ export default function NavButton() {
       </SheetTrigger>
       <SheetContent side="right" className="w-full">
         <SheetTitle className="sr-only">모바일 내비게이션</SheetTitle>
-        <MobileNavMenu />
+        <MobileNavMenu navVariant={navVariant} />
       </SheetContent>
     </Sheet>
   );

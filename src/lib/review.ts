@@ -109,3 +109,44 @@ export const createReview = async (
     throw new Error("Unknown error during review creation");
   }
 };
+
+/** 후기 상세 DTO (백엔드 응답) */
+export interface MyReviewDetailDto {
+  reviewId: string;
+  applicationId: string | null;
+  breederId: string | null;
+  breederNickname: string;
+  breederProfileImage: string | null;
+  breederLevel: string;
+  breedingPetType: string;
+  content: string;
+  reviewType: string;
+  writtenAt: Date;
+  isVisible: boolean;
+}
+
+/**
+ * 후기 상세 조회
+ * GET /api/adopter/reviews/:id
+ */
+export const getReviewDetail = async (
+  reviewId: string
+): Promise<MyReviewDetailDto> => {
+  try {
+    const response = await apiClient.get<ApiResponse<MyReviewDetailDto>>(
+      `/api/adopter/reviews/${reviewId}`
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error("Failed to fetch review detail");
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Fetch review detail error:", error.message);
+      throw error;
+    }
+    throw new Error("Unknown error during review detail fetch");
+  }
+};

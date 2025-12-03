@@ -21,7 +21,8 @@ const fetchHomeAnimals = async (): Promise<HomeAnimalsResponse> => {
 
     // 백엔드 AvailablePetDto를 프론트엔드 HomeAnimalData 타입으로 변환
     const data: HomeAnimalData[] = response.map((pet: AvailablePetDto) => ({
-      id: pet.breederId, // 브리더 ID를 사용 (브리더 프로필로 연결)
+      id: pet.petId, // 고유한 petId 사용 (중복 방지)
+      breederId: pet.breederId, // 브리더 프로필 연결용
       avatarUrl: pet.mainPhoto,
       name: pet.name,
       sex: "male", // 백엔드 API에 성별 정보가 없어 기본값 사용

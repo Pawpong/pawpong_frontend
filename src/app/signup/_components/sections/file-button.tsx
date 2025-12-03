@@ -1,34 +1,41 @@
 "use client";
 
 import FileIcon from "@/assets/icons/file";
-import { Button } from "@/components/ui/button";
+import CloseTertiary from "@/assets/icons/close-tertiary.svg";
+import ErrorMessage from "@/components/error-message";
+import { useFileUpload } from "../hooks/use-file-upload";
 import { cn } from "@/lib/utils";
-import { ComponentProps, useRef, useState } from "react";
 
-interface FileButtonProps extends ComponentProps<"button"> {
+interface FileButtonProps {
+  children: React.ReactNode;
+  className?: string;
   onUpload?: (file: File) => void;
+  onDelete?: () => void;
+  file?: File | null;
+  maxSizeMB?: number;
+  errorMessage?: string;
 }
 
 export default function FileButton({
   children,
   className,
   onUpload,
-  ...props
+  onDelete,
+  file,
+  maxSizeMB = 10,
+  errorMessage,
 }: FileButtonProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = useState<string>("");
+  const resolvedErrorMessage =
+    errorMessage ?? `파일은 최대 ${maxSizeMB}MB까지 업로드할 수 있어요`;
 
-  const handleClick = () => {
-    inputRef.current?.click();
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setFileName(file.name);
-    onUpload?.(file); // ✅ 외부에서 제어 가능
-  };
+  const { inputRef, fileName, handleClick, handleChange, handleDelete, error } =
+    useFileUpload({
+      onUpload,
+      onDelete,
+      file,
+      maxSizeMB,
+      errorMessage: resolvedErrorMessage,
+    });
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -38,23 +45,34 @@ export default function FileButton({
         onChange={handleChange}
         className="hidden"
       />
-      <Button
-        variant="input"
-        type="button"
-        onClick={handleClick}
-        className={cn("px-4 py-3 flex items-center justify-between", className)}
-        {...props}
-      >
-        <div className="flex items-center gap-2">
-          <FileIcon className="fill-transparent stroke-grayscale-gray5 size-5" />
-          <div>{children}</div>
-        </div>
-        {fileName && (
-          <div className="text-caption-s text-grayscale-gray5 truncate max-w-[50%] text-right">
-            {fileName}
-          </div>
+      <div
+        className={cn(
+          "bg-white rounded-lg px-4 py-3 flex items-center gap-2 group cursor-pointer",
+          className
         )}
-      </Button>
+        onClick={handleClick}
+      >
+        <FileIcon className="fill-transparent stroke-grayscale-gray5 size-5 shrink-0" />
+        {fileName ? (
+          <span className="text-body-m font-medium text-[#4F3B2E] flex-1 truncate">
+            {fileName}
+          </span>
+        ) : (
+          <span className="text-body-m font-medium text-grayscale-gray5">
+            {children}
+          </span>
+        )}
+        {fileName && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+          >
+            <CloseTertiary className="size-6" />
+          </button>
+        )}
+      </div>
+      {error && <ErrorMessage message={error} />}
     </div>
   );
 }
