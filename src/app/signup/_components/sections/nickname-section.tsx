@@ -65,7 +65,6 @@ export default function NicknameSection() {
         setNicknameChecked(false);
         setNicknameAvailable(false);
       } else {
-        alert("사용 가능한 닉네임입니다!");
         setNicknameChecked(true);
         setNicknameAvailable(true);
       }
@@ -195,7 +194,7 @@ export default function NicknameSection() {
             </Button>
           </div>
           {nicknameAvailable && (
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-0.5">
               <Check className="size-3 shrink-0" />
               <p className="text-caption font-medium text-status-success-500">
                 사용할 수 있는 닉네임이에요
