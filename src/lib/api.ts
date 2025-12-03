@@ -32,10 +32,17 @@ function createApi(): AxiosInstance {
   instance.interceptors.response.use(
     (res) => res,
     async (error: AxiosError) => {
-      // 예시: 401 처리 (refresh token 흐름 등)
+      // 401 처리 (refresh token 흐름 등)
       if (error.response?.status === 401) {
         // TODO: 리프레시 처리 또는 로그아웃 로직
         // 예: await tryRefreshToken();
+        const message =
+          (error.response?.data &&
+          typeof error.response.data === "object" &&
+          "message" in error.response.data
+            ? (error.response.data as { message?: string }).message
+            : undefined) || "로그인이 필요합니다. 다시 로그인해주세요.";
+        return Promise.reject(new Error(message));
       }
 
       // 에러 메시지 포맷 통일해서 던지기

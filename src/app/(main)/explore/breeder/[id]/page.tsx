@@ -15,7 +15,7 @@ import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { BREEDER_DETAIL_MOCK } from "@/app/(main)/explore/_mocks/explore-mock-data";
 
 export default function Page() {
-  const breederNickname = BREEDER_DETAIL_MOCK.nickname;
+  const { id: breederId, nickname: breederNickname } = BREEDER_DETAIL_MOCK;
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
   const isLg = useBreakpoint("lg");
@@ -27,7 +27,7 @@ export default function Page() {
 
   return (
     <>
-      <Header breederNickname={breederNickname} />
+      <Header breederNickname={breederNickname} breederId={breederId} />
       <div className="pt-4 lg:flex lg:gap-24.5 space-y-10 md:space-y-15 pb-10 md:pb-15 lg:lg-80">
         <div>
           <BreederProfile data={BREEDER_DETAIL_MOCK.profile} />
