@@ -4,7 +4,7 @@ import ProfileImageWithBadge from "@/components/breeder/profile-image-with-badge
 import BreederInfo from "@/components/breeder/breeder-info";
 import { Button } from "@/components/ui/button";
 import RightArrow from "@/assets/icons/right-arrow.svg";
-import ReviewDialog from "../../application/_components/review-dialog";
+import Link from "next/link";
 
 interface MyReviewListItemProps {
   breederId: string;
@@ -49,19 +49,12 @@ export default function MyReviewListItem({
               hideDate={true}
             />
 
-            <ReviewDialog
-              breederId={breederId}
-              breederName={breederName}
-              breederLevel={breederLevel}
-              applicationDate={applicationDate}
-              profileImage={profileImage}
-              animalType={animalType}
-            >
+            <Link href={`/explore/breeder/${breederId}`}>
               <Button className="gap-1 text-grayscale-gray5 text-body-xs h-auto p-0 has-[>svg]:px-0 hover:bg-transparent">
                 <span>보기</span>
                 <RightArrow className="size-5" />
               </Button>
-            </ReviewDialog>
+            </Link>
           </div>
         </div>
       </div>

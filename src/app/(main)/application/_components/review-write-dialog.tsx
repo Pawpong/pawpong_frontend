@@ -74,7 +74,7 @@ export default function ReviewWriteDialog({
         <div className="h-px bg-grayscale-gray2 w-full" />
 
         {/* 스크롤 가능한 콘텐츠 영역 */}
-        <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-5 min-h-0 overflow-y-auto px-5 pt-6 pb-[9.25rem] scrollbar-custom md:px-6 md:pb-[4.5rem]">
+        <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-5 min-h-0 px-5 pt-6 pb-[9.25rem] md:px-6 md:pb-[4.5rem]">
           {/* 브리더 정보 */}
           <div className="flex items-center justify-between w-full">
             <div className="flex gap-5 items-center grow">
