@@ -63,6 +63,7 @@ export const BREEDER_LIST_MOCK = [
 }[];
 
 export const BREEDER_DETAIL_MOCK = {
+  id: "breeder-1",
   nickname: "범과 같이",
   profile: {
     avatarUrl: "",
@@ -138,6 +139,7 @@ export const BREEDER_DETAIL_MOCK = {
     },
   ],
 } satisfies {
+  id: string;
   nickname: string;
   profile: {
     avatarUrl: string;

@@ -9,7 +9,7 @@ import ReportDialog from "@/components/report-dialog/report-dialog";
 export default function Review({
   data,
 }: {
-  data: { nickname: string; date: string; content: string };
+  data: { id: string; nickname: string; date: string; content: string };
 }) {
   const isMobile = !useBreakpoint("md");
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
@@ -50,6 +50,7 @@ export default function Review({
         open={isReportDialogOpen}
         onOpenChange={setIsReportDialogOpen}
         type="review"
+        reviewId={data.id}
       />
     </>
   );
