@@ -1,0 +1,188 @@
+name: Create Jira Subtask
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  create-jira-subtask:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extract Jira Story Key
+        id: extract-jira-key
+        run: |
+          STORY_NUMBER=$(echo "${{ github.event.issue.body }}" | grep -oE '[0-9]+' | head -1)
+          if [ -z "$STORY_NUMBER" ]; then
+            echo "❌ No story number found"
+            exit 1
+          fi
+          JIRA_KEY="PP-$STORY_NUMBER"
+          echo "jira_key=$JIRA_KEY" >> $GITHUB_OUTPUT
+          echo "✅ Built Jira Key: $JIRA_KEY"
+
+      - name: Extract Assignee
+        id: extract-assignee
+        run: |
+          # GitHub 이슈의 assignee를 확인
+          GITHUB_ASSIGNEE="${{ github.event.issue.assignee.login }}"
+
+          echo "GitHub Assignee: $GITHUB_ASSIGNEE"
+
+          case "$GITHUB_ASSIGNEE" in
+            "heeyoung123")
+              JIRA_ASSIGNEE="712020:d6d4a8f9-52f7-4976-8b6c-7010ce28c5b5?cloudId=7c421a75-44ad-4581-880c-54ba3c02ebbe"
+              ASSIGNEE_NAME="김희영"
+              ;;
+            *)
+              JIRA_ASSIGNEE=""
+              ASSIGNEE_NAME=""
+              ;;
+          esac
+
+          echo "assignee_name=$ASSIGNEE_NAME" >> $GITHUB_OUTPUT
+          echo "jira_assignee=$JIRA_ASSIGNEE" >> $GITHUB_OUTPUT
+          echo "✅ GitHub Assignee: $GITHUB_ASSIGNEE -> Jira: $JIRA_ASSIGNEE ($ASSIGNEE_NAME)"
+
+      - name: Extract Issue Description
+        id: extract-description
+        run: |
+          echo "=== Debugging Issue Body ==="
+          echo "${{ github.event.issue.body }}"
+          echo "============================"
+
+          FULL_BODY="${{ github.event.issue.body }}"
+
+          # "### 작업 설명" 다음부터 끝까지 추출 (줄바꿈 유지)
+          DESCRIPTION=$(echo "$FULL_BODY" | awk '
+            BEGIN { found=0; content="" }
+            /^### 작업 설명/ { found=1; next }
+            found && /^###/ { found=0 }
+            found { 
+              if (content != "") content = content "\n"
+              content = content $0 
+            }
+            END { print content }
+          ')
+
+          # 빈 값 처리
+          if [ -z "$DESCRIPTION" ] || [ "$DESCRIPTION" = " " ]; then
+            DESCRIPTION="작업 내용이 입력되지 않았습니다."
+          fi
+
+          # GitHub Actions output에 안전하게 저장 (줄바꿈 유지)
+          {
+            echo "description<<EOF"
+            echo "$DESCRIPTION"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+          echo "✅ Final Description with line breaks:"
+          echo "$DESCRIPTION"
+
+      - name: Create Jira Subtask
+        id: create-subtask
+        run: |
+          echo "Creating Jira Sub-task for story: ${{ steps.extract-jira-key.outputs.jira_key }}"
+          echo "Assignee: ${{ steps.extract-assignee.outputs.jira_assignee }}"
+          echo "Description: ${{ steps.extract-description.outputs.description }}"
+
+          # 설명을 ADF 형식으로 변환 (개행 유지)
+          DESCRIPTION="${{ steps.extract-description.outputs.description }}"
+
+          # 줄바꿈을 기준으로 각 줄을 별도의 paragraph로 만들기
+          ADF_CONTENT=""
+          while IFS= read -r line; do
+            if [ -n "$line" ]; then
+              if [ -n "$ADF_CONTENT" ]; then
+                ADF_CONTENT="$ADF_CONTENT,"
+              fi
+              # JSON 이스케이프 처리
+              ESCAPED_LINE=$(echo "$line" | sed 's/"/\\"/g' | sed 's/\\/\\\\/g')
+              ADF_CONTENT="$ADF_CONTENT{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"$ESCAPED_LINE\"}]}"
+            fi
+          done <<< "$DESCRIPTION"
+
+          # 기본 페이로드 생성 (ADF 형식)
+          PAYLOAD=$(jq -n \
+            --arg project "PP" \
+            --arg parent "${{ steps.extract-jira-key.outputs.jira_key }}" \
+            --arg summary "${{ github.event.issue.title }}" \
+            --argjson content "[$ADF_CONTENT]" \
+            '{
+              "fields": {
+                "project": {"key": $project},
+                "parent": {"key": $parent},
+                "summary": $summary,
+                "description": {
+                  "type": "doc",
+                  "version": 1,
+                  "content": $content
+                },
+                "issuetype": {"name": "하위 작업"}
+              }
+            }')
+
+          # 담당자가 있으면 추가
+          if [ -n "${{ steps.extract-assignee.outputs.jira_assignee }}" ]; then
+            PAYLOAD=$(echo "$PAYLOAD" | jq \
+              --arg assignee "${{ steps.extract-assignee.outputs.jira_assignee }}" \
+              '.fields.assignee = {"accountId": $assignee}')
+            echo "✅ Added assignee to payload"
+          fi
+
+          echo "Sending payload:"
+          echo "$PAYLOAD"
+
+          RESPONSE=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST \
+            -H "Authorization: Basic ${{ secrets.JIRA_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d "$PAYLOAD" \
+            ${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue)
+
+          HTTP_CODE=$(echo "$RESPONSE" | grep "HTTP_CODE:" | cut -d: -f2)
+          RESPONSE_BODY=$(echo "$RESPONSE" | sed '/HTTP_CODE:/d')
+
+          echo "HTTP Code: $HTTP_CODE"
+          echo "Response: $RESPONSE_BODY"
+
+          if [ "$HTTP_CODE" = "201" ]; then
+            JIRA_ISSUE_KEY=$(echo "$RESPONSE_BODY" | jq -r '.key')
+            echo "✅ Created Jira Sub-task: $JIRA_ISSUE_KEY"
+            echo "jira_issue_key=$JIRA_ISSUE_KEY" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Failed to create Jira Sub-task: $RESPONSE_BODY"
+            exit 1
+          fi
+
+      - name: Add Success Comment
+        if: steps.create-subtask.outputs.jira_issue_key
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const jiraIssueKey = '${{ steps.create-subtask.outputs.jira_issue_key }}';
+            const parentStory = '${{ steps.extract-jira-key.outputs.jira_key }}';
+            const jiraBaseUrl = '${{ secrets.JIRA_BASE_URL }}';
+            const assigneeName = '${{ steps.extract-assignee.outputs.assignee_name }}';
+
+            let assigneeText = '';
+            if (assigneeName) {
+              assigneeText = `\n**담당자:** ${assigneeName}`;
+            }
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🔗 **Jira 하위 작업 생성 완료**
+
+            **하위 작업:** [${jiraIssueKey}](${jiraBaseUrl}/browse/${jiraIssueKey})
+            **상위 스토리:** [${parentStory}](${jiraBaseUrl}/browse/${parentStory})${assigneeText}
+
+            > GitHub 이슈와 Jira 하위 작업이 자동 연결되었습니다.`
+            });
