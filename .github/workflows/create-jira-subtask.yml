@@ -35,7 +35,7 @@ jobs:
 
           case "$GITHUB_ASSIGNEE" in
             "heeyoung123")
-              JIRA_ASSIGNEE="712020:d6d4a8f9-52f7-4976-8b6c-7010ce28c5b5?cloudId=7c421a75-44ad-4581-880c-54ba3c02ebbe"
+              JIRA_ASSIGNEE="712020:d6d4a8f9-52f7-4976-8b6c-7010ce28c5b5"
               ASSIGNEE_NAME="김희영"
               ;;
             *)
