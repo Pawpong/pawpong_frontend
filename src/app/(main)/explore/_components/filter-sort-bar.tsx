@@ -1,6 +1,6 @@
-import Container from "@/components/ui/container";
-import SortSelect from "./sort-select";
-import ToggleFilterSidebarButton from "./toggle-filter-sidebar-button";
+import Container from '@/components/ui/container';
+import SortSelect from './sort-select';
+import ToggleFilterSidebarButton from './toggle-filter-sidebar-button';
 
 export default function FilterSortBar() {
   return (

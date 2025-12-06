@@ -1,10 +1,7 @@
-"use client";
+'use client';
 
-import { useMutation } from "@tanstack/react-query";
-import {
-  createApplication,
-  type ApplicationCreateRequest,
-} from "@/lib/application";
+import { useMutation } from '@tanstack/react-query';
+import { createApplication, type ApplicationCreateRequest } from '@/lib/application';
 
 /**
  * 입양 신청 제출 mutation hook

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Close from "@/assets/icons/close";
-import ClearFilters from "@/components/filter-sidebar/clear-filters";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import Close from '@/assets/icons/close';
+import ClearFilters from '@/components/filter-sidebar/clear-filters';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import {
   LargeDialog,
   LargeDialogClose,
@@ -14,13 +14,13 @@ import {
   LargeDialogHeader,
   LargeDialogTitle,
   LargeDialogTrigger,
-} from "@/components/ui/large-dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { cn } from "@/lib/utils";
-import { Animal } from "@/stores/signup-form-store";
-import { useState, useEffect } from "react";
-import { getBreeds } from "@/lib/breeds";
+} from '@/components/ui/large-dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { cn } from '@/lib/utils';
+import { Animal } from '@/stores/signup-form-store';
+import { useState, useEffect } from 'react';
+import { getBreeds } from '@/lib/breeds';
 
 interface BreedCategory {
   category: string;
@@ -36,10 +36,10 @@ export default function BreedsSelectDialogTrigger({
   animal: Animal;
   onSubmitBreeds: (value: string[]) => void;
 } & React.ComponentProps<typeof DialogTrigger>) {
-  const isMobile = useBreakpoint("md") === false;
+  const isMobile = useBreakpoint('md') === false;
   const [categories, setCategories] = useState<BreedCategory[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedGroup, setSelectedGroup] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState('');
   const [selected, setSelected] = useState<string[]>([]);
 
   // API에서 품종 데이터 가져오기
@@ -53,7 +53,7 @@ export default function BreedsSelectDialogTrigger({
           setSelectedGroup(response.categories[0].category);
         }
       } catch (error) {
-        console.error("품종 데이터 로딩 실패:", error);
+        console.error('품종 데이터 로딩 실패:', error);
       } finally {
         setLoading(false);
       }
@@ -101,20 +101,17 @@ export default function BreedsSelectDialogTrigger({
               <div className="flex gap-4 px-padding">
                 {categories.map(({ category }) => (
                   <Button
-                    variant={"ghost"}
+                    variant={'ghost'}
                     key={category}
-                    className={cn(
-                      "flex-col gap-2 p-0 text-grayscale-gray5 font-semibold text-body-m",
-                      {
-                        "text-primary": selectedGroup === category,
-                      }
-                    )}
+                    className={cn('flex-col gap-2 p-0 text-grayscale-gray5 font-semibold text-body-m', {
+                      'text-primary': selectedGroup === category,
+                    })}
                     onClick={() => setSelectedGroup(category)}
                   >
                     {category}
                     <div
-                      className={cn("h-0.5 w-full bg-transparent", {
-                        "bg-primary-500": selectedGroup === category,
+                      className={cn('h-0.5 w-full bg-transparent', {
+                        'bg-primary-500': selectedGroup === category,
                       })}
                     />
                   </Button>
@@ -131,9 +128,9 @@ export default function BreedsSelectDialogTrigger({
                 {categories.map(({ category }) => (
                   <Button
                     key={category}
-                    variant={"category"}
-                    className={cn("py-2 px-2.5", {
-                      "bg-[#F6F6EA]": selectedGroup === category,
+                    variant={'category'}
+                    className={cn('py-2 px-2.5', {
+                      'bg-[#F6F6EA]': selectedGroup === category,
                     })}
                     onClick={() => {
                       setSelectedGroup(category);
@@ -145,15 +142,10 @@ export default function BreedsSelectDialogTrigger({
               </div>
             </ScrollArea>
           )}
-          <ScrollArea className={cn("w-38.25 md:w-auto h-full", "flex-1")}>
-            <div
-              className={cn("flex-shrink-0 py-2 pl-3.5 pr-3", " pl-5 pr-3.5")}
-            >
+          <ScrollArea className={cn('w-38.25 md:w-auto h-full', 'flex-1')}>
+            <div className={cn('flex-shrink-0 py-2 pl-3.5 pr-3', ' pl-5 pr-3.5')}>
               {currentCategory?.breeds.map((breed) => (
-                <Label
-                  key={breed}
-                  className="py-2 pr-2.5 gap-2 text-body-xs text-grayscale-gray6 flex items-center"
-                >
+                <Label key={breed} className="py-2 pr-2.5 gap-2 text-body-xs text-grayscale-gray6 flex items-center">
                   <Checkbox
                     checked={selected.includes(breed)}
                     onCheckedChange={() =>

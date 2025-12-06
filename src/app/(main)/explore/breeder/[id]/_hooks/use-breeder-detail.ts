@@ -1,19 +1,14 @@
-"use client";
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import {
-  getBreederProfile,
-  getBreederPets,
-  getParentPets,
-  getBreederReviews,
-} from "@/lib/breeder";
+import { useQuery } from '@tanstack/react-query';
+import { getBreederProfile, getBreederPets, getParentPets, getBreederReviews } from '@/lib/breeder';
 
 /**
  * 브리더 프로필 정보 조회 훅
  */
 export function useBreederProfile(breederId: string) {
   return useQuery({
-    queryKey: ["breeder-profile", breederId],
+    queryKey: ['breeder-profile', breederId],
     queryFn: () => getBreederProfile(breederId),
     enabled: !!breederId,
     staleTime: 1000 * 60 * 5, // 5분
@@ -25,7 +20,7 @@ export function useBreederProfile(breederId: string) {
  */
 export function useBreederPets(breederId: string, page: number = 1, limit: number = 20) {
   return useQuery({
-    queryKey: ["breeder-pets", breederId, page, limit],
+    queryKey: ['breeder-pets', breederId, page, limit],
     queryFn: () => getBreederPets(breederId, page, limit),
     enabled: !!breederId,
     staleTime: 1000 * 60 * 5,
@@ -37,7 +32,7 @@ export function useBreederPets(breederId: string, page: number = 1, limit: numbe
  */
 export function useParentPets(breederId: string) {
   return useQuery({
-    queryKey: ["parent-pets", breederId],
+    queryKey: ['parent-pets', breederId],
     queryFn: () => getParentPets(breederId),
     enabled: !!breederId,
     staleTime: 1000 * 60 * 5,
@@ -49,7 +44,7 @@ export function useParentPets(breederId: string) {
  */
 export function useBreederReviews(breederId: string, page: number = 1, limit: number = 10) {
   return useQuery({
-    queryKey: ["breeder-reviews", breederId, page, limit],
+    queryKey: ['breeder-reviews', breederId, page, limit],
     queryFn: () => getBreederReviews(breederId, page, limit),
     enabled: !!breederId,
     staleTime: 1000 * 60 * 5,

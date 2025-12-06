@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import OathDialogTrigger from "@/app/signup/_components/oath-dialog-trigger";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { type Level } from "./document-constants";
+import OathDialogTrigger from '@/app/signup/_components/oath-dialog-trigger';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { type Level } from './document-constants';
 
 interface OathCheckboxProps {
   level: Level;
@@ -13,11 +13,7 @@ interface OathCheckboxProps {
   onCheckedChange: (checked: boolean) => void;
 }
 
-export default function OathCheckbox({
-  level,
-  checked,
-  onCheckedChange,
-}: OathCheckboxProps) {
+export default function OathCheckbox({ level, checked, onCheckedChange }: OathCheckboxProps) {
   // 팝업에서 한번 동의하면 Read-only 상태 (checked가 true이면 Read-only)
   const isReadOnly = checked;
 
@@ -50,18 +46,15 @@ export default function OathCheckbox({
                   return;
                 }
               }}
-              className={cn(isReadOnly && "cursor-default")}
+              className={cn(isReadOnly && 'cursor-default')}
             />
           </div>
           <span className="text-body-xs text-grayscale-gray6 select-none">
-            (필수) {level === "elite" ? "엘리트" : "뉴"} 레벨 브리더 입점 서약서
+            (필수) {level === 'elite' ? '엘리트' : '뉴'} 레벨 브리더 입점 서약서
           </span>
         </div>
 
-        <Button
-          variant="ghost"
-          className="flex items-center gap-2.5 text-grayscale-gray5 text-body-xs"
-        >
+        <Button variant="ghost" className="flex items-center gap-2.5 text-grayscale-gray5 text-body-xs">
           <div>보기</div>
           <div className="size-5 flex items-center justify-center">
             <ChevronRight className="size-4" />

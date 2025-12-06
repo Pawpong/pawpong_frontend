@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { z } from "zod";
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { z } from 'zod';
 
 interface UseFileUploadOptions {
   onUpload?: (file: File) => void;
@@ -9,29 +9,22 @@ interface UseFileUploadOptions {
   errorMessage?: string;
 }
 
-export function useFileUpload({
-  onUpload,
-  onDelete,
-  file,
-  maxSizeMB,
-  errorMessage,
-}: UseFileUploadOptions = {}) {
+export function useFileUpload({ onUpload, onDelete, file, maxSizeMB, errorMessage }: UseFileUploadOptions = {}) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = useState<string>(file?.name ?? "");
-  const [error, setError] = useState<string>("");
+  const [fileName, setFileName] = useState<string>(file?.name ?? '');
+  const [error, setError] = useState<string>('');
   const fileSchema = useMemo(() => {
     if (!maxSizeMB) return null;
     const maxBytes = maxSizeMB * 1024 * 1024;
     return z.instanceof(File).refine((curFile) => curFile.size <= maxBytes, {
-      message:
-        errorMessage ?? `파일은 최대 ${maxSizeMB}MB까지 업로드할 수 있어요`,
+      message: errorMessage ?? `파일은 최대 ${maxSizeMB}MB까지 업로드할 수 있어요`,
     });
   }, [maxSizeMB, errorMessage]);
 
   useEffect(() => {
-    setFileName(file?.name ?? "");
+    setFileName(file?.name ?? '');
     if (file) {
-      setError("");
+      setError('');
     }
   }, [file]);
 
@@ -52,30 +45,27 @@ export function useFileUpload({
     if (fileSchema) {
       const result = fileSchema.safeParse(selectedFile);
       if (!result.success) {
-        setError(
-          result.error.issues[0]?.message ??
-            `파일은 최대 ${maxSizeMB}MB까지 업로드할 수 있어요`
-        );
+        setError(result.error.issues[0]?.message ?? `파일은 최대 ${maxSizeMB}MB까지 업로드할 수 있어요`);
         if (inputRef.current) {
-          inputRef.current.value = "";
+          inputRef.current.value = '';
         }
         return;
       }
     }
 
     // 새 파일 선택 시 기존 파일 삭제하고 새 파일로 교체
-    setError("");
+    setError('');
     setFileName(selectedFile.name);
     onUpload?.(selectedFile);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setFileName("");
+    setFileName('');
     if (inputRef.current) {
-      inputRef.current.value = "";
+      inputRef.current.value = '';
     }
-    setError("");
+    setError('');
     onDelete?.();
   };
 

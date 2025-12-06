@@ -1,7 +1,7 @@
-import SignupFormItems from "@/components/signup-form-section/signup-form-items";
-import SignupFormSection from "@/components/signup-form-section/signup-form-section";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import SignupFormItems from '@/components/signup-form-section/signup-form-items';
+import SignupFormSection from '@/components/signup-form-section/signup-form-section';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function SignupComplete() {
   return (
@@ -10,9 +10,7 @@ export default function SignupComplete() {
       <div className="space-y-3 text-center">
         <div className="text-balance text-body-m text-primary/80 font-medium">
           포퐁에 오신 걸 환영해요!
-          <br /> 브리더 심사는{" "}
-          <span className="text-secondary-700">최대 3영업일</span> 정도 소요될
-          수 있어요.
+          <br /> 브리더 심사는 <span className="text-secondary-700">최대 3영업일</span> 정도 소요될 수 있어요.
           <br />
           제출한 서류를 변경하고 싶거나, <br />
           궁금한 점이 있으면 고객센터로 문의해 주세요.
@@ -31,7 +29,7 @@ export default function SignupComplete() {
       </div>
       <SignupFormItems className="flex flex-col gap-3">
         <Link href="/">
-          <Button variant={"tertiary"} className="py-3 px-4 w-full">
+          <Button variant={'tertiary'} className="py-3 px-4 w-full">
             홈으로
           </Button>
         </Link>

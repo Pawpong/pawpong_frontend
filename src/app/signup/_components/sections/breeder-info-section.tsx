@@ -1,25 +1,22 @@
-"use client";
+'use client';
 
-import Arrow from "@/assets/icons/arrow";
-import Camera from "@/assets/icons/camera";
-import ErrorIcon from "@/assets/icons/error";
-import NextButton from "@/components/signup-form-section/next-button";
-import SignupFormHeader from "@/components/signup-form-section/signup-form-header";
-import SignupFormItems from "@/components/signup-form-section/signup-form-items";
-import SignupFormSection from "@/components/signup-form-section/signup-form-section";
-import SignupFormTitle from "@/components/signup-form-section/signup-form-title";
-import UndoButton from "@/components/signup-form-section/undo-button";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import useSignupFormStore from "@/stores/signup-form-store";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import BreedsSelectDialogTrigger from "../breeds-select-dialog-trigger";
-import LocationSelectDialogTrigger from "../location-select-dialog-trigger";
-import {
-  breederInfoSchema,
-  type BreederInfoFormData,
-} from "./breeder-info-schema";
+import Arrow from '@/assets/icons/arrow';
+import Camera from '@/assets/icons/camera';
+import ErrorIcon from '@/assets/icons/error';
+import NextButton from '@/components/signup-form-section/next-button';
+import SignupFormHeader from '@/components/signup-form-section/signup-form-header';
+import SignupFormItems from '@/components/signup-form-section/signup-form-items';
+import SignupFormSection from '@/components/signup-form-section/signup-form-section';
+import SignupFormTitle from '@/components/signup-form-section/signup-form-title';
+import UndoButton from '@/components/signup-form-section/undo-button';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import useSignupFormStore from '@/stores/signup-form-store';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import BreedsSelectDialogTrigger from '../breeds-select-dialog-trigger';
+import LocationSelectDialogTrigger from '../location-select-dialog-trigger';
+import { breederInfoSchema, type BreederInfoFormData } from './breeder-info-schema';
 
 export default function BreederInfoSection() {
   const setPhoto = useSignupFormStore((state) => state.setPhoto);
@@ -29,9 +26,7 @@ export default function BreederInfoSection() {
   const setBreederName = useSignupFormStore((state) => state.setBreederName);
 
   const breederLocation = useSignupFormStore((state) => state.breederLocation);
-  const setBreederLocation = useSignupFormStore(
-    (state) => state.setBreederLocation
-  );
+  const setBreederLocation = useSignupFormStore((state) => state.setBreederLocation);
   const breeds = useSignupFormStore((state) => state.breeds);
   const setBreeds = useSignupFormStore((state) => state.setBreeds);
   const nextFlowIndex = useSignupFormStore((state) => state.nextFlowIndex);
@@ -45,11 +40,11 @@ export default function BreederInfoSection() {
   } = useForm<BreederInfoFormData>({
     resolver: zodResolver(breederInfoSchema),
     defaultValues: {
-      breederName: breederName || "",
+      breederName: breederName || '',
       breederLocation: breederLocation || null,
       breeds: breeds || [],
     },
-    mode: "onBlur",
+    mode: 'onBlur',
   });
 
   const onSubmit = (data: BreederInfoFormData) => {
@@ -72,9 +67,9 @@ export default function BreederInfoSection() {
             variant="input"
             className="size-20 justify-center"
             onClick={() => {
-              const input = document.createElement("input");
-              input.type = "file";
-              input.accept = "image/*";
+              const input = document.createElement('input');
+              input.type = 'file';
+              input.accept = 'image/*';
               input.onchange = (e: Event) => {
                 const target = e.target as HTMLInputElement;
                 const file = target.files?.[0];
@@ -94,11 +89,7 @@ export default function BreederInfoSection() {
           >
             {photoPreview ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={photoPreview}
-                alt="Uploaded"
-                className="object-cover w-full h-full"
-              />
+              <img src={photoPreview} alt="Uploaded" className="object-cover w-full h-full" />
             ) : (
               <Camera className="text-grayscale-gray6 size-7" />
             )}
@@ -107,16 +98,12 @@ export default function BreederInfoSection() {
             <Controller
               name="breederName"
               control={control}
-              render={({ field }) => (
-                <Input placeholder="브리더명(상호명)" {...field} />
-              )}
+              render={({ field }) => <Input placeholder="브리더명(상호명)" {...field} />}
             />
             {errors.breederName && (
               <div className="flex items-center gap-0.5">
                 <ErrorIcon className="size-3 shrink-0" />
-                <p className="text-caption font-medium text-status-error-500">
-                  {errors.breederName.message}
-                </p>
+                <p className="text-caption font-medium text-status-error-500">{errors.breederName.message}</p>
               </div>
             )}
           </div>
@@ -165,9 +152,7 @@ export default function BreederInfoSection() {
                     )}
                     <Arrow
                       className={`size-5 [&_path]:fill-current ${
-                        field.value
-                          ? "text-primary-500"
-                          : "group-hover:text-primary-500"
+                        field.value ? 'text-primary-500' : 'group-hover:text-primary-500'
                       }`}
                     />
                   </Button>
@@ -177,9 +162,7 @@ export default function BreederInfoSection() {
             {errors.breederLocation && (
               <div className="flex items-center gap-0.5">
                 <ErrorIcon className="size-3 shrink-0" />
-                <p className="text-caption font-medium text-status-error-500">
-                  {errors.breederLocation.message}
-                </p>
+                <p className="text-caption font-medium text-status-error-500">{errors.breederLocation.message}</p>
               </div>
             )}
           </div>
@@ -198,20 +181,14 @@ export default function BreederInfoSection() {
                   <Button variant="input" className="py-3 px-4 pr-3.5 group">
                     <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
                       {field.value && field.value.length > 0 ? (
-                        <span className="text-primary-500">
-                          {field.value.join("/")}
-                        </span>
+                        <span className="text-primary-500">{field.value.join('/')}</span>
                       ) : (
-                        <span className="group-hover:text-primary-500">
-                          품종
-                        </span>
+                        <span className="group-hover:text-primary-500">품종</span>
                       )}
                     </div>
                     <Arrow
                       className={`size-5 [&_path]:fill-current ${
-                        field.value && field.value.length > 0
-                          ? "text-primary-500"
-                          : "group-hover:text-primary-500"
+                        field.value && field.value.length > 0 ? 'text-primary-500' : 'group-hover:text-primary-500'
                       }`}
                     />
                   </Button>
@@ -221,14 +198,10 @@ export default function BreederInfoSection() {
             {errors.breeds ? (
               <div className="flex items-center gap-0.5">
                 <ErrorIcon className="size-3 shrink-0" />
-                <p className="text-caption font-medium text-status-error-500">
-                  {errors.breeds.message}
-                </p>
+                <p className="text-caption font-medium text-status-error-500">{errors.breeds.message}</p>
               </div>
             ) : (
-              <div className="text-caption-s text-grayscale-gray5 font-medium">
-                최대 다섯 가지 선택할 수 있어요
-              </div>
+              <div className="text-caption-s text-grayscale-gray5 font-medium">최대 다섯 가지 선택할 수 있어요</div>
             )}
           </div>
         </div>
@@ -238,7 +211,6 @@ export default function BreederInfoSection() {
           <UndoButton />
         </div>
       </SignupFormItems>
-      
     </SignupFormSection>
   );
 }

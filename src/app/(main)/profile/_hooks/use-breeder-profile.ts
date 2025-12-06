@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getBreederProfile,
   updateBreederProfile,
@@ -13,14 +13,14 @@ import {
   type ProfileUpdateRequest,
   type ParentPetAddRequest,
   type AvailablePetAddRequest,
-} from "@/lib/breeder-management";
+} from '@/lib/breeder-management';
 
 /**
  * 브리더 프로필 조회 훅
  */
 export function useBreederProfile() {
   return useQuery({
-    queryKey: ["breeder-profile"],
+    queryKey: ['breeder-profile'],
     queryFn: () => getBreederProfile(),
     staleTime: 1000 * 60 * 5, // 5분
   });
@@ -35,7 +35,7 @@ export function useUpdateBreederProfile() {
   return useMutation({
     mutationFn: (data: ProfileUpdateRequest) => updateBreederProfile(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["breeder-profile"] });
+      queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
     },
   });
 }
@@ -49,7 +49,7 @@ export function useAddParentPet() {
   return useMutation({
     mutationFn: (data: ParentPetAddRequest) => addParentPet(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["breeder-profile"] });
+      queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
     },
   });
 }
@@ -61,15 +61,10 @@ export function useUpdateParentPet() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      petId,
-      data,
-    }: {
-      petId: string;
-      data: Partial<ParentPetAddRequest>;
-    }) => updateParentPet(petId, data),
+    mutationFn: ({ petId, data }: { petId: string; data: Partial<ParentPetAddRequest> }) =>
+      updateParentPet(petId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["breeder-profile"] });
+      queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
     },
   });
 }
@@ -83,7 +78,7 @@ export function useDeleteParentPet() {
   return useMutation({
     mutationFn: (petId: string) => deleteParentPet(petId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["breeder-profile"] });
+      queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
     },
   });
 }
@@ -97,7 +92,7 @@ export function useAddAvailablePet() {
   return useMutation({
     mutationFn: (data: AvailablePetAddRequest) => addAvailablePet(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["breeder-profile"] });
+      queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
     },
   });
 }
@@ -109,15 +104,10 @@ export function useUpdateAvailablePet() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      petId,
-      data,
-    }: {
-      petId: string;
-      data: Partial<AvailablePetAddRequest>;
-    }) => updateAvailablePet(petId, data),
+    mutationFn: ({ petId, data }: { petId: string; data: Partial<AvailablePetAddRequest> }) =>
+      updateAvailablePet(petId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["breeder-profile"] });
+      queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
     },
   });
 }
@@ -131,7 +121,7 @@ export function useDeleteAvailablePet() {
   return useMutation({
     mutationFn: (petId: string) => deleteAvailablePet(petId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["breeder-profile"] });
+      queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
     },
   });
 }

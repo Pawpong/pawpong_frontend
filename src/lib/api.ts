@@ -1,7 +1,7 @@
-import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 // trailing slash 제거하여 이중 슬래시 방지
-const BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, "") || "";
+const BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '') || '';
 
 // 토큰 리프레시 상태 관리 (중복 요청 방지)
 let isRefreshing = false;
@@ -26,8 +26,8 @@ function createApi(): AxiosInstance {
     baseURL: BASE,
     withCredentials: true, // 쿠키 필요하면 true
     headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
     timeout: 10000,
   });
@@ -50,18 +50,20 @@ function createApi(): AxiosInstance {
       if (error.response?.status === 401 && !originalRequest._retry) {
         // 리프레시 엔드포인트 자체의 401은 바로 에러 처리
         if (originalRequest.url?.includes('/api/auth/refresh')) {
-          return Promise.reject(new Error("세션이 만료되었습니다. 다시 로그인해주세요."));
+          return Promise.reject(new Error('세션이 만료되었습니다. 다시 로그인해주세요.'));
         }
 
         if (isRefreshing) {
           // 이미 리프레시 진행 중이면 큐에 추가하여 대기
           return new Promise((resolve, reject) => {
             failedQueue.push({ resolve, reject });
-          }).then(() => {
-            return instance(originalRequest);
-          }).catch((err) => {
-            return Promise.reject(err);
-          });
+          })
+            .then(() => {
+              return instance(originalRequest);
+            })
+            .catch((err) => {
+              return Promise.reject(err);
+            });
         }
 
         originalRequest._retry = true;
@@ -69,7 +71,7 @@ function createApi(): AxiosInstance {
 
         try {
           // 쿠키 기반 리프레시 - 백엔드가 쿠키에서 refreshToken을 읽어 처리
-          await instance.post("/api/auth/refresh");
+          await instance.post('/api/auth/refresh');
 
           processQueue(null);
 
@@ -83,7 +85,7 @@ function createApi(): AxiosInstance {
             window.location.href = '/login';
           }
 
-          return Promise.reject(new Error("세션이 만료되었습니다. 다시 로그인해주세요."));
+          return Promise.reject(new Error('세션이 만료되었습니다. 다시 로그인해주세요.'));
         } finally {
           isRefreshing = false;
         }
@@ -91,15 +93,14 @@ function createApi(): AxiosInstance {
 
       // 에러 메시지 포맷 통일해서 던지기
       const message =
-        (error.response?.data &&
-        typeof error.response.data === "object" &&
-        "message" in error.response.data
-          ? (error.response.data as { message?: string }).message
+        (error.response?.data && typeof error.response.data === 'object'
+          ? (error.response.data as { message?: string; error?: string }).error ||
+            (error.response.data as { message?: string; error?: string }).message
           : undefined) ||
         error.message ||
-        "Unknown error";
+        'Unknown error';
       return Promise.reject(new Error(message));
-    }
+    },
   );
 
   return instance;

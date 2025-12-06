@@ -1,18 +1,18 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./global.css";
-import { Toaster } from "@/components/ui/toaster";
+import type { Metadata } from 'next';
+import localFont from 'next/font/local';
+import './global.css';
+import { Toaster } from '@/components/ui/toaster';
 
 const pretendard = localFont({
-  src: "../assets/fonts/PretendardVariable.woff2",
-  display: "swap",
-  weight: "45 920",
-  variable: "--font-pretendard",
+  src: '../assets/fonts/PretendardVariable.woff2',
+  display: 'swap',
+  weight: '45 920',
+  variable: '--font-pretendard',
 });
 
 export const metadata: Metadata = {
-  title: "포퐁",
-  description: "포퐁 페이지",
+  title: '포퐁',
+  description: '포퐁 페이지',
 };
 
 export default function RootLayout({
@@ -21,13 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="ko"
-      className={`${pretendard.variable}  ${pretendard.className} break-keep`}
-    >
-      <body
-        className={`${pretendard.variable}  ${pretendard.className} antialiased`}
-      >
+    <html lang="ko" className={`${pretendard.variable}  ${pretendard.className} break-keep`}>
+      <body className={`${pretendard.variable}  ${pretendard.className} antialiased`}>
         {children}
         <Toaster />
       </body>

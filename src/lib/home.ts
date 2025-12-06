@@ -1,10 +1,10 @@
-import apiClient from "./api";
+import apiClient from './api';
 
 /** 배너 응답 타입 (백엔드 DTO와 일치) */
 export interface BannerDto {
   bannerId: string;
   imageUrl: string;
-  linkType: "internal" | "external";
+  linkType: 'internal' | 'external';
   linkUrl: string;
   title?: string;
   description?: string;
@@ -17,7 +17,7 @@ export interface FaqDto {
   question: string;
   answer: string;
   category: string;
-  userType: "adopter" | "breeder";
+  userType: 'adopter' | 'breeder';
   order: number;
 }
 
@@ -51,9 +51,7 @@ interface ApiResponse<T> {
  * GET /api/home/banners
  */
 export const getBanners = async (): Promise<BannerDto[]> => {
-  const response = await apiClient.get<ApiResponse<BannerDto[]>>(
-    "/api/home/banners"
-  );
+  const response = await apiClient.get<ApiResponse<BannerDto[]>>('/api/home/banners');
   return response.data.data;
 };
 
@@ -62,12 +60,9 @@ export const getBanners = async (): Promise<BannerDto[]> => {
  * GET /api/home/faqs?userType=adopter
  */
 export const getAdopterFaqs = async (): Promise<FaqDto[]> => {
-  const response = await apiClient.get<ApiResponse<FaqDto[]>>(
-    "/api/home/faqs",
-    {
-      params: { userType: "adopter" },
-    }
-  );
+  const response = await apiClient.get<ApiResponse<FaqDto[]>>('/api/home/faqs', {
+    params: { userType: 'adopter' },
+  });
   return response.data.data;
 };
 
@@ -76,12 +71,9 @@ export const getAdopterFaqs = async (): Promise<FaqDto[]> => {
  * GET /api/home/faqs?userType=breeder
  */
 export const getBreederFaqs = async (): Promise<FaqDto[]> => {
-  const response = await apiClient.get<ApiResponse<FaqDto[]>>(
-    "/api/home/faqs",
-    {
-      params: { userType: "breeder" },
-    }
-  );
+  const response = await apiClient.get<ApiResponse<FaqDto[]>>('/api/home/faqs', {
+    params: { userType: 'breeder' },
+  });
   return response.data.data;
 };
 
@@ -89,27 +81,22 @@ export const getBreederFaqs = async (): Promise<FaqDto[]> => {
  * 분양중인 아이들 조회
  * GET /api/home/available-pets
  */
-export const getAvailablePets = async (
-  limit: number = 10
-): Promise<AvailablePetDto[]> => {
+export const getAvailablePets = async (limit: number = 10): Promise<AvailablePetDto[]> => {
   try {
-    const response = await apiClient.get<ApiResponse<AvailablePetDto[]>>(
-      "/api/home/available-pets",
-      {
-        params: { limit },
-      }
-    );
+    const response = await apiClient.get<ApiResponse<AvailablePetDto[]>>('/api/home/available-pets', {
+      params: { limit },
+    });
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch available pets");
+      throw new Error('Failed to fetch available pets');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Available pets fetch error:", error.message);
+      console.error('Available pets fetch error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during available pets fetch");
+    throw new Error('Unknown error during available pets fetch');
   }
 };

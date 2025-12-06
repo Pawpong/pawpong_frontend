@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { getAdopterFaqs, type FaqDto } from "@/lib/home";
-import BreederProfileSectionHeader from "@/components/breeder-profile/breeder-profile-section-header";
-import BreederProfileSectionTitle from "@/components/breeder-profile/breeder-profile-section-title";
-import BreederProfileSectionMore from "@/components/breeder-profile/breeder-profile-section-more";
+import { useEffect, useState } from 'react';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { getAdopterFaqs, type FaqDto } from '@/lib/home';
+import BreederProfileSectionHeader from '@/components/breeder-profile/breeder-profile-section-header';
+import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
+import BreederProfileSectionMore from '@/components/breeder-profile/breeder-profile-section-more';
 
 const FAQ = () => {
-  const isMd = useBreakpoint("md");
+  const isMd = useBreakpoint('md');
   const [faqs, setFaqs] = useState<FaqDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,8 +21,8 @@ const FAQ = () => {
         setFaqs(data);
         setError(null);
       } catch (err) {
-        console.error("FAQ 조회 실패:", err);
-        setError("FAQ를 불러오는데 실패했습니다.");
+        console.error('FAQ 조회 실패:', err);
+        setError('FAQ를 불러오는데 실패했습니다.');
       } finally {
         setIsLoading(false);
       }
@@ -38,9 +38,7 @@ const FAQ = () => {
     return (
       <div className="flex flex-col gap-7">
         <BreederProfileSectionHeader>
-          <BreederProfileSectionTitle>
-            자주 묻는 질문
-          </BreederProfileSectionTitle>
+          <BreederProfileSectionTitle>자주 묻는 질문</BreederProfileSectionTitle>
           <BreederProfileSectionMore />
         </BreederProfileSectionHeader>
         <div className="h-40 flex items-center justify-center">
@@ -54,15 +52,11 @@ const FAQ = () => {
     return (
       <div className="flex flex-col gap-7">
         <BreederProfileSectionHeader>
-          <BreederProfileSectionTitle>
-            자주 묻는 질문
-          </BreederProfileSectionTitle>
+          <BreederProfileSectionTitle>자주 묻는 질문</BreederProfileSectionTitle>
           <BreederProfileSectionMore />
         </BreederProfileSectionHeader>
         <div className="h-40 flex items-center justify-center">
-          <p className="text-body-m text-gray-400">
-            {error || "표시할 FAQ가 없습니다."}
-          </p>
+          <p className="text-body-m text-gray-400">{error || '표시할 FAQ가 없습니다.'}</p>
         </div>
       </div>
     );
@@ -81,9 +75,7 @@ const FAQ = () => {
             <div key={item.faqId}>
               <div className="h-px bg-[#e4e7ec] w-full" />
               <div className="py-5">
-                <p className="text-body-m font-medium text-primary-500">
-                  {item.question}
-                </p>
+                <p className="text-body-m font-medium text-primary-500">{item.question}</p>
               </div>
             </div>
           ))}
@@ -100,9 +92,7 @@ const FAQ = () => {
               <div key={item.faqId}>
                 <div className="h-px bg-[#e4e7ec] w-full" />
                 <div className="py-5">
-                  <p className="text-body-m font-medium text-primary">
-                    {item.question}
-                  </p>
+                  <p className="text-body-m font-medium text-primary">{item.question}</p>
                 </div>
               </div>
             ))}
@@ -115,9 +105,7 @@ const FAQ = () => {
               <div key={item.faqId}>
                 <div className="h-px bg-[#e4e7ec] w-full" />
                 <div className="py-5">
-                  <p className="text-body-m font-medium text-primary">
-                    {item.question}
-                  </p>
+                  <p className="text-body-m font-medium text-primary">{item.question}</p>
                 </div>
               </div>
             ))}

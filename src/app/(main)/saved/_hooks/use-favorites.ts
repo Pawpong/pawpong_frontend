@@ -1,18 +1,14 @@
-"use client";
+'use client';
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  getFavorites,
-  addFavorite,
-  removeFavorite,
-} from "@/lib/breeder";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getFavorites, addFavorite, removeFavorite } from '@/lib/adopter';
 
 /**
  * 즐겨찾기 목록 조회 hook
  */
 export function useFavorites(page: number = 1, limit: number = 20) {
   return useQuery({
-    queryKey: ["favorites", page, limit],
+    queryKey: ['favorites', page, limit],
     queryFn: () => getFavorites(page, limit),
     staleTime: 1000 * 60 * 5, // 5분
   });
@@ -28,9 +24,9 @@ export function useAddFavorite() {
     mutationFn: (breederId: string) => addFavorite(breederId),
     onSuccess: () => {
       // 즐겨찾기 목록 쿼리 무효화하여 자동 재조회
-      queryClient.invalidateQueries({ queryKey: ["favorites"] });
+      queryClient.invalidateQueries({ queryKey: ['favorites'] });
       // 브리더 목록도 무효화 (isFavorited 상태 업데이트)
-      queryClient.invalidateQueries({ queryKey: ["breeders"] });
+      queryClient.invalidateQueries({ queryKey: ['breeders'] });
     },
   });
 }
@@ -45,9 +41,9 @@ export function useRemoveFavorite() {
     mutationFn: (breederId: string) => removeFavorite(breederId),
     onSuccess: () => {
       // 즐겨찾기 목록 쿼리 무효화하여 자동 재조회
-      queryClient.invalidateQueries({ queryKey: ["favorites"] });
+      queryClient.invalidateQueries({ queryKey: ['favorites'] });
       // 브리더 목록도 무효화 (isFavorited 상태 업데이트)
-      queryClient.invalidateQueries({ queryKey: ["breeders"] });
+      queryClient.invalidateQueries({ queryKey: ['breeders'] });
     },
   });
 }

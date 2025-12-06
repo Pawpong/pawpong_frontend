@@ -1,31 +1,22 @@
-"use client";
+'use client';
 
-import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
-import Close from "@/assets/icons/close";
-import RadioActive from "@/assets/icons/radio-active.svg";
-import RadioInactive from "@/assets/icons/radio-inactive.svg";
-import {
-  reportDescription,
-  reportReasons,
-  reportTitle,
-  type ReportReason,
-} from "@/constants/report";
-import {
-  breederReportDescription,
-  breederReportReasons,
-  breederReportTitle,
-} from "@/constants/breeder-report";
-import ReportSuccessDialog from "./report-success-dialog";
-import { reportBreeder, reportReview } from "@/lib/report";
-import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogClose, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { useState } from 'react';
+import Close from '@/assets/icons/close';
+import RadioActive from '@/assets/icons/radio-active.svg';
+import RadioInactive from '@/assets/icons/radio-inactive.svg';
+import { reportDescription, reportReasons, reportTitle, type ReportReason } from '@/constants/report';
+import { breederReportDescription, breederReportReasons, breederReportTitle } from '@/constants/breeder-report';
+import ReportSuccessDialog from './report-success-dialog';
+import { reportBreeder, reportReview } from '@/lib/report';
+import { useToast } from '@/hooks/use-toast';
 
 interface ReportDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  type?: "review" | "breeder";
+  type?: 'review' | 'breeder';
   breederNickname?: string;
   breederId?: string;
   reviewId?: string;
@@ -34,27 +25,23 @@ interface ReportDialogProps {
 export default function ReportDialog({
   open,
   onOpenChange,
-  type = "review",
+  type = 'review',
   breederNickname,
   breederId,
   reviewId,
 }: ReportDialogProps) {
   const [selectedReason, setSelectedReason] = useState<string | null>(null);
-  const [otherReasonText, setOtherReasonText] = useState<string>("");
+  const [otherReasonText, setOtherReasonText] = useState<string>('');
   const [isTextareaFocused, setIsTextareaFocused] = useState(false);
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const isOtherSelected = selectedReason === "other";
+  const isOtherSelected = selectedReason === 'other';
 
-  const isBreederReport = type === "breeder";
-  const title = isBreederReport
-    ? breederReportTitle(breederNickname || "")
-    : reportTitle;
-  const description = isBreederReport
-    ? breederReportDescription
-    : reportDescription;
+  const isBreederReport = type === 'breeder';
+  const title = isBreederReport ? breederReportTitle(breederNickname || '') : reportTitle;
+  const description = isBreederReport ? breederReportDescription : reportDescription;
   const reasons = isBreederReport
     ? Object.entries(breederReportReasons).map(([key, label]) => ({
         key,
@@ -63,8 +50,7 @@ export default function ReportDialog({
     : reportReasons;
 
   const otherReasonDescription = otherReasonText.trim();
-  const canSubmit =
-    !!selectedReason && (!isOtherSelected || !!otherReasonDescription);
+  const canSubmit = !!selectedReason && (!isOtherSelected || !!otherReasonDescription);
 
   const handleSubmit = async () => {
     if (!canSubmit || isSubmitting) {
@@ -73,9 +59,9 @@ export default function ReportDialog({
 
     setIsSubmitting(true);
     try {
-      if (type === "review") {
+      if (type === 'review') {
         if (!reviewId) {
-          throw new Error("신고할 후기 정보를 찾을 수 없습니다.");
+          throw new Error('신고할 후기 정보를 찾을 수 없습니다.');
         }
 
         await reportReview({
@@ -85,7 +71,7 @@ export default function ReportDialog({
         });
       } else {
         if (!breederId) {
-          throw new Error("신고할 브리더 정보를 찾을 수 없습니다.");
+          throw new Error('신고할 브리더 정보를 찾을 수 없습니다.');
         }
 
         await reportBreeder({
@@ -98,13 +84,10 @@ export default function ReportDialog({
       onOpenChange(false);
       setIsSuccessDialogOpen(true);
     } catch (error) {
-      console.error("신고 실패:", error);
+      console.error('신고 실패:', error);
       toast({
-        title: "신고 실패",
-        description:
-          error instanceof Error
-            ? error.message
-            : "신고 처리 중 오류가 발생했습니다.",
+        title: '신고 실패',
+        description: error instanceof Error ? error.message : '신고 처리 중 오류가 발생했습니다.',
       });
     } finally {
       setIsSubmitting(false);
@@ -114,7 +97,7 @@ export default function ReportDialog({
   const handleSuccessDialogClose = () => {
     setIsSuccessDialogOpen(false);
     setSelectedReason(null);
-    setOtherReasonText("");
+    setOtherReasonText('');
     setIsTextareaFocused(false);
   };
 
@@ -122,7 +105,7 @@ export default function ReportDialog({
     onOpenChange(newOpen);
     if (!newOpen) {
       setSelectedReason(null);
-      setOtherReasonText("");
+      setOtherReasonText('');
       setIsTextareaFocused(false);
     }
   };
@@ -152,9 +135,9 @@ export default function ReportDialog({
           <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-9 h-[452px] items-start overflow-x-clip overflow-y-auto pb-[7.44rem] sm:pb-10 pt-6 px-6 relative shrink-0 w-full">
             {/* 제목 */}
             <div className="flex flex-col gap-1.5 items-start not-italic relative shrink-0">
-              <p className="font-semibold leading-[32px] relative shrink-0 text-primary text-[20px]">
+              <DialogTitle className="font-semibold leading-[32px] relative shrink-0 text-primary text-[20px]">
                 {title}
-              </p>
+              </DialogTitle>
               <p className="font-medium leading-[12px] relative shrink-0 text-grayscale-gray5 text-[12px]">
                 {description}
               </p>
@@ -162,70 +145,57 @@ export default function ReportDialog({
 
             {/* 라디오 버튼 리스트 */}
             <div className="flex flex-col items-start relative shrink-0 w-full">
-              {reasons.map(
-                (
-                  reason: ReportReason | { key: string; label: string },
-                  index: number
-                ) => {
-                  const reasonValue =
-                    "value" in reason ? reason.value : reason.key;
-                  const reasonLabel = reason.label;
-                  const isOther =
-                    reasonValue === "other" ||
-                    reasonLabel === "기타 부적절한 사유가 있어요.";
+              {reasons.map((reason: ReportReason | { key: string; label: string }, index: number) => {
+                const reasonValue = 'value' in reason ? reason.value : reason.key;
+                const reasonLabel = reason.label;
+                const isOther = reasonValue === 'other' || reasonLabel === '기타 부적절한 사유가 있어요.';
 
-                  return (
-                    <div
-                      key={index}
-                      className="flex flex-col items-start relative shrink-0 w-full"
+                return (
+                  <div key={index} className="flex flex-col items-start relative shrink-0 w-full">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedReason(reasonValue)}
+                      className="box-border flex gap-2 h-9 items-start pl-0 pr-[10px] py-2 relative shrink-0 w-full"
                     >
-                      <button
-                        type="button"
-                        onClick={() => setSelectedReason(reasonValue)}
-                        className="box-border flex gap-2 h-9 items-start pl-0 pr-[10px] py-2 relative shrink-0 w-full"
-                      >
-                        {/* 라디오 버튼 */}
-                        <div className="relative shrink-0 size-5">
-                          {selectedReason === reasonValue ? (
-                            <RadioActive className="size-5" />
-                          ) : (
-                            <RadioInactive className="size-5" />
-                          )}
+                      {/* 라디오 버튼 */}
+                      <div className="relative shrink-0 size-5">
+                        {selectedReason === reasonValue ? (
+                          <RadioActive className="size-5" />
+                        ) : (
+                          <RadioInactive className="size-5" />
+                        )}
+                      </div>
+                      {/* 텍스트 */}
+                      <div className="flex flex-col font-medium justify-center leading-[0] not-italic relative shrink-0 text-grayscale-gray6 text-body-xs">
+                        <p className="leading-[20px] whitespace-pre">{reasonLabel}</p>
+                      </div>
+                    </button>
+                    {/* 기타 사유 선택 시 textarea 표시 */}
+                    {isOther && isOtherSelected && (
+                      <div className="bg-white flex flex-col items-start overflow-clip relative rounded-lg shrink-0 w-full mt-2">
+                        <div className="box-border flex flex-col items-start overflow-clip pb-0 pt-3 px-4 sm:pt-4 sm:px-4 relative shrink-0 w-full">
+                          <Textarea
+                            placeholder="신고 사유를 최대한 상세히 적어주세요."
+                            value={otherReasonText}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value.length <= 200) {
+                                setOtherReasonText(value);
+                              }
+                            }}
+                            onFocus={() => setIsTextareaFocused(true)}
+                            onBlur={() => setIsTextareaFocused(false)}
+                            maxLength={200}
+                            showLength={isTextareaFocused}
+                            currentLength={otherReasonText.length}
+                            className="h-[12.5rem] sm:min-h-[140px] font-medium leading-[24px] text-body-s w-full resize-none px-0 pt-0"
+                          />
                         </div>
-                        {/* 텍스트 */}
-                        <div className="flex flex-col font-medium justify-center leading-[0] not-italic relative shrink-0 text-grayscale-gray6 text-body-xs">
-                          <p className="leading-[20px] whitespace-pre">
-                            {reasonLabel}
-                          </p>
-                        </div>
-                      </button>
-                      {/* 기타 사유 선택 시 textarea 표시 */}
-                      {isOther && isOtherSelected && (
-                        <div className="bg-white flex flex-col items-start overflow-clip relative rounded-lg shrink-0 w-full mt-2">
-                          <div className="box-border flex flex-col items-start overflow-clip pb-0 pt-3 px-4 sm:pt-4 sm:px-4 relative shrink-0 w-full">
-                            <Textarea
-                              placeholder="신고 사유를 최대한 상세히 적어주세요."
-                              value={otherReasonText}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                if (value.length <= 200) {
-                                  setOtherReasonText(value);
-                                }
-                              }}
-                              onFocus={() => setIsTextareaFocused(true)}
-                              onBlur={() => setIsTextareaFocused(false)}
-                              maxLength={200}
-                              showLength={isTextareaFocused}
-                              currentLength={otherReasonText.length}
-                              className="h-[12.5rem] sm:min-h-[140px] font-medium leading-[24px] text-body-s w-full resize-none px-0 pt-0"
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                }
-              )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -238,13 +208,13 @@ export default function ReportDialog({
               type="button"
               className={`button-brown ${
                 !canSubmit
-                  ? "bg-[var(--color-status-disabled)] text-[var(--color-grayscale-gray4)] cursor-not-allowed"
-                  : ""
-              } ${isSubmitting ? "cursor-wait" : ""}`}
+                  ? 'bg-[var(--color-status-disabled)] text-[var(--color-grayscale-gray4)] cursor-not-allowed'
+                  : ''
+              } ${isSubmitting ? 'cursor-wait' : ''}`}
               onClick={handleSubmit}
               disabled={!canSubmit || isSubmitting}
             >
-              {isSubmitting ? "신고 중..." : "신고"}
+              {isSubmitting ? '신고 중...' : '신고'}
             </button>
           </div>
         </DialogContent>

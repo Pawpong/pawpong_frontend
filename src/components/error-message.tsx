@@ -1,4 +1,4 @@
-import ErrorIcon from "@/assets/icons/error";
+import ErrorIcon from '@/assets/icons/error';
 
 interface ErrorMessageProps {
   message: string;

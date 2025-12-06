@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface SavedStore {
   savedBreederIds: string[];
@@ -22,9 +22,7 @@ export const useSavedStore = create<SavedStore>()(
 
       removeFromSaved: (id) => {
         set((state) => ({
-          savedBreederIds: state.savedBreederIds.filter(
-            (savedId) => savedId !== id
-          ),
+          savedBreederIds: state.savedBreederIds.filter((savedId) => savedId !== id),
         }));
       },
 
@@ -42,7 +40,7 @@ export const useSavedStore = create<SavedStore>()(
       },
     }),
     {
-      name: "saved-breeders-storage",
-    }
-  )
+      name: 'saved-breeders-storage',
+    },
+  ),
 );

@@ -6,9 +6,9 @@ export interface HomeAnimalData {
   breederId: string; // 브리더 프로필 연결용
   avatarUrl: string;
   name: string;
-  sex: "male" | "female";
+  sex: 'male' | 'female';
   birth: string;
   price: string;
   breed: string;
-  status: "available" | "reserved" | "completed";
+  status: 'available' | 'reserved' | 'completed';
 }

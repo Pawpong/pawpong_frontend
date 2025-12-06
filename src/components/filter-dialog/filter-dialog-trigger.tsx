@@ -7,22 +7,22 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { useSegment } from "@/hooks/use-segment";
-import { cn } from "@/lib/utils";
-import { findParentAndChildren, useFilterStore } from "@/stores/filter-store";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import React, { useEffect, useState } from "react";
-import ClearFilters from "../filter-sidebar/clear-filters";
-import CurrentFilters from "../filter-sidebar/current-filters";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import { Label } from "../ui/label";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { Separator } from "../ui/separator";
-import { useAllFiltersData } from "@/app/(main)/explore/_hooks/use-filter-data";
+} from '@/components/ui/dialog';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { useSegment } from '@/hooks/use-segment';
+import { cn } from '@/lib/utils';
+import { findParentAndChildren, useFilterStore } from '@/stores/filter-store';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import React, { useEffect, useState } from 'react';
+import ClearFilters from '../filter-sidebar/clear-filters';
+import CurrentFilters from '../filter-sidebar/current-filters';
+import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
+import { Label } from '../ui/label';
+import { ScrollArea, ScrollBar } from '../ui/scroll-area';
+import { Separator } from '../ui/separator';
+import { useAllFiltersData } from '@/app/(main)/explore/_hooks/use-filter-data';
 
 // Filter 타입 정의
 type Filter = {
@@ -31,10 +31,8 @@ type Filter = {
   children?: Filter[];
 };
 
-export default function FilterDialogTrigger({
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
-  const animal = (useSegment(1) as "cat" | "dog") || "cat";
+export default function FilterDialogTrigger({ ...props }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
+  const animal = (useSegment(1) as 'cat' | 'dog') || 'cat';
   const [isOpen, setIsOpen] = useState(false);
 
   // 더보기 눌렀을 때만 API 호출 (모달이 열렸을 때만)
@@ -55,7 +53,7 @@ export default function FilterDialogTrigger({
   const clearTempFilters = useFilterStore((e) => e.clearTempFilters);
   const activeFilters = useFilterStore((e) => e.activeFilters);
   const setRootFilters = useFilterStore((e) => e.setRootFilters);
-  const isMobile = useBreakpoint("md") === false;
+  const isMobile = useBreakpoint('md') === false;
 
   // animal이 변경되면 모달 상태 초기화
   useEffect(() => {
@@ -64,12 +62,7 @@ export default function FilterDialogTrigger({
 
   // rootFilters가 처음 로드되었을 때만 첫 번째 필터 선택
   useEffect(() => {
-    if (
-      !isLoading &&
-      !error &&
-      rootFilters.length > 0 &&
-      selectionPath.length === 0
-    ) {
+    if (!isLoading && !error && rootFilters.length > 0 && selectionPath.length === 0) {
       // API 필터를 store에 저장
       setRootFilters(rootFilters);
       selectPath(rootFilters[0], 0);
@@ -111,24 +104,22 @@ export default function FilterDialogTrigger({
         {isMobile && (
           <div className="px-5 flex gap-4">
             {rootFilters.map((filterGroup) => {
-              const isTabSelected =
-                selectionPath[0]?.label === filterGroup.label;
+              const isTabSelected = selectionPath[0]?.label === filterGroup.label;
 
               return (
                 <Button
                   variant="text"
                   key={filterGroup.label}
-                  className={cn(
-                    "text-body-m font-semibold flex flex-col gap-1.5 py-0 px-0",
-                    { "text-primary!": isTabSelected }
-                  )}
+                  className={cn('text-body-m font-semibold flex flex-col gap-1.5 py-0 px-0', {
+                    'text-primary!': isTabSelected,
+                  })}
                   // --- 수정: 모바일 탭 클릭 이벤트 복구 ---
                   onClick={() => selectPath(filterGroup, 0)}
                 >
                   {filterGroup.label}
                   <div
-                    className={cn("h-0.5 w-full bg-transparent", {
-                      "bg-primary-500": isTabSelected,
+                    className={cn('h-0.5 w-full bg-transparent', {
+                      'bg-primary-500': isTabSelected,
                     })}
                   />
                 </Button>
@@ -156,9 +147,7 @@ export default function FilterDialogTrigger({
         {/* 에러 상태 표시 */}
         {error && !isLoading && (
           <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-red-500">
-              필터 옵션을 불러오는 데 실패했습니다.
-            </div>
+            <div className="text-red-500">필터 옵션을 불러오는 데 실패했습니다.</div>
           </div>
         )}
 
@@ -172,9 +161,9 @@ export default function FilterDialogTrigger({
                   {rootFilters.map((filterGroup) => (
                     <Button
                       key={filterGroup.label}
-                      variant={"category"}
-                      className={cn("py-2 px-2.5", {
-                        "bg-[#F6F6EA]": isSelected(filterGroup, 0),
+                      variant={'category'}
+                      className={cn('py-2 px-2.5', {
+                        'bg-[#F6F6EA]': isSelected(filterGroup, 0),
                       })}
                       onClick={() => selectPath(filterGroup, 0)}
                     >
@@ -186,22 +175,21 @@ export default function FilterDialogTrigger({
             )}
 
             {selectionPath.map((selectedItem, index) => {
-              if (!selectedItem.children || selectedItem.children.length === 0)
-                return null;
+              if (!selectedItem.children || selectedItem.children.length === 0) return null;
 
               const isLeafColumn = !selectedItem.children[0]?.children;
 
               return (
                 <ScrollArea
                   key={index}
-                  className={cn("w-38.25 md:w-auto h-full", {
-                    "border-r": !isLeafColumn,
-                    "flex-1": isLeafColumn,
+                  className={cn('w-38.25 md:w-auto h-full', {
+                    'border-r': !isLeafColumn,
+                    'flex-1': isLeafColumn,
                   })}
                 >
                   <div
-                    className={cn("flex-shrink-0 py-2 pl-3.5 pr-3", {
-                      " pl-5 pr-3.5": isLeafColumn,
+                    className={cn('flex-shrink-0 py-2 pl-3.5 pr-3', {
+                      ' pl-5 pr-3.5': isLeafColumn,
                     })}
                   >
                     {index === 1 && isLeafColumn && (
@@ -212,14 +200,11 @@ export default function FilterDialogTrigger({
                         >
                           <Checkbox
                             checked={(() => {
-                              if (tempSelectedLeaves.includes(selectedItem.label))
-                                return true;
+                              if (tempSelectedLeaves.includes(selectedItem.label)) return true;
 
                               return false;
                             })()}
-                            onCheckedChange={(checked) =>
-                              selectAllTempLeaves(selectedItem, !!checked)
-                            }
+                            onCheckedChange={(checked) => selectAllTempLeaves(selectedItem, !!checked)}
                           />
 
                           <div className="whitespace-wrap">모두 선택</div>
@@ -232,23 +217,19 @@ export default function FilterDialogTrigger({
                           <Button
                             onClick={() => selectPath(childItem, index + 1)}
                             key={childItem.label}
-                            variant={"category"}
-                            className={cn("py-2 px-2.5", {
-                              "bg-[#F6F6EA]": isSelected(childItem, index + 1),
+                            variant={'category'}
+                            className={cn('py-2 px-2.5', {
+                              'bg-[#F6F6EA]': isSelected(childItem, index + 1),
                             })}
                           >
                             {childItem.label}
                           </Button>
                         );
                       } else {
-                        const parent = findParentAndChildren(
-                          childItem.label,
-                          rootFilters
-                        ).parent;
+                        const parent = findParentAndChildren(childItem.label, rootFilters).parent;
                         const isChecked =
                           tempSelectedLeaves.includes(childItem.label) ||
-                          (parent != null &&
-                            tempSelectedLeaves.includes(parent.label));
+                          (parent != null && tempSelectedLeaves.includes(parent.label));
                         return (
                           <Label
                             key={childItem.label}
@@ -256,13 +237,9 @@ export default function FilterDialogTrigger({
                           >
                             <Checkbox
                               checked={isChecked}
-                              onCheckedChange={(checked) =>
-                                selectTempLeaf(childItem.label, !!checked, animal)
-                              }
+                              onCheckedChange={(checked) => selectTempLeaf(childItem.label, !!checked, animal)}
                             />
-                            <div className="whitespace-wrap">
-                              {childItem.label}
-                            </div>
+                            <div className="whitespace-wrap">{childItem.label}</div>
                           </Label>
                         );
                       }

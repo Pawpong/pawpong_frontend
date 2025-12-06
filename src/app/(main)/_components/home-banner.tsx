@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { getBanners, type BannerDto } from "@/lib/home";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { getBanners, type BannerDto } from '@/lib/home';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const HomeBanner = () => {
   const [banners, setBanners] = useState<BannerDto[]>([]);
@@ -20,8 +20,8 @@ const HomeBanner = () => {
         setBanners(data);
         setError(null);
       } catch (err) {
-        console.error("배너 조회 실패:", err);
-        setError("배너를 불러오는데 실패했습니다.");
+        console.error('배너 조회 실패:', err);
+        setError('배너를 불러오는데 실패했습니다.');
       } finally {
         setIsLoading(false);
       }
@@ -50,8 +50,8 @@ const HomeBanner = () => {
   };
 
   const handleBannerClick = (banner: BannerDto) => {
-    if (banner.linkType === "external") {
-      window.open(banner.linkUrl, "_blank", "noopener,noreferrer");
+    if (banner.linkType === 'external') {
+      window.open(banner.linkUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -66,9 +66,7 @@ const HomeBanner = () => {
   if (error || banners.length === 0) {
     return (
       <div className="w-full h-[20rem] md:h-[20rem] lg:h-[30rem] flex items-center justify-center bg-gray-50">
-        <p className="text-body-m text-gray-400">
-          {error || "표시할 배너가 없습니다."}
-        </p>
+        <p className="text-body-m text-gray-400">{error || '표시할 배너가 없습니다.'}</p>
       </div>
     );
   }
@@ -79,7 +77,7 @@ const HomeBanner = () => {
     <div className="relative w-full h-full">
       <Image
         src={currentBanner.imageUrl}
-        alt={currentBanner.title || "배너 이미지"}
+        alt={currentBanner.title || '배너 이미지'}
         fill
         className="object-cover"
         priority
@@ -87,14 +85,10 @@ const HomeBanner = () => {
       {(currentBanner.title || currentBanner.description) && (
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">
           {currentBanner.title && (
-            <h2 className="text-heading-2 md:text-heading-1 font-semibold text-white mb-2">
-              {currentBanner.title}
-            </h2>
+            <h2 className="text-heading-2 md:text-heading-1 font-semibold text-white mb-2">{currentBanner.title}</h2>
           )}
           {currentBanner.description && (
-            <p className="text-body-m md:text-body-l text-white/90">
-              {currentBanner.description}
-            </p>
+            <p className="text-body-m md:text-body-l text-white/90">{currentBanner.description}</p>
           )}
         </div>
       )}
@@ -103,15 +97,12 @@ const HomeBanner = () => {
 
   return (
     <div className="relative w-full h-[20rem] md:h-[20rem] lg:h-[30rem] overflow-hidden">
-      {currentBanner.linkType === "internal" ? (
+      {currentBanner.linkType === 'internal' ? (
         <Link href={currentBanner.linkUrl} className="block w-full h-full">
           {renderBannerContent()}
         </Link>
       ) : (
-        <button
-          onClick={() => handleBannerClick(currentBanner)}
-          className="w-full h-full cursor-pointer"
-        >
+        <button onClick={() => handleBannerClick(currentBanner)} className="w-full h-full cursor-pointer">
           {renderBannerContent()}
         </button>
       )}
@@ -144,9 +135,7 @@ const HomeBanner = () => {
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={`w-2 h-2 rounded-full transition-all ${
-                index === currentIndex
-                  ? "bg-white w-8"
-                  : "bg-white/50 hover:bg-white/75"
+                index === currentIndex ? 'bg-white w-8' : 'bg-white/50 hover:bg-white/75'
               }`}
               aria-label={`${index + 1}번째 배너로 이동`}
             />

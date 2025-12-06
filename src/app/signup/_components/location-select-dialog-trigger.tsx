@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Close from "@/assets/icons/close";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import Close from '@/assets/icons/close';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import {
   LargeDialog,
   LargeDialogClose,
@@ -13,23 +13,21 @@ import {
   LargeDialogHeader,
   LargeDialogTitle,
   LargeDialogTrigger,
-} from "@/components/ui/large-dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
-import { getAllDistricts, type District } from "@/lib/districts";
+} from '@/components/ui/large-dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { cn } from '@/lib/utils';
+import { useState, useEffect } from 'react';
+import { getAllDistricts, type District } from '@/lib/districts';
 
 export default function LocationSelectDialogTrigger({
   onSubmitLocation,
   ...props
-}: { onSubmitLocation: (value: string | null) => void } & React.ComponentProps<
-  typeof DialogTrigger
->) {
-  const isMobile = useBreakpoint("md") === false;
+}: { onSubmitLocation: (value: string | null) => void } & React.ComponentProps<typeof DialogTrigger>) {
+  const isMobile = useBreakpoint('md') === false;
   const [districts, setDistricts] = useState<District[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedGroup, setSelectedGroup] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState('');
   const [selected, setSelected] = useState<string | null>(null);
 
   // API에서 지역 데이터 가져오기
@@ -43,7 +41,7 @@ export default function LocationSelectDialogTrigger({
           setSelectedGroup(data[0].city);
         }
       } catch (error) {
-        console.error("지역 데이터 로딩 실패:", error);
+        console.error('지역 데이터 로딩 실패:', error);
       } finally {
         setLoading(false);
       }
@@ -90,20 +88,17 @@ export default function LocationSelectDialogTrigger({
               <div className="flex gap-4 px-padding">
                 {districts.map(({ city }) => (
                   <Button
-                    variant={"ghost"}
+                    variant={'ghost'}
                     key={city}
-                    className={cn(
-                      "flex-col gap-2 p-0 text-grayscale-gray5 font-semibold text-body-m",
-                      {
-                        "text-primary": selectedGroup === city,
-                      }
-                    )}
+                    className={cn('flex-col gap-2 p-0 text-grayscale-gray5 font-semibold text-body-m', {
+                      'text-primary': selectedGroup === city,
+                    })}
                     onClick={() => setSelectedGroup(city)}
                   >
                     {city}
                     <div
-                      className={cn("h-0.5 w-full bg-transparent", {
-                        "bg-primary-500": selectedGroup === city,
+                      className={cn('h-0.5 w-full bg-transparent', {
+                        'bg-primary-500': selectedGroup === city,
                       })}
                     />
                   </Button>
@@ -120,9 +115,9 @@ export default function LocationSelectDialogTrigger({
                 {districts.map(({ city }) => (
                   <Button
                     key={city}
-                    variant={"category"}
-                    className={cn("py-2 px-2.5", {
-                      "bg-[#F6F6EA]": selectedGroup === city,
+                    variant={'category'}
+                    className={cn('py-2 px-2.5', {
+                      'bg-[#F6F6EA]': selectedGroup === city,
                     })}
                     onClick={() => setSelectedGroup(city)}
                   >
@@ -132,20 +127,13 @@ export default function LocationSelectDialogTrigger({
               </div>
             </ScrollArea>
           )}
-          <ScrollArea className={cn("w-38.25 md:w-auto h-full", "flex-1")}>
-            <div
-              className={cn("flex-shrink-0 py-2 pl-3.5 pr-3", " pl-5 pr-3.5")}
-            >
+          <ScrollArea className={cn('w-38.25 md:w-auto h-full', 'flex-1')}>
+            <div className={cn('flex-shrink-0 py-2 pl-3.5 pr-3', ' pl-5 pr-3.5')}>
               {currentDistrict?.districts.map((district) => (
-                <Label
-                  key={district}
-                  className="py-2 pr-2.5 gap-2 text-body-xs text-grayscale-gray6 flex items-center"
-                >
+                <Label key={district} className="py-2 pr-2.5 gap-2 text-body-xs text-grayscale-gray6 flex items-center">
                   <Checkbox
                     checked={selected === `${selectedGroup} ${district}`}
-                    onCheckedChange={(checked) =>
-                      onSelect(checked ? `${selectedGroup} ${district}` : null)
-                    }
+                    onCheckedChange={(checked) => onSelect(checked ? `${selectedGroup} ${district}` : null)}
                   />
                   <div className="whitespace-wrap">{district}</div>
                 </Label>

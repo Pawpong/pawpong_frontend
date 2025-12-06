@@ -1,4 +1,4 @@
-import apiClient from "./api";
+import apiClient from './api';
 
 /** API 응답 타입 */
 interface ApiResponse<T> {
@@ -28,7 +28,7 @@ export interface ProfileUpdateRequest {
 export interface ParentPetAddRequest {
   name: string;
   breed: string;
-  gender: "male" | "female";
+  gender: 'male' | 'female';
   birthDate: string; // YYYY-MM-DD 형식
   photoFileName: string;
   description?: string;
@@ -38,7 +38,7 @@ export interface ParentPetAddRequest {
 export interface AvailablePetAddRequest {
   name: string;
   breed: string;
-  gender: "male" | "female";
+  gender: 'male' | 'female';
   birthDate: string; // YYYY-MM-DD 형식
   price: number;
   description?: string;
@@ -54,21 +54,19 @@ export interface AvailablePetAddRequest {
  */
 export const getBreederProfile = async (): Promise<any> => {
   try {
-    const response = await apiClient.get<ApiResponse<any>>(
-      "/api/breeder-management/profile"
-    );
+    const response = await apiClient.get<ApiResponse<any>>('/api/breeder-management/profile');
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch breeder profile");
+      throw new Error('Failed to fetch breeder profile');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Breeder profile fetch error:", error.message);
+      console.error('Breeder profile fetch error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during breeder profile fetch");
+    throw new Error('Unknown error during breeder profile fetch');
   }
 };
 
@@ -76,26 +74,21 @@ export const getBreederProfile = async (): Promise<any> => {
  * 브리더 프로필 수정
  * PATCH /api/breeder-management/profile
  */
-export const updateBreederProfile = async (
-  data: ProfileUpdateRequest
-): Promise<any> => {
+export const updateBreederProfile = async (data: ProfileUpdateRequest): Promise<any> => {
   try {
-    const response = await apiClient.patch<ApiResponse<any>>(
-      "/api/breeder-management/profile",
-      data
-    );
+    const response = await apiClient.patch<ApiResponse<any>>('/api/breeder-management/profile', data);
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to update breeder profile");
+      throw new Error('Failed to update breeder profile');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Breeder profile update error:", error.message);
+      console.error('Breeder profile update error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during breeder profile update");
+    throw new Error('Unknown error during breeder profile update');
   }
 };
 
@@ -103,26 +96,21 @@ export const updateBreederProfile = async (
  * 부모 반려동물 추가
  * POST /api/breeder-management/parent-pets
  */
-export const addParentPet = async (
-  data: ParentPetAddRequest
-): Promise<any> => {
+export const addParentPet = async (data: ParentPetAddRequest): Promise<any> => {
   try {
-    const response = await apiClient.post<ApiResponse<any>>(
-      "/api/breeder-management/parent-pets",
-      data
-    );
+    const response = await apiClient.post<ApiResponse<any>>('/api/breeder-management/parent-pets', data);
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to add parent pet");
+      throw new Error('Failed to add parent pet');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Add parent pet error:", error.message);
+      console.error('Add parent pet error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during add parent pet");
+    throw new Error('Unknown error during add parent pet');
   }
 };
 
@@ -130,27 +118,21 @@ export const addParentPet = async (
  * 부모 반려동물 수정
  * PATCH /api/breeder-management/parent-pets/:petId
  */
-export const updateParentPet = async (
-  petId: string,
-  data: Partial<ParentPetAddRequest>
-): Promise<any> => {
+export const updateParentPet = async (petId: string, data: Partial<ParentPetAddRequest>): Promise<any> => {
   try {
-    const response = await apiClient.patch<ApiResponse<any>>(
-      `/api/breeder-management/parent-pets/${petId}`,
-      data
-    );
+    const response = await apiClient.patch<ApiResponse<any>>(`/api/breeder-management/parent-pets/${petId}`, data);
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to update parent pet");
+      throw new Error('Failed to update parent pet');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Update parent pet error:", error.message);
+      console.error('Update parent pet error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during update parent pet");
+    throw new Error('Unknown error during update parent pet');
   }
 };
 
@@ -160,21 +142,19 @@ export const updateParentPet = async (
  */
 export const deleteParentPet = async (petId: string): Promise<any> => {
   try {
-    const response = await apiClient.delete<ApiResponse<any>>(
-      `/api/breeder-management/parent-pets/${petId}`
-    );
+    const response = await apiClient.delete<ApiResponse<any>>(`/api/breeder-management/parent-pets/${petId}`);
 
     if (!response.data.success) {
-      throw new Error("Failed to delete parent pet");
+      throw new Error('Failed to delete parent pet');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Delete parent pet error:", error.message);
+      console.error('Delete parent pet error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during delete parent pet");
+    throw new Error('Unknown error during delete parent pet');
   }
 };
 
@@ -182,26 +162,21 @@ export const deleteParentPet = async (petId: string): Promise<any> => {
  * 분양 가능 반려동물 추가
  * POST /api/breeder-management/available-pets
  */
-export const addAvailablePet = async (
-  data: AvailablePetAddRequest
-): Promise<any> => {
+export const addAvailablePet = async (data: AvailablePetAddRequest): Promise<any> => {
   try {
-    const response = await apiClient.post<ApiResponse<any>>(
-      "/api/breeder-management/available-pets",
-      data
-    );
+    const response = await apiClient.post<ApiResponse<any>>('/api/breeder-management/available-pets', data);
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to add available pet");
+      throw new Error('Failed to add available pet');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Add available pet error:", error.message);
+      console.error('Add available pet error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during add available pet");
+    throw new Error('Unknown error during add available pet');
   }
 };
 
@@ -209,27 +184,21 @@ export const addAvailablePet = async (
  * 분양 가능 반려동물 수정
  * PATCH /api/breeder-management/available-pets/:petId
  */
-export const updateAvailablePet = async (
-  petId: string,
-  data: Partial<AvailablePetAddRequest>
-): Promise<any> => {
+export const updateAvailablePet = async (petId: string, data: Partial<AvailablePetAddRequest>): Promise<any> => {
   try {
-    const response = await apiClient.patch<ApiResponse<any>>(
-      `/api/breeder-management/available-pets/${petId}`,
-      data
-    );
+    const response = await apiClient.patch<ApiResponse<any>>(`/api/breeder-management/available-pets/${petId}`, data);
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to update available pet");
+      throw new Error('Failed to update available pet');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Update available pet error:", error.message);
+      console.error('Update available pet error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during update available pet");
+    throw new Error('Unknown error during update available pet');
   }
 };
 
@@ -239,21 +208,19 @@ export const updateAvailablePet = async (
  */
 export const deleteAvailablePet = async (petId: string): Promise<any> => {
   try {
-    const response = await apiClient.delete<ApiResponse<any>>(
-      `/api/breeder-management/available-pets/${petId}`
-    );
+    const response = await apiClient.delete<ApiResponse<any>>(`/api/breeder-management/available-pets/${petId}`);
 
     if (!response.data.success) {
-      throw new Error("Failed to delete available pet");
+      throw new Error('Failed to delete available pet');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Delete available pet error:", error.message);
+      console.error('Delete available pet error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during delete available pet");
+    throw new Error('Unknown error during delete available pet');
   }
 };
 
@@ -261,27 +228,23 @@ export const deleteAvailablePet = async (petId: string): Promise<any> => {
  * 반려동물 상태 변경
  * PATCH /api/breeder-management/available-pets/:petId/status
  */
-export const updatePetStatus = async (
-  petId: string,
-  petStatus: "available" | "reserved" | "adopted"
-): Promise<any> => {
+export const updatePetStatus = async (petId: string, petStatus: 'available' | 'reserved' | 'adopted'): Promise<any> => {
   try {
-    const response = await apiClient.patch<ApiResponse<any>>(
-      `/api/breeder-management/available-pets/${petId}/status`,
-      { petStatus }
-    );
+    const response = await apiClient.patch<ApiResponse<any>>(`/api/breeder-management/available-pets/${petId}/status`, {
+      petStatus,
+    });
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to update pet status");
+      throw new Error('Failed to update pet status');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Update pet status error:", error.message);
+      console.error('Update pet status error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during update pet status");
+    throw new Error('Unknown error during update pet status');
   }
 };
 
@@ -320,34 +283,35 @@ export interface DashboardResponseDto {
  */
 export const getDashboard = async (): Promise<DashboardResponseDto> => {
   try {
-    const response = await apiClient.get<ApiResponse<DashboardResponseDto>>(
-      "/api/breeder-management/dashboard"
-    );
+    const response = await apiClient.get<ApiResponse<DashboardResponseDto>>('/api/breeder-management/dashboard');
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch dashboard");
+      throw new Error('Failed to fetch dashboard');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Fetch dashboard error:", error.message);
+      console.error('Fetch dashboard error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during dashboard fetch");
+    throw new Error('Unknown error during dashboard fetch');
   }
 };
 
 /** 인증 상태 응답 DTO */
 export interface VerificationStatusDto {
   breederId: string;
-  status: "pending" | "approved" | "rejected" | "not_submitted";
+  status: 'pending' | 'reviewing' | 'approved' | 'rejected' | 'not_submitted';
+  level?: 'new' | 'elite';
   submittedAt?: string;
-  processedAt?: string;
+  reviewedAt?: string;
   rejectionReason?: string;
+  submittedByEmail?: boolean;
   documents?: Array<{
     type: string;
     url: string;
+    uploadedAt?: string;
   }>;
 }
 
@@ -355,26 +319,23 @@ export interface VerificationStatusDto {
  * 브리더 인증 상태 조회
  * GET /api/breeder-management/verification
  */
-export const getVerificationStatus =
-  async (): Promise<VerificationStatusDto> => {
-    try {
-      const response = await apiClient.get<ApiResponse<VerificationStatusDto>>(
-        "/api/breeder-management/verification"
-      );
+export const getVerificationStatus = async (): Promise<VerificationStatusDto> => {
+  try {
+    const response = await apiClient.get<ApiResponse<VerificationStatusDto>>('/api/breeder-management/verification');
 
-      if (!response.data.success || !response.data.data) {
-        throw new Error("Failed to fetch verification status");
-      }
-
-      return response.data.data;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error("Fetch verification status error:", error.message);
-        throw error;
-      }
-      throw new Error("Unknown error during verification status fetch");
+    if (!response.data.success || !response.data.data) {
+      throw new Error('Failed to fetch verification status');
     }
-  };
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Fetch verification status error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during verification status fetch');
+  }
+};
 
 /** 인증 신청 요청 DTO */
 export interface VerificationSubmitRequest {
@@ -388,26 +349,114 @@ export interface VerificationSubmitRequest {
  * 브리더 인증 신청
  * POST /api/breeder-management/verification
  */
-export const submitVerification = async (
-  data: VerificationSubmitRequest
-): Promise<any> => {
+export const submitVerification = async (data: VerificationSubmitRequest): Promise<any> => {
   try {
-    const response = await apiClient.post<ApiResponse<any>>(
-      "/api/breeder-management/verification",
-      data
-    );
+    const response = await apiClient.post<ApiResponse<any>>('/api/breeder-management/verification', data);
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to submit verification");
+      throw new Error('Failed to submit verification');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Submit verification error:", error.message);
+      console.error('Submit verification error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during verification submission");
+    throw new Error('Unknown error during verification submission');
+  }
+};
+
+/** 업로드된 문서 응답 DTO */
+export interface UploadedDocumentDto {
+  type: string;
+  url: string;
+  fileName: string;
+  size: number;
+}
+
+/** 서류 업로드 응답 DTO */
+export interface UploadDocumentsResponseDto {
+  count: number;
+  level: string;
+  documents: UploadedDocumentDto[];
+}
+
+/**
+ * 브리더 인증 서류 업로드
+ * POST /api/breeder-management/verification/upload
+ */
+export const uploadVerificationDocuments = async (
+  files: File[],
+  types: string[],
+  level: 'new' | 'elite',
+): Promise<UploadDocumentsResponseDto> => {
+  try {
+    const formData = new FormData();
+
+    files.forEach((file) => {
+      formData.append('files', file);
+    });
+
+    formData.append('types', JSON.stringify(types));
+    formData.append('level', level);
+
+    const response = await apiClient.post<ApiResponse<UploadDocumentsResponseDto>>(
+      '/api/breeder-management/verification/upload',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error('서류 업로드에 실패했습니다.');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Upload verification documents error:', error.message);
+      throw error;
+    }
+    throw new Error('서류 업로드 중 오류가 발생했습니다.');
+  }
+};
+
+/** 서류 제출 요청 DTO */
+export interface SubmitDocumentsRequest {
+  level: 'new' | 'elite';
+  documents: Array<{
+    type: string;
+    fileName: string;
+  }>;
+  submittedByEmail?: boolean;
+}
+
+/**
+ * 브리더 인증 서류 제출 (간소화)
+ * POST /api/breeder-management/verification/submit
+ */
+export const submitVerificationDocuments = async (data: SubmitDocumentsRequest): Promise<{ message: string }> => {
+  try {
+    const response = await apiClient.post<ApiResponse<{ message: string }>>(
+      '/api/breeder-management/verification/submit',
+      data,
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error('서류 제출에 실패했습니다.');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Submit verification documents error:', error.message);
+      throw error;
+    }
+    throw new Error('서류 제출 중 오류가 발생했습니다.');
   }
 };
 
@@ -420,11 +469,7 @@ export interface ReceivedApplicationItemDto {
   adopterPhone?: string;
   petId?: string;
   petName?: string;
-  status:
-    | "consultation_pending"
-    | "consultation_completed"
-    | "adoption_approved"
-    | "adoption_rejected";
+  status: 'consultation_pending' | 'consultation_completed' | 'adoption_approved' | 'adoption_rejected';
   appliedAt: string;
   processedAt?: string;
 }
@@ -448,7 +493,7 @@ interface PaginationResponse<T> {
  */
 export const getReceivedApplications = async (
   page: number = 1,
-  take: number = 10
+  take: number = 10,
 ): Promise<{
   applications: ReceivedApplicationItemDto[];
   pagination: {
@@ -461,14 +506,15 @@ export const getReceivedApplications = async (
   };
 }> => {
   try {
-    const response = await apiClient.get<
-      ApiResponse<PaginationResponse<ReceivedApplicationItemDto>>
-    >("/api/breeder-management/applications", {
-      params: { page, take },
-    });
+    const response = await apiClient.get<ApiResponse<PaginationResponse<ReceivedApplicationItemDto>>>(
+      '/api/breeder-management/applications',
+      {
+        params: { page, take },
+      },
+    );
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch received applications");
+      throw new Error('Failed to fetch received applications');
     }
 
     const { items, pagination } = response.data.data;
@@ -476,10 +522,10 @@ export const getReceivedApplications = async (
     return { applications: items, pagination };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Fetch received applications error:", error.message);
+      console.error('Fetch received applications error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during received applications fetch");
+    throw new Error('Unknown error during received applications fetch');
   }
 };
 
@@ -523,35 +569,29 @@ export interface ReceivedApplicationDetailDto {
  * 받은 입양 신청 상세 조회
  * GET /api/breeder-management/applications/:applicationId
  */
-export const getApplicationDetail = async (
-  applicationId: string
-): Promise<ReceivedApplicationDetailDto> => {
+export const getApplicationDetail = async (applicationId: string): Promise<ReceivedApplicationDetailDto> => {
   try {
-    const response = await apiClient.get<
-      ApiResponse<ReceivedApplicationDetailDto>
-    >(`/api/breeder-management/applications/${applicationId}`);
+    const response = await apiClient.get<ApiResponse<ReceivedApplicationDetailDto>>(
+      `/api/breeder-management/applications/${applicationId}`,
+    );
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch application detail");
+      throw new Error('Failed to fetch application detail');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Fetch application detail error:", error.message);
+      console.error('Fetch application detail error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during application detail fetch");
+    throw new Error('Unknown error during application detail fetch');
   }
 };
 
 /** 입양 신청 상태 변경 요청 DTO */
 export interface ApplicationStatusUpdateRequest {
-  newStatus:
-    | "consultation_pending"
-    | "consultation_completed"
-    | "adoption_approved"
-    | "adoption_rejected";
+  newStatus: 'consultation_pending' | 'consultation_completed' | 'adoption_approved' | 'adoption_rejected';
   breederNotes?: string;
 }
 
@@ -561,25 +601,25 @@ export interface ApplicationStatusUpdateRequest {
  */
 export const updateApplicationStatus = async (
   applicationId: string,
-  data: ApplicationStatusUpdateRequest
+  data: ApplicationStatusUpdateRequest,
 ): Promise<any> => {
   try {
     const response = await apiClient.patch<ApiResponse<any>>(
       `/api/breeder-management/applications/${applicationId}`,
-      data
+      data,
     );
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to update application status");
+      throw new Error('Failed to update application status');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Update application status error:", error.message);
+      console.error('Update application status error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during application status update");
+    throw new Error('Unknown error during application status update');
   }
 };
 
@@ -590,9 +630,9 @@ export interface MyPetItemDto {
   breed: string;
   breedKo: string;
   birthDate: string;
-  gender: "male" | "female";
+  gender: 'male' | 'female';
   price: number;
-  status: "available" | "reserved" | "adopted";
+  status: 'available' | 'reserved' | 'adopted';
   photos: string[];
   applicationCount: number;
   isActive: boolean;
@@ -608,7 +648,7 @@ export const getMyPets = async (
   status?: string,
   includeInactive: boolean = false,
   page: number = 1,
-  limit: number = 20
+  limit: number = 20,
 ): Promise<{
   pets: MyPetItemDto[];
   pagination: {
@@ -621,14 +661,15 @@ export const getMyPets = async (
   };
 }> => {
   try {
-    const response = await apiClient.get<
-      ApiResponse<PaginationResponse<MyPetItemDto>>
-    >("/api/breeder-management/my-pets", {
-      params: { status, includeInactive, page, limit },
-    });
+    const response = await apiClient.get<ApiResponse<PaginationResponse<MyPetItemDto>>>(
+      '/api/breeder-management/my-pets',
+      {
+        params: { status, includeInactive, page, limit },
+      },
+    );
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch my pets");
+      throw new Error('Failed to fetch my pets');
     }
 
     const { items, pagination } = response.data.data;
@@ -636,10 +677,10 @@ export const getMyPets = async (
     return { pets: items, pagination };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Fetch my pets error:", error.message);
+      console.error('Fetch my pets error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during my pets fetch");
+    throw new Error('Unknown error during my pets fetch');
   }
 };
 
@@ -653,7 +694,7 @@ export interface MyReviewItemDto {
   rating: number;
   comment: string;
   photos?: string[];
-  visibility: "public" | "private";
+  visibility: 'public' | 'private';
   isReported: boolean;
   createdAt: string;
 }
@@ -663,9 +704,9 @@ export interface MyReviewItemDto {
  * GET /api/breeder-management/my-reviews
  */
 export const getMyReviews = async (
-  visibility: string = "all",
+  visibility: string = 'all',
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ): Promise<{
   reviews: MyReviewItemDto[];
   pagination: {
@@ -678,14 +719,15 @@ export const getMyReviews = async (
   };
 }> => {
   try {
-    const response = await apiClient.get<
-      ApiResponse<PaginationResponse<MyReviewItemDto>>
-    >("/api/breeder-management/my-reviews", {
-      params: { visibility, page, limit },
-    });
+    const response = await apiClient.get<ApiResponse<PaginationResponse<MyReviewItemDto>>>(
+      '/api/breeder-management/my-reviews',
+      {
+        params: { visibility, page, limit },
+      },
+    );
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch my reviews");
+      throw new Error('Failed to fetch my reviews');
     }
 
     const { items, pagination } = response.data.data;
@@ -693,10 +735,10 @@ export const getMyReviews = async (
     return { reviews: items, pagination };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Fetch my reviews error:", error.message);
+      console.error('Fetch my reviews error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during my reviews fetch");
+    throw new Error('Unknown error during my reviews fetch');
   }
 };
 
@@ -706,7 +748,7 @@ export interface ApplicationFormDto {
   breederName: string;
   standardQuestions: Array<{
     id: string;
-    type: "text" | "textarea" | "radio" | "checkbox" | "select";
+    type: 'text' | 'textarea' | 'radio' | 'checkbox' | 'select';
     label: string;
     required: boolean;
     options?: string[];
@@ -715,7 +757,7 @@ export interface ApplicationFormDto {
   }>;
   customQuestions: Array<{
     id: string;
-    type: "text" | "textarea" | "radio" | "checkbox" | "select";
+    type: 'text' | 'textarea' | 'radio' | 'checkbox' | 'select';
     label: string;
     required: boolean;
     options?: string[];
@@ -730,21 +772,19 @@ export interface ApplicationFormDto {
  */
 export const getApplicationForm = async (): Promise<ApplicationFormDto> => {
   try {
-    const response = await apiClient.get<ApiResponse<ApplicationFormDto>>(
-      "/api/breeder-management/application-form"
-    );
+    const response = await apiClient.get<ApiResponse<ApplicationFormDto>>('/api/breeder-management/application-form');
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch application form");
+      throw new Error('Failed to fetch application form');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Fetch application form error:", error.message);
+      console.error('Fetch application form error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during application form fetch");
+    throw new Error('Unknown error during application form fetch');
   }
 };
 
@@ -752,7 +792,7 @@ export const getApplicationForm = async (): Promise<ApplicationFormDto> => {
 export interface ApplicationFormUpdateRequest {
   customQuestions: Array<{
     id: string;
-    type: "text" | "textarea" | "radio" | "checkbox" | "select";
+    type: 'text' | 'textarea' | 'radio' | 'checkbox' | 'select';
     label: string;
     required: boolean;
     options?: string[];
@@ -765,25 +805,20 @@ export interface ApplicationFormUpdateRequest {
  * 입양 신청 폼 수정
  * PATCH /api/breeder-management/application-form
  */
-export const updateApplicationForm = async (
-  data: ApplicationFormUpdateRequest
-): Promise<any> => {
+export const updateApplicationForm = async (data: ApplicationFormUpdateRequest): Promise<any> => {
   try {
-    const response = await apiClient.patch<ApiResponse<any>>(
-      "/api/breeder-management/application-form",
-      data
-    );
+    const response = await apiClient.patch<ApiResponse<any>>('/api/breeder-management/application-form', data);
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to update application form");
+      throw new Error('Failed to update application form');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Update application form error:", error.message);
+      console.error('Update application form error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during application form update");
+    throw new Error('Unknown error during application form update');
   }
 };

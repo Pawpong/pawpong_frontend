@@ -1,4 +1,4 @@
-import apiClient from "./api";
+import apiClient from './api';
 
 /** API 응답 */
 interface ApiResponse<T> {
@@ -37,7 +37,7 @@ export interface MyReviewItemDto {
 /** 후기 작성 요청 */
 export interface ReviewCreateRequest {
   applicationId: string;
-  reviewType: "consultation" | "adoption";
+  reviewType: 'consultation' | 'adoption';
   content: string;
 }
 
@@ -47,7 +47,7 @@ export interface ReviewCreateRequest {
  */
 export const getMyReviews = async (
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ): Promise<{
   reviews: MyReviewItemDto[];
   pagination: {
@@ -60,14 +60,12 @@ export const getMyReviews = async (
   };
 }> => {
   try {
-    const response = await apiClient.get<
-      ApiResponse<PaginationResponse<MyReviewItemDto>>
-    >("/api/adopter/reviews", {
+    const response = await apiClient.get<ApiResponse<PaginationResponse<MyReviewItemDto>>>('/api/adopter/reviews', {
       params: { page, limit },
     });
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch reviews");
+      throw new Error('Failed to fetch reviews');
     }
 
     const { items, pagination } = response.data.data;
@@ -75,10 +73,10 @@ export const getMyReviews = async (
     return { reviews: items, pagination };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Fetch reviews error:", error.message);
+      console.error('Fetch reviews error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during reviews fetch");
+    throw new Error('Unknown error during reviews fetch');
   }
 };
 
@@ -87,26 +85,25 @@ export const getMyReviews = async (
  * POST /api/adopter/review
  */
 export const createReview = async (
-  requestData: ReviewCreateRequest
+  requestData: ReviewCreateRequest,
 ): Promise<{ reviewId: string; message: string }> => {
   try {
-    const response = await apiClient.post<
-      ApiResponse<{ reviewId: string; message: string }>
-    >("/api/adopter/review", requestData);
+    const response = await apiClient.post<ApiResponse<{ reviewId: string; message: string }>>(
+      '/api/adopter/review',
+      requestData,
+    );
 
     if (!response.data.success || !response.data.data) {
-      throw new Error(
-        response.data.message || "Failed to create review"
-      );
+      throw new Error(response.data.message || 'Failed to create review');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Create review error:", error.message);
+      console.error('Create review error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during review creation");
+    throw new Error('Unknown error during review creation');
   }
 };
 
@@ -129,24 +126,20 @@ export interface MyReviewDetailDto {
  * 후기 상세 조회
  * GET /api/adopter/reviews/:id
  */
-export const getReviewDetail = async (
-  reviewId: string
-): Promise<MyReviewDetailDto> => {
+export const getReviewDetail = async (reviewId: string): Promise<MyReviewDetailDto> => {
   try {
-    const response = await apiClient.get<ApiResponse<MyReviewDetailDto>>(
-      `/api/adopter/reviews/${reviewId}`
-    );
+    const response = await apiClient.get<ApiResponse<MyReviewDetailDto>>(`/api/adopter/reviews/${reviewId}`);
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch review detail");
+      throw new Error('Failed to fetch review detail');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Fetch review detail error:", error.message);
+      console.error('Fetch review detail error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during review detail fetch");
+    throw new Error('Unknown error during review detail fetch');
   }
 };

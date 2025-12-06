@@ -1,13 +1,8 @@
-import React from "react";
+import React from 'react';
 
 export default function Google({ ...props }: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      viewBox="0 0 20 21"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
+    <svg viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"

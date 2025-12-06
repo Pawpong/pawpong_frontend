@@ -1,13 +1,10 @@
 // src/store/filterStore.ts
 
-import { Filter, filter as filterData } from "@/constants/filter"; // filter 데이터와 타입을 import
-import { create } from "zustand";
+import { Filter, filter as filterData } from '@/constants/filter'; // filter 데이터와 타입을 import
+import { create } from 'zustand';
 
 // --- 헬퍼 함수들 (스토어 내부에서 사용) ---
-export const findNodeByLabel = (
-  label: string,
-  nodes: Filter[]
-): Filter | null => {
+export const findNodeByLabel = (label: string, nodes: Filter[]): Filter | null => {
   for (const node of nodes) {
     if (node.label === label) return node;
     if (node.children) {
@@ -20,13 +17,11 @@ export const findNodeByLabel = (
 
 export const findParentAndChildren = (
   leafLabel: string,
-  nodes: Filter[]
+  nodes: Filter[],
 ): { parent: Filter | null; childrenLabels: string[] } => {
   for (const node of nodes) {
     if (node.children) {
-      const parentCandidate = node.children.find((child) =>
-        child.children?.some((leaf) => leaf.label === leafLabel)
-      );
+      const parentCandidate = node.children.find((child) => child.children?.some((leaf) => leaf.label === leafLabel));
       if (parentCandidate && parentCandidate.children) {
         return {
           parent: parentCandidate,
@@ -56,15 +51,11 @@ interface FilterState {
   setRootFilters: (filters: Filter[]) => void; // API 필터 데이터 설정
 
   selectPath: (item: Filter, columnIndex: number) => void;
-  selectTempLeaf: (
-    itemLabel: string,
-    checked: boolean,
-    animal: "cat" | "dog"
-  ) => void;
+  selectTempLeaf: (itemLabel: string, checked: boolean, animal: 'cat' | 'dog') => void;
   selectAllTempLeaves: (parentItem: Filter, shouldSelect: boolean) => void;
-  animal: "cat" | "dog"; // 1. animal 상태 추가
+  animal: 'cat' | 'dog'; // 1. animal 상태 추가
   applyTempFilters: () => void; // 임시 선택을 최종 필터에 적용
-  setAnimal: (animal: "cat" | "dog") => void; // 2. animal 설정 액션 추가
+  setAnimal: (animal: 'cat' | 'dog') => void; // 2. animal 설정 액션 추가
   removeActiveFilter: (itemLabel: string) => void; // 3. animal 인자 제거
   clearTempFilters: () => void;
   clearActiveFilters: () => void;
@@ -78,7 +69,7 @@ export const useFilterStore = create<FilterState>((set, get) => ({
   tempSelectedLeaves: [],
   selectionPath: [],
   currentRootFilters: [], // API 필터 데이터
-  animal: "cat", // 기본값 설정
+  animal: 'cat', // 기본값 설정
 
   // --- 액션 ---
   setAnimal: (animal) => set({ animal }),
@@ -111,41 +102,28 @@ export const useFilterStore = create<FilterState>((set, get) => ({
 
   selectTempLeaf: (itemLabel, checked, animal) => {
     // API 필터가 있으면 사용, 없으면 하드코딩된 데이터 사용 (사이드바용)
-    const rootFilters = get().currentRootFilters.length > 0
-      ? get().currentRootFilters
-      : filterData[animal];
-    const { parent, childrenLabels } = findParentAndChildren(
-      itemLabel,
-      rootFilters
-    );
+    const rootFilters = get().currentRootFilters.length > 0 ? get().currentRootFilters : filterData[animal];
+    const { parent, childrenLabels } = findParentAndChildren(itemLabel, rootFilters);
 
     set((state) => {
       let newSelection = [...state.tempSelectedLeaves];
       if (!parent || childrenLabels.length === 0) {
         return {
-          tempSelectedLeaves: checked
-            ? [...newSelection, itemLabel]
-            : newSelection.filter((l) => l !== itemLabel),
+          tempSelectedLeaves: checked ? [...newSelection, itemLabel] : newSelection.filter((l) => l !== itemLabel),
         };
       }
 
       if (checked) {
         newSelection.push(itemLabel);
-        const allChildrenSelected = childrenLabels.every((child) =>
-          newSelection.includes(child)
-        );
+        const allChildrenSelected = childrenLabels.every((child) => newSelection.includes(child));
         if (allChildrenSelected) {
-          newSelection = newSelection.filter(
-            (label) => !childrenLabels.includes(label)
-          );
+          newSelection = newSelection.filter((label) => !childrenLabels.includes(label));
           newSelection.push(parent.label);
         }
       } else {
         if (newSelection.includes(parent.label)) {
           newSelection = newSelection.filter((label) => label !== parent.label);
-          const otherChildren = childrenLabels.filter(
-            (label) => label !== itemLabel
-          );
+          const otherChildren = childrenLabels.filter((label) => label !== itemLabel);
           newSelection.push(...otherChildren);
         } else {
           newSelection = newSelection.filter((label) => label !== itemLabel);
@@ -161,7 +139,7 @@ export const useFilterStore = create<FilterState>((set, get) => ({
 
     set((state) => {
       const newSelection = state.tempSelectedLeaves.filter(
-        (label) => !childrenLabels.includes(label) && label !== parentItem.label
+        (label) => !childrenLabels.includes(label) && label !== parentItem.label,
       );
       if (shouldSelect) {
         newSelection.push(parentItem.label);
@@ -183,14 +161,9 @@ export const useFilterStore = create<FilterState>((set, get) => ({
     set((state) => {
       let newActiveFilters = [...state.activeFilters];
       if (node && node.children) {
-        newActiveFilters = newActiveFilters.filter(
-          (leaf) => leaf !== itemLabel
-        );
+        newActiveFilters = newActiveFilters.filter((leaf) => leaf !== itemLabel);
       } else {
-        const { parent, childrenLabels } = findParentAndChildren(
-          itemLabel,
-          rootFilters
-        );
+        const { parent, childrenLabels } = findParentAndChildren(itemLabel, rootFilters);
         if (parent && newActiveFilters.includes(parent.label)) {
           newActiveFilters = newActiveFilters.filter((l) => l !== parent.label);
           const otherChildren = childrenLabels.filter((l) => l !== itemLabel);

@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { BREEDER_PROFILE_ERROR } from "@/constants/errors/breeder-profile-error";
+import { z } from 'zod';
+import { BREEDER_PROFILE_ERROR } from '@/constants/errors/breeder-profile-error';
 
 /**
  * 생년월일 형식 검증 (YYYYMMDD)
@@ -18,20 +18,16 @@ const birthDateSchema = z
       if (day < 1 || day > 31) return false;
 
       const date = new Date(year, month - 1, day);
-      return (
-        date.getFullYear() === year &&
-        date.getMonth() === month - 1 &&
-        date.getDate() === day
-      );
+      return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
     },
     {
       message: BREEDER_PROFILE_ERROR.BIRTH_DATE_INVALID,
-    }
+    },
   );
 
 const locationSchema = z
   .union([z.string().min(1, BREEDER_PROFILE_ERROR.LOCATION_REQUIRED), z.null()])
-  .refine((val) => val !== null && val.trim() !== "", {
+  .refine((val) => val !== null && val.trim() !== '', {
     message: BREEDER_PROFILE_ERROR.LOCATION_REQUIRED,
   });
 
@@ -40,7 +36,7 @@ const breedsSchema = z
   .min(1, BREEDER_PROFILE_ERROR.BREEDS_REQUIRED)
   .max(5, BREEDER_PROFILE_ERROR.BREEDS_MAX);
 
-const priceSchema = z.string().regex(/^\d*$/, "숫자만 입력해 주세요.");
+const priceSchema = z.string().regex(/^\d*$/, '숫자만 입력해 주세요.');
 
 const parentItemSchema = z.object({
   id: z.string(),
@@ -48,7 +44,7 @@ const parentItemSchema = z.object({
   birthDate: birthDateSchema,
   breed: breedsSchema,
   gender: z
-    .enum(["male", "female"])
+    .enum(['male', 'female'])
     .nullable()
     .refine((val) => val !== null, {
       message: BREEDER_PROFILE_ERROR.GENDER_REQUIRED,
@@ -64,7 +60,7 @@ const breedingAnimalItemSchema = z
     birthDate: birthDateSchema,
     breed: breedsSchema,
     gender: z
-      .enum(["male", "female"])
+      .enum(['male', 'female'])
       .nullable()
       .refine((val) => val !== null, {
         message: BREEDER_PROFILE_ERROR.GENDER_REQUIRED,
@@ -80,15 +76,15 @@ const breedingAnimalItemSchema = z
   .refine(
     (data) => {
       // isCounselMode가 false일 때만 price 필수
-      if (!data.isCounselMode && (!data.price || data.price.trim() === "")) {
+      if (!data.isCounselMode && (!data.price || data.price.trim() === '')) {
         return false;
       }
       return true;
     },
     {
       message: BREEDER_PROFILE_ERROR.PRICE_REQUIRED,
-      path: ["price"],
-    }
+      path: ['price'],
+    },
   );
 
 export const profileFormSchema = z
@@ -98,9 +94,7 @@ export const profileFormSchema = z
     description: z.string(),
     location: locationSchema,
     breeds: breedsSchema,
-    representativePhotos: z
-      .array(z.union([z.instanceof(File), z.string()]))
-      .min(1, ""),
+    representativePhotos: z.array(z.union([z.instanceof(File), z.string()])).min(1, ''),
     minPrice: priceSchema,
     maxPrice: priceSchema,
     isCounselMode: z.boolean(),
@@ -113,35 +107,30 @@ export const profileFormSchema = z
   })
   .superRefine((data, ctx) => {
     if (!data.isCounselMode) {
-      if (!data.minPrice || data.minPrice.trim() === "") {
+      if (!data.minPrice || data.minPrice.trim() === '') {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: BREEDER_PROFILE_ERROR.PRICE_REQUIRED,
-          path: ["minPrice"],
+          path: ['minPrice'],
         });
       }
-      if (!data.maxPrice || data.maxPrice.trim() === "") {
+      if (!data.maxPrice || data.maxPrice.trim() === '') {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: BREEDER_PROFILE_ERROR.PRICE_REQUIRED,
-          path: ["maxPrice"],
+          path: ['maxPrice'],
         });
       }
 
-      if (
-        data.minPrice &&
-        data.maxPrice &&
-        data.minPrice.trim() !== "" &&
-        data.maxPrice.trim() !== ""
-      ) {
+      if (data.minPrice && data.maxPrice && data.minPrice.trim() !== '' && data.maxPrice.trim() !== '') {
         const min = Number(data.minPrice);
         const max = Number(data.maxPrice);
 
         if (!Number.isNaN(min) && !Number.isNaN(max) && min > max) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "최대 금액은 최소 금액보다 크거나 같아야 해요",
-            path: ["maxPrice"],
+            message: '최대 금액은 최소 금액보다 크거나 같아야 해요',
+            path: ['maxPrice'],
           });
         }
       }

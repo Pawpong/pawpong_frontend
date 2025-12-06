@@ -1,19 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Pencil from "@/assets/icons/pencil.svg";
-import { Button } from "@/components/ui/button";
-import NicknameEditDialog from "./nickname-edit-dialog";
+import { useState } from 'react';
+import Pencil from '@/assets/icons/pencil.svg';
+import { Button } from '@/components/ui/button';
+import NicknameEditDialog from './nickname-edit-dialog';
 
 interface NicknameSectionProps {
   nickname: string;
   onEdit?: (newNickname: string) => void;
 }
 
-export default function NicknameSection({
-  nickname,
-  onEdit,
-}: NicknameSectionProps) {
+export default function NicknameSection({ nickname, onEdit }: NicknameSectionProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleSave = (newNickname: string) => {
@@ -25,9 +22,7 @@ export default function NicknameSection({
       <div className="flex flex-col gap-5 w-full">
         <h3 className="text-body-s font-medium text-grayscale-gray5">닉네임</h3>
         <div className="flex items-center justify-between gap-2 w-full">
-          <span className="text-body-s font-medium text-grayscale-gray6">
-            {nickname}
-          </span>
+          <span className="text-body-s font-medium text-grayscale-gray6">{nickname}</span>
           <Button
             variant="ghost"
             onClick={() => setDialogOpen(true)}

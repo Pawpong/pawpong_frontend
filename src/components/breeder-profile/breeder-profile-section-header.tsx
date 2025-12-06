@@ -1,9 +1,5 @@
-import React from "react";
+import React from 'react';
 
-export default function BreederProfileSectionHeader({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function BreederProfileSectionHeader({ children }: { children: React.ReactNode }) {
   return <div className="flex justify-between items-center">{children}</div>;
 }

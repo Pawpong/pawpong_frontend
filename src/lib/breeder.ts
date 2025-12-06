@@ -1,12 +1,197 @@
-import apiClient from "./api";
+import apiClient from './api';
 
-/** 백엔드 API 응답 타입 */
-export interface BreederCardDto {
+/** API 응답 */
+interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  message?: string;
+}
+
+/** 페이지네이션 응답 */
+interface PaginationInfo {
+  currentPage: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+interface PaginationResponse<T> {
+  items: T[];
+  pagination: PaginationInfo;
+}
+
+/** 브리더 위치 정보 DTO */
+export interface BreederLocationDto {
+  cityName: string;
+  districtName: string;
+  detailAddress?: string;
+}
+
+/** 브리더 가격대 정보 DTO */
+export interface BreederPriceRangeDto {
+  minPrice: number;
+  maxPrice: number;
+}
+
+/** 브리더 프로필 상세 정보 DTO */
+export interface BreederProfileInfoDto {
+  profileDescription: string;
+  locationInfo: BreederLocationDto;
+  profilePhotos: string[];
+  priceRangeInfo: BreederPriceRangeDto;
+  specializationAreas: string[];
+  experienceYears?: number;
+}
+
+/** 브리더 통계 정보 DTO */
+export interface BreederStatsDto {
+  totalApplicationCount: number;
+  completedAdoptionCount: number;
+  averageRatingScore: number;
+  totalReviewCount: number;
+  profileViewCount: number;
+}
+
+/** 브리더 인증 정보 DTO */
+export interface BreederVerificationDto {
+  verificationStatus: 'pending' | 'approved' | 'rejected';
+}
+
+/** 브리더 프로필 응답 DTO */
+export interface BreederProfileResponseDto {
   breederId: string;
   breederName: string;
-  breederLevel: "elite" | "new";
+  breederEmail: string;
+  profileImageFileName?: string;
+  profileInfo: BreederProfileInfoDto;
+  parentPetInfo: any[];
+  availablePetInfo: any[];
+  reviewInfo: any[];
+  statsInfo: BreederStatsDto;
+  verificationInfo: BreederVerificationDto;
+}
+
+/** 브리더 프로필 수정 요청 DTO */
+export interface ProfileUpdateRequestDto {
+  profileDescription?: string;
+  locationInfo?: {
+    cityName: string;
+    districtName: string;
+    detailAddress?: string;
+  };
+  profilePhotos?: string[];
+  priceRangeInfo?: {
+    minimumPrice: number;
+    maximumPrice: number;
+  };
+  specializationTypes?: string[];
+  experienceYears?: number;
+}
+
+/** 브리더 프로필 수정 응답 DTO */
+export interface BreederProfileUpdateResponseDto {
+  breederId: string;
+  updatedFields: string[];
+  message: string;
+}
+
+/**
+ * 브리더 상세 정보 조회 (공개 API)
+ * GET /api/breeder/:breederId
+ */
+export const getBreederProfile = async (breederId: string): Promise<BreederProfileResponseDto> => {
+  try {
+    const response = await apiClient.get<ApiResponse<BreederProfileResponseDto>>(`/api/breeder/${breederId}`);
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error('Failed to fetch breeder profile');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Fetch breeder profile error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during breeder profile fetch');
+  }
+};
+
+/**
+ * 인증된 브리더의 자신의 프로필 조회
+ * GET /api/breeder-management/profile
+ */
+export const getMyBreederProfile = async (): Promise<BreederProfileResponseDto> => {
+  try {
+    const response = await apiClient.get<ApiResponse<BreederProfileResponseDto>>('/api/breeder-management/profile');
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error('Failed to fetch my breeder profile');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Fetch my breeder profile error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during my breeder profile fetch');
+  }
+};
+
+/**
+ * 브리더 프로필 수정
+ * PATCH /api/breeder-management/profile
+ */
+export const updateBreederProfile = async (
+  updateData: ProfileUpdateRequestDto,
+): Promise<BreederProfileUpdateResponseDto> => {
+  try {
+    const response = await apiClient.patch<ApiResponse<BreederProfileUpdateResponseDto>>(
+      '/api/breeder-management/profile',
+      updateData,
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.message || 'Failed to update breeder profile');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Update breeder profile error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during breeder profile update');
+  }
+};
+
+/** 브리더 대시보드 응답 DTO */
+export interface BreederDashboardResponseDto {
+  breederInfo: {
+    breederId: string;
+    name: string;
+    level: string;
+  };
+  statistics: {
+    totalPets: number;
+    availablePets: number;
+    totalApplications: number;
+    pendingApplications: number;
+  };
+  recentActivities: any[];
+}
+
+/** 브리더 카드 DTO (탐색/검색 결과) */
+export interface Breeder {
+  breederId: string;
+  breederName: string;
+  breederLevel: string;
   location: string;
   mainBreed: string;
+  specializationTypes?: string[]; // 전문 분야 (옵셔널)
   isAdoptionAvailable: boolean;
   priceRange?: {
     min: number;
@@ -22,137 +207,62 @@ export interface BreederCardDto {
   createdAt: string;
 }
 
-/** 프론트엔드 Breeder 타입 */
-export interface Breeder {
-  id: string;
-  avatar: string;
-  name: string;
-  level: "elite" | "new";
-  location: string;
-  price: string;
-  tags: string[];
-  image: string;
-  status: "available" | "reserved" | "completed";
-  isFavorited?: boolean;
-}
-
-/** 브리더 검색 요청 파라미터 (프론트엔드) */
+/** 브리더 검색 파라미터 */
 export interface SearchBreederParams {
+  petType?: 'dog' | 'cat';
+  dogSize?: string[];
+  catFurLength?: string[];
+  breeds?: string[];
+  province?: string[];
+  city?: string[];
+  isAdoptionAvailable?: boolean;
+  breederLevel?: string[];
+  sortBy?: 'latest' | 'favorite' | 'review' | 'price_asc' | 'price_desc';
   page?: number;
   limit?: number;
-  petType?: "cat" | "dog"; // 백엔드와 일치시킴
-  dogSize?: ("small" | "medium" | "large")[];
-  catFurLength?: ("short" | "long")[];
-  province?: string[]; // 백엔드와 일치시킴 (광역시/도)
-  city?: string[]; // 백엔드와 일치시킴 (시/군/구)
-  breeds?: string[];
-  isAdoptionAvailable?: boolean;
-  breederLevel?: ("new" | "elite")[]; // 백엔드와 일치시킴
-  sortBy?: "latest" | "favorite" | "review" | "price_asc" | "price_desc"; // 백엔드와 일치시킴
-}
-
-/** 백엔드 페이지네이션 응답 */
-interface PaginationResponse<T> {
-  items: T[];
-  pagination: {
-    currentPage: number;
-    pageSize: number;
-    totalItems: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-  };
-}
-
-/** API 응답 */
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
 }
 
 /**
- * 백엔드 DTO를 프론트엔드 Breeder 타입으로 변환
+ * 브리더 대시보드 조회
+ * GET /api/breeder-management/dashboard
  */
-function mapBreederCardToBreeder(dto: BreederCardDto): Breeder {
-  // 가격 범위 포맷팅
-  let priceDisplay = "상담 후 결정";
-  if (dto.priceRange && dto.priceRange.display === "range") {
-    const minPrice = dto.priceRange.min.toLocaleString();
-    const maxPrice = dto.priceRange.max.toLocaleString();
-    priceDisplay = `${minPrice} - ${maxPrice}원`;
-  }
-
-  // 입양 가능 여부를 status로 변환
-  // 백엔드에서 예약/완료 상태를 반환하지 않으므로 available만 사용
-  const status: "available" | "reserved" | "completed" =
-    dto.isAdoptionAvailable ? "available" : "completed";
-
-  return {
-    id: dto.breederId,
-    avatar: dto.profileImage || "/avatar-sample.png",
-    name: dto.breederName,
-    level: dto.breederLevel,
-    location: dto.location,
-    price: priceDisplay,
-    tags: [dto.mainBreed],
-    image: dto.representativePhotos[0] || "/main-img-sample.png",
-    status,
-    isFavorited: dto.isFavorited,
-  };
-}
-
-/**
- * 브리더 목록 검색/필터링
- * POST /api/breeder/explore
- */
-export const exploreBreeders = async (
-  params: SearchBreederParams = {}
-): Promise<{
-  breeders: Breeder[];
-  pagination: {
-    currentPage: number;
-    pageSize: number;
-    totalItems: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-  };
-}> => {
+export const getBreederDashboard = async (): Promise<BreederDashboardResponseDto> => {
   try {
-    // 백엔드 API 스펙에 맞게 요청 데이터 구성
-    const requestBody = {
-      petType: params.petType || "dog", // 필수 필드, 기본값 'dog'
-      breeds: params.breeds, // 품종 필터
-      dogSize: params.dogSize,
-      catFurLength: params.catFurLength,
-      province: params.province,
-      city: params.city,
-      isAdoptionAvailable: params.isAdoptionAvailable,
-      breederLevel: params.breederLevel,
-      sortBy: params.sortBy || "latest",
-      page: params.page || 1,
-      take: params.limit || 20, // limit -> take로 변경
-    };
-
-    const response = await apiClient.post<
-      ApiResponse<PaginationResponse<BreederCardDto>>
-    >("/api/breeder/explore", requestBody);
+    const response = await apiClient.get<ApiResponse<BreederDashboardResponseDto>>('/api/breeder-management/dashboard');
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch breeders");
+      throw new Error('Failed to fetch breeder dashboard');
     }
 
-    const { items, pagination } = response.data.data;
-    const breeders = items.map(mapBreederCardToBreeder);
-
-    return { breeders, pagination };
+    return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Breeder explore error:", error.message);
+      console.error('Fetch breeder dashboard error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during breeder exploration");
+    throw new Error('Unknown error during breeder dashboard fetch');
+  }
+};
+
+/**
+ * 브리더 탐색/검색
+ * POST /api/breeder/explore
+ */
+export const exploreBreeders = async (params: SearchBreederParams = {}): Promise<PaginationResponse<Breeder>> => {
+  try {
+    const response = await apiClient.post<ApiResponse<PaginationResponse<Breeder>>>('/api/breeder/explore', params);
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error('Failed to explore breeders');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Explore breeders error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during breeder exploration');
   }
 };
 
@@ -162,173 +272,56 @@ export const exploreBreeders = async (
  */
 export const getPopularBreeders = async (): Promise<Breeder[]> => {
   try {
-    const response = await apiClient.get<ApiResponse<BreederCardDto[]>>(
-      "/api/breeder/popular"
-    );
+    const response = await apiClient.get<ApiResponse<Breeder[]>>('/api/breeder/popular');
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch popular breeders");
-    }
-
-    return response.data.data.map(mapBreederCardToBreeder);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Popular breeders error:", error.message);
-      throw error;
-    }
-    throw new Error("Unknown error during popular breeders fetch");
-  }
-};
-
-/**
- * 브리더 상세 정보 조회
- * GET /api/breeder/:id
- */
-export const getBreederProfile = async (breederId: string): Promise<any> => {
-  try {
-    const response = await apiClient.get<ApiResponse<any>>(
-      `/api/breeder/${breederId}`
-    );
-
-    if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch breeder profile");
+      throw new Error('Failed to fetch popular breeders');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Breeder profile error:", error.message);
+      console.error('Fetch popular breeders error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during breeder profile fetch");
+    throw new Error('Unknown error during popular breeders fetch');
   }
 };
 
-/**
- * 브리더 후기 목록 조회
- * GET /api/breeder/:id/reviews
- */
-export const getBreederReviews = async (
-  breederId: string,
-  page: number = 1,
-  limit: number = 10
-): Promise<any> => {
-  try {
-    const response = await apiClient.get<ApiResponse<any>>(
-      `/api/breeder/${breederId}/reviews`,
-      {
-        params: { page, limit },
-      }
-    );
-
-    if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch breeder reviews");
-    }
-
-    return response.data.data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Breeder reviews error:", error.message);
-      throw error;
-    }
-    throw new Error("Unknown error during breeder reviews fetch");
-  }
-};
-
-/**
- * 브리더 분양 가능 개체 목록 조회
- * GET /api/breeder/:id/pets
- */
-export const getBreederPets = async (
-  breederId: string,
-  page: number = 1,
-  limit: number = 10
-): Promise<any> => {
-  try {
-    const response = await apiClient.get<ApiResponse<any>>(
-      `/api/breeder/${breederId}/pets`,
-      {
-        params: { page, limit },
-      }
-    );
-
-    if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch breeder pets");
-    }
-
-    return response.data.data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Breeder pets error:", error.message);
-      throw error;
-    }
-    throw new Error("Unknown error during breeder pets fetch");
-  }
-};
-
-/**
- * 브리더 부모견/부모묘 목록 조회
- * GET /api/breeder/:id/parent-pets
- */
-export const getParentPets = async (breederId: string): Promise<any> => {
-  try {
-    const response = await apiClient.get<ApiResponse<any>>(
-      `/api/breeder/${breederId}/parent-pets`
-    );
-
-    if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch parent pets");
-    }
-
-    return response.data.data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Parent pets error:", error.message);
-      throw error;
-    }
-    throw new Error("Unknown error during parent pets fetch");
-  }
-};
-
-/** 즐겨찾기 브리더 DTO (백엔드 응답) */
-export interface FavoriteBreederDto {
-  breederId: string;
-  breederName: string;
-  profileImageFileName?: string;
-  location: string;
-  specialization?: string;
-  averageRating: number;
-  totalReviews: number;
-  availablePets: number;
-  addedAt: string;
-}
-
-/**
- * 즐겨찾기 브리더를 프론트엔드 Breeder 타입으로 변환
- */
-function mapFavoriteToBreeder(dto: FavoriteBreederDto): Breeder {
-  return {
-    id: dto.breederId,
-    avatar: dto.profileImageFileName || "/avatar-sample.png",
-    name: dto.breederName,
-    level: "new", // 즐겨찾기 응답에는 level이 없으므로 기본값
-    location: dto.location,
-    price: "상담 후 결정", // 즐겨찾기 응답에는 가격이 없으므로 기본값
-    tags: dto.specialization ? [dto.specialization] : [],
-    image: "/main-img-sample.png", // 즐겨찾기 응답에는 대표 이미지가 없으므로 기본값
-    status: dto.availablePets > 0 ? "available" : "completed",
+/** 받은 입양 신청 아이템 DTO (브리더용) */
+export interface ReceivedApplicationItemDto {
+  applicationId: string;
+  adopterId: string;
+  adopterName: string;
+  adopterEmail: string;
+  adopterPhone: string;
+  petId?: string;
+  petName?: string;
+  status: 'consultation_pending' | 'consultation_completed' | 'adoption_approved' | 'adoption_rejected';
+  applicationData: {
+    privacyConsent: boolean;
+    selfIntroduction: string;
+    familyMembers: string;
+    allFamilyConsent: boolean;
+    allergyTestInfo: string;
+    timeAwayFromHome: string;
+    livingSpaceDescription: string;
+    previousPetExperience: string;
   };
+  appliedAt: string;
+  processedAt?: string;
+  breederNotes?: string;
 }
 
 /**
- * 즐겨찾기 목록 조회
- * GET /api/adopter/favorites
+ * 받은 입양 신청 목록 조회 (브리더용)
+ * GET /api/breeder-management/applications
  */
-export const getFavorites = async (
+export const getReceivedApplications = async (
   page: number = 1,
-  limit: number = 10
+  take: number = 10,
 ): Promise<{
-  breeders: Breeder[];
+  applications: ReceivedApplicationItemDto[];
   pagination: {
     currentPage: number;
     pageSize: number;
@@ -339,179 +332,129 @@ export const getFavorites = async (
   };
 }> => {
   try {
-    const response = await apiClient.get<
-      ApiResponse<PaginationResponse<FavoriteBreederDto>>
-    >("/api/adopter/favorites", {
-      params: { page, limit },
-    });
+    const response = await apiClient.get<ApiResponse<PaginationResponse<ReceivedApplicationItemDto>>>(
+      '/api/breeder-management/applications',
+      {
+        params: { page, take },
+      },
+    );
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch favorites");
+      throw new Error('Failed to fetch received applications');
     }
 
     const { items, pagination } = response.data.data;
-    const breeders = items.map(mapFavoriteToBreeder);
 
-    return { breeders, pagination };
+    return { applications: items, pagination };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Favorites fetch error:", error.message);
+      console.error('Fetch received applications error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during favorites fetch");
+    throw new Error('Unknown error during received applications fetch');
   }
 };
 
 /**
- * 즐겨찾기 추가
- * POST /api/adopter/favorite
+ * 받은 입양 신청 상세 조회 (브리더용)
+ * GET /api/breeder-management/applications/:applicationId
  */
-export const addFavorite = async (breederId: string): Promise<void> => {
+export const getReceivedApplicationDetail = async (applicationId: string): Promise<ReceivedApplicationItemDto> => {
   try {
-    const response = await apiClient.post<ApiResponse<any>>(
-      "/api/adopter/favorite",
-      { breederId }
+    const response = await apiClient.get<ApiResponse<ReceivedApplicationItemDto>>(
+      `/api/breeder-management/applications/${applicationId}`,
     );
 
-    if (!response.data.success) {
-      throw new Error("Failed to add favorite");
+    if (!response.data.success || !response.data.data) {
+      throw new Error('Failed to fetch received application detail');
     }
+
+    return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Add favorite error:", error.message);
+      console.error('Fetch received application detail error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during add favorite");
+    throw new Error('Unknown error during received application detail fetch');
   }
 };
 
 /**
- * 즐겨찾기 삭제
- * DELETE /api/adopter/favorite/:breederId
+ * 브리더 분양 가능 개체 목록 조회
+ * GET /api/breeder/:breederId/pets
  */
-export const removeFavorite = async (breederId: string): Promise<void> => {
-  try {
-    const response = await apiClient.delete<ApiResponse<any>>(
-      `/api/adopter/favorite/${breederId}`
-    );
-
-    if (!response.data.success) {
-      throw new Error("Failed to remove favorite");
-    }
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Remove favorite error:", error.message);
-      throw error;
-    }
-    throw new Error("Unknown error during remove favorite");
-  }
-};
-
-/** 개체 상세 응답 DTO (백엔드 응답) */
-export interface PetDetailDto {
-  petId: string;
-  name: string;
-  breed: string;
-  breedKo: string;
-  birthDate: string;
-  gender: "male" | "female";
-  price: number;
-  status: "available" | "reserved" | "adopted";
-  description?: string;
-  photos: string[];
-  vaccinations: Array<{
-    name: string;
-    date: string;
-    veterinarian?: string;
-  }>;
-  healthRecords: Array<{
-    date: string;
-    type: string;
-    description: string;
-    veterinarian?: string;
-  }>;
-  parentInfo?: {
-    father?: {
-      name: string;
-      breed: string;
-      photos?: string[];
-    };
-    mother?: {
-      name: string;
-      breed: string;
-      photos?: string[];
-    };
-  };
-  availableFrom?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-/**
- * 개체 상세 조회
- * GET /api/breeder/:id/pet/:petId
- */
-export const getPetDetail = async (
+export const getBreederPets = async (
   breederId: string,
-  petId: string
-): Promise<PetDetailDto> => {
+  page: number = 1,
+  limit: number = 20,
+): Promise<{ items: any[]; pagination: any }> => {
   try {
-    const response = await apiClient.get<ApiResponse<PetDetailDto>>(
-      `/api/breeder/${breederId}/pet/${petId}`
+    const response = await apiClient.get<ApiResponse<PaginationResponse<any>>>(
+      `/api/breeder/${breederId}/pets`,
+      { params: { page, limit } },
     );
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch pet detail");
+      throw new Error('Failed to fetch breeder pets');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Pet detail error:", error.message);
+      console.error('Fetch breeder pets error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during pet detail fetch");
+    throw new Error('Unknown error during breeder pets fetch');
   }
 };
 
-/** 입양 신청 폼 응답 DTO (백엔드 응답) */
-export interface ApplicationFormDto {
-  breederId: string;
-  breederName: string;
-  customQuestions: Array<{
-    questionId: string;
-    questionLabel: string;
-    questionType: "text" | "textarea" | "radio" | "checkbox" | "select";
-    options?: string[];
-    required: boolean;
-    order: number;
-  }>;
-  requiredDocuments: string[];
-  additionalNotes?: string;
-}
-
 /**
- * 입양 신청 폼 구조 조회
- * GET /api/breeder/:id/application-form
+ * 브리더 부모견/부모묘 목록 조회
+ * GET /api/breeder/:breederId/parent-pets
  */
-export const getApplicationForm = async (
-  breederId: string
-): Promise<ApplicationFormDto> => {
+export const getParentPets = async (breederId: string): Promise<any[]> => {
   try {
-    const response = await apiClient.get<ApiResponse<ApplicationFormDto>>(
-      `/api/breeder/${breederId}/application-form`
-    );
+    const response = await apiClient.get<ApiResponse<any[]>>(`/api/breeder/${breederId}/parent-pets`);
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch application form");
+      throw new Error('Failed to fetch parent pets');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Application form error:", error.message);
+      console.error('Fetch parent pets error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during application form fetch");
+    throw new Error('Unknown error during parent pets fetch');
+  }
+};
+
+/**
+ * 브리더 후기 목록 조회
+ * GET /api/breeder/:breederId/reviews
+ */
+export const getBreederReviews = async (
+  breederId: string,
+  page: number = 1,
+  limit: number = 10,
+): Promise<{ items: any[]; pagination: any }> => {
+  try {
+    const response = await apiClient.get<ApiResponse<PaginationResponse<any>>>(
+      `/api/breeder/${breederId}/reviews`,
+      { params: { page, limit } },
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error('Failed to fetch breeder reviews');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Fetch breeder reviews error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during breeder reviews fetch');
   }
 };

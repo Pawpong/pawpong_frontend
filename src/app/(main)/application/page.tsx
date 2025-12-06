@@ -1,18 +1,26 @@
-"use client";
+'use client';
 
-import Container from "@/components/ui/container";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import ApplicationListItem from "./_components/application-list-item";
-import DownArrow from "@/assets/icons/long-down-arrow.svg";
-import { useApplications } from "./_hooks/use-applications";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
+import Container from '@/components/ui/container';
+import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import ApplicationListItem from './_components/application-list-item';
+import DownArrow from '@/assets/icons/long-down-arrow.svg';
+import { useApplications } from './_hooks/use-applications';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { useAuthGuard } from '@/hooks/use-auth-guard';
+import { useAuthStore } from '@/stores/auth-store';
+import { getUserRoleFromCookie } from '@/lib/cookie-utils';
 
 const ApplicationPage = () => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useApplications();
+  const { isLoading: isAuthLoading } = useAuthGuard();
+  const { user } = useAuthStore();
+  // 쿠키의 userRole을 우선적으로 사용
+  const cookieRole = getUserRoleFromCookie();
+  const userRole = cookieRole || user?.role;
+  const isBreeder = userRole === 'breeder';
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useApplications();
   const allApplications = data?.pages.flatMap((page) => page.data) ?? [];
-  const isMdUp = useBreakpoint("md");
+  const isMdUp = useBreakpoint('md');
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -20,13 +28,15 @@ const ApplicationPage = () => {
     }
   };
 
-  if (isLoading) {
+  // 페이지 제목을 role에 따라 다르게 표시
+  const pageTitle = isBreeder ? '받은 신청' : '신청 내역';
+  const emptyMessage = isBreeder ? '받은 신청이 없습니다.' : '신청 내역이 없습니다.';
+
+  if (isAuthLoading || isLoading) {
     return (
       <Container>
         <div className="flex-1 @container flex flex-col gap-6 lg:gap-10">
-          <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">
-            신청 내역
-          </div>
+          <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">{pageTitle}</div>
           <div className="flex justify-center py-20">
             <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
           </div>
@@ -38,25 +48,19 @@ const ApplicationPage = () => {
   return (
     <Container>
       <div className="flex-1 @container flex flex-col gap-6 lg:gap-10">
-        <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">
-          신청 내역
-        </div>
+        <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">{pageTitle}</div>
 
         {allApplications.length === 0 ? (
           <div className="flex justify-center py-20">
-            <p className="text-body-s text-grayscale-gray5">
-              신청 내역이 없습니다.
-            </p>
+            <p className="text-body-s text-grayscale-gray5">{emptyMessage}</p>
           </div>
         ) : (
           <>
             <div className="flex flex-col gap-7">
               {allApplications.map((item, index) => (
                 <div key={item.applicationId} className="flex flex-col">
-                  <ApplicationListItem {...item} />
-                  {(isMdUp ? index !== allApplications.length - 1 : true) && (
-                    <Separator className="mt-7" />
-                  )}
+                  <ApplicationListItem {...item} isBreeder={isBreeder} />
+                  {(isMdUp ? index !== allApplications.length - 1 : true) && <Separator className="mt-7" />}
                 </div>
               ))}
             </div>
@@ -71,7 +75,7 @@ const ApplicationPage = () => {
                   className="bg-[var(--color-grayscale-gray1)] hover:bg-[var(--color-grayscale-gray2)] h-12 py-2.5 gap-1 rounded-full has-[>svg]:px-0 has-[>svg]:pl-5 has-[>svg]:pr-3 disabled:opacity-50"
                 >
                   <span className="text-body-s font-medium text-grayscale-gray6">
-                    {isFetchingNextPage ? "로딩 중..." : "더보기"}
+                    {isFetchingNextPage ? '로딩 중...' : '더보기'}
                   </span>
                   <DownArrow />
                 </Button>

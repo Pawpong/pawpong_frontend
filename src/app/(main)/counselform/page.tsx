@@ -1,58 +1,51 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+'use client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Arrow from "@/assets/icons/arrow";
-import SmallDot from "@/assets/icons/small-dot.svg";
-import { useForm, FormProvider, Controller, useWatch } from "react-hook-form";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import LeftArrow from "@/assets/icons/left-arrow.svg";
-import useNavigationGuard from "@/hooks/use-navigation-guard";
-import {
-  useCounselFormStore,
-  type CounselFormData,
-} from "@/stores/counsel-form-store";
-import { useToast } from "@/hooks/use-toast";
-import { isFormComplete, isFormEmpty } from "@/utils/counsel-form-validation";
-import ExitConfirmDialog from "@/components/exit-confirmation-dialog";
-import { useNavigationGuardContext } from "@/contexts/navigation-guard-context";
-import { useCreateApplication } from "./_hooks/use-application";
-import { useBreederPets } from "./_hooks/use-breeder-pets";
-import { useSearchParams, useRouter } from "next/navigation";
-import type { ApplicationCreateRequest } from "@/lib/application";
-import { formatPhoneNumber } from "@/utils/phone";
+} from '@/components/ui/dropdown-menu';
+import Arrow from '@/assets/icons/arrow';
+import SmallDot from '@/assets/icons/small-dot.svg';
+import { useForm, FormProvider, Controller, useWatch } from 'react-hook-form';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import LeftArrow from '@/assets/icons/left-arrow.svg';
+import useNavigationGuard from '@/hooks/use-navigation-guard';
+import { useCounselFormStore, type CounselFormData } from '@/stores/counsel-form-store';
+import { useToast } from '@/hooks/use-toast';
+import { isFormComplete, isFormEmpty } from '@/utils/counsel-form-validation';
+import ExitConfirmDialog from '@/components/exit-confirmation-dialog';
+import { useNavigationGuardContext } from '@/contexts/navigation-guard-context';
+import { useCreateApplication } from './_hooks/use-application';
+import { useBreederPets } from './_hooks/use-breeder-pets';
+import { useSearchParams, useRouter } from 'next/navigation';
+import type { ApplicationCreateRequest } from '@/lib/application';
+import { formatPhoneNumber } from '@/utils/phone';
 
 export default function CounselFormPage() {
-  const isMdUp = useBreakpoint("md");
+  const isMdUp = useBreakpoint('md');
   const { toast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const breederId = searchParams.get("breederId") || "";
-  const petId = searchParams.get("petId") || undefined;
+  const breederId = searchParams.get('breederId') || '';
+  const petId = searchParams.get('petId') || undefined;
 
   const { setCounselFormData, counselFormData, clearCounselFormData } = useCounselFormStore();
   const createApplicationMutation = useCreateApplication();
   const { data: breederPetsData } = useBreederPets(breederId);
-  const availablePets = breederPetsData?.items?.filter(pet => pet.status === "available") || [];
+  const availablePets = breederPetsData?.items?.filter((pet) => pet.status === 'available') || [];
   const [isIntroductionFocused, setIsIntroductionFocused] = useState(false);
   const [isLivingSpaceFocused, setIsLivingSpaceFocused] = useState(false);
   const [isPreviousPetsFocused, setIsPreviousPetsFocused] = useState(false);
-  const [isAdditionalMessageFocused, setIsAdditionalMessageFocused] =
-    useState(false);
-  const [
-    isInterestedAnimalDetailsFocused,
-    setIsInterestedAnimalDetailsFocused,
-  ] = useState(false);
-  
+  const [isAdditionalMessageFocused, setIsAdditionalMessageFocused] = useState(false);
+  const [isInterestedAnimalDetailsFocused, setIsInterestedAnimalDetailsFocused] = useState(false);
+
   const defaultCounselValues: CounselFormData = counselFormData
     ? {
         ...counselFormData,
@@ -60,27 +53,27 @@ export default function CounselFormPage() {
       }
     : {
         privacyAgreement: false,
-        name: "",
-        phone: "",
-        email: "",
-        introduction: "",
-        familyMembers: "",
+        name: '',
+        phone: '',
+        email: '',
+        introduction: '',
+        familyMembers: '',
         familyAgreement: false,
-        allergyCheck: "",
-        awayTime: "",
-        livingSpace: "",
-        previousPets: "",
+        allergyCheck: '',
+        awayTime: '',
+        livingSpace: '',
+        previousPets: '',
         basicCare: false,
         medicalExpense: false,
-        interestedAnimal: "",
-        interestedAnimalDetails: "",
-        adoptionTiming: "",
-        additionalMessage: "",
+        interestedAnimal: '',
+        interestedAnimalDetails: '',
+        adoptionTiming: '',
+        additionalMessage: '',
       };
 
   const form = useForm<CounselFormData>({
     defaultValues: defaultCounselValues,
-    mode: "onBlur",
+    mode: 'onBlur',
   });
 
   const formValues = useWatch({ control: form.control });
@@ -117,15 +110,15 @@ export default function CounselFormPage() {
 
     if (!isValid) {
       toast({
-        title: "입력 정보를 확인해주세요.",
+        title: '입력 정보를 확인해주세요.',
       });
       return;
     }
 
     if (!breederId) {
       toast({
-        title: "브리더 정보가 없습니다.",
-        description: "브리더 페이지에서 다시 시도해주세요.",
+        title: '브리더 정보가 없습니다.',
+        description: '브리더 페이지에서 다시 시도해주세요.',
       });
       return;
     }
@@ -156,27 +149,27 @@ export default function CounselFormPage() {
       clearCounselFormData();
 
       toast({
-        title: "상담 신청이 완료되었습니다.",
+        title: '상담 신청이 완료되었습니다.',
         description: result.message,
       });
 
       // 신청 목록 페이지로 이동
-      router.push("/myapplication");
+      router.push('/myapplication');
     } catch (error) {
-      console.error("Application submission error:", error);
+      console.error('Application submission error:', error);
       toast({
-        title: "상담 신청에 실패했습니다.",
-        description: error instanceof Error ? error.message : "다시 시도해주세요.",
+        title: '상담 신청에 실패했습니다.',
+        description: error instanceof Error ? error.message : '다시 시도해주세요.',
       });
     }
   };
 
-  const introductionValue = form.watch("introduction");
-  const livingSpaceValue = form.watch("livingSpace");
-  const previousPetsValue = form.watch("previousPets");
-  const additionalMessageValue = form.watch("additionalMessage");
-  const interestedAnimal = form.watch("interestedAnimal");
-  const interestedAnimalDetailsValue = form.watch("interestedAnimalDetails");
+  const introductionValue = form.watch('introduction');
+  const livingSpaceValue = form.watch('livingSpace');
+  const previousPetsValue = form.watch('previousPets');
+  const additionalMessageValue = form.watch('additionalMessage');
+  const interestedAnimal = form.watch('interestedAnimal');
+  const interestedAnimalDetailsValue = form.watch('interestedAnimalDetails');
 
   return (
     <FormProvider {...form}>
@@ -205,13 +198,8 @@ export default function CounselFormPage() {
                     control={form.control}
                     render={({ field }) => (
                       <label className="bg-white flex gap-2 h-12 items-center px-4 py-2 rounded-lg cursor-pointer">
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                        <span className="text-body-s font-medium text-grayscale-gray6">
-                          동의합니다
-                        </span>
+                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                        <span className="text-body-s font-medium text-grayscale-gray6">동의합니다</span>
                       </label>
                     )}
                   />
@@ -244,11 +232,7 @@ export default function CounselFormPage() {
                   name="name"
                   control={form.control}
                   render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="이름"
-                      className="overflow-hidden text-ellipsis whitespace-nowrap"
-                    />
+                    <Input {...field} placeholder="이름" className="overflow-hidden text-ellipsis whitespace-nowrap" />
                   )}
                 />
                 <Controller
@@ -261,9 +245,7 @@ export default function CounselFormPage() {
                       inputMode="numeric"
                       maxLength={13}
                       className="overflow-hidden text-ellipsis whitespace-nowrap"
-                      onChange={(e) =>
-                        field.onChange(formatPhoneNumber(e.target.value))
-                      }
+                      onChange={(e) => field.onChange(formatPhoneNumber(e.target.value))}
                     />
                   )}
                 />
@@ -286,9 +268,7 @@ export default function CounselFormPage() {
 
               {/* 자기소개 섹션 */}
               <div className="flex flex-col gap-3 items-start w-full">
-                <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                  간단하게 자기소개 부탁드려요.
-                </h2>
+                <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">간단하게 자기소개 부탁드려요.</h2>
                 <Controller
                   name="introduction"
                   control={form.control}
@@ -297,11 +277,8 @@ export default function CounselFormPage() {
                       {...field}
                       placeholder="성별, 연령대, 거주지, 결혼 계획, 생활 패턴 등"
                       maxLength={800}
-                      showLength={
-                        isIntroductionFocused ||
-                        (introductionValue || "").length > 0
-                      }
-                      currentLength={String(introductionValue || "").length}
+                      showLength={isIntroductionFocused || (introductionValue || '').length > 0}
+                      currentLength={String(introductionValue || '').length}
                       onFocus={() => {
                         setIsIntroductionFocused(true);
                       }}
@@ -322,13 +299,7 @@ export default function CounselFormPage() {
                 <Controller
                   name="familyMembers"
                   control={form.control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="인원 수, 관계, 연령대 등"
-                      className="h-12"
-                    />
-                  )}
+                  render={({ field }) => <Input {...field} placeholder="인원 수, 관계, 연령대 등" className="h-12" />}
                 />
               </div>
 
@@ -342,13 +313,8 @@ export default function CounselFormPage() {
                   control={form.control}
                   render={({ field }) => (
                     <label className="bg-white flex gap-2 h-12 w-full items-center px-4 py-2 rounded-lg cursor-pointer">
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                      <span className="text-body-s font-medium text-grayscale-gray6">
-                        네
-                      </span>
+                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                      <span className="text-body-s font-medium text-grayscale-gray6">네</span>
                     </label>
                   )}
                 />
@@ -357,18 +323,13 @@ export default function CounselFormPage() {
               {/* 알러지 검사 */}
               <div className="flex flex-col gap-3 items-start w-full">
                 <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                  본인을 포함한 모든 가족 구성원분들께서 알러지 검사를
-                  마치셨나요?
+                  본인을 포함한 모든 가족 구성원분들께서 알러지 검사를 마치셨나요?
                 </h2>
                 <Controller
                   name="allergyCheck"
                   control={form.control}
                   render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="알러지 검사 여부와 결과(유무), 혹은 향후 계획"
-                      className="h-12"
-                    />
+                    <Input {...field} placeholder="알러지 검사 여부와 결과(유무), 혹은 향후 계획" className="h-12" />
                   )}
                 />
               </div>
@@ -408,11 +369,8 @@ export default function CounselFormPage() {
                         {...field}
                         placeholder="반려동물이 주로 생활할 공간(예: 거실 등)과 환경(크기, 구조 등)"
                         maxLength={800}
-                        showLength={
-                          isLivingSpaceFocused ||
-                          (livingSpaceValue || "").length > 0
-                        }
-                        currentLength={String(livingSpaceValue || "").length}
+                        showLength={isLivingSpaceFocused || (livingSpaceValue || '').length > 0}
+                        currentLength={String(livingSpaceValue || '').length}
                         onFocus={() => {
                           setIsLivingSpaceFocused(true);
                         }}
@@ -422,8 +380,7 @@ export default function CounselFormPage() {
                         }}
                       />
                       <p className="text-caption font-medium text-grayscale-gray5 mt-2.5">
-                        아이들은 철장, 베란다, 야외 등 열악한 공간에서는 지낼 수
-                        없어요
+                        아이들은 철장, 베란다, 야외 등 열악한 공간에서는 지낼 수 없어요
                       </p>
                     </div>
                   )}
@@ -433,8 +390,7 @@ export default function CounselFormPage() {
               {/* 이전 반려동물 */}
               <div className="flex flex-col gap-3 items-start w-full">
                 <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                  현재 함께하는, 또는 이전에 함께했던 반려동물에 대해
-                  알려주세요.
+                  현재 함께하는, 또는 이전에 함께했던 반려동물에 대해 알려주세요.
                 </h2>
                 <Controller
                   name="previousPets"
@@ -444,11 +400,8 @@ export default function CounselFormPage() {
                       {...field}
                       placeholder="반려동물의 품종, 성격, 함께한 기간, 이별 사유 등"
                       maxLength={800}
-                      showLength={
-                        isPreviousPetsFocused ||
-                        (previousPetsValue || "").length > 0
-                      }
-                      currentLength={String(previousPetsValue || "").length}
+                      showLength={isPreviousPetsFocused || (previousPetsValue || '').length > 0}
+                      currentLength={String(previousPetsValue || '').length}
                       onFocus={() => {
                         setIsPreviousPetsFocused(true);
                       }}
@@ -467,21 +420,15 @@ export default function CounselFormPage() {
               {/* 케어 관련 섹션 */}
               <div className="flex flex-col gap-3 items-start w-full">
                 <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                  정기 예방접종·건강검진·훈련 등 기본 케어를 책임지고 해주실 수
-                  있나요?
+                  정기 예방접종·건강검진·훈련 등 기본 케어를 책임지고 해주실 수 있나요?
                 </h2>
                 <Controller
                   name="basicCare"
                   control={form.control}
                   render={({ field }) => (
                     <label className="bg-white flex gap-2 h-12 w-full items-center px-4 py-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity">
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                      <span className="text-body-s font-medium text-grayscale-gray6">
-                        네
-                      </span>
+                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                      <span className="text-body-s font-medium text-grayscale-gray6">네</span>
                     </label>
                   )}
                 />
@@ -489,21 +436,15 @@ export default function CounselFormPage() {
 
               <div className="flex flex-col gap-3 items-start w-full">
                 <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                  예상치 못한 질병이나 사고 등으로 치료비가 발생할 경우 감당
-                  가능하신가요?
+                  예상치 못한 질병이나 사고 등으로 치료비가 발생할 경우 감당 가능하신가요?
                 </h2>
                 <Controller
                   name="medicalExpense"
                   control={form.control}
                   render={({ field }) => (
                     <label className="bg-white flex gap-2 h-12 w-full items-center px-4 py-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity">
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                      <span className="text-body-s font-medium text-grayscale-gray6">
-                        네
-                      </span>
+                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                      <span className="text-body-s font-medium text-grayscale-gray6">네</span>
                     </label>
                   )}
                 />
@@ -528,7 +469,7 @@ export default function CounselFormPage() {
                           size={undefined}
                           className="!px-[var(--space-16)] !py-[var(--space-12)] w-full group"
                           onClick={(e) => {
-                            if (field.value === "") {
+                            if (field.value === '') {
                               e.preventDefault();
                               e.stopPropagation();
                             }
@@ -536,13 +477,11 @@ export default function CounselFormPage() {
                         >
                           <span
                             className={cn(
-                              "text-body-s font-medium",
-                              field.value
-                                ? "text-[#4F3B2E]"
-                                : "text-grayscale-gray5"
+                              'text-body-s font-medium',
+                              field.value ? 'text-[#4F3B2E]' : 'text-grayscale-gray5',
                             )}
                           >
-                            {field.value || "분양 중인 아이"}
+                            {field.value || '분양 중인 아이'}
                           </span>
                           <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
                         </Button>
@@ -552,14 +491,16 @@ export default function CounselFormPage() {
                           <DropdownMenuItem
                             key={pet.petId}
                             className="px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
-                            onSelect={() => field.onChange(`${pet.name} (${pet.breed}, ${pet.gender === "male" ? "수컷" : "암컷"})`)}
+                            onSelect={() =>
+                              field.onChange(`${pet.name} (${pet.breed}, ${pet.gender === 'male' ? '수컷' : '암컷'})`)
+                            }
                           >
-                            {pet.name} ({pet.breed}, {pet.gender === "male" ? "수컷" : "암컷"})
+                            {pet.name} ({pet.breed}, {pet.gender === 'male' ? '수컷' : '암컷'})
                           </DropdownMenuItem>
                         ))}
                         <DropdownMenuItem
                           className="px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
-                          onSelect={() => field.onChange("특징 직접 입력")}
+                          onSelect={() => field.onChange('특징 직접 입력')}
                         >
                           특징 직접 입력
                         </DropdownMenuItem>
@@ -567,7 +508,7 @@ export default function CounselFormPage() {
                     </DropdownMenu>
                   )}
                 />
-                {interestedAnimal === "특징 직접 입력" && (
+                {interestedAnimal === '특징 직접 입력' && (
                   <Controller
                     name="interestedAnimalDetails"
                     control={form.control}
@@ -576,13 +517,8 @@ export default function CounselFormPage() {
                         {...field}
                         placeholder="원하시는 아이의 특징을 자유롭게 입력해주세요"
                         maxLength={800}
-                        showLength={
-                          isInterestedAnimalDetailsFocused ||
-                          (interestedAnimalDetailsValue || "").length > 0
-                        }
-                        currentLength={
-                          String(interestedAnimalDetailsValue || "").length
-                        }
+                        showLength={isInterestedAnimalDetailsFocused || (interestedAnimalDetailsValue || '').length > 0}
+                        currentLength={String(interestedAnimalDetailsValue || '').length}
                         className="text-color-primary-500-basic"
                         onFocus={() => {
                           setIsInterestedAnimalDetailsFocused(true);
@@ -598,9 +534,7 @@ export default function CounselFormPage() {
               </div>
 
               <div className="flex flex-col gap-3 items-start w-full">
-                <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                  원하시는 입양 시기가 있나요?
-                </h2>
+                <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">원하시는 입양 시기가 있나요?</h2>
                 <Controller
                   name="adoptionTiming"
                   control={form.control}
@@ -623,13 +557,8 @@ export default function CounselFormPage() {
                     <Textarea
                       {...field}
                       maxLength={800}
-                      showLength={
-                        isAdditionalMessageFocused ||
-                        (additionalMessageValue || "").length > 0
-                      }
-                      currentLength={
-                        String(additionalMessageValue || "").length
-                      }
+                      showLength={isAdditionalMessageFocused || (additionalMessageValue || '').length > 0}
+                      currentLength={String(additionalMessageValue || '').length}
                       onFocus={() => {
                         setIsAdditionalMessageFocused(true);
                       }}

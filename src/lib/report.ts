@@ -1,4 +1,4 @@
-import apiClient from "./api";
+import apiClient from './api';
 
 interface ApiResponse<T> {
   success: boolean;
@@ -27,21 +27,21 @@ export interface ReportBreederPayload {
 export const reportReview = async (payload: ReportReviewPayload) => {
   try {
     const response = await apiClient.post<ApiResponse<{ reportId: string; message: string }>>(
-      "/api/adopter/report/review",
-      payload
+      '/api/adopter/report/review',
+      payload,
     );
 
     if (!response.data.success) {
-      throw new Error(response.data.message ?? "신고 처리에 실패했습니다.");
+      throw new Error(response.data.message ?? '신고 처리에 실패했습니다.');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Report review error:", error.message);
+      console.error('Report review error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during review report.");
+    throw new Error('Unknown error during review report.');
   }
 };
 
@@ -52,7 +52,7 @@ export const reportReview = async (payload: ReportReviewPayload) => {
 export const reportBreeder = async (payload: ReportBreederPayload) => {
   try {
     const body = {
-      type: "breeder",
+      type: 'breeder',
       breederId: payload.breederId,
       reason: payload.reason,
       description: payload.description,
@@ -61,20 +61,20 @@ export const reportBreeder = async (payload: ReportBreederPayload) => {
     };
 
     const response = await apiClient.post<ApiResponse<{ reportId: string; message: string }>>(
-      "/api/adopter/report",
-      body
+      '/api/adopter/report',
+      body,
     );
 
     if (!response.data.success) {
-      throw new Error(response.data.message ?? "브리더 신고에 실패했습니다.");
+      throw new Error(response.data.message ?? '브리더 신고에 실패했습니다.');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Report breeder error:", error.message);
+      console.error('Report breeder error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during breeder report.");
+    throw new Error('Unknown error during breeder report.');
   }
 };

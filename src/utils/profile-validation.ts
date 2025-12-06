@@ -1,6 +1,6 @@
-import type { ProfileFormData } from "@/stores/profile-store";
-import { BREEDER_PROFILE_ERROR } from "@/constants/errors/breeder-profile-error";
-import type { UseFormReturn, FieldValues } from "react-hook-form";
+import type { ProfileFormData } from '@/stores/profile-store';
+import { BREEDER_PROFILE_ERROR } from '@/constants/errors/breeder-profile-error';
+import type { UseFormReturn, FieldValues } from 'react-hook-form';
 
 export interface ValidationErrors {
   [key: string]: string | undefined;
@@ -26,7 +26,7 @@ export interface AnimalValidationErrors {
  * 생년월일 형식 검증 (YYYYMMDD)
  */
 function isValidBirthDate(birthDate: string): boolean {
-  if (!birthDate || birthDate.trim() === "") return false;
+  if (!birthDate || birthDate.trim() === '') return false;
 
   // 8자리 숫자인지 확인
   const dateRegex = /^\d{8}$/;
@@ -41,11 +41,7 @@ function isValidBirthDate(birthDate: string): boolean {
   if (day < 1 || day > 31) return false;
 
   const date = new Date(year, month - 1, day);
-  return (
-    date.getFullYear() === year &&
-    date.getMonth() === month - 1 &&
-    date.getDate() === day
-  );
+  return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
 }
 
 /**
@@ -53,10 +49,10 @@ function isValidBirthDate(birthDate: string): boolean {
  */
 function hasValue(value: unknown): boolean {
   if (value === null || value === undefined) return false;
-  if (typeof value === "string") return value.trim() !== "";
-  if (typeof value === "boolean") return value === true;
+  if (typeof value === 'string') return value.trim() !== '';
+  if (typeof value === 'boolean') return value === true;
   if (Array.isArray(value)) return value.length > 0;
-  if (typeof value === "object") {
+  if (typeof value === 'object') {
     // 이미지 파일이나 프리뷰 체크
     if (value instanceof File) return true;
     // 객체의 값들 중 하나라도 있으면 true
@@ -85,17 +81,13 @@ export function isFormEmpty(data: ProfileFormData): boolean {
   // 부모/동물 정보 체크 (id 필드는 제외)
   const checkArrayItems = (items: unknown[]) =>
     items.some((item) =>
-      typeof item === "object" && item !== null
-        ? Object.entries(item).some(
-            ([key, value]) => key !== "id" && hasValue(value)
-          )
-        : false
+      typeof item === 'object' && item !== null
+        ? Object.entries(item).some(([key, value]) => key !== 'id' && hasValue(value))
+        : false,
     );
 
-  if (data.parents?.length && checkArrayItems(data.parents as unknown[]))
-    return false;
-  if (data.animals?.length && checkArrayItems(data.animals as unknown[]))
-    return false;
+  if (data.parents?.length && checkArrayItems(data.parents as unknown[])) return false;
+  if (data.animals?.length && checkArrayItems(data.animals as unknown[])) return false;
 
   return true;
 }
@@ -103,19 +95,17 @@ export function isFormEmpty(data: ProfileFormData): boolean {
 /**
  * 부모 정보 검증
  */
-export function validateParents(
-  parents: ProfileFormData["parents"]
-): Array<ParentValidationErrors | undefined> {
+export function validateParents(parents: ProfileFormData['parents']): Array<ParentValidationErrors | undefined> {
   return parents.map((parent) => {
     const errors: ParentValidationErrors = {};
 
-    if (!parent.name || parent.name.trim() === "") {
+    if (!parent.name || parent.name.trim() === '') {
       errors.name = BREEDER_PROFILE_ERROR.NAME_REQUIRED;
     }
     if (!parent.breed || parent.breed.length === 0) {
       errors.breed = BREEDER_PROFILE_ERROR.BREEDS_REQUIRED;
     }
-    if (!parent.birthDate || parent.birthDate.trim() === "") {
+    if (!parent.birthDate || parent.birthDate.trim() === '') {
       errors.birthDate = BREEDER_PROFILE_ERROR.BIRTH_DATE_REQUIRED;
     } else if (!isValidBirthDate(parent.birthDate)) {
       errors.birthDate = BREEDER_PROFILE_ERROR.BIRTH_DATE_INVALID;
@@ -131,28 +121,23 @@ export function validateParents(
 /**
  * 분양 중인 아이 정보 검증
  */
-export function validateAnimals(
-  animals: ProfileFormData["animals"]
-): Array<AnimalValidationErrors | undefined> {
+export function validateAnimals(animals: ProfileFormData['animals']): Array<AnimalValidationErrors | undefined> {
   return animals.map((animal) => {
     const errors: AnimalValidationErrors = {};
 
-    if (!animal.name || animal.name.trim() === "") {
+    if (!animal.name || animal.name.trim() === '') {
       errors.name = BREEDER_PROFILE_ERROR.NAME_REQUIRED;
     }
     if (!animal.breed || animal.breed.length === 0) {
       errors.breed = BREEDER_PROFILE_ERROR.BREEDS_REQUIRED;
     }
-    if (!animal.adoptionStatus || animal.adoptionStatus.trim() === "") {
+    if (!animal.adoptionStatus || animal.adoptionStatus.trim() === '') {
       errors.adoptionStatus = BREEDER_PROFILE_ERROR.STATUS_REQUIRED;
     }
-    if (
-      !animal.isCounselMode &&
-      (!animal.price || animal.price.trim() === "")
-    ) {
+    if (!animal.isCounselMode && (!animal.price || animal.price.trim() === '')) {
       errors.price = BREEDER_PROFILE_ERROR.PRICE_REQUIRED;
     }
-    if (!animal.birthDate || animal.birthDate.trim() === "") {
+    if (!animal.birthDate || animal.birthDate.trim() === '') {
       errors.birthDate = BREEDER_PROFILE_ERROR.BIRTH_DATE_REQUIRED;
     } else if (!isValidBirthDate(animal.birthDate)) {
       errors.birthDate = BREEDER_PROFILE_ERROR.BIRTH_DATE_INVALID;
@@ -171,7 +156,7 @@ export function validateAnimals(
 export function setFormErrors<T extends FieldValues = FieldValues>(
   form: UseFormReturn<T>,
   errors: Array<Record<string, string | undefined> | undefined>,
-  fieldPrefix: string
+  fieldPrefix: string,
 ) {
   const hasErrors = errors.some((err) => err !== undefined);
   if (!hasErrors) return false;
@@ -181,14 +166,12 @@ export function setFormErrors<T extends FieldValues = FieldValues>(
       Object.entries(errorObj).forEach(([field, message]) => {
         if (message) {
           form.setError(
-            `${fieldPrefix}.${index}.${field}` as Parameters<
-              typeof form.setError
-            >[0],
+            `${fieldPrefix}.${index}.${field}` as Parameters<typeof form.setError>[0],
             {
-              type: "manual",
+              type: 'manual',
               message: message,
             },
-            { shouldFocus: false }
+            { shouldFocus: false },
           );
         }
       });
@@ -203,23 +186,19 @@ export function setFormErrors<T extends FieldValues = FieldValues>(
  */
 export function scrollToFirstError(
   parentErrors: Array<ParentValidationErrors | undefined>,
-  animalErrors: Array<AnimalValidationErrors | undefined>
+  animalErrors: Array<AnimalValidationErrors | undefined>,
 ) {
   let firstErrorIndex: number | null = null;
-  let dataAttribute = "";
+  let dataAttribute = '';
 
   // 부모 에러가 먼저 있으면 부모로 스크롤
   if (parentErrors.some((err) => err !== undefined)) {
-    firstErrorIndex = parentErrors.findIndex(
-      (err) => err !== undefined && Object.keys(err).length > 0
-    );
+    firstErrorIndex = parentErrors.findIndex((err) => err !== undefined && Object.keys(err).length > 0);
     dataAttribute = `data-parent-index="${firstErrorIndex}"`;
   }
   // 부모 에러가 없으면 동물 에러로 스크롤
   else if (animalErrors.some((err) => err !== undefined)) {
-    firstErrorIndex = animalErrors.findIndex(
-      (err) => err !== undefined && Object.keys(err).length > 0
-    );
+    firstErrorIndex = animalErrors.findIndex((err) => err !== undefined && Object.keys(err).length > 0);
     dataAttribute = `data-animal-index="${firstErrorIndex}"`;
   }
 
@@ -227,7 +206,7 @@ export function scrollToFirstError(
     setTimeout(() => {
       const element = document.querySelector(`[${dataAttribute}]`);
       if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }, 100);
   }

@@ -1,14 +1,13 @@
-"use client";
+'use client';
 
-import Container from "@/components/ui/container";
-import { Button } from "@/components/ui/button";
-import ReceivedApplicationListItem from "./_components/received-application-list-item";
-import DownArrow from "@/assets/icons/long-down-arrow.svg";
-import { useReceivedApplications } from "./_hooks/use-received-applications";
+import Container from '@/components/ui/container';
+import { Button } from '@/components/ui/button';
+import ReceivedApplicationListItem from './_components/received-application-list-item';
+import DownArrow from '@/assets/icons/long-down-arrow.svg';
+import { useReceivedApplications } from './_hooks/use-received-applications';
 
 export default function ReceivedApplicationsPage() {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useReceivedApplications();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useReceivedApplications();
   const allApplications = data?.pages.flatMap((page) => page.data) ?? [];
 
   const handleLoadMore = () => {
@@ -40,9 +39,7 @@ export default function ReceivedApplicationsPage() {
             받은 신청
           </div>
           <div className="flex justify-center py-20">
-            <p className="text-body-s text-grayscale-gray5">
-              받은 신청이 없습니다.
-            </p>
+            <p className="text-body-s text-grayscale-gray5">받은 신청이 없습니다.</p>
           </div>
         </>
       ) : (
@@ -74,7 +71,7 @@ export default function ReceivedApplicationsPage() {
                   className="bg-[var(--color-grayscale-gray1)] hover:bg-[var(--color-grayscale-gray2)] h-12 py-2.5 gap-1 rounded-full has-[>svg]:px-0 has-[>svg]:pl-5 has-[>svg]:pr-3 disabled:opacity-50"
                 >
                   <span className="text-body-s font-medium text-grayscale-gray6">
-                    {isFetchingNextPage ? "로딩 중..." : "더보기"}
+                    {isFetchingNextPage ? '로딩 중...' : '더보기'}
                   </span>
                   <DownArrow />
                 </Button>

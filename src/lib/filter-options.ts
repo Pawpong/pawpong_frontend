@@ -1,4 +1,4 @@
-import apiClient from "./api";
+import apiClient from './api';
 
 /** API 응답 */
 interface ApiResponse<T> {
@@ -57,21 +57,19 @@ export interface AllFilterOptions {
  */
 export const getAllFilterOptions = async (): Promise<AllFilterOptions> => {
   try {
-    const response = await apiClient.get<ApiResponse<AllFilterOptions>>(
-      "/api/filter-options"
-    );
+    const response = await apiClient.get<ApiResponse<AllFilterOptions>>('/api/filter-options');
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch filter options");
+      throw new Error('Failed to fetch filter options');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Filter options error:", error.message);
+      console.error('Filter options error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during filter options fetch");
+    throw new Error('Unknown error during filter options fetch');
   }
 };
 
@@ -81,21 +79,19 @@ export const getAllFilterOptions = async (): Promise<AllFilterOptions> => {
  */
 export const getBreederLevels = async (): Promise<BreederLevelOption[]> => {
   try {
-    const response = await apiClient.get<ApiResponse<BreederLevelOption[]>>(
-      "/api/filter-options/breeder-levels"
-    );
+    const response = await apiClient.get<ApiResponse<BreederLevelOption[]>>('/api/filter-options/breeder-levels');
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch breeder levels");
+      throw new Error('Failed to fetch breeder levels');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Breeder levels error:", error.message);
+      console.error('Breeder levels error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during breeder levels fetch");
+    throw new Error('Unknown error during breeder levels fetch');
   }
 };
 
@@ -105,21 +101,19 @@ export const getBreederLevels = async (): Promise<BreederLevelOption[]> => {
  */
 export const getSortOptions = async (): Promise<SortOption[]> => {
   try {
-    const response = await apiClient.get<ApiResponse<SortOption[]>>(
-      "/api/filter-options/sort-options"
-    );
+    const response = await apiClient.get<ApiResponse<SortOption[]>>('/api/filter-options/sort-options');
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch sort options");
+      throw new Error('Failed to fetch sort options');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Sort options error:", error.message);
+      console.error('Sort options error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during sort options fetch");
+    throw new Error('Unknown error during sort options fetch');
   }
 };
 
@@ -129,21 +123,19 @@ export const getSortOptions = async (): Promise<SortOption[]> => {
  */
 export const getDogSizes = async (): Promise<DogSizeOption[]> => {
   try {
-    const response = await apiClient.get<ApiResponse<DogSizeOption[]>>(
-      "/api/filter-options/dog-sizes"
-    );
+    const response = await apiClient.get<ApiResponse<DogSizeOption[]>>('/api/filter-options/dog-sizes');
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch dog sizes");
+      throw new Error('Failed to fetch dog sizes');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Dog sizes error:", error.message);
+      console.error('Dog sizes error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during dog sizes fetch");
+    throw new Error('Unknown error during dog sizes fetch');
   }
 };
 
@@ -153,21 +145,19 @@ export const getDogSizes = async (): Promise<DogSizeOption[]> => {
  */
 export const getCatFurLengths = async (): Promise<CatFurLengthOption[]> => {
   try {
-    const response = await apiClient.get<ApiResponse<CatFurLengthOption[]>>(
-      "/api/filter-options/cat-fur-lengths"
-    );
+    const response = await apiClient.get<ApiResponse<CatFurLengthOption[]>>('/api/filter-options/cat-fur-lengths');
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch cat fur lengths");
+      throw new Error('Failed to fetch cat fur lengths');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Cat fur lengths error:", error.message);
+      console.error('Cat fur lengths error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during cat fur lengths fetch");
+    throw new Error('Unknown error during cat fur lengths fetch');
   }
 };
 
@@ -177,20 +167,18 @@ export const getCatFurLengths = async (): Promise<CatFurLengthOption[]> => {
  */
 export const getAdoptionStatus = async (): Promise<AdoptionStatusOption[]> => {
   try {
-    const response = await apiClient.get<ApiResponse<AdoptionStatusOption[]>>(
-      "/api/filter-options/adoption-status"
-    );
+    const response = await apiClient.get<ApiResponse<AdoptionStatusOption[]>>('/api/filter-options/adoption-status');
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch adoption status");
+      throw new Error('Failed to fetch adoption status');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Adoption status error:", error.message);
+      console.error('Adoption status error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during adoption status fetch");
+    throw new Error('Unknown error during adoption status fetch');
   }
 };

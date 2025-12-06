@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 import {
   getAllFilterOptions,
   getBreederLevels,
@@ -8,7 +8,7 @@ import {
   getDogSizes,
   getCatFurLengths,
   getAdoptionStatus,
-} from "@/lib/filter-options";
+} from '@/lib/filter-options';
 
 /**
  * 전체 필터 옵션 조회 hook
@@ -16,7 +16,7 @@ import {
  */
 export function useFilterOptions() {
   return useQuery({
-    queryKey: ["filter-options"],
+    queryKey: ['filter-options'],
     queryFn: () => getAllFilterOptions(),
     staleTime: 1000 * 60 * 60, // 1시간 (필터 옵션은 자주 변경되지 않음)
   });
@@ -27,7 +27,7 @@ export function useFilterOptions() {
  */
 export function useBreederLevels() {
   return useQuery({
-    queryKey: ["filter-options", "breeder-levels"],
+    queryKey: ['filter-options', 'breeder-levels'],
     queryFn: () => getBreederLevels(),
     staleTime: 1000 * 60 * 60, // 1시간
   });
@@ -38,7 +38,7 @@ export function useBreederLevels() {
  */
 export function useSortOptions() {
   return useQuery({
-    queryKey: ["filter-options", "sort-options"],
+    queryKey: ['filter-options', 'sort-options'],
     queryFn: () => getSortOptions(),
     staleTime: 1000 * 60 * 60, // 1시간
   });
@@ -49,7 +49,7 @@ export function useSortOptions() {
  */
 export function useDogSizes() {
   return useQuery({
-    queryKey: ["filter-options", "dog-sizes"],
+    queryKey: ['filter-options', 'dog-sizes'],
     queryFn: () => getDogSizes(),
     staleTime: 1000 * 60 * 60, // 1시간
   });
@@ -60,7 +60,7 @@ export function useDogSizes() {
  */
 export function useCatFurLengths() {
   return useQuery({
-    queryKey: ["filter-options", "cat-fur-lengths"],
+    queryKey: ['filter-options', 'cat-fur-lengths'],
     queryFn: () => getCatFurLengths(),
     staleTime: 1000 * 60 * 60, // 1시간
   });
@@ -71,7 +71,7 @@ export function useCatFurLengths() {
  */
 export function useAdoptionStatus() {
   return useQuery({
-    queryKey: ["filter-options", "adoption-status"],
+    queryKey: ['filter-options', 'adoption-status'],
     queryFn: () => getAdoptionStatus(),
     staleTime: 1000 * 60 * 60, // 1시간
   });

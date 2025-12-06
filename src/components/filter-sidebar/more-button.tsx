@@ -1,5 +1,5 @@
-import FilterDialogTrigger from "../filter-dialog/filter-dialog-trigger";
-import { Button } from "../ui/button";
+import FilterDialogTrigger from '../filter-dialog/filter-dialog-trigger';
+import { Button } from '../ui/button';
 
 export default function MoreButton(props: React.ComponentProps<typeof Button>) {
   return (

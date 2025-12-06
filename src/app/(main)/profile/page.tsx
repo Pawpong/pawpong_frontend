@@ -1,27 +1,27 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { useMemo, useEffect, useRef } from "react";
-import ProfileBasicInfo from "./_components/profile-basic-info";
-import ParentsInfo from "./_components/parents-info";
-import BreedingAnimals from "./_components/breeding-animals";
-import { useToast } from "@/hooks/use-toast";
-import { useForm, FormProvider } from "react-hook-form";
-import { useProfileStore, type ProfileFormData } from "@/stores/profile-store";
-import { useWatch } from "react-hook-form";
+'use client';
+import { Button } from '@/components/ui/button';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { useMemo, useEffect, useRef } from 'react';
+import ProfileBasicInfo from './_components/profile-basic-info';
+import ParentsInfo from './_components/parents-info';
+import BreedingAnimals from './_components/breeding-animals';
+import { useToast } from '@/hooks/use-toast';
+import { useForm, FormProvider } from 'react-hook-form';
+import { useProfileStore, type ProfileFormData } from '@/stores/profile-store';
+import { useWatch } from 'react-hook-form';
 import {
   isFormEmpty,
   validateParents,
   validateAnimals,
   setFormErrors,
   scrollToFirstError,
-} from "@/utils/profile-validation";
-import { useBreederProfile, useUpdateBreederProfile } from "./_hooks/use-breeder-profile";
-import { syncParentPets, syncAvailablePets } from "@/utils/profile-sync";
+} from '@/utils/profile-validation';
+import { useBreederProfile, useUpdateBreederProfile } from './_hooks/use-breeder-profile';
+import { syncParentPets, syncAvailablePets } from '@/utils/profile-sync';
 
 export default function ProfilePage() {
-  const isMdUp = useBreakpoint("md");
-  const { toast} = useToast();
+  const isMdUp = useBreakpoint('md');
+  const { toast } = useToast();
   const { setProfileData, profileData } = useProfileStore();
   const { data: apiProfileData, isLoading } = useBreederProfile();
   const updateProfileMutation = useUpdateBreederProfile();
@@ -34,19 +34,19 @@ export default function ProfilePage() {
 
   const form = useForm<ProfileFormData>({
     defaultValues: profileData || {
-      breederName: "",
-      description: "",
+      breederName: '',
+      description: '',
       location: null,
       breeds: [],
       representativePhotos: [],
-      minPrice: "",
-      maxPrice: "",
+      minPrice: '',
+      maxPrice: '',
       isCounselMode: false,
       parents: [
         {
           id: defaultParentId,
-          name: "",
-          birthDate: "",
+          name: '',
+          birthDate: '',
           breed: [],
           gender: null,
         },
@@ -54,19 +54,19 @@ export default function ProfilePage() {
       animals: [
         {
           id: defaultAnimalId,
-          name: "",
-          birthDate: "",
+          name: '',
+          birthDate: '',
           breed: [],
           gender: null,
-          description: "",
-          adoptionStatus: "",
-          parent: "",
-          price: "",
+          description: '',
+          adoptionStatus: '',
+          parent: '',
+          price: '',
           isCounselMode: false,
         },
       ],
     },
-    mode: "onBlur",
+    mode: 'onBlur',
   });
 
   // API 데이터로 폼 초기화
@@ -76,59 +76,63 @@ export default function ProfilePage() {
       originalDataRef.current = apiProfileData;
 
       const locationParts = apiProfileData.profileInfo?.locationInfo;
-      const locationString = locationParts
-        ? `${locationParts.cityName} ${locationParts.districtName}`
-        : null;
+      const locationString = locationParts ? `${locationParts.cityName} ${locationParts.districtName}` : null;
 
       form.reset({
-        breederName: apiProfileData.breederName || "",
-        description: apiProfileData.profileInfo?.profileDescription || "",
+        breederName: apiProfileData.breederName || '',
+        description: apiProfileData.profileInfo?.profileDescription || '',
         location: locationString,
         breeds: apiProfileData.profileInfo?.specializationAreas || [],
         representativePhotos: apiProfileData.profileInfo?.profilePhotos || [],
-        minPrice: apiProfileData.profileInfo?.priceRangeInfo?.minPrice?.toString() || "",
-        maxPrice: apiProfileData.profileInfo?.priceRangeInfo?.maxPrice?.toString() || "",
+        minPrice: apiProfileData.profileInfo?.priceRangeInfo?.minPrice?.toString() || '',
+        maxPrice: apiProfileData.profileInfo?.priceRangeInfo?.maxPrice?.toString() || '',
         isCounselMode: false,
-        parents: apiProfileData.parentPetInfo?.length > 0
-          ? apiProfileData.parentPetInfo.map((pet: any) => ({
-              id: pet.petId,
-              name: pet.name,
-              birthDate: pet.birthDate,
-              breed: [pet.breed],
-              gender: pet.gender,
-            }))
-          : [{
-              id: defaultParentId,
-              name: "",
-              birthDate: "",
-              breed: [],
-              gender: null,
-            }],
-        animals: apiProfileData.availablePetInfo?.length > 0
-          ? apiProfileData.availablePetInfo.map((pet: any) => ({
-              id: pet.petId,
-              name: pet.name,
-              birthDate: pet.birthDate,
-              breed: [pet.breed],
-              gender: pet.gender,
-              description: pet.description || "",
-              adoptionStatus: pet.status || "",
-              parent: "",
-              price: pet.price?.toString() || "",
-              isCounselMode: false,
-            }))
-          : [{
-              id: defaultAnimalId,
-              name: "",
-              birthDate: "",
-              breed: [],
-              gender: null,
-              description: "",
-              adoptionStatus: "",
-              parent: "",
-              price: "",
-              isCounselMode: false,
-            }],
+        parents:
+          apiProfileData.parentPetInfo?.length > 0
+            ? apiProfileData.parentPetInfo.map((pet: any) => ({
+                id: pet.petId,
+                name: pet.name,
+                birthDate: pet.birthDate,
+                breed: [pet.breed],
+                gender: pet.gender,
+              }))
+            : [
+                {
+                  id: defaultParentId,
+                  name: '',
+                  birthDate: '',
+                  breed: [],
+                  gender: null,
+                },
+              ],
+        animals:
+          apiProfileData.availablePetInfo?.length > 0
+            ? apiProfileData.availablePetInfo.map((pet: any) => ({
+                id: pet.petId,
+                name: pet.name,
+                birthDate: pet.birthDate,
+                breed: [pet.breed],
+                gender: pet.gender,
+                description: pet.description || '',
+                adoptionStatus: pet.status || '',
+                parent: '',
+                price: pet.price?.toString() || '',
+                isCounselMode: false,
+              }))
+            : [
+                {
+                  id: defaultAnimalId,
+                  name: '',
+                  birthDate: '',
+                  breed: [],
+                  gender: null,
+                  description: '',
+                  adoptionStatus: '',
+                  parent: '',
+                  price: '',
+                  isCounselMode: false,
+                },
+              ],
       });
     }
   }, [apiProfileData, profileData, form, defaultParentId, defaultAnimalId]);
@@ -147,19 +151,19 @@ export default function ProfilePage() {
     const animalErrors = validateAnimals(formData.animals);
 
     // 기존 에러 클리어
-    form.clearErrors("parents");
-    form.clearErrors("animals");
+    form.clearErrors('parents');
+    form.clearErrors('animals');
 
     // 에러 설정
     const hasParentErrors = setFormErrors(
       form,
       parentErrors as Array<Record<string, string | undefined> | undefined>,
-      "parents"
+      'parents',
     );
     const hasAnimalErrors = setFormErrors(
       form,
       animalErrors as Array<Record<string, string | undefined> | undefined>,
-      "animals"
+      'animals',
     );
 
     // 에러가 있으면 스크롤하고 리턴
@@ -172,26 +176,28 @@ export default function ProfilePage() {
     if (isValid) {
       try {
         // 1. 기본 프로필 정보 업데이트
-        const locationParts = formData.location?.split(" ") || [];
-        const locationInfo = locationParts.length >= 2
-          ? {
-              cityName: locationParts[0],
-              districtName: locationParts.slice(1).join(" "),
-            }
-          : undefined;
+        const locationParts = formData.location?.split(' ') || [];
+        const locationInfo =
+          locationParts.length >= 2
+            ? {
+                cityName: locationParts[0],
+                districtName: locationParts.slice(1).join(' '),
+              }
+            : undefined;
 
         const updateData = {
           profileDescription: formData.description || undefined,
           locationInfo,
           profilePhotos: Array.isArray(formData.representativePhotos)
-            ? formData.representativePhotos.filter((p): p is string => typeof p === "string")
+            ? formData.representativePhotos.filter((p): p is string => typeof p === 'string')
             : undefined,
-          priceRangeInfo: formData.minPrice && formData.maxPrice
-            ? {
-                minimumPrice: parseInt(formData.minPrice),
-                maximumPrice: parseInt(formData.maxPrice),
-              }
-            : undefined,
+          priceRangeInfo:
+            formData.minPrice && formData.maxPrice
+              ? {
+                  minimumPrice: parseInt(formData.minPrice),
+                  maximumPrice: parseInt(formData.maxPrice),
+                }
+              : undefined,
           specializationTypes: formData.breeds?.length > 0 ? formData.breeds : undefined,
         };
 
@@ -207,12 +213,12 @@ export default function ProfilePage() {
 
         setProfileData(formData);
         toast({
-          title: "프로필이 수정되었습니다.",
+          title: '프로필이 수정되었습니다.',
         });
       } catch (error) {
         toast({
-          title: "프로필 수정에 실패했습니다.",
-          description: error instanceof Error ? error.message : "다시 시도해주세요.",
+          title: '프로필 수정에 실패했습니다.',
+          description: error instanceof Error ? error.message : '다시 시도해주세요.',
         });
       }
     }

@@ -1,33 +1,29 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { PriceInput } from "@/components/ui/price-input";
-import { Textarea } from "@/components/ui/textarea";
+'use client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { PriceInput } from '@/components/ui/price-input';
+import { Textarea } from '@/components/ui/textarea';
 // import Camera from "@/assets/icons/camera";
-import Camera from "@/assets/icons/camera.svg";
-import Arrow from "@/assets/icons/arrow";
-import BreedsSelectDialogTrigger from "@/app/signup/_components/breeds-select-dialog-trigger";
-import { useState } from "react";
-import LocationSelectDialogTrigger from "@/app/signup/_components/location-select-dialog-trigger";
-import ImageEdit from "@/components/image-edit";
-import MinusIcon from "@/assets/icons/minus.svg";
-import { useFormContext, Controller } from "react-hook-form";
-import type { ProfileFormData } from "@/stores/profile-store";
-import ErrorMessage from "@/components/error-message";
+import Camera from '@/assets/icons/camera.svg';
+import Arrow from '@/assets/icons/arrow';
+import BreedsSelectDialogTrigger from '@/app/signup/_components/breeds-select-dialog-trigger';
+import { useState } from 'react';
+import LocationSelectDialogTrigger from '@/app/signup/_components/location-select-dialog-trigger';
+import ImageEdit from '@/components/image-edit';
+import MinusIcon from '@/assets/icons/minus.svg';
+import { useFormContext, Controller } from 'react-hook-form';
+import type { ProfileFormData } from '@/stores/profile-store';
+import ErrorMessage from '@/components/error-message';
 
-export default function ProfileBasicInfo({
-  form,
-}: {
-  form: ReturnType<typeof useFormContext<ProfileFormData>>;
-}) {
-  const [animal] = useState<"dog" | "cat">("dog");
+export default function ProfileBasicInfo({ form }: { form: ReturnType<typeof useFormContext<ProfileFormData>> }) {
+  const [animal] = useState<'dog' | 'cat'>('dog');
   const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
   const { control, watch, setValue, formState, trigger } = form;
   const { errors } = formState;
 
-  const isCounselMode = watch("isCounselMode");
-  const descriptionValue = watch("description");
-  const normalizeNumber = (value: string) => value.replace(/\D/g, "");
+  const isCounselMode = watch('isCounselMode');
+  const descriptionValue = watch('description');
+  const normalizeNumber = (value: string) => value.replace(/\D/g, '');
   return (
     <div className="flex flex-col gap-8 items-start w-full">
       <div className="flex flex-col gap-3 items-center w-full">
@@ -39,13 +35,9 @@ export default function ProfileBasicInfo({
           <Controller
             name="breederName"
             control={control}
-            render={({ field }) => (
-              <Input placeholder="브리더명(상호명)" {...field} />
-            )}
+            render={({ field }) => <Input placeholder="브리더명(상호명)" {...field} />}
           />
-          {errors.breederName && (
-            <ErrorMessage message={errors.breederName.message as string} />
-          )}
+          {errors.breederName && <ErrorMessage message={errors.breederName.message as string} />}
         </div>
         <Controller
           name="description"
@@ -54,10 +46,8 @@ export default function ProfileBasicInfo({
             <Textarea
               placeholder="소개"
               maxLength={1500}
-              showLength={
-                isDescriptionFocused || (descriptionValue || "").length > 0
-              }
-              currentLength={String(descriptionValue || "").length}
+              showLength={isDescriptionFocused || (descriptionValue || '').length > 0}
+              currentLength={String(descriptionValue || '').length}
               {...field}
               onFocus={() => {
                 setIsDescriptionFocused(true);
@@ -78,28 +68,18 @@ export default function ProfileBasicInfo({
               <LocationSelectDialogTrigger
                 onSubmitLocation={(value: string | null) => {
                   field.onChange(value);
-                  trigger("location");
+                  trigger('location');
                 }}
                 asChild
               >
-                <Button
-                  variant="input"
-                  size={undefined}
-                  className="!px-[var(--space-16)] !py-[var(--space-12)] group"
-                >
-                  {field.value ? (
-                    <span className="text-[#4F3B2E]">{field.value}</span>
-                  ) : (
-                    <span>지역</span>
-                  )}
+                <Button variant="input" size={undefined} className="!px-[var(--space-16)] !py-[var(--space-12)] group">
+                  {field.value ? <span className="text-[#4F3B2E]">{field.value}</span> : <span>지역</span>}
                   <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
                 </Button>
               </LocationSelectDialogTrigger>
             )}
           />
-          {errors.location && (
-            <ErrorMessage message={errors.location.message as string} />
-          )}
+          {errors.location && <ErrorMessage message={errors.location.message as string} />}
         </div>
 
         {/* 품종 선택 */}
@@ -112,20 +92,14 @@ export default function ProfileBasicInfo({
                 animal={animal!}
                 onSubmitBreeds={(newBreeds) => {
                   field.onChange(newBreeds);
-                  trigger("breeds");
+                  trigger('breeds');
                 }}
                 asChild
               >
-                <Button
-                  variant="input"
-                  size={undefined}
-                  className="!px-[var(--space-16)] !py-[var(--space-12)] group"
-                >
+                <Button variant="input" size={undefined} className="!px-[var(--space-16)] !py-[var(--space-12)] group">
                   <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
                     {field.value && field.value.length > 0 ? (
-                      <span className="text-[#4F3B2E]">
-                        {field.value.join("/")}
-                      </span>
+                      <span className="text-[#4F3B2E]">{field.value.join('/')}</span>
                     ) : (
                       <span>품종</span>
                     )}
@@ -135,12 +109,8 @@ export default function ProfileBasicInfo({
               </BreedsSelectDialogTrigger>
             )}
           />
-          {errors.breeds && (
-            <ErrorMessage message={errors.breeds.message as string} />
-          )}
-          <div className="text-caption-s text-grayscale-gray5 font-medium">
-            최대 다섯 가지 선택할 수 있어요
-          </div>
+          {errors.breeds && <ErrorMessage message={errors.breeds.message as string} />}
+          <div className="text-caption-s text-grayscale-gray5 font-medium">최대 다섯 가지 선택할 수 있어요</div>
         </div>
       </div>
       {/* 대표 사진 */}
@@ -154,10 +124,10 @@ export default function ProfileBasicInfo({
           render={({ field }) => (
             <ImageEdit
               maxCount={3}
-              status={errors.representativePhotos ? "Error" : "Default"}
+              status={errors.representativePhotos ? 'Error' : 'Default'}
               onFileChange={(files) => {
                 field.onChange(files);
-                trigger("representativePhotos");
+                trigger('representativePhotos');
               }}
             />
           )}
@@ -175,11 +145,11 @@ export default function ProfileBasicInfo({
               control={control}
               render={({ field }) => (
                 <PriceInput
-                  placeholder={isCounselMode ? "상담 후 공개" : "0"}
+                  placeholder={isCounselMode ? '상담 후 공개' : '0'}
                   className="grow"
                   inputMode="numeric"
                   disabled={isCounselMode}
-                  value={isCounselMode ? "" : field.value}
+                  value={isCounselMode ? '' : field.value}
                   onChange={(e) => {
                     const digits = normalizeNumber(e.target.value);
                     field.onChange(digits);
@@ -195,11 +165,11 @@ export default function ProfileBasicInfo({
               control={control}
               render={({ field }) => (
                 <PriceInput
-                  placeholder={isCounselMode ? "상담 후 공개" : "0"}
+                  placeholder={isCounselMode ? '상담 후 공개' : '0'}
                   className="grow"
                   inputMode="numeric"
                   disabled={isCounselMode}
-                  value={isCounselMode ? "" : field.value}
+                  value={isCounselMode ? '' : field.value}
                   onChange={(e) => {
                     const digits = normalizeNumber(e.target.value);
                     field.onChange(digits);
@@ -211,10 +181,10 @@ export default function ProfileBasicInfo({
               onClick={() => {
                 if (!isCounselMode) {
                   // 상담 후 공개 모드로 전환 시 값 초기화
-                  setValue("minPrice", "", { shouldValidate: true });
-                  setValue("maxPrice", "", { shouldValidate: true });
+                  setValue('minPrice', '', { shouldValidate: true });
+                  setValue('maxPrice', '', { shouldValidate: true });
                 }
-                setValue("isCounselMode", !isCounselMode, {
+                setValue('isCounselMode', !isCounselMode, {
                   shouldValidate: true,
                 });
               }}
@@ -223,9 +193,7 @@ export default function ProfileBasicInfo({
               상담 후 공개하기
             </button>
           </div>
-          {(errors.minPrice || errors.maxPrice) && (
-            <ErrorMessage message="입양 비용 범위를 입력해 주세요" />
-          )}
+          {(errors.minPrice || errors.maxPrice) && <ErrorMessage message="입양 비용 범위를 입력해 주세요" />}
         </div>
       </div>
 

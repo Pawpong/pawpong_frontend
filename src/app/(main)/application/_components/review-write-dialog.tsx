@@ -1,34 +1,29 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  Dialog,
-  DialogContent,
-  DialogClose,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import ProfileImageWithBadge from "@/components/breeder/profile-image-with-badge";
-import BreederInfo from "@/components/breeder/breeder-info";
-import RightArrow from "@/assets/icons/right-arrow.svg";
-import Close from "@/assets/icons/close";
-import { cn } from "@/lib/utils";
-import { createReview } from "@/lib/review";
-import { useToast } from "@/hooks/use-toast";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Dialog, DialogContent, DialogClose, DialogTitle } from '@/components/ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import ProfileImageWithBadge from '@/components/breeder/profile-image-with-badge';
+import BreederInfo from '@/components/breeder/breeder-info';
+import RightArrow from '@/assets/icons/right-arrow.svg';
+import Close from '@/assets/icons/close';
+import { cn } from '@/lib/utils';
+import { createReview } from '@/lib/review';
+import { useToast } from '@/hooks/use-toast';
 
 interface ReviewWriteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   applicationId: string;
   breederName: string;
-  breederLevel: "elite" | "new";
+  breederLevel: 'elite' | 'new';
   applicationDate: string;
   profileImage: string;
-  animalType: "cat" | "dog";
+  animalType: 'cat' | 'dog';
 }
 
 export default function ReviewWriteDialog({
@@ -44,27 +39,25 @@ export default function ReviewWriteDialog({
   const router = useRouter();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<"상담 후기" | "입양 후기">(
-    "상담 후기"
-  );
-  const [reviewText, setReviewText] = useState("");
+  const [activeTab, setActiveTab] = useState<'상담 후기' | '입양 후기'>('상담 후기');
+  const [reviewText, setReviewText] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
   const createReviewMutation = useMutation({
     mutationFn: createReview,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["my-reviews"] });
-      queryClient.invalidateQueries({ queryKey: ["applications"] });
+      queryClient.invalidateQueries({ queryKey: ['my-reviews'] });
+      queryClient.invalidateQueries({ queryKey: ['applications'] });
       toast({
-        title: "후기가 작성되었습니다.",
+        title: '후기가 작성되었습니다.',
       });
       onOpenChange(false);
-      router.push("/myapplication");
+      router.push('/myapplication');
     },
     onError: (error) => {
       toast({
-        title: "후기 작성에 실패했습니다.",
-        description: error instanceof Error ? error.message : "다시 시도해주세요.",
+        title: '후기 작성에 실패했습니다.',
+        description: error instanceof Error ? error.message : '다시 시도해주세요.',
       });
     },
   });
@@ -72,12 +65,12 @@ export default function ReviewWriteDialog({
   const handleSubmit = () => {
     if (!reviewText.trim()) {
       toast({
-        title: "후기 내용을 입력해주세요.",
+        title: '후기 내용을 입력해주세요.',
       });
       return;
     }
 
-    const reviewType = activeTab === "상담 후기" ? "consultation" : "adoption";
+    const reviewType = activeTab === '상담 후기' ? 'consultation' : 'adoption';
 
     createReviewMutation.mutate({
       applicationId,
@@ -114,12 +107,7 @@ export default function ReviewWriteDialog({
           {/* 브리더 정보 */}
           <div className="flex items-center justify-between w-full">
             <div className="flex gap-5 items-center grow">
-              <ProfileImageWithBadge
-                src={profileImage}
-                alt={breederName}
-                animalType={animalType}
-                size={68}
-              />
+              <ProfileImageWithBadge src={profileImage} alt={breederName} animalType={animalType} size={68} />
               <BreederInfo
                 breederName={breederName}
                 breederLevel={breederLevel}
@@ -137,44 +125,30 @@ export default function ReviewWriteDialog({
           <div className="flex flex-col gap-5 items-start w-full">
             {/* 탭 */}
             <div className="flex gap-4 items-start">
-              <button
-                onClick={() => setActiveTab("상담 후기")}
-                className="flex flex-col items-start"
-              >
+              <button onClick={() => setActiveTab('상담 후기')} className="flex flex-col items-start">
                 <p
                   className={cn(
-                    "text-body-m font-semibold",
-                    activeTab === "상담 후기"
-                      ? "text-primary"
-                      : "text-grayscale-gray5"
+                    'text-body-m font-semibold',
+                    activeTab === '상담 후기' ? 'text-primary' : 'text-grayscale-gray5',
                   )}
                 >
                   상담 후기
                 </p>
                 <div className="h-[2px] w-full mt-1.5">
-                  {activeTab === "상담 후기" && (
-                    <div className="bg-primary-500 h-[2px] w-full" />
-                  )}
+                  {activeTab === '상담 후기' && <div className="bg-primary-500 h-[2px] w-full" />}
                 </div>
               </button>
-              <button
-                onClick={() => setActiveTab("입양 후기")}
-                className="flex flex-col items-start"
-              >
+              <button onClick={() => setActiveTab('입양 후기')} className="flex flex-col items-start">
                 <p
                   className={cn(
-                    "text-body-m font-semibold",
-                    activeTab === "입양 후기"
-                      ? "text-primary"
-                      : "text-grayscale-gray5"
+                    'text-body-m font-semibold',
+                    activeTab === '입양 후기' ? 'text-primary' : 'text-grayscale-gray5',
                   )}
                 >
                   입양 후기
                 </p>
                 <div className="h-[2px] w-full mt-1.5">
-                  {activeTab === "입양 후기" && (
-                    <div className="bg-primary-500 h-[2px] w-full" />
-                  )}
+                  {activeTab === '입양 후기' && <div className="bg-primary-500 h-[2px] w-full" />}
                 </div>
               </button>
             </div>
@@ -188,9 +162,7 @@ export default function ReviewWriteDialog({
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
                   placeholder={
-                    activeTab === "상담 후기"
-                      ? "브리더님과의 상담은 어떠셨나요?"
-                      : "입양하는 과정은 어떠셨나요?"
+                    activeTab === '상담 후기' ? '브리더님과의 상담은 어떠셨나요?' : '입양하는 과정은 어떠셨나요?'
                   }
                   maxLength={800}
                   showLength={false}
@@ -201,7 +173,7 @@ export default function ReviewWriteDialog({
               <div className="bg-white box-border flex gap-[10px] items-center justify-end pb-[var(--space-12)] pt-[var(--space-16)] px-[var(--space-16)] relative rounded-bl-lg rounded-br-lg shrink-0 w-full min-h-[44px]">
                 <p
                   className={`text-[14px] font-medium text-grayscale-gray5 text-right leading-[20px] ${
-                    isFocused ? "opacity-100" : "opacity-0"
+                    isFocused ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
                   <span className="text-[#4e9cf1]">{reviewText.length}</span>

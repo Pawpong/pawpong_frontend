@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   LargeDialog,
   LargeDialogContent,
@@ -8,18 +8,14 @@ import {
   LargeDialogTitle,
   LargeDialogFooter,
   LargeDialogClose,
-} from "@/components/ui/large-dialog";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import Close from "@/assets/icons/close";
-import RadioActive from "@/assets/icons/radio-active.svg";
-import RadioInactive from "@/assets/icons/radio-inactive.svg";
-import {
-  adoptionSources,
-  adoptionCompleteTitle,
-  adoptionCompleteDescription,
-} from "@/constants/adoption-complete";
+} from '@/components/ui/large-dialog';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import Close from '@/assets/icons/close';
+import RadioActive from '@/assets/icons/radio-active.svg';
+import RadioInactive from '@/assets/icons/radio-inactive.svg';
+import { adoptionSources, adoptionCompleteTitle, adoptionCompleteDescription } from '@/constants/adoption-complete';
 
 interface AdoptionCompleteDialogProps {
   open: boolean;
@@ -27,22 +23,18 @@ interface AdoptionCompleteDialogProps {
   onConfirm: (source: string, otherSource?: string) => void;
 }
 
-export default function AdoptionCompleteDialog({
-  open,
-  onOpenChange,
-  onConfirm,
-}: AdoptionCompleteDialogProps) {
+export default function AdoptionCompleteDialog({ open, onOpenChange, onConfirm }: AdoptionCompleteDialogProps) {
   const [selectedSource, setSelectedSource] = useState<string | null>(null);
-  const [otherSourceText, setOtherSourceText] = useState<string>("");
+  const [otherSourceText, setOtherSourceText] = useState<string>('');
   const [isTextareaFocused, setIsTextareaFocused] = useState(false);
 
-  const isOtherSelected = selectedSource === "other";
+  const isOtherSelected = selectedSource === 'other';
 
   // 다이얼로그가 열릴 때 초기화
   useEffect(() => {
     if (open) {
       setSelectedSource(null);
-      setOtherSourceText("");
+      setOtherSourceText('');
       setIsTextareaFocused(false);
     }
   }, [open]);
@@ -50,7 +42,7 @@ export default function AdoptionCompleteDialog({
   const handleClose = () => {
     onOpenChange(false);
     setSelectedSource(null);
-    setOtherSourceText("");
+    setOtherSourceText('');
     setIsTextareaFocused(false);
   };
 
@@ -86,28 +78,21 @@ export default function AdoptionCompleteDialog({
         {/* Content */}
         <div
           className={`bg-[#F6F6EA] px-5 md:px-6 pt-6 md:pt-6 flex flex-1 sm:flex-none flex-col gap-9 md:gap-9 overflow-x-clip overflow-y-auto sm:h-[452px] shrink-0 ${
-            isOtherSelected ? "pb-10" : "pb-[7.44rem]"
+            isOtherSelected ? 'pb-10' : 'pb-[7.44rem]'
           }`}
         >
           {/* Title Section */}
           <div className="flex flex-col gap-1.5">
-            <h2 className="text-body-l font-semibold text-primary">
-              {adoptionCompleteTitle}
-            </h2>
-            <p className="text-caption font-medium text-grayscale-gray5">
-              {adoptionCompleteDescription}
-            </p>
+            <h2 className="text-body-l font-semibold text-primary">{adoptionCompleteTitle}</h2>
+            <p className="text-caption font-medium text-grayscale-gray5">{adoptionCompleteDescription}</p>
           </div>
 
           {/* Radio List */}
           <div className="flex flex-col gap-0">
             {adoptionSources.map((source) => {
-              const isOther = source.value === "other";
+              const isOther = source.value === 'other';
               return (
-                <div
-                  key={source.value}
-                  className="flex flex-col items-start relative shrink-0 w-full"
-                >
+                <div key={source.value} className="flex flex-col items-start relative shrink-0 w-full">
                   <button
                     type="button"
                     onClick={() => setSelectedSource(source.value)}
@@ -122,9 +107,7 @@ export default function AdoptionCompleteDialog({
                       )}
                     </div>
                     {/* Label */}
-                    <span className="text-body-xs font-medium text-grayscale-gray6">
-                      {source.label}
-                    </span>
+                    <span className="text-body-xs font-medium text-grayscale-gray6">{source.label}</span>
                   </button>
                   {/* 기타 선택 시 textarea 표시 */}
                   {isOther && isOtherSelected && (
@@ -162,13 +145,11 @@ export default function AdoptionCompleteDialog({
           <button
             className={`button-brown ${
               !selectedSource || (isOtherSelected && !otherSourceText.trim())
-                ? "bg-[var(--color-status-disabled)] text-[var(--color-grayscale-gray4)] cursor-not-allowed"
-                : ""
+                ? 'bg-[var(--color-status-disabled)] text-[var(--color-grayscale-gray4)] cursor-not-allowed'
+                : ''
             }`}
             onClick={handleConfirm}
-            disabled={
-              !selectedSource || (isOtherSelected && !otherSourceText.trim())
-            }
+            disabled={!selectedSource || (isOtherSelected && !otherSourceText.trim())}
           >
             제출
           </button>

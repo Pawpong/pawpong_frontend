@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Heart from "@/assets/icons/heart.svg";
-import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
-import HeartFill from "@/assets/icons/heart-fill.svg";
-import { useToggleFavorite } from "@/app/(main)/saved/_hooks/use-favorites";
-import { useState } from "react";
+import Heart from '@/assets/icons/heart.svg';
+import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
+import HeartFill from '@/assets/icons/heart-fill.svg';
+import { useToggleFavorite } from '@/app/(main)/saved/_hooks/use-favorites';
+import { useState } from 'react';
 
 interface BreederLikeButtonProps {
   className?: string;
@@ -36,15 +36,11 @@ export default function BreederLikeButton({
     <Button
       variant="ghost"
       size="icon"
-      className={cn("text-grayscale-white size-8 ", className)}
+      className={cn('text-grayscale-white size-8 ', className)}
       onClick={handleClick}
       disabled={isLoading}
     >
-      {isLiked ? (
-        <HeartFill className="size-8 " />
-      ) : (
-        <Heart className="size-8 " />
-      )}
+      {isLiked ? <HeartFill className="size-8 " /> : <Heart className="size-8 " />}
     </Button>
   );
 }

@@ -1,15 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-import { getBreederPets } from "@/lib/breeder";
+import { useQuery } from '@tanstack/react-query';
+import { getBreederPets } from '@/lib/breeder';
 
 export interface BreederPetItem {
   petId: string;
   name: string;
   breed: string;
-  gender: "male" | "female";
+  gender: 'male' | 'female';
   birthDate: string;
   ageInMonths: number;
   price: number;
-  status: "available" | "reserved" | "adopted";
+  status: 'available' | 'reserved' | 'adopted';
   mainPhoto: string;
   photoCount: number;
   isVaccinated: boolean;
@@ -36,7 +36,7 @@ interface BreederPetsResponse {
 
 export function useBreederPets(breederId: string) {
   return useQuery<BreederPetsResponse>({
-    queryKey: ["breeder-pets", breederId],
+    queryKey: ['breeder-pets', breederId],
     queryFn: async () => {
       // 분양 가능한 개체만 조회 (status=available)
       const result = await getBreederPets(breederId, 1, 50);

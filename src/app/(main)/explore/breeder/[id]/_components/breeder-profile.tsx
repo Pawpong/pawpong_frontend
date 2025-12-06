@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import LevelBadge from "../../../../../../components/level-badge";
-import { useCounselFormStore } from "@/stores/counsel-form-store";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
-import Cat from "@/assets/icons/cat";
-import Dog from "@/assets/icons/dog";
-import type { Animal } from "@/stores/signup-form-store";
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import LevelBadge from '../../../../../../components/level-badge';
+import { useCounselFormStore } from '@/stores/counsel-form-store';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import Cat from '@/assets/icons/cat';
+import Dog from '@/assets/icons/dog';
+import type { Animal } from '@/stores/signup-form-store';
 
 export default function BreederProfile({
   data: { avatarUrl, nickname, level, location, priceRange, breeds, animal },
@@ -17,7 +17,7 @@ export default function BreederProfile({
   data: {
     avatarUrl: string;
     nickname: string;
-    level: "new" | "elite";
+    level: 'new' | 'elite';
     location: string;
     priceRange: string;
     breeds: string[];
@@ -27,14 +27,14 @@ export default function BreederProfile({
 }) {
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
-  const isLg = useBreakpoint("lg");
+  const isLg = useBreakpoint('lg');
 
   const handleCounselClick = () => {
     clearCounselFormData();
     router.push(`/counselform?breederId=${breederId}`);
   };
 
-  const IconComponent = animal === "cat" ? Cat : Dog;
+  const IconComponent = animal === 'cat' ? Cat : Dog;
 
   return (
     <div className="flex flex-col gap-4 lg:w-51">
@@ -54,9 +54,7 @@ export default function BreederProfile({
         </div>
         <div className="flex-1 space-y-4 flex flex-col md:justify-between">
           <div className="flex items-center flex-wrap gap-2">
-            <span className="text-heading-3 text-primary font-semibold">
-              {nickname}
-            </span>
+            <span className="text-heading-3 text-primary font-semibold">{nickname}</span>
             <LevelBadge level={level} />
           </div>
           <div className="space-y-3">

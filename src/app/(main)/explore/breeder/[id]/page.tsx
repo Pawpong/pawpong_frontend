@@ -1,24 +1,19 @@
-"use client";
+'use client';
 
-import { use } from "react";
-import BreederProfile from "@/app/(main)/explore/breeder/[id]/_components/breeder-profile";
-import { Separator } from "@/components/ui/separator";
-import BreederDescription from "./_components/breeder-description";
-import BreedingAnimals from "./_components/breeding-animals";
-import EnvPhotos from "./_components/env-photos";
-import Parents from "./_components/parents";
-import Reviews from "./_components/reviews";
-import Header from "../_components/header";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { useCounselFormStore } from "@/stores/counsel-form-store";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
-import {
-  useBreederProfile,
-  useBreederPets,
-  useParentPets,
-  useBreederReviews,
-} from "./_hooks/use-breeder-detail";
+import { use } from 'react';
+import BreederProfile from '@/app/(main)/explore/breeder/[id]/_components/breeder-profile';
+import { Separator } from '@/components/ui/separator';
+import BreederDescription from './_components/breeder-description';
+import BreedingAnimals from './_components/breeding-animals';
+import EnvPhotos from './_components/env-photos';
+import Parents from './_components/parents';
+import Reviews from './_components/reviews';
+import Header from '../_components/header';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { useCounselFormStore } from '@/stores/counsel-form-store';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { useBreederProfile, useBreederPets, useParentPets, useBreederReviews } from './_hooks/use-breeder-detail';
 
 interface PageProps {
   params: Promise<{
@@ -30,7 +25,7 @@ export default function Page({ params }: PageProps) {
   const { id: breederId } = use(params);
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
-  const isLg = useBreakpoint("lg");
+  const isLg = useBreakpoint('lg');
 
   const { data: profileData, isLoading: isProfileLoading } = useBreederProfile(breederId);
   const { data: petsData, isLoading: isPetsLoading } = useBreederPets(breederId);
@@ -60,27 +55,27 @@ export default function Page({ params }: PageProps) {
 
   // 프로필 데이터 매핑
   const breederProfileData = {
-    avatarUrl: profileData.profileImage || "/avatar-sample.png",
+    avatarUrl: profileData.profileImage || '/avatar-sample.png',
     nickname: profileData.breederName,
-    level: profileData.breederLevel || "new",
-    location: profileData.location || "",
+    level: profileData.breederLevel || 'new',
+    location: profileData.location || '',
     priceRange: profileData.priceRange
       ? `${profileData.priceRange.min?.toLocaleString()} - ${profileData.priceRange.max?.toLocaleString()}원`
-      : "상담 후 결정",
+      : '상담 후 결정',
     breeds: profileData.detailBreed ? [profileData.detailBreed] : [],
-    animal: (profileData.petType as "cat" | "dog") || "dog",
+    animal: (profileData.petType as 'cat' | 'dog') || 'dog',
   };
 
   // 환경 사진
   const envPhotos = profileData.representativePhotos || [];
 
   // 브리더 소개
-  const breederDescription = profileData.description || "";
+  const breederDescription = profileData.description || '';
 
   // 분양 가능 개체 매핑
   const breedingAnimals = (petsData?.items || []).map((pet: any) => ({
     id: pet.petId,
-    avatarUrl: pet.mainPhoto || "/animal-sample.png",
+    avatarUrl: pet.mainPhoto || '/animal-sample.png',
     name: pet.name,
     sex: pet.gender,
     birth: pet.birthDate,
@@ -89,14 +84,14 @@ export default function Page({ params }: PageProps) {
   }));
 
   // 부모견/부모묘 매핑 - 백엔드가 배열을 직접 반환하는 경우 처리
-  const parentPetsArray = Array.isArray(parentPetsData) ? parentPetsData : (parentPetsData?.items || []);
+  const parentPetsArray = Array.isArray(parentPetsData) ? parentPetsData : parentPetsData?.items || [];
   const parentPets = parentPetsArray.map((pet: any) => ({
     id: pet.petId,
-    avatarUrl: pet.photoUrl || "/animal-sample.png",
+    avatarUrl: pet.photoUrl || '/animal-sample.png',
     name: pet.name,
     sex: pet.gender,
     birth: pet.birthDate,
-    price: "", // 부모견은 가격이 없음
+    price: '', // 부모견은 가격이 없음
     breed: pet.breed,
   }));
 
@@ -104,24 +99,24 @@ export default function Page({ params }: PageProps) {
   const reviews = (reviewsData?.items || []).map((review: any) => {
     // 날짜 필드: 백엔드에서 writtenAt을 반환
     const dateString = review.writtenAt || review.createdAt;
-    let formattedDate = "";
+    let formattedDate = '';
 
     if (dateString) {
       try {
         const date = new Date(dateString);
         // 유효한 날짜인지 확인
         if (!isNaN(date.getTime())) {
-          formattedDate = date.toISOString().split("T")[0];
+          formattedDate = date.toISOString().split('T')[0];
         }
       } catch (error) {
-        console.error("Invalid date format:", dateString, error);
+        console.error('Invalid date format:', dateString, error);
       }
     }
 
     return {
       id: review.reviewId,
-      nickname: review.adopterName || review.adopterNickname || "익명",
-      date: formattedDate || "날짜 없음",
+      nickname: review.adopterName || review.adopterNickname || '익명',
+      date: formattedDate || '날짜 없음',
       content: review.content,
     };
   });

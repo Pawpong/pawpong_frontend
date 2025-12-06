@@ -1,4 +1,4 @@
-import apiClient from "./api";
+import apiClient from './api';
 
 /** 입양 신청 요청 데이터 */
 export interface ApplicationCreateRequest {
@@ -44,12 +44,12 @@ export interface ApplicationListItemDto {
   applicationId: string;
   breederId: string;
   breederName: string;
-  breederLevel: "elite" | "new";
+  breederLevel: 'elite' | 'new';
   profileImage?: string;
-  animalType: "cat" | "dog";
+  animalType: 'cat' | 'dog';
   petId?: string;
   petBreed?: string;
-  status: "consultation_pending" | "consultation_completed" | "adoption_approved" | "adoption_rejected";
+  status: 'consultation_pending' | 'consultation_completed' | 'adoption_approved' | 'adoption_rejected';
   applicationDate: string; // "2024. 01. 15." 형식
 }
 
@@ -58,25 +58,25 @@ export interface ApplicationListItemDto {
  * POST /api/adopter/application
  */
 export const createApplication = async (
-  requestData: ApplicationCreateRequest
+  requestData: ApplicationCreateRequest,
 ): Promise<{ applicationId: string; message: string }> => {
   try {
     const response = await apiClient.post<ApiResponse<{ applicationId: string; message: string }>>(
-      "/api/adopter/application",
-      requestData
+      '/api/adopter/application',
+      requestData,
     );
 
     if (!response.data.success || !response.data.data) {
-      throw new Error(response.data.message || "Failed to create application");
+      throw new Error(response.data.message || 'Failed to create application');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Create application error:", error.message);
+      console.error('Create application error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during application creation");
+    throw new Error('Unknown error during application creation');
   }
 };
 
@@ -87,7 +87,7 @@ export const createApplication = async (
 export const getMyApplications = async (
   page: number = 1,
   limit: number = 10,
-  animalType?: "cat" | "dog"
+  animalType?: 'cat' | 'dog',
 ): Promise<{
   applications: ApplicationListItemDto[];
   pagination: {
@@ -100,14 +100,15 @@ export const getMyApplications = async (
   };
 }> => {
   try {
-    const response = await apiClient.get<
-      ApiResponse<PaginationResponse<ApplicationListItemDto>>
-    >("/api/adopter/applications", {
-      params: { page, limit, animalType },
-    });
+    const response = await apiClient.get<ApiResponse<PaginationResponse<ApplicationListItemDto>>>(
+      '/api/adopter/applications',
+      {
+        params: { page, limit, animalType },
+      },
+    );
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch applications");
+      throw new Error('Failed to fetch applications');
     }
 
     const { items, pagination } = response.data.data;
@@ -115,10 +116,10 @@ export const getMyApplications = async (
     return { applications: items, pagination };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Fetch applications error:", error.message);
+      console.error('Fetch applications error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during applications fetch");
+    throw new Error('Unknown error during applications fetch');
   }
 };
 
@@ -160,24 +161,22 @@ export interface ApplicationDetailDto {
  * 입양 신청 상세 조회
  * GET /api/adopter/applications/:id
  */
-export const getApplicationDetail = async (
-  applicationId: string
-): Promise<ApplicationDetailDto> => {
+export const getApplicationDetail = async (applicationId: string): Promise<ApplicationDetailDto> => {
   try {
     const response = await apiClient.get<ApiResponse<ApplicationDetailDto>>(
-      `/api/adopter/applications/${applicationId}`
+      `/api/adopter/applications/${applicationId}`,
     );
 
     if (!response.data.success || !response.data.data) {
-      throw new Error("Failed to fetch application detail");
+      throw new Error('Failed to fetch application detail');
     }
 
     return response.data.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Fetch application detail error:", error.message);
+      console.error('Fetch application detail error:', error.message);
       throw error;
     }
-    throw new Error("Unknown error during application detail fetch");
+    throw new Error('Unknown error during application detail fetch');
   }
 };

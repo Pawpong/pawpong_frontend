@@ -1,5 +1,5 @@
-import ReadingGlasses from "@/assets/icons/reading-glasses.svg";
-import Link from "next/link";
+import ReadingGlasses from '@/assets/icons/reading-glasses.svg';
+import Link from 'next/link';
 
 const ExploreButton = () => {
   return (

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   LargeDialog,
   LargeDialogContent,
@@ -8,49 +8,38 @@ import {
   LargeDialogTitle,
   LargeDialogFooter,
   LargeDialogClose,
-} from "@/components/ui/large-dialog";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import Close from "@/assets/icons/close";
-import RadioActive from "@/assets/icons/radio-active.svg";
-import RadioInactive from "@/assets/icons/radio-inactive.svg";
-import {
-  withdrawReasons,
-  breederWithdrawReasons,
-  withdrawTitle,
-  withdrawDescription,
-} from "@/constants/withdraw";
-import AdoptionCompleteDialog from "./adoption-complete-dialog";
+} from '@/components/ui/large-dialog';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import Close from '@/assets/icons/close';
+import RadioActive from '@/assets/icons/radio-active.svg';
+import RadioInactive from '@/assets/icons/radio-inactive.svg';
+import { withdrawReasons, breederWithdrawReasons, withdrawTitle, withdrawDescription } from '@/constants/withdraw';
+import AdoptionCompleteDialog from './adoption-complete-dialog';
 
 interface WithdrawDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: (reason: string, otherReason?: string) => void;
-  userType?: "adopter" | "breeder";
+  userType?: 'adopter' | 'breeder';
 }
 
-export default function WithdrawDialog({
-  open,
-  onOpenChange,
-  onConfirm,
-  userType = "adopter",
-}: WithdrawDialogProps) {
+export default function WithdrawDialog({ open, onOpenChange, onConfirm, userType = 'adopter' }: WithdrawDialogProps) {
   const [selectedReason, setSelectedReason] = useState<string | null>(null);
-  const [otherReasonText, setOtherReasonText] = useState<string>("");
+  const [otherReasonText, setOtherReasonText] = useState<string>('');
   const [isTextareaFocused, setIsTextareaFocused] = useState(false);
-  const [isAdoptionCompleteDialogOpen, setIsAdoptionCompleteDialogOpen] =
-    useState(false);
+  const [isAdoptionCompleteDialogOpen, setIsAdoptionCompleteDialogOpen] = useState(false);
 
-  const isOtherSelected = selectedReason === "other";
-  const isBreeder = userType === "breeder";
+  const isOtherSelected = selectedReason === 'other';
+  const isBreeder = userType === 'breeder';
   const reasons = isBreeder ? breederWithdrawReasons : withdrawReasons;
 
   // 다이얼로그가 열릴 때 초기화
   useEffect(() => {
     if (open) {
       setSelectedReason(null);
-      setOtherReasonText("");
+      setOtherReasonText('');
       setIsTextareaFocused(false);
       setIsAdoptionCompleteDialogOpen(false);
     }
@@ -59,7 +48,7 @@ export default function WithdrawDialog({
   const handleClose = () => {
     onOpenChange(false);
     setSelectedReason(null);
-    setOtherReasonText("");
+    setOtherReasonText('');
     setIsTextareaFocused(false);
     setIsAdoptionCompleteDialogOpen(false);
   };
@@ -67,7 +56,7 @@ export default function WithdrawDialog({
   const handleReasonSelect = (reason: string) => {
     setSelectedReason(reason);
     // 일반 사용자이고 "이미 입양을 마쳤어요" 선택 시 입양 완료 다이얼로그 열기
-    if (!isBreeder && reason === "already_adopted") {
+    if (!isBreeder && reason === 'already_adopted') {
       setIsAdoptionCompleteDialogOpen(true);
     }
   };
@@ -83,20 +72,14 @@ export default function WithdrawDialog({
     }
   };
 
-  const handleAdoptionCompleteConfirm = (
-    source: string,
-    otherSource?: string
-  ) => {
+  const handleAdoptionCompleteConfirm = (source: string, otherSource?: string) => {
     // 입양 완료 정보와 함께 탈퇴 처리
-    console.log("입양 경로:", source);
+    console.log('입양 경로:', source);
     if (otherSource) {
-      console.log("기타 경로:", otherSource);
+      console.log('기타 경로:', otherSource);
     }
     // 탈퇴 처리
-    onConfirm(
-      "already_adopted",
-      `입양경로: ${source}${otherSource ? ` - ${otherSource}` : ""}`
-    );
+    onConfirm('already_adopted', `입양경로: ${source}${otherSource ? ` - ${otherSource}` : ''}`);
     handleClose();
   };
 
@@ -122,28 +105,21 @@ export default function WithdrawDialog({
           {/* Content */}
           <div
             className={`bg-[#F6F6EA] px-5 md:px-6 pt-6 md:pt-6 flex flex-1 sm:flex-none flex-col gap-9 md:gap-9 overflow-x-clip overflow-y-auto sm:h-[452px] shrink-0 ${
-              isOtherSelected ? "pb-10" : "pb-[7.44rem]"
+              isOtherSelected ? 'pb-10' : 'pb-[7.44rem]'
             }`}
           >
             {/* Title Section */}
             <div className="flex flex-col gap-1.5">
-              <h2 className="text-body-l font-semibold text-primary">
-                {withdrawTitle}
-              </h2>
-              <p className="text-caption font-medium text-grayscale-gray5">
-                {withdrawDescription}
-              </p>
+              <h2 className="text-body-l font-semibold text-primary">{withdrawTitle}</h2>
+              <p className="text-caption font-medium text-grayscale-gray5">{withdrawDescription}</p>
             </div>
 
             {/* Radio List */}
             <div className="flex flex-col gap-0">
               {reasons.map((reason) => {
-                const isOther = reason.value === "other";
+                const isOther = reason.value === 'other';
                 return (
-                  <div
-                    key={reason.value}
-                    className="flex flex-col items-start relative shrink-0 w-full"
-                  >
+                  <div key={reason.value} className="flex flex-col items-start relative shrink-0 w-full">
                     <button
                       type="button"
                       onClick={() => handleReasonSelect(reason.value)}
@@ -158,9 +134,7 @@ export default function WithdrawDialog({
                         )}
                       </div>
                       {/* Label */}
-                      <span className="text-body-xs font-medium text-grayscale-gray6">
-                        {reason.label}
-                      </span>
+                      <span className="text-body-xs font-medium text-grayscale-gray6">{reason.label}</span>
                     </button>
                     {/* 기타 사유 선택 시 textarea 표시 */}
                     {isOther && isOtherSelected && (
@@ -198,13 +172,11 @@ export default function WithdrawDialog({
             <button
               className={`button-brown ${
                 !selectedReason || (isOtherSelected && !otherReasonText.trim())
-                  ? "bg-[var(--color-status-disabled)] text-[var(--color-grayscale-gray4)] cursor-not-allowed"
-                  : ""
+                  ? 'bg-[var(--color-status-disabled)] text-[var(--color-grayscale-gray4)] cursor-not-allowed'
+                  : ''
               }`}
               onClick={handleConfirm}
-              disabled={
-                !selectedReason || (isOtherSelected && !otherReasonText.trim())
-              }
+              disabled={!selectedReason || (isOtherSelected && !otherReasonText.trim())}
             >
               탈퇴
             </button>
