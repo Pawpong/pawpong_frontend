@@ -24,9 +24,9 @@ export function useAddFavorite() {
     mutationFn: (breederId: string) => addFavorite(breederId),
     onSuccess: () => {
       // 즐겨찾기 목록 쿼리 무효화하여 자동 재조회
-      queryClient.invalidateQueries({ queryKey: ['favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['favorites'], refetchType: 'all' });
       // 브리더 목록도 무효화 (isFavorited 상태 업데이트)
-      queryClient.invalidateQueries({ queryKey: ['breeders'] });
+      queryClient.invalidateQueries({ queryKey: ['breeders'], refetchType: 'all' });
     },
   });
 }
@@ -41,9 +41,9 @@ export function useRemoveFavorite() {
     mutationFn: (breederId: string) => removeFavorite(breederId),
     onSuccess: () => {
       // 즐겨찾기 목록 쿼리 무효화하여 자동 재조회
-      queryClient.invalidateQueries({ queryKey: ['favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['favorites'], refetchType: 'all' });
       // 브리더 목록도 무효화 (isFavorited 상태 업데이트)
-      queryClient.invalidateQueries({ queryKey: ['breeders'] });
+      queryClient.invalidateQueries({ queryKey: ['breeders'], refetchType: 'all' });
     },
   });
 }

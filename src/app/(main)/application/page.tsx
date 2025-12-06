@@ -10,14 +10,22 @@ import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useAuthGuard } from '@/hooks/use-auth-guard';
 import { useAuthStore } from '@/stores/auth-store';
 import { getUserRoleFromCookie } from '@/lib/cookie-utils';
+import { useState, useEffect } from 'react';
 
 const ApplicationPage = () => {
   const { isLoading: isAuthLoading } = useAuthGuard();
   const { user } = useAuthStore();
-  // 쿠키의 userRole을 우선적으로 사용
-  const cookieRole = getUserRoleFromCookie();
-  const userRole = cookieRole || user?.role;
-  const isBreeder = userRole === 'breeder';
+  const [isBreeder, setIsBreeder] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // 클라이언트 마운트 후에만 role 결정 (Hydration 에러 방지)
+  useEffect(() => {
+    const cookieRole = getUserRoleFromCookie();
+    const userRole = cookieRole || user?.role;
+    setIsBreeder(userRole === 'breeder');
+    setIsMounted(true);
+  }, [user?.role]);
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useApplications();
   const allApplications = data?.pages.flatMap((page) => page.data) ?? [];
   const isMdUp = useBreakpoint('md');
@@ -32,11 +40,11 @@ const ApplicationPage = () => {
   const pageTitle = isBreeder ? '받은 신청' : '신청 내역';
   const emptyMessage = isBreeder ? '받은 신청이 없습니다.' : '신청 내역이 없습니다.';
 
-  if (isAuthLoading || isLoading) {
+  if (isAuthLoading || isLoading || !isMounted) {
     return (
       <Container>
         <div className="flex-1 @container flex flex-col gap-6 lg:gap-10">
-          <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">{pageTitle}</div>
+          <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">신청 내역</div>
           <div className="flex justify-center py-20">
             <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
           </div>
