@@ -36,6 +36,7 @@ export default function NicknameEditDialog({
     null
   );
   const [isModified, setIsModified] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   // 다이얼로그가 열릴 때 currentNickname으로 초기화
   useEffect(() => {
@@ -69,14 +70,36 @@ export default function NicknameEditDialog({
     }
   };
 
-  const handleSave = () => {
-    if (nicknameAvailable && nickname !== currentNickname) {
+  const handleSave = async () => {
+    if (
+      !isModified ||
+      !nickname ||
+      nickname === currentNickname ||
+      checkingNickname ||
+      isSaving
+    ) {
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const isDuplicate = await checkNicknameDuplicate(nickname);
+      if (isDuplicate) {
+        setNicknameAvailable(false);
+        alert("이미 사용 중인 닉네임입니다. 다른 닉네임을 입력해주세요.");
+        return;
+      }
+
+      setNicknameAvailable(true);
       onSave(nickname);
       onOpenChange(false);
-      // Reset state
-      setNickname(currentNickname);
       setIsModified(false);
       setNicknameAvailable(null);
+    } catch (error) {
+      console.error("닉네임 중복 확인 오류:", error);
+      alert("닉네임 중복 확인에 실패했습니다.");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -90,9 +113,10 @@ export default function NicknameEditDialog({
 
   const isSaveDisabled =
     !isModified ||
-    !nicknameAvailable ||
+    !nickname ||
     nickname === currentNickname ||
-    checkingNickname;
+    checkingNickname ||
+    isSaving;
 
   return (
     <LargeDialog open={open} onOpenChange={handleClose}>
@@ -125,7 +149,7 @@ export default function NicknameEditDialog({
                   onChange={(e) => handleNicknameChange(e.target.value)}
                   placeholder="닉네임을 입력하세요"
                   className="h-12"
-                  disabled={checkingNickname}
+                  disabled={checkingNickname || isSaving}
                 />
                 {nicknameAvailable === true && (
                   <div className="flex items-center gap-0.5">
@@ -148,6 +172,7 @@ export default function NicknameEditDialog({
                 variant="tertiary"
                 disabled={
                   checkingNickname ||
+                  isSaving ||
                   !nickname ||
                   nickname === currentNickname ||
                   !isModified
@@ -166,21 +191,18 @@ export default function NicknameEditDialog({
         {/* Footer */}
         <LargeDialogFooter className="px-5 md:px-6 pt-4 md:pt-4 pb-6 md:pb-6 justify-end border-t-0">
           <Button
-            variant={
-              nicknameAvailable === true && !isSaveDisabled
-                ? "default"
-                : "secondary"
-            }
+            variant={isSaveDisabled ? "secondary" : "default"}
             disabled={
-              !nicknameAvailable ||
               !isModified ||
               nickname === currentNickname ||
-              checkingNickname
+              checkingNickname ||
+              isSaving ||
+              !nickname
             }
             onClick={handleSave}
             className="h-9 bg-primary-500 px-4 min-w-[72px] disabled:bg-[#E1E1E1] disabled:text-[#A0A0A0]"
           >
-            수정
+            {isSaving ? "수정 중..." : "수정"}
           </Button>
         </LargeDialogFooter>
       </LargeDialogContent>

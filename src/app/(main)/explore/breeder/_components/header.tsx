@@ -9,7 +9,7 @@ import ReportDialog from "@/components/report-dialog/report-dialog";
 
 interface HeaderProps {
   breederNickname: string;
-  breederId?: string;
+  breederId: string;
 }
 
 export default function Header({ breederNickname, breederId }: HeaderProps) {

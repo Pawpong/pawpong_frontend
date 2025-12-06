@@ -19,7 +19,7 @@ import {
   breederReportTitle,
 } from "@/constants/breeder-report";
 import ReportSuccessDialog from "./report-success-dialog";
-import { createReport, reportReview } from "@/lib/report";
+import { reportBreeder, reportReview } from "@/lib/report";
 import { useToast } from "@/hooks/use-toast";
 
 interface ReportDialogProps {
@@ -62,33 +62,39 @@ export default function ReportDialog({
       }))
     : reportReasons;
 
+  const otherReasonDescription = otherReasonText.trim();
+  const canSubmit =
+    !!selectedReason && (!isOtherSelected || !!otherReasonDescription);
+
   const handleSubmit = async () => {
-    if (!selectedReason) return;
-    if (isOtherSelected && !otherReasonText.trim()) return;
+    if (!canSubmit || isSubmitting) {
+      return;
+    }
 
     setIsSubmitting(true);
-
     try {
-      if (isBreederReport && breederId) {
-        // 브리더 신고
-        await createReport({
-          type: "breeder",
-          breederId: breederId,
-          reason: selectedReason as any,
-          description: isOtherSelected ? otherReasonText : selectedReason,
-        });
-      } else if (!isBreederReport && reviewId) {
-        // 후기 신고
+      if (type === "review") {
+        if (!reviewId) {
+          throw new Error("신고할 후기 정보를 찾을 수 없습니다.");
+        }
+
         await reportReview({
-          reviewId: reviewId,
-          reason: selectedReason,
-          description: isOtherSelected ? otherReasonText : selectedReason,
+          reviewId,
+          reason: selectedReason!,
+          description: otherReasonDescription || undefined,
         });
       } else {
-        throw new Error("신고에 필요한 정보가 없습니다.");
+        if (!breederId) {
+          throw new Error("신고할 브리더 정보를 찾을 수 없습니다.");
+        }
+
+        await reportBreeder({
+          breederId,
+          reason: selectedReason!,
+          description: otherReasonDescription || undefined,
+        });
       }
 
-      // 신고 다이얼로그 닫고 완료 다이얼로그 열기
       onOpenChange(false);
       setIsSuccessDialogOpen(true);
     } catch (error) {
@@ -229,15 +235,14 @@ export default function ReportDialog({
           {/* 하단 버튼 영역 */}
           <div className="bg-white flex gap-[10px] items-start justify-end overflow-clip py-4 px-5 sm:pb-6 sm:pt-4 sm:px-6 relative rounded-bl-2xl rounded-br-2xl shrink-0 w-full">
             <button
+              type="button"
               className={`button-brown ${
-                !selectedReason || (isOtherSelected && !otherReasonText.trim()) || isSubmitting
+                !canSubmit
                   ? "bg-[var(--color-status-disabled)] text-[var(--color-grayscale-gray4)] cursor-not-allowed"
                   : ""
-              }`}
+              } ${isSubmitting ? "cursor-wait" : ""}`}
               onClick={handleSubmit}
-              disabled={
-                !selectedReason || (isOtherSelected && !otherReasonText.trim()) || isSubmitting
-              }
+              disabled={!canSubmit || isSubmitting}
             >
               {isSubmitting ? "신고 중..." : "신고"}
             </button>

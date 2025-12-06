@@ -39,7 +39,7 @@ export default function Page({ params }: PageProps) {
 
   const handleCounselClick = () => {
     clearCounselFormData();
-    router.push(`/counsel/${breederId}`);
+    router.push(`/counselform?breederId=${breederId}`);
   };
 
   if (isProfileLoading) {
@@ -131,7 +131,7 @@ export default function Page({ params }: PageProps) {
       <Header breederNickname={profileData.breederName} breederId={breederId} />
       <div className="pt-4 lg:flex lg:gap-24.5 space-y-10 md:space-y-15 pb-10 md:pb-15 lg:lg-80">
         <div>
-          <BreederProfile data={breederProfileData} />
+          <BreederProfile data={breederProfileData} breederId={breederId} />
         </div>
         <div className="space-y-12 mt-10 md:mt-0">
           {envPhotos.length > 0 && (

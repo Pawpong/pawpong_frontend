@@ -13,14 +13,14 @@ export default function BreederInfo({
   breederName,
   breederLevel,
   applicationDate,
-  nameWidth = "w-[70px]",
+
   className = "",
   hideDate = false,
 }: BreederInfoProps) {
   return (
     <div className={`flex flex-col items-start ${className}`}>
       <div className="flex gap-2 items-center">
-        <p className={`text-body-l font-semibold text-primary ${nameWidth}`}>
+        <p className={`text-body-l font-semibold text-primary `}>
           {breederName}
         </p>
         <LevelBadge level={breederLevel} />

@@ -1,75 +1,38 @@
 import apiClient from "./api";
 
-/** API 응답 */
 interface ApiResponse<T> {
   success: boolean;
   data?: T;
   message?: string;
 }
 
-/** 신고 생성 요청 */
-export interface ReportCreateRequest {
-  type: "breeder" | "adopter" | "content";
+export interface ReportReviewPayload {
+  reviewId: string;
+  reason: string;
+  description?: string;
+}
+
+export interface ReportBreederPayload {
   breederId: string;
-  reason:
-    | "no_contract"
-    | "false_info"
-    | "inappropriate_content"
-    | "poor_conditions"
-    | "fraud"
-    | "other";
-  description: string;
+  reason: string;
+  description?: string;
   evidence?: string[];
   contactInfo?: string;
 }
-
-/** 후기 신고 요청 */
-export interface ReviewReportRequest {
-  reviewId: string;
-  reason: string;
-  description: string;
-}
-
-/**
- * 브리더 신고
- * POST /api/adopter/report
- */
-export const createReport = async (
-  requestData: ReportCreateRequest
-): Promise<{ reportId: string; message: string }> => {
-  try {
-    const response = await apiClient.post<
-      ApiResponse<{ reportId: string; message: string }>
-    >("/api/adopter/report", requestData);
-
-    if (!response.data.success || !response.data.data) {
-      throw new Error(response.data.message || "Failed to create report");
-    }
-
-    return response.data.data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Create report error:", error.message);
-      throw error;
-    }
-    throw new Error("Unknown error during report creation");
-  }
-};
 
 /**
  * 후기 신고
  * POST /api/adopter/report/review
  */
-export const reportReview = async (
-  requestData: ReviewReportRequest
-): Promise<{ reportId: string; message: string }> => {
+export const reportReview = async (payload: ReportReviewPayload) => {
   try {
-    const response = await apiClient.post<
-      ApiResponse<{ reportId: string; message: string }>
-    >("/api/adopter/report/review", requestData);
+    const response = await apiClient.post<ApiResponse<{ reportId: string; message: string }>>(
+      "/api/adopter/report/review",
+      payload
+    );
 
-    if (!response.data.success || !response.data.data) {
-      throw new Error(response.data.message || "Failed to report review");
+    if (!response.data.success) {
+      throw new Error(response.data.message ?? "신고 처리에 실패했습니다.");
     }
 
     return response.data.data;
@@ -78,6 +41,40 @@ export const reportReview = async (
       console.error("Report review error:", error.message);
       throw error;
     }
-    throw new Error("Unknown error during review report");
+    throw new Error("Unknown error during review report.");
+  }
+};
+
+/**
+ * 브리더 신고
+ * POST /api/adopter/report
+ */
+export const reportBreeder = async (payload: ReportBreederPayload) => {
+  try {
+    const body = {
+      type: "breeder",
+      breederId: payload.breederId,
+      reason: payload.reason,
+      description: payload.description,
+      evidence: payload.evidence,
+      contactInfo: payload.contactInfo,
+    };
+
+    const response = await apiClient.post<ApiResponse<{ reportId: string; message: string }>>(
+      "/api/adopter/report",
+      body
+    );
+
+    if (!response.data.success) {
+      throw new Error(response.data.message ?? "브리더 신고에 실패했습니다.");
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Report breeder error:", error.message);
+      throw error;
+    }
+    throw new Error("Unknown error during breeder report.");
   }
 };
