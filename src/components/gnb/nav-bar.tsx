@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { MouseEvent } from "react";
 import { useSegment } from "@/hooks/use-segment";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { useNavigationGuardContext } from "@/contexts/navigation-guard-context";
@@ -14,6 +14,8 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { NAV_ITEMS, NAV_ITEMS_BREEDER } from "./nav-items";
+import { logout } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
 
 interface NavBarProps {
   navVariant?: "default" | "breeder";
@@ -22,7 +24,9 @@ interface NavBarProps {
 export default function NavBar({ navVariant = "default" }: NavBarProps) {
   const currNav = useSegment(0);
   const pathname = usePathname();
+  const router = useRouter();
   const guardContext = useNavigationGuardContext();
+  const { toast } = useToast();
   const navConfig = navVariant === "breeder" ? NAV_ITEMS_BREEDER : NAV_ITEMS;
 
   const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -34,6 +38,23 @@ export default function NavBar({ navVariant = "default" }: NavBarProps) {
     // 가드 로직 실행
     e.preventDefault();
     guardContext.guardNavigation(href);
+  };
+
+  const handleLogout = async (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    try {
+      await logout();
+      toast({
+        title: "로그아웃 완료",
+        description: "성공적으로 로그아웃되었습니다.",
+      });
+      router.push("/");
+    } catch (error) {
+      toast({
+        title: "로그아웃 실패",
+        description: error instanceof Error ? error.message : "다시 시도해주세요.",
+      });
+    }
   };
 
   return (
@@ -112,6 +133,7 @@ export default function NavBar({ navVariant = "default" }: NavBarProps) {
                 const ChildIcon = child.icon;
                 const isMuted = child.variant === "muted";
                 const isDisabled = child.variant === "disabled";
+                const isLogout = child.action === "logout";
                 return (
                   <DropdownMenuItem
                     key={child.name}
@@ -125,7 +147,13 @@ export default function NavBar({ navVariant = "default" }: NavBarProps) {
                   >
                     <Link
                       href={child.href}
-                      onClick={(e) => handleLinkClick(e, child.href)}
+                      onClick={(e) => {
+                        if (isLogout) {
+                          handleLogout(e);
+                          return;
+                        }
+                        handleLinkClick(e, child.href);
+                      }}
                       aria-disabled={isDisabled}
                     >
                       <div

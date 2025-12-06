@@ -32,6 +32,7 @@ export default function ClientPage() {
   const setSocialName = useSignupFormStore((e) => e.setSocialName);
   const setEmail = useSignupFormStore((e) => e.setEmail);
   const setProfileImage = useSignupFormStore((e) => e.setProfileImage);
+  const setNeedsEmail = useSignupFormStore((e) => e.setNeedsEmail);
   const resetFlowIndex = useSignupFormStore((e) => e.resetFlowIndex);
 
   // URL 파라미터에서 소셜 로그인 정보 읽어오기
@@ -41,6 +42,7 @@ export default function ClientPage() {
     const email = searchParams.get("email");
     const name = searchParams.get("name");
     const profileImage = searchParams.get("profileImage");
+    const needsEmail = searchParams.get("needsEmail") === "true";
 
     if (tempId) {
       // 이미 로그인되어 있는지 확인 (쿠키에 accessToken이 있는지)
@@ -60,6 +62,7 @@ export default function ClientPage() {
       setEmail(email || "");
       setSocialName(name || "");
       setProfileImage(profileImage || "");
+      setNeedsEmail(needsEmail);
       // 소셜 로그인으로 들어온 경우 flowIndex 초기화
       resetFlowIndex();
     }
@@ -70,6 +73,7 @@ export default function ClientPage() {
     setEmail,
     setSocialName,
     setProfileImage,
+    setNeedsEmail,
     resetFlowIndex,
     router,
   ]);

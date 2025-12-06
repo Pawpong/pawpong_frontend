@@ -12,6 +12,7 @@ import type { Animal } from "@/stores/signup-form-store";
 
 export default function BreederProfile({
   data: { avatarUrl, nickname, level, location, priceRange, breeds, animal },
+  breederId,
 }: {
   data: {
     avatarUrl: string;
@@ -22,6 +23,7 @@ export default function BreederProfile({
     breeds: string[];
     animal: Animal;
   };
+  breederId: string;
 }) {
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
@@ -29,7 +31,7 @@ export default function BreederProfile({
 
   const handleCounselClick = () => {
     clearCounselFormData();
-    router.push("/counselform");
+    router.push(`/counselform?breederId=${breederId}`);
   };
 
   const IconComponent = animal === "cat" ? Cat : Dog;

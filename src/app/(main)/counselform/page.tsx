@@ -26,6 +26,7 @@ import { isFormComplete, isFormEmpty } from "@/utils/counsel-form-validation";
 import ExitConfirmDialog from "@/components/exit-confirmation-dialog";
 import { useNavigationGuardContext } from "@/contexts/navigation-guard-context";
 import { useCreateApplication } from "./_hooks/use-application";
+import { useBreederPets } from "./_hooks/use-breeder-pets";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { ApplicationCreateRequest } from "@/lib/application";
 import { formatPhoneNumber } from "@/utils/phone";
@@ -40,6 +41,8 @@ export default function CounselFormPage() {
 
   const { setCounselFormData, counselFormData, clearCounselFormData } = useCounselFormStore();
   const createApplicationMutation = useCreateApplication();
+  const { data: breederPetsData } = useBreederPets(breederId);
+  const availablePets = breederPetsData?.items?.filter(pet => pet.status === "available") || [];
   const [isIntroductionFocused, setIsIntroductionFocused] = useState(false);
   const [isLivingSpaceFocused, setIsLivingSpaceFocused] = useState(false);
   const [isPreviousPetsFocused, setIsPreviousPetsFocused] = useState(false);
@@ -544,7 +547,16 @@ export default function CounselFormPage() {
                           <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-[353px]">
+                      <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-[353px] max-h-[300px] overflow-y-auto">
+                        {availablePets.map((pet) => (
+                          <DropdownMenuItem
+                            key={pet.petId}
+                            className="px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
+                            onSelect={() => field.onChange(`${pet.name} (${pet.breed}, ${pet.gender === "male" ? "수컷" : "암컷"})`)}
+                          >
+                            {pet.name} ({pet.breed}, {pet.gender === "male" ? "수컷" : "암컷"})
+                          </DropdownMenuItem>
+                        ))}
                         <DropdownMenuItem
                           className="px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
                           onSelect={() => field.onChange("특징 직접 입력")}

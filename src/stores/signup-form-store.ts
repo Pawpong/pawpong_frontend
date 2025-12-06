@@ -30,6 +30,9 @@ interface SignupFormStore {
   profileImage: string;
   setProfileImage: (url: string) => void;
 
+  needsEmail: boolean;
+  setNeedsEmail: (needsEmail: boolean) => void;
+
   // user info
   agreements: { term: boolean; privacy: boolean; marketing: boolean };
   setAgreements: (name: AgreementName, value: boolean) => void;
@@ -95,6 +98,9 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
 
   profileImage: "",
   setProfileImage: (url: string) => set({ profileImage: url }),
+
+  needsEmail: false,
+  setNeedsEmail: (needsEmail: boolean) => set({ needsEmail }),
 
   agreements: { term: false, privacy: false, marketing: false },
   setAgreements: (name, value) =>

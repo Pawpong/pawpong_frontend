@@ -39,7 +39,6 @@ export default function SettingsPage() {
         toast({
           title: "프로필 로드 실패",
           description: "프로필 정보를 불러올 수 없습니다.",
-          variant: "destructive",
         });
       } finally {
         setIsLoading(false);
@@ -61,7 +60,24 @@ export default function SettingsPage() {
       toast({
         title: "닉네임 변경 실패",
         description: error instanceof Error ? error.message : "다시 시도해주세요.",
-        variant: "destructive",
+      });
+    }
+  };
+
+  const handleMarketingAgreedChange = async (checked: boolean) => {
+    try {
+      await updateAdopterProfile({ marketingConsent: checked });
+      setMarketingAgreed(checked);
+      toast({
+        title: checked ? "마케팅 수신 동의" : "마케팅 수신 거부",
+        description: checked
+          ? "광고성 정보 수신에 동의하셨습니다."
+          : "광고성 정보 수신을 거부하셨습니다.",
+      });
+    } catch (error) {
+      toast({
+        title: "설정 변경 실패",
+        description: error instanceof Error ? error.message : "다시 시도해주세요.",
       });
     }
   };
@@ -91,7 +107,6 @@ export default function SettingsPage() {
       toast({
         title: "탈퇴 처리 실패",
         description: error instanceof Error ? error.message : "다시 시도해주세요.",
-        variant: "destructive",
       });
     }
   };
@@ -125,7 +140,7 @@ export default function SettingsPage() {
           {/* 이메일 수신 설정 */}
           <EmailSettingsSection
             marketingAgreed={marketingAgreed}
-            onMarketingAgreedChange={setMarketingAgreed}
+            onMarketingAgreedChange={handleMarketingAgreedChange}
           />
         </div>
 

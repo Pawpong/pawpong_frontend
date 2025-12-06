@@ -59,20 +59,20 @@ const checkboxInfo: {
     >
   >;
 }[] = [
-  {
-    name: "term",
-    label: "서비스 이용약관 동의",
-    required: true,
-    trigger: TermDialogTrigger,
-  },
-  {
-    name: "privacy",
-    label: "개인정보 수집 및 이용 동의",
-    required: true,
-    trigger: PrivacyDialogTrigger,
-  },
-  { name: "marketing", label: "광고성 정보 수신 동의", required: false },
-];
+    {
+      name: "term",
+      label: "서비스 이용약관 동의",
+      required: true,
+      trigger: TermDialogTrigger,
+    },
+    {
+      name: "privacy",
+      label: "개인정보 수집 및 이용 동의",
+      required: true,
+      trigger: PrivacyDialogTrigger,
+    },
+    { name: "marketing", label: "광고성 정보 수신 동의", required: false },
+  ];
 
 export default function UserInfoSection() {
   const router = useRouter();
@@ -89,6 +89,7 @@ export default function UserInfoSection() {
   const tempId = useSignupFormStore((e) => e.tempId);
   const provider = useSignupFormStore((e) => e.provider);
   const socialName = useSignupFormStore((e) => e.socialName);
+  const needsEmail = useSignupFormStore((e) => e.needsEmail);
 
   // SMS verification state
   const [verificationCode, setVerificationCode] = useState("");
@@ -251,8 +252,8 @@ export default function UserInfoSection() {
               setEmail(e.target.value);
               setShowEmailError(false);
             }}
-            disabled={isSocialLogin}
-            className={isSocialLogin ? "bg-gray-100" : ""}
+            disabled={isSocialLogin && !needsEmail && !!email}
+            className={isSocialLogin && !needsEmail && !!email ? "bg-gray-100" : ""}
           />
           {showEmailError && !email && (
             <div className="flex items-center gap-0.5">
@@ -286,8 +287,8 @@ export default function UserInfoSection() {
                 {isSending
                   ? "발송 중..."
                   : isCodeSent
-                  ? "인증번호 재전송"
-                  : "인증번호 받기"}
+                    ? "인증번호 재전송"
+                    : "인증번호 받기"}
               </Button>
             </div>
             {showPhoneError && !phoneNumber && (
@@ -405,12 +406,10 @@ export default function UserInfoSection() {
         <div className="flex flex-col gap-4">
           <NextButton
             onClick={() => {
-              // 기존 검증 로직 주석처리
-              /*
               let hasError = false;
 
-              // 이메일 검증 (소셜 로그인이 아닌 경우만)
-              if (!isSocialLogin && !email) {
+              // 이메일 검증 (소셜 로그인이 아니거나, 이메일 입력이 필요한 경우)
+              if ((!isSocialLogin || needsEmail || !email) && !email) {
                 setShowEmailError(true);
                 hasError = true;
               } else {
@@ -445,10 +444,6 @@ export default function UserInfoSection() {
               if (!hasError) {
                 nextFlowIndex();
               }
-              */
-
-              // 바로 다음 단계로 이동
-              nextFlowIndex();
             }}
           />
           <UndoButton />

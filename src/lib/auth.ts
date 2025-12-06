@@ -240,3 +240,30 @@ export const completeBreederRegistration = async (
     throw new Error("Unknown error during registration.");
   }
 };
+
+/** 로그아웃 응답 DTO */
+export interface LogoutResponseDto {
+  message: string;
+  loggedOutAt: string;
+}
+
+/** 로그아웃 */
+export const logout = async (): Promise<LogoutResponseDto> => {
+  try {
+    const response = await apiClient.post<ApiResponse<LogoutResponseDto>>(
+      "/api/auth/logout"
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error("로그아웃에 실패했습니다.");
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Logout error:", error.message);
+      throw error;
+    }
+    throw new Error("로그아웃 중 오류가 발생했습니다.");
+  }
+};

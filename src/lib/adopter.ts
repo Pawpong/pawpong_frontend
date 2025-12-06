@@ -25,6 +25,7 @@ export interface AdopterProfileUpdateRequest {
   name?: string;
   phone?: string;
   profileImage?: string;
+  marketingConsent?: boolean;
 }
 
 /** 입양자 프로필 수정 응답 DTO (백엔드 응답) */

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useNavigationGuardContext } from "@/contexts/navigation-guard-context";
 import { cn } from "@/lib/utils";
 import type { NavItem } from "./nav-items";
@@ -18,6 +18,8 @@ import {
 import Minus from "@/assets/icons/minus";
 import Plus from "@/assets/icons/plus";
 import { SheetClose } from "../ui/sheet";
+import { logout } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
 
 interface MobileNavItemProps {
   item: NavItem;
@@ -97,7 +99,9 @@ function CollapsibleNavSection({
 }) {
   const { open, setOpen } = useCollapsible();
   const pathname = usePathname();
+  const router = useRouter();
   const guardContext = useNavigationGuardContext();
+  const { toast } = useToast();
   const Icon = open ? item.iconFill : item.icon;
 
   const handleLinkClick = (
@@ -109,6 +113,23 @@ function CollapsibleNavSection({
     }
     e.preventDefault();
     guardContext.guardNavigation(href);
+  };
+
+  const handleLogout = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    try {
+      await logout();
+      toast({
+        title: "로그아웃 완료",
+        description: "성공적으로 로그아웃되었습니다.",
+      });
+      router.push("/");
+    } catch (error) {
+      toast({
+        title: "로그아웃 실패",
+        description: error instanceof Error ? error.message : "다시 시도해주세요.",
+      });
+    }
   };
 
   return (
@@ -145,6 +166,7 @@ function CollapsibleNavSection({
               const ChildIcon = child.icon;
               const isMuted = child.variant === "muted";
               const isDisabled = child.variant === "disabled";
+              const isLogout = child.action === "logout";
 
               return (
                 <SheetClose asChild key={child.name}>
@@ -153,6 +175,10 @@ function CollapsibleNavSection({
                     onClick={(e) => {
                       if (isDisabled) {
                         e.preventDefault();
+                        return;
+                      }
+                      if (isLogout) {
+                        handleLogout(e);
                         return;
                       }
                       handleLinkClick(e, child.href);

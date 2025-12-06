@@ -10,12 +10,14 @@ import Cat from "@/assets/icons/cat";
 import Dog from "@/assets/icons/dog";
 
 export type NavChildVariant = "default" | "muted" | "disabled";
+export type NavChildAction = "logout";
 
 export interface NavChildItem {
   name: string;
   href: string;
   icon?: ComponentType<SVGProps<SVGSVGElement>>;
   variant?: NavChildVariant;
+  action?: NavChildAction;
 }
 
 export interface NavItem {
@@ -53,7 +55,7 @@ export const NAV_ITEMS: NavItem[] = [
       { name: "찜한 브리더", href: "/saved" },
       { name: "공지사항", href: "/notice" },
       { name: "설정", href: "/settings" },
-      { name: "로그아웃", href: "/logout", variant: "muted" },
+      { name: "로그아웃", href: "#", variant: "muted", action: "logout" },
     ],
   },
 ];
@@ -82,7 +84,7 @@ export const NAV_ITEMS_BREEDER: NavItem[] = [
       { name: "찜한 브리더", href: "/saved" },
       { name: "공지사항", href: "/notice" },
       { name: "설정", href: "/settings" },
-      { name: "로그아웃", href: "/logout", variant: "muted" },
+      { name: "로그아웃", href: "#", variant: "muted", action: "logout" },
     ],
   },
 ];
