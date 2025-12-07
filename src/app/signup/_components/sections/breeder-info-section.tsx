@@ -3,6 +3,7 @@
 import Arrow from '@/assets/icons/arrow';
 import Camera from '@/assets/icons/camera';
 import ErrorIcon from '@/assets/icons/error';
+import Check from '@/assets/icons/check-blue.svg';
 import NextButton from '@/components/signup-form-section/next-button';
 import SignupFormHeader from '@/components/signup-form-section/signup-form-header';
 import SignupFormItems from '@/components/signup-form-section/signup-form-items';
@@ -14,9 +15,11 @@ import { Input } from '@/components/ui/input';
 import useSignupFormStore from '@/stores/signup-form-store';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import BreedsSelectDialogTrigger from '../breeds-select-dialog-trigger';
 import LocationSelectDialogTrigger from '../location-select-dialog-trigger';
 import { breederInfoSchema, type BreederInfoFormData } from './breeder-info-schema';
+import { checkBreederNameDuplicate } from '@/lib/auth';
 
 export default function BreederInfoSection() {
   const setPhoto = useSignupFormStore((state) => state.setPhoto);
@@ -32,11 +35,17 @@ export default function BreederInfoSection() {
   const nextFlowIndex = useSignupFormStore((state) => state.nextFlowIndex);
   const animal = useSignupFormStore((state) => state.animal);
 
+  // 상호명 중복 검증 상태
+  const [isCheckingName, setIsCheckingName] = useState(false);
+  const [nameChecked, setNameChecked] = useState(false);
+  const [nameAvailable, setNameAvailable] = useState(false);
+
   // react-hook-form 설정
   const {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<BreederInfoFormData>({
     resolver: zodResolver(breederInfoSchema),
     defaultValues: {
@@ -47,7 +56,46 @@ export default function BreederInfoSection() {
     mode: 'onBlur',
   });
 
+  const currentBreederName = watch('breederName');
+
+  // 상호명 중복 검사 버튼 클릭 핸들러
+  const handleCheckBreederName = async () => {
+    if (!currentBreederName || currentBreederName.trim().length === 0) {
+      alert('상호명을 입력해주세요.');
+      return;
+    }
+
+    setIsCheckingName(true);
+    try {
+      const isDuplicate = await checkBreederNameDuplicate(currentBreederName.trim());
+      setNameChecked(true);
+      setNameAvailable(!isDuplicate);
+    } catch (error) {
+      alert('상호명 중복 확인에 실패했습니다.');
+      setNameChecked(false);
+      setNameAvailable(false);
+    } finally {
+      setIsCheckingName(false);
+    }
+  };
+
+  // 상호명 변경 시 검증 상태 초기화
+  const handleBreederNameChange = (onChange: (value: string) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+    setNameChecked(false);
+    setNameAvailable(false);
+    setSubmitAttempted(false);
+  };
+
+  // 제출 시도 상태 (중복검사 미완료 메시지 표시용)
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+
   const onSubmit = (data: BreederInfoFormData) => {
+    // 상호명 중복 검사를 완료하지 않았으면 제출 차단
+    if (!nameChecked || !nameAvailable) {
+      setSubmitAttempted(true);
+      return;
+    }
     // 제출 시에만 Zustand store에 저장
     setBreederName(data.breederName);
     setBreederLocation(data.breederLocation);
@@ -95,11 +143,45 @@ export default function BreederInfoSection() {
             )}
           </Button>
           <div className="flex flex-col gap-2.5 w-full">
-            <Controller
-              name="breederName"
-              control={control}
-              render={({ field }) => <Input placeholder="브리더명(상호명)" {...field} />}
-            />
+            <div className="flex gap-3">
+              <Controller
+                name="breederName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    placeholder="브리더명(상호명)"
+                    {...field}
+                    onChange={handleBreederNameChange(field.onChange)}
+                    className={nameAvailable ? 'border-green-500 focus:border-green-500' : ''}
+                  />
+                )}
+              />
+              <Button
+                variant="tertiary"
+                disabled={isCheckingName || !currentBreederName || nameAvailable}
+                onClick={handleCheckBreederName}
+              >
+                {isCheckingName ? '확인 중...' : '중복검사'}
+              </Button>
+            </div>
+            {nameAvailable && (
+              <div className="flex items-center gap-0.5">
+                <Check className="size-3 shrink-0" />
+                <p className="text-caption font-medium text-status-success-500">사용할 수 있는 브리더명이에요</p>
+              </div>
+            )}
+            {nameChecked && !nameAvailable && (
+              <div className="flex items-center gap-0.5">
+                <ErrorIcon className="size-3 shrink-0" />
+                <p className="text-caption font-medium text-status-error-500">이미 등록된 브리더명이에요</p>
+              </div>
+            )}
+            {submitAttempted && !nameChecked && (
+              <div className="flex items-center gap-0.5">
+                <ErrorIcon className="size-3 shrink-0" />
+                <p className="text-caption font-medium text-status-error-500">브리더명 중복 검사를 진행해 주세요</p>
+              </div>
+            )}
             {errors.breederName && (
               <div className="flex items-center gap-0.5">
                 <ErrorIcon className="size-3 shrink-0" />

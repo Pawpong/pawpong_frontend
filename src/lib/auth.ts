@@ -72,6 +72,22 @@ export const checkNicknameDuplicate = async (nickname: string): Promise<boolean>
   }
 };
 
+/** 브리더 상호명 중복 확인 */
+export const checkBreederNameDuplicate = async (breederName: string): Promise<boolean> => {
+  try {
+    const response = await apiClient.post<ApiResponse<{ isDuplicate: boolean }>>('/api/auth/check-breeder-name', {
+      breederName,
+    });
+    return response.data.data?.isDuplicate ?? false;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Breeder name duplication check error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during breeder name check.');
+  }
+};
+
 /** SMS 발송 */
 export const sendVerificationCode = async (phone: string): Promise<void> => {
   try {
