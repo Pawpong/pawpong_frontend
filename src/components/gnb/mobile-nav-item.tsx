@@ -137,13 +137,15 @@ function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolea
         </CollapsibleTrigger>
         <CollapsibleContent asChild>
           <div className="flex flex-col mt-3 overflow-hidden transition-all duration-300 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:opacity-0 data-[state=closed]:mt-0 data-[state=closed]:max-h-0 max-h-[1000px]">
-            {item.children?.map((child) => {
-              const ChildIcon = child.icon;
-              const isMuted = child.variant === 'muted';
-              const isDisabled = child.variant === 'disabled';
-              const isLogout = child.action === 'logout';
+            {item.children
+              ?.filter((child) => !(child.action === 'logout' && !isAuthenticated))
+              .map((child) => {
+                const ChildIcon = child.icon;
+                const isMuted = child.variant === 'muted';
+                const isDisabled = child.variant === 'disabled';
+                const isLogout = child.action === 'logout';
 
-              return (
+                return (
                 <SheetClose asChild key={child.name}>
                   <Link
                     href={child.href}

@@ -127,7 +127,9 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
               sideOffset={12}
               className="border border-grayscale-gray2/50 rounded-lg p-1 shadow-[0px_8px_24px_rgba(12,17,29,0.12)] "
             >
-              {item.children?.map((child) => {
+              {item.children
+              ?.filter((child) => !(child.action === 'logout' && !isAuthenticated))
+              .map((child) => {
                 const ChildIcon = child.icon;
                 const isMuted = child.variant === 'muted';
                 const isDisabled = child.variant === 'disabled';
