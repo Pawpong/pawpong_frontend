@@ -11,8 +11,10 @@ export interface AuthUser {
 interface AuthStore {
   user: AuthUser | null;
   isAuthenticated: boolean;
+  hasHydrated: boolean;
   setUser: (user: AuthUser | null) => void;
   clearAuth: () => void;
+  setHasHydrated: (state: boolean) => void;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -20,11 +22,16 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       user: null,
       isAuthenticated: false,
+      hasHydrated: false,
       setUser: (user) => set({ user, isAuthenticated: !!user }),
       clearAuth: () => set({ user: null, isAuthenticated: false }),
+      setHasHydrated: (state) => set({ hasHydrated: state }),
     }),
     {
       name: 'auth-storage',
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     },
   ),
 );
