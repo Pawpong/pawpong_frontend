@@ -78,7 +78,7 @@ function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolea
   const pathname = usePathname();
   const guardContext = useNavigationGuardContext();
   const { toast } = useToast();
-  const { isAuthenticated, clearAuth } = useAuthStore();
+  const { isAuthenticated, clearAuth, user } = useAuthStore();
   const Icon = open ? item.iconFill : item.icon;
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -138,7 +138,17 @@ function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolea
         <CollapsibleContent asChild>
           <div className="flex flex-col mt-3 overflow-hidden transition-all duration-300 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:opacity-0 data-[state=closed]:mt-0 data-[state=closed]:max-h-0 max-h-[1000px]">
             {item.children
-              ?.filter((child) => !(child.action === 'logout' && !isAuthenticated))
+              ?.filter((child) => {
+                // 로그아웃 항목은 인증된 경우에만 표시
+                if (child.action === 'logout' && !isAuthenticated) {
+                  return false;
+                }
+                // showForVerificationStatus가 설정된 경우, 해당 status에 맞는 경우에만 표시
+                if (child.showForVerificationStatus && user?.role === 'breeder') {
+                  return child.showForVerificationStatus.includes(user.verificationStatus || 'pending');
+                }
+                return true;
+              })
               .map((child) => {
                 const ChildIcon = child.icon;
                 const isMuted = child.variant === 'muted';

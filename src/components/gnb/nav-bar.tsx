@@ -23,7 +23,7 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
   const router = useRouter();
   const guardContext = useNavigationGuardContext();
   const { toast } = useToast();
-  const { isAuthenticated, clearAuth } = useAuthStore();
+  const { isAuthenticated, clearAuth, user } = useAuthStore();
   const navConfig = navVariant === 'breeder' ? NAV_ITEMS_BREEDER : NAV_ITEMS;
 
   const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -128,7 +128,17 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
               className="border border-grayscale-gray2/50 rounded-lg p-1 shadow-[0px_8px_24px_rgba(12,17,29,0.12)] "
             >
               {item.children
-              ?.filter((child) => !(child.action === 'logout' && !isAuthenticated))
+              ?.filter((child) => {
+                // 로그아웃 항목은 인증된 경우에만 표시
+                if (child.action === 'logout' && !isAuthenticated) {
+                  return false;
+                }
+                // showForVerificationStatus가 설정된 경우, 해당 status에 맞는 경우에만 표시
+                if (child.showForVerificationStatus && user?.role === 'breeder') {
+                  return child.showForVerificationStatus.includes(user.verificationStatus || 'pending');
+                }
+                return true;
+              })
               .map((child) => {
                 const ChildIcon = child.icon;
                 const isMuted = child.variant === 'muted';

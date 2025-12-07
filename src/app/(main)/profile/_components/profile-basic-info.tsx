@@ -7,29 +7,82 @@ import { Textarea } from '@/components/ui/textarea';
 import Camera from '@/assets/icons/camera.svg';
 import Arrow from '@/assets/icons/arrow';
 import BreedsSelectDialogTrigger from '@/app/signup/_components/breeds-select-dialog-trigger';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import LocationSelectDialogTrigger from '@/app/signup/_components/location-select-dialog-trigger';
 import ImageEdit from '@/components/image-edit';
 import MinusIcon from '@/assets/icons/minus.svg';
 import { useFormContext, Controller } from 'react-hook-form';
 import type { ProfileFormData } from '@/stores/profile-store';
 import ErrorMessage from '@/components/error-message';
+import Image from 'next/image';
 
-export default function ProfileBasicInfo({ form }: { form: ReturnType<typeof useFormContext<ProfileFormData>> }) {
+interface ProfileBasicInfoProps {
+  form: ReturnType<typeof useFormContext<ProfileFormData>>;
+  profileImagePreview?: string;
+  onProfileImageChange?: (file: File, preview: string) => void;
+}
+
+export default function ProfileBasicInfo({ form, profileImagePreview, onProfileImageChange }: ProfileBasicInfoProps) {
   const [animal] = useState<'dog' | 'cat'>('dog');
   const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
   const { control, watch, setValue, formState, trigger } = form;
   const { errors } = formState;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isCounselMode = watch('isCounselMode');
   const descriptionValue = watch('description');
   const normalizeNumber = (value: string) => value.replace(/\D/g, '');
+  const formatPrice = (value: string) => {
+    const digits = value.replace(/\D/g, '');
+    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  const handleProfileImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          onProfileImageChange?.(file, event.target.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
   return (
     <div className="flex flex-col gap-8 items-start w-full">
       <div className="flex flex-col gap-3 items-center w-full">
         {/* 프로필 이미지 */}
-        <div className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group">
-          <Camera className="size-7 group-hover:[&_path]:fill-[#4F3B2E]" />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleProfileImageChange}
+        />
+        <div
+          onClick={handleProfileImageClick}
+          className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden"
+        >
+          {profileImagePreview ? (
+            <Image
+              src={profileImagePreview}
+              alt="프로필 이미지"
+              width={80}
+              height={80}
+              className="object-cover w-full h-full"
+              unoptimized
+            />
+          ) : (
+            <Camera className="size-7 group-hover:[&_path]:fill-[#4F3B2E]" />
+          )}
         </div>
         <div className="flex flex-col gap-[10px] w-full">
           <Controller
@@ -70,6 +123,7 @@ export default function ProfileBasicInfo({ form }: { form: ReturnType<typeof use
                   field.onChange(value);
                   trigger('location');
                 }}
+                initialValue={field.value}
                 asChild
               >
                 <Button variant="input" size={undefined} className="!px-[var(--space-16)] !py-[var(--space-12)] group">
@@ -94,6 +148,7 @@ export default function ProfileBasicInfo({ form }: { form: ReturnType<typeof use
                   field.onChange(newBreeds);
                   trigger('breeds');
                 }}
+                initialValue={field.value || []}
                 asChild
               >
                 <Button variant="input" size={undefined} className="!px-[var(--space-16)] !py-[var(--space-12)] group">
@@ -125,6 +180,9 @@ export default function ProfileBasicInfo({ form }: { form: ReturnType<typeof use
             <ImageEdit
               maxCount={3}
               status={errors.representativePhotos ? 'Error' : 'Default'}
+              initialImages={
+                Array.isArray(field.value) ? field.value.filter((v): v is string => typeof v === 'string') : []
+              }
               onFileChange={(files) => {
                 field.onChange(files);
                 trigger('representativePhotos');
@@ -149,11 +207,12 @@ export default function ProfileBasicInfo({ form }: { form: ReturnType<typeof use
                   className="grow"
                   inputMode="numeric"
                   disabled={isCounselMode}
-                  value={isCounselMode ? '' : field.value}
+                  value={isCounselMode ? '' : formatPrice(field.value || '')}
                   onChange={(e) => {
                     const digits = normalizeNumber(e.target.value);
                     field.onChange(digits);
                   }}
+                  onBlur={field.onBlur}
                 />
               )}
             />
@@ -169,11 +228,12 @@ export default function ProfileBasicInfo({ form }: { form: ReturnType<typeof use
                   className="grow"
                   inputMode="numeric"
                   disabled={isCounselMode}
-                  value={isCounselMode ? '' : field.value}
+                  value={isCounselMode ? '' : formatPrice(field.value || '')}
                   onChange={(e) => {
                     const digits = normalizeNumber(e.target.value);
                     field.onChange(digits);
                   }}
+                  onBlur={field.onBlur}
                 />
               )}
             />

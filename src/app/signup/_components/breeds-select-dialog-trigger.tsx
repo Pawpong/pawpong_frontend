@@ -31,16 +31,23 @@ interface BreedCategory {
 export default function BreedsSelectDialogTrigger({
   animal,
   onSubmitBreeds,
+  initialValue = [],
   ...props
 }: {
   animal: Animal;
   onSubmitBreeds: (value: string[]) => void;
+  initialValue?: string[];
 } & React.ComponentProps<typeof DialogTrigger>) {
   const isMobile = useBreakpoint('md') === false;
   const [categories, setCategories] = useState<BreedCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedGroup, setSelectedGroup] = useState('');
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string[]>(initialValue);
+
+  // Sync with initialValue when it changes
+  useEffect(() => {
+    setSelected(initialValue);
+  }, [initialValue]);
 
   // API에서 품종 데이터 가져오기
   useEffect(() => {

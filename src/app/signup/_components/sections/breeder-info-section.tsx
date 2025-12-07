@@ -142,6 +142,7 @@ export default function BreederInfoSection() {
                   onSubmitLocation={(value: string | null) => {
                     field.onChange(value);
                   }}
+                  initialValue={field.value}
                   asChild
                 >
                   <Button variant="input" className="py-3 px-4 pr-3.5 group">
@@ -176,6 +177,7 @@ export default function BreederInfoSection() {
                   onSubmitBreeds={(value) => {
                     field.onChange(value);
                   }}
+                  initialValue={field.value || []}
                   asChild
                 >
                   <Button variant="input" className="py-3 px-4 pr-3.5 group">

@@ -34,15 +34,24 @@ function isTempId(id: string): boolean {
 
 /**
  * 부모견 변경사항 동기화
+ * @returns 임시 ID → 실제 petId 매핑
  */
-export async function syncParentPets(originalParents: any[] = [], currentParents: ProfileFormData['parents']) {
-  const originalIds = new Set(originalParents.map((p) => p.petId));
+export async function syncParentPets(
+  originalParents: any[] = [],
+  currentParents: ProfileFormData['parents'],
+): Promise<Map<string, string>> {
+  const idMapping = new Map<string, string>(); // 임시 ID → 실제 petId 매핑
+  // petId 또는 _id 사용 (백엔드 응답 형식에 따라 다를 수 있음)
+  const getParentId = (p: any) => p.petId || p._id?.toString();
+  const originalIds = new Set(originalParents.map(getParentId).filter(Boolean));
   const currentIds = new Set(currentParents.filter((p) => !isTempId(p.id)).map((p) => p.id));
 
   // 1. 삭제된 부모견 처리
-  const deletedIds = [...originalIds].filter((id) => !currentIds.has(id));
+  const deletedIds = [...originalIds].filter((id) => id && !currentIds.has(id));
   for (const petId of deletedIds) {
-    await deleteParentPet(petId);
+    if (petId) {
+      await deleteParentPet(petId);
+    }
   }
 
   // 2. 새로 추가되거나 수정된 부모견 처리
@@ -66,13 +75,19 @@ export async function syncParentPets(originalParents: any[] = [], currentParents
       const result = await addParentPet(petData);
       const newPetId = result.petId;
 
+      // 임시 ID → 실제 petId 매핑 저장
+      idMapping.set(parent.id, newPetId);
+
       // 이미지가 있으면 업로드
       if (parent.imageFile) {
         await uploadParentPetPhoto(newPetId, parent.imageFile);
       }
     } else {
+      // 기존 부모견은 ID 그대로 유지
+      idMapping.set(parent.id, parent.id);
+
       // 기존 부모견 수정
-      const original = originalParents.find((p) => p.petId === parent.id);
+      const original = originalParents.find((p) => getParentId(p) === parent.id);
 
       // 변경사항이 있는 경우만 업데이트
       if (
@@ -97,19 +112,30 @@ export async function syncParentPets(originalParents: any[] = [], currentParents
       }
     }
   }
+
+  return idMapping;
 }
 
 /**
  * 분양 개체 변경사항 동기화
+ * @param parentIdMapping 부모 임시 ID → 실제 petId 매핑
  */
-export async function syncAvailablePets(originalAnimals: any[] = [], currentAnimals: ProfileFormData['animals']) {
-  const originalIds = new Set(originalAnimals.map((a) => a.petId));
+export async function syncAvailablePets(
+  originalAnimals: any[] = [],
+  currentAnimals: ProfileFormData['animals'],
+  parentIdMapping: Map<string, string> = new Map(),
+) {
+  // petId 또는 _id 사용 (백엔드 응답 형식에 따라 다를 수 있음)
+  const getAnimalId = (a: any) => a.petId || a._id?.toString();
+  const originalIds = new Set(originalAnimals.map(getAnimalId).filter(Boolean));
   const currentIds = new Set(currentAnimals.filter((a) => !isTempId(a.id)).map((a) => a.id));
 
   // 1. 삭제된 분양 개체 처리
-  const deletedIds = [...originalIds].filter((id) => !currentIds.has(id));
+  const deletedIds = [...originalIds].filter((id) => id && !currentIds.has(id));
   for (const petId of deletedIds) {
-    await deleteAvailablePet(petId);
+    if (petId) {
+      await deleteAvailablePet(petId);
+    }
   }
 
   // 2. 새로 추가되거나 수정된 분양 개체 처리
@@ -126,6 +152,14 @@ export async function syncAvailablePets(originalAnimals: any[] = [], currentAnim
       continue;
     }
 
+    // 부모 ID를 실제 petId로 변환 (임시 ID인 경우 매핑에서 조회)
+    const resolvedMotherId = animal.motherId ? parentIdMapping.get(animal.motherId) || animal.motherId : undefined;
+    const resolvedFatherId = animal.fatherId ? parentIdMapping.get(animal.fatherId) || animal.fatherId : undefined;
+
+    // 임시 ID가 해결되지 않은 경우 parentInfo 제외
+    const hasValidMother = resolvedMotherId && !isTempId(resolvedMotherId);
+    const hasValidFather = resolvedFatherId && !isTempId(resolvedFatherId);
+
     const petData: AvailablePetAddRequest = {
       name: animal.name,
       breed: animal.breed[0],
@@ -133,6 +167,13 @@ export async function syncAvailablePets(originalAnimals: any[] = [], currentAnim
       birthDate: formatBirthDate(animal.birthDate),
       price: animal.isCounselMode ? 0 : parseInt(animal.price),
       description: animal.description || '',
+      parentInfo:
+        hasValidMother || hasValidFather
+          ? {
+              mother: hasValidMother ? resolvedMotherId : undefined,
+              father: hasValidFather ? resolvedFatherId : undefined,
+            }
+          : undefined,
     };
 
     if (isTempId(animal.id)) {
@@ -146,7 +187,7 @@ export async function syncAvailablePets(originalAnimals: any[] = [], currentAnim
       }
     } else {
       // 기존 분양 개체 수정
-      const original = originalAnimals.find((a) => a.petId === animal.id);
+      const original = originalAnimals.find((a) => getAnimalId(a) === animal.id);
 
       // 변경사항이 있는 경우만 업데이트
       if (
@@ -156,7 +197,9 @@ export async function syncAvailablePets(originalAnimals: any[] = [], currentAnim
           original.gender !== animal.gender ||
           original.birthDate !== formatBirthDate(animal.birthDate) ||
           original.price !== parseInt(animal.price) ||
-          original.description !== animal.description)
+          original.description !== animal.description ||
+          original.parentInfo?.mother !== resolvedMotherId ||
+          original.parentInfo?.father !== resolvedFatherId)
       ) {
         await updateAvailablePet(animal.id, {
           name: animal.name,
@@ -165,6 +208,13 @@ export async function syncAvailablePets(originalAnimals: any[] = [], currentAnim
           birthDate: formatBirthDate(animal.birthDate),
           price: animal.isCounselMode ? 0 : parseInt(animal.price),
           description: animal.description,
+          parentInfo:
+            hasValidMother || hasValidFather
+              ? {
+                  mother: hasValidMother ? resolvedMotherId : undefined,
+                  father: hasValidFather ? resolvedFatherId : undefined,
+                }
+              : undefined,
         });
       }
 

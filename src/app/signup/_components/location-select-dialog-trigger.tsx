@@ -22,13 +22,28 @@ import { getAllDistricts, type District } from '@/lib/districts';
 
 export default function LocationSelectDialogTrigger({
   onSubmitLocation,
+  initialValue = null,
   ...props
-}: { onSubmitLocation: (value: string | null) => void } & React.ComponentProps<typeof DialogTrigger>) {
+}: { onSubmitLocation: (value: string | null) => void; initialValue?: string | null } & React.ComponentProps<
+  typeof DialogTrigger
+>) {
   const isMobile = useBreakpoint('md') === false;
   const [districts, setDistricts] = useState<District[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedGroup, setSelectedGroup] = useState('');
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(initialValue);
+
+  // Sync with initialValue when it changes
+  useEffect(() => {
+    setSelected(initialValue);
+    // Set selectedGroup based on initialValue
+    if (initialValue) {
+      const city = initialValue.split(' ')[0];
+      if (city) {
+        setSelectedGroup(city);
+      }
+    }
+  }, [initialValue]);
 
   // API에서 지역 데이터 가져오기
   useEffect(() => {

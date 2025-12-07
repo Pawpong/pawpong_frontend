@@ -2,7 +2,7 @@
 
 import Camera from '@/assets/icons/camera.svg';
 import { cn } from '@/lib/utils';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ImagePreview, { ImageFile } from './image-preview';
 
 interface ImageEditProps {
@@ -10,10 +10,11 @@ interface ImageEditProps {
   limit?: 'on' | 'off';
   status?: 'Default' | 'Hover' | 'Filled' | 'Error';
   maxCount?: number;
-  onFileChange?: (files: File[]) => void;
+  onFileChange?: (files: (File | string)[]) => void;
   showPreview?: boolean;
   previewSize?: 'small' | 'medium' | 'large';
   previewLayout?: 'grid' | 'horizontal' | 'vertical';
+  initialImages?: string[];
 }
 
 export default function ImageEdit({
@@ -25,9 +26,25 @@ export default function ImageEdit({
   showPreview = true,
   previewSize = 'medium',
   previewLayout = 'horizontal',
+  initialImages = [],
 }: ImageEditProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
+  const initializedRef = useRef(false);
+
+  // Initialize with existing images (URLs)
+  useEffect(() => {
+    if (initialImages.length > 0 && !initializedRef.current) {
+      const existingImages: ImageFile[] = initialImages.map((url, index) => ({
+        id: `existing-${index}-${Date.now()}`,
+        file: null,
+        preview: url,
+        isUrl: true,
+      }));
+      setImageFiles(existingImages);
+      initializedRef.current = true;
+    }
+  }, [initialImages]);
 
   const handleClick = () => {
     fileInputRef.current?.click();
@@ -35,15 +52,17 @@ export default function ImageEdit({
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const newFiles = files.map((file) => ({
+    const newFiles: ImageFile[] = files.map((file) => ({
       id: `${file.name}-${Date.now()}-${Math.random()}`,
       file,
       preview: URL.createObjectURL(file),
+      isUrl: false,
     }));
 
     const updatedFiles = [...imageFiles, ...newFiles].slice(0, maxCount);
     setImageFiles(updatedFiles);
-    onFileChange?.(updatedFiles.map((img) => img.file));
+    // Return File objects for new uploads, string URLs for existing images
+    onFileChange?.(updatedFiles.map((img) => (img.isUrl ? img.preview : img.file!)));
 
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -53,7 +72,8 @@ export default function ImageEdit({
   const handleRemoveImage = (id: string) => {
     const newFiles = imageFiles.filter((img) => img.id !== id);
     setImageFiles(newFiles);
-    onFileChange?.(newFiles.map((img) => img.file));
+    // Return File objects for new uploads, string URLs for existing images
+    onFileChange?.(newFiles.map((img) => (img.isUrl ? img.preview : img.file!)));
   };
 
   const currentStatus = imageFiles.length > 0 ? 'Filled' : status;

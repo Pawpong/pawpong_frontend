@@ -69,7 +69,8 @@ const breedingAnimalItemSchema = z
     imageFile: z.union([z.instanceof(File), z.undefined()]).optional(),
     description: z.string(),
     adoptionStatus: z.string().min(1, BREEDER_PROFILE_ERROR.STATUS_REQUIRED),
-    parent: z.string(),
+    motherId: z.string().optional(),
+    fatherId: z.string().optional(),
     price: z.string(),
     isCounselMode: z.boolean(),
   })

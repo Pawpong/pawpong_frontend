@@ -4,8 +4,9 @@ import { cn } from '@/lib/utils';
 import PictureRemove from '@/assets/icons/picture-delete.svg';
 export interface ImageFile {
   id: string;
-  file: File;
+  file: File | null; // null for URL-based images
   preview: string;
+  isUrl?: boolean; // true if this is a URL-based image
 }
 
 interface ImagePreviewProps {

@@ -225,6 +225,41 @@ export interface LogoutResponseDto {
   loggedOutAt: string;
 }
 
+/** 프로필 이미지 업로드 (회원가입 시 사용) */
+export const uploadProfileImage = async (
+  file: File,
+  tempId?: string,
+): Promise<{ url: string; filename: string; size: number }> => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const url = tempId
+      ? `/api/auth/upload-breeder-profile?tempId=${encodeURIComponent(tempId)}`
+      : '/api/auth/upload-breeder-profile';
+
+    const response = await apiClient.post<
+      ApiResponse<{ url: string; filename: string; size: number }>
+    >(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error('프로필 이미지 업로드에 실패했습니다.');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Profile image upload error:', error.message);
+      throw error;
+    }
+    throw new Error('프로필 이미지 업로드 중 오류가 발생했습니다.');
+  }
+};
+
 /** 로그아웃 */
 export const logout = async (): Promise<LogoutResponseDto> => {
   try {

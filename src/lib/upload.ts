@@ -32,6 +32,7 @@ export const uploadRepresentativePhotos = async (files: File[]): Promise<UploadR
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        timeout: 60000, // 업로드는 60초 타임아웃
       },
     );
 
@@ -65,6 +66,7 @@ export const uploadParentPetPhoto = async (petId: string, file: File): Promise<U
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        timeout: 60000, // 업로드는 60초 타임아웃
       },
     );
 
@@ -98,6 +100,7 @@ export const uploadAvailablePetPhoto = async (petId: string, file: File): Promis
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        timeout: 60000, // 업로드는 60초 타임아웃
       },
     );
 
@@ -131,6 +134,7 @@ export const uploadSingleFile = async (file: File, folder?: string): Promise<Upl
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      timeout: 60000, // 업로드는 60초 타임아웃
     });
 
     if (!response.data.success || !response.data.data) {
@@ -165,6 +169,7 @@ export const uploadMultipleFiles = async (files: File[], folder?: string): Promi
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      timeout: 60000, // 업로드는 60초 타임아웃
     });
 
     if (!response.data.success || !response.data.data) {

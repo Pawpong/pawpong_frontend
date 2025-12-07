@@ -40,11 +40,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (cookieRole === 'breeder') {
           const profile = await getMyBreederProfile();
+          // API 응답에서 verificationInfo는 breeder.verification 객체를 직접 반환
+          // 따라서 verificationInfo.status로 접근해야 함
+          const verificationStatus =
+            (profile.verificationInfo as any)?.status ||
+            profile.verificationInfo?.verificationStatus ||
+            'pending';
           setUser({
             userId: profile.breederId,
             email: profile.breederEmail,
             name: profile.breederName,
             role: 'breeder',
+            verificationStatus,
           });
         } else {
           const profile = await getAdopterProfile();

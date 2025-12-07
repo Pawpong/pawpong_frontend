@@ -93,10 +93,29 @@ export function isFormEmpty(data: ProfileFormData): boolean {
 }
 
 /**
- * 부모 정보 검증
+ * 부모 항목이 비어있는지 확인 (id 제외)
+ */
+function isParentEmpty(parent: ProfileFormData['parents'][number]): boolean {
+  return (
+    (!parent.name || parent.name.trim() === '') &&
+    (!parent.breed || parent.breed.length === 0) &&
+    (!parent.birthDate || parent.birthDate.trim() === '') &&
+    !parent.gender &&
+    !parent.imageFile &&
+    !parent.imagePreview
+  );
+}
+
+/**
+ * 부모 정보 검증 (비어있지 않은 항목만 검증)
  */
 export function validateParents(parents: ProfileFormData['parents']): Array<ParentValidationErrors | undefined> {
   return parents.map((parent) => {
+    // 완전히 비어있는 항목은 검증 스킵
+    if (isParentEmpty(parent)) {
+      return undefined;
+    }
+
     const errors: ParentValidationErrors = {};
 
     if (!parent.name || parent.name.trim() === '') {
@@ -119,10 +138,31 @@ export function validateParents(parents: ProfileFormData['parents']): Array<Pare
 }
 
 /**
- * 분양 중인 아이 정보 검증
+ * 분양 개체 항목이 비어있는지 확인 (id 제외)
+ */
+function isAnimalEmpty(animal: ProfileFormData['animals'][number]): boolean {
+  return (
+    (!animal.name || animal.name.trim() === '') &&
+    (!animal.breed || animal.breed.length === 0) &&
+    (!animal.birthDate || animal.birthDate.trim() === '') &&
+    !animal.gender &&
+    (!animal.adoptionStatus || animal.adoptionStatus.trim() === '') &&
+    (!animal.price || animal.price.trim() === '') &&
+    !animal.imageFile &&
+    !animal.imagePreview
+  );
+}
+
+/**
+ * 분양 중인 아이 정보 검증 (비어있지 않은 항목만 검증)
  */
 export function validateAnimals(animals: ProfileFormData['animals']): Array<AnimalValidationErrors | undefined> {
   return animals.map((animal) => {
+    // 완전히 비어있는 항목은 검증 스킵
+    if (isAnimalEmpty(animal)) {
+      return undefined;
+    }
+
     const errors: AnimalValidationErrors = {};
 
     if (!animal.name || animal.name.trim() === '') {

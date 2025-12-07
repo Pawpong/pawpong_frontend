@@ -25,14 +25,16 @@ import ErrorMessage from '@/components/error-message';
 import { BREEDER_PROFILE_ERROR } from '@/constants/errors/breeder-profile-error';
 
 export default function BreedingAnimals({ form }: { form: ReturnType<typeof useFormContext<ProfileFormData>> }) {
-  const { control, watch, formState } = form;
+  const { control, watch, formState, getValues, setValue } = form;
   const { errors } = formState;
   const selectedBreeds = watch('breeds');
   const parents = watch('parents');
+  // 실시간 animals 값 watch (fields는 stale할 수 있음)
+  const watchedAnimals = watch('animals');
   const [focusedDescriptions, setFocusedDescriptions] = useState<{
     [key: number]: boolean;
   }>({});
-  const { fields, append, remove, update } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'animals',
   });
@@ -47,7 +49,8 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
         gender: null,
         description: '',
         adoptionStatus: '',
-        parent: '',
+        motherId: '',
+        fatherId: '',
         price: '',
         isCounselMode: false,
       });
@@ -64,7 +67,8 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
       gender: null,
       description: '',
       adoptionStatus: '',
-      parent: '',
+      motherId: '',
+      fatherId: '',
       price: '',
       isCounselMode: false,
     });
@@ -75,22 +79,37 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
   };
 
   const updateAnimal = (index: number, updates: Partial<ProfileFormData['animals'][0]>) => {
-    const current = fields[index];
-    update(index, { ...current, ...updates });
+    // getValues로 현재 폼 값을 가져와서 업데이트 (stale 데이터 방지)
+    const currentAnimals = getValues('animals');
+    const current = currentAnimals[index];
+    const updatedAnimals = [...currentAnimals];
+    updatedAnimals[index] = { ...current, ...updates };
+    setValue('animals', updatedAnimals, { shouldDirty: true });
   };
 
-  // 이름이 입력된 부모들만 필터링
-  const availableParents = parents.filter((parent) => parent.name.trim() !== '');
+  // 이름이 입력된 부모들만 필터링하고 성별로 분류
+  const availableParents = parents.filter((parent) => parent.name && parent.name.trim() !== '');
+  const availableMothers = availableParents.filter((parent) => parent.gender === 'female');
+  const availableFathers = availableParents.filter((parent) => parent.gender === 'male');
+
+  // 부모 ID로 이름 찾기 (ID 비교 시 문자열 변환)
+  const findParentName = (parentId: string | undefined, parentList: typeof availableParents) => {
+    if (!parentId) return null;
+    const parent = parentList.find((p) => p.id === parentId || p.id?.toString() === parentId);
+    return parent?.name || null;
+  };
 
   return (
     <div className="flex flex-col gap-8 items-center w-full">
       {/* 분양 중인 아이 항목들 */}
       <div className="flex flex-col gap-3 items-start w-full">
-        {fields.map((animal, index) => {
+        {fields.map((field, index) => {
+          // watchedAnimals에서 실시간 값 사용
+          const animal = watchedAnimals?.[index] || field;
           // React Hook Form의 watch로 해당 인덱스의 description 값 실시간 감시
           const descriptionValue = watch(`animals.${index}.description`) || '';
           return (
-            <div key={animal.id} data-animal-index={index} className="flex flex-col gap-3 items-start w-full">
+            <div key={field.id} data-animal-index={index} className="flex flex-col gap-3 items-start w-full">
               <div className="flex items-center justify-between w-full">
                 <div className="flex flex-col font-semibold justify-center relative shrink-0 text-grayscale-gray6 text-body-xs">
                   <p className="leading-body-xs">
@@ -292,7 +311,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                       }}
                     >
                       <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
-                        {animal.breed.length > 0 ? (
+                        {animal.breed && animal.breed.length > 0 ? (
                           <span className="text-[#4F3B2E]">{animal.breed.join('/')}</span>
                         ) : (
                           <span className="text-grayscale-gray5">품종</span>
@@ -317,7 +336,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                           )}
                           onClick={() => {
                             updateAnimal(index, {
-                              breed: animal.breed.includes(breed) ? [] : [breed],
+                              breed: animal.breed?.includes(breed) ? [] : [breed],
                             });
                             form.trigger(`animals.${index}.breed`);
                           }}
@@ -391,26 +410,28 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                 )}
               </div>
 
-              {/* 엄마 아빠 */}
+              {/* 엄마 선택 */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="input"
                     size={undefined}
                     className="!px-[var(--space-16)] !py-[var(--space-12)] w-full group"
-                    disabled={availableParents.length === 0}
+                    disabled={availableMothers.length === 0}
                     onClick={(e) => {
-                      if (availableParents.length === 0) {
+                      if (availableMothers.length === 0) {
                         e.preventDefault();
                         e.stopPropagation();
                       }
                     }}
                   >
                     <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
-                      {animal.parent ? (
-                        <span className="text-[#4F3B2E]">{animal.parent}</span>
+                      {animal.motherId ? (
+                        <span className="text-[#4F3B2E]">
+                          {findParentName(animal.motherId, availableMothers) || '엄마 (삭제됨)'}
+                        </span>
                       ) : (
-                        <span className="text-grayscale-gray5">엄마 · 아빠</span>
+                        <span className="text-grayscale-gray5">엄마</span>
                       )}
                     </div>
                     <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
@@ -423,24 +444,82 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                   sideOffset={4}
                   avoidCollisions={false}
                 >
-                  {availableParents.length > 0 ? (
-                    availableParents.map((parent) => (
+                  {availableMothers.length > 0 ? (
+                    availableMothers.map((mother) => (
                       <DropdownMenuItem
-                        key={parent.id}
+                        key={mother.id}
                         className={cn(
                           'px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6',
+                          animal.motherId === mother.id && 'bg-tertiary-100',
                         )}
                         onClick={() => {
                           updateAnimal(index, {
-                            parent: animal.parent === parent.name ? '' : parent.name,
+                            motherId: animal.motherId === mother.id ? '' : mother.id,
                           });
                         }}
                       >
-                        {parent.name}
+                        {mother.name}
                       </DropdownMenuItem>
                     ))
                   ) : (
-                    <div className="px-4 py-2 text-body-s text-grayscale-gray5">등록된 부모가 없습니다</div>
+                    <div className="px-4 py-2 text-body-s text-grayscale-gray5">등록된 엄마가 없습니다</div>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* 아빠 선택 */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="input"
+                    size={undefined}
+                    className="!px-[var(--space-16)] !py-[var(--space-12)] w-full group"
+                    disabled={availableFathers.length === 0}
+                    onClick={(e) => {
+                      if (availableFathers.length === 0) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }
+                    }}
+                  >
+                    <div className="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">
+                      {animal.fatherId ? (
+                        <span className="text-[#4F3B2E]">
+                          {findParentName(animal.fatherId, availableFathers) || '아빠 (삭제됨)'}
+                        </span>
+                      ) : (
+                        <span className="text-grayscale-gray5">아빠</span>
+                      )}
+                    </div>
+                    <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-[var(--radix-dropdown-menu-trigger-width)] bg-white p-1 rounded-lg min-w-[353px]"
+                  align="start"
+                  side="bottom"
+                  sideOffset={4}
+                  avoidCollisions={false}
+                >
+                  {availableFathers.length > 0 ? (
+                    availableFathers.map((father) => (
+                      <DropdownMenuItem
+                        key={father.id}
+                        className={cn(
+                          'px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6',
+                          animal.fatherId === father.id && 'bg-tertiary-100',
+                        )}
+                        onClick={() => {
+                          updateAnimal(index, {
+                            fatherId: animal.fatherId === father.id ? '' : father.id,
+                          });
+                        }}
+                      >
+                        {father.name}
+                      </DropdownMenuItem>
+                    ))
+                  ) : (
+                    <div className="px-4 py-2 text-body-s text-grayscale-gray5">등록된 아빠가 없습니다</div>
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -448,14 +527,30 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
               {/* 입양 비용 */}
               <div className="flex flex-col gap-[10px] w-full">
                 <div className="flex gap-3 items-center relative w-full flex-nowrap">
-                  <PriceInput
-                    placeholder={animal.isCounselMode ? '상담 후 공개' : '0'}
-                    className="grow"
-                    disabled={animal.isCounselMode}
-                    value={animal.isCounselMode ? '' : animal.price}
-                    onChange={(e) => {
-                      updateAnimal(index, { price: e.target.value });
-                      form.trigger(`animals.${index}.price`);
+                  <Controller
+                    name={`animals.${index}.price`}
+                    control={control}
+                    render={({ field }) => {
+                      // 천단위 쉼표 포맷팅
+                      const formatPrice = (value: string) => {
+                        const digits = value.replace(/\D/g, '');
+                        return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                      };
+                      const displayValue = animal.isCounselMode ? '' : formatPrice(field.value || '');
+                      return (
+                        <PriceInput
+                          placeholder={animal.isCounselMode ? '상담 후 공개' : '0'}
+                          className="grow"
+                          disabled={animal.isCounselMode}
+                          value={displayValue}
+                          onChange={(e) => {
+                            // 숫자만 추출하여 저장
+                            const digits = e.target.value.replace(/\D/g, '');
+                            field.onChange(digits);
+                          }}
+                          onBlur={field.onBlur}
+                        />
+                      );
                     }}
                   />
                   <button
@@ -464,14 +559,13 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                         // 상담 후 공개 모드로 전환 시 값 초기화
                         updateAnimal(index, {
                           price: '',
-                          isCounselMode: !animal.isCounselMode,
+                          isCounselMode: true,
                         });
                       } else {
                         updateAnimal(index, {
-                          isCounselMode: !animal.isCounselMode,
+                          isCounselMode: false,
                         });
                       }
-                      form.trigger(`animals.${index}.price`);
                     }}
                     className="button-after-counsel shrink-0 whitespace-nowrap"
                   >

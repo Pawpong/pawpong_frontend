@@ -11,7 +11,7 @@ import UndoButton from '@/components/signup-form-section/undo-button';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
-import { completeBreederRegistration, uploadBreederDocuments } from '@/lib/auth';
+import { completeBreederRegistration, uploadBreederDocuments, uploadProfileImage } from '@/lib/auth';
 import useSignupFormStore from '@/stores/signup-form-store';
 import { useRouter } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
@@ -72,19 +72,33 @@ export default function DocumentSection() {
   const breederName = useSignupFormStore((e) => e.breederName);
   const breederLocation = useSignupFormStore((e) => e.breederLocation);
   const breeds = useSignupFormStore((e) => e.breeds);
+  const photo = useSignupFormStore((e) => e.photo);
 
   const [check, setCheck] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<{ type: string; file: File }[]>([]);
   const [uploading, setUploading] = useState(false);
 
-  // 파일 업로드 핸들러
-  const handleFileUpload = (type: string) => (file: File) => {
-    setUploadedFiles((prev) => {
-      // 같은 타입의 파일이 있으면 교체, 없으면 추가
-      const filtered = prev.filter((f) => f.type !== type);
-      return [...filtered, { type, file }];
-    });
+  // 파일 업로드 핸들러 - 파일을 복제하여 저장 (ERR_UPLOAD_FILE_CHANGED 방지)
+  const handleFileUpload = (type: string) => async (file: File) => {
+    try {
+      // 파일 내용을 ArrayBuffer로 읽어서 새 File 객체 생성
+      const arrayBuffer = await file.arrayBuffer();
+      const clonedFile = new File([arrayBuffer], file.name, { type: file.type });
+
+      setUploadedFiles((prev) => {
+        // 같은 타입의 파일이 있으면 교체, 없으면 추가
+        const filtered = prev.filter((f) => f.type !== type);
+        return [...filtered, { type, file: clonedFile }];
+      });
+    } catch (error) {
+      console.error('파일 복제 실패:', error);
+      // 복제 실패 시 원본 파일 사용
+      setUploadedFiles((prev) => {
+        const filtered = prev.filter((f) => f.type !== type);
+        return [...filtered, { type, file }];
+      });
+    }
   };
 
   // Complete breeder registration
@@ -108,7 +122,17 @@ export default function DocumentSection() {
     setSubmitting(true);
 
     try {
-      // 1단계: 파일이 있으면 먼저 업로드
+      // 1단계: 프로필 이미지가 있으면 먼저 업로드
+      if (photo) {
+        setUploading(true);
+        console.log('=== Uploading Profile Image ===');
+
+        await uploadProfileImage(photo, tempId);
+
+        console.log('=== Profile Image Uploaded Successfully ===');
+      }
+
+      // 2단계: 서류 파일이 있으면 업로드
       if (uploadedFiles.length > 0) {
         setUploading(true);
         console.log('=== Uploading Documents ===', uploadedFiles.length);
@@ -116,10 +140,11 @@ export default function DocumentSection() {
         await uploadBreederDocuments(tempId, uploadedFiles, level);
 
         console.log('=== Documents Uploaded Successfully ===');
-        setUploading(false);
       }
 
-      // 2단계: 회원가입 완료
+      setUploading(false);
+
+      // 3단계: 회원가입 완료
       const requestData = {
         tempId,
         provider,
