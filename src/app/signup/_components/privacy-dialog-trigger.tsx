@@ -1,5 +1,5 @@
-import Close from "@/assets/icons/close";
-import { Button } from "@/components/ui/button";
+import Close from '@/assets/icons/close';
+import { Button } from '@/components/ui/button';
 import {
   LargeDialog,
   LargeDialogClose,
@@ -8,18 +8,16 @@ import {
   LargeDialogHeader,
   LargeDialogTitle,
   LargeDialogTrigger,
-} from "@/components/ui/large-dialog";
-import { privacyContents } from "@/constants/privacy";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import React from "react";
+} from '@/components/ui/large-dialog';
+import { privacyContents } from '@/constants/privacy';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import React from 'react';
 
 export default function PrivacyDialogTrigger({
   onAgree,
 
   ...props
-}: { onAgree: () => void } & React.ComponentProps<
-  typeof DialogPrimitive.Trigger
->) {
+}: { onAgree: () => void } & React.ComponentProps<typeof DialogPrimitive.Trigger>) {
   return (
     <LargeDialog>
       <LargeDialogTrigger {...props} />

@@ -1,6 +1,6 @@
-import Alarm from "@/assets/icons/alarm";
-import { Button } from "../ui/button";
-import NotificationDialog from "../notification/notification-dialog";
+import Alarm from '@/assets/icons/alarm';
+import { Button } from '../ui/button';
+import NotificationDialog from '../notification/notification-dialog';
 
 export default function NoticeButton() {
   return (

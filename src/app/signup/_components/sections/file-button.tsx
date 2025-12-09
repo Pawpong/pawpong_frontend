@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import FileIcon from "@/assets/icons/file";
-import CloseTertiary from "@/assets/icons/close-tertiary.svg";
-import ErrorMessage from "@/components/error-message";
-import { useFileUpload } from "../hooks/use-file-upload";
-import { cn } from "@/lib/utils";
+import FileIcon from '@/assets/icons/file';
+import CloseTertiary from '@/assets/icons/close-tertiary.svg';
+import ErrorMessage from '@/components/error-message';
+import { useFileUpload } from '../hooks/use-file-upload';
+import { cn } from '@/lib/utils';
 
 interface FileButtonProps {
   children: React.ReactNode;
@@ -25,42 +25,28 @@ export default function FileButton({
   maxSizeMB = 10,
   errorMessage,
 }: FileButtonProps) {
-  const resolvedErrorMessage =
-    errorMessage ?? `파일은 최대 ${maxSizeMB}MB까지 업로드할 수 있어요`;
+  const resolvedErrorMessage = errorMessage ?? `파일은 최대 ${maxSizeMB}MB까지 업로드할 수 있어요`;
 
-  const { inputRef, fileName, handleClick, handleChange, handleDelete, error } =
-    useFileUpload({
-      onUpload,
-      onDelete,
-      file,
-      maxSizeMB,
-      errorMessage: resolvedErrorMessage,
-    });
+  const { inputRef, fileName, handleClick, handleChange, handleDelete, error } = useFileUpload({
+    onUpload,
+    onDelete,
+    file,
+    maxSizeMB,
+    errorMessage: resolvedErrorMessage,
+  });
 
   return (
     <div className="flex flex-col gap-2 w-full">
-      <input
-        type="file"
-        ref={inputRef}
-        onChange={handleChange}
-        className="hidden"
-      />
+      <input type="file" ref={inputRef} onChange={handleChange} className="hidden" />
       <div
-        className={cn(
-          "bg-white rounded-lg px-4 py-3 flex items-center gap-2 group cursor-pointer",
-          className
-        )}
+        className={cn('bg-white rounded-lg px-4 py-3 flex items-center gap-2 group cursor-pointer', className)}
         onClick={handleClick}
       >
         <FileIcon className="fill-transparent stroke-grayscale-gray5 size-5 shrink-0" />
         {fileName ? (
-          <span className="text-body-m font-medium text-[#4F3B2E] flex-1 truncate">
-            {fileName}
-          </span>
+          <span className="text-body-m font-medium text-[#4F3B2E] flex-1 truncate">{fileName}</span>
         ) : (
-          <span className="text-body-m font-medium text-grayscale-gray5">
-            {children}
-          </span>
+          <span className="text-body-m font-medium text-grayscale-gray5">{children}</span>
         )}
         {fileName && (
           <button

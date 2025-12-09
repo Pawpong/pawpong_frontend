@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Close from "@/assets/icons/close";
-import Location from "@/assets/icons/location";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Close from '@/assets/icons/close';
+import Location from '@/assets/icons/location';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export default function HeaderFilters() {
   const router = useRouter();
@@ -12,8 +12,8 @@ export default function HeaderFilters() {
   const pathname = usePathname();
 
   const filters = [
-    { key: "adoptable", label: "입양 가능", value: "true" },
-    { key: "location", label: "현재 위치", value: "true", icon: Location },
+    { key: 'adoptable', label: '입양 가능', value: 'true' },
+    { key: 'location', label: '현재 위치', value: 'true', icon: Location },
   ];
 
   const toggleQuery = (key: string, value: string) => {
@@ -42,12 +42,12 @@ export default function HeaderFilters() {
             className={cn(
               {
                 [buttonVariants({
-                  variant: "default",
-                  className: "border-primary hover:text-point-basic!  ",
+                  variant: 'default',
+                  className: 'border-primary hover:text-point-basic!  ',
                 })]: isActive,
               },
-              "py-2 px-3 text-body-xs h-auto gap-2",
-              { "pl-2!": filter.icon }
+              'py-2 px-3 text-body-xs h-auto gap-2',
+              { 'pl-2!': filter.icon },
             )}
           >
             <div className="flex items-center gap-1">

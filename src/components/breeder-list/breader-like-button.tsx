@@ -1,46 +1,46 @@
-"use client";
+'use client';
 
-import Heart from "@/assets/icons/heart.svg";
-import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
-import HeartFill from "@/assets/icons/heart-fill.svg";
-import { useSavedStore } from "@/stores/saved-store";
-import { useEffect, useState } from "react";
+import Heart from '@/assets/icons/heart.svg';
+import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
+import HeartFill from '@/assets/icons/heart-fill.svg';
+import { useToggleFavorite } from '@/app/(main)/saved/_hooks/use-favorites';
+import { useState } from 'react';
 
 interface BreederLikeButtonProps {
   className?: string;
   breederId: string;
+  initialIsFavorited?: boolean;
 }
 
 export default function BreederLikeButton({
   className,
   breederId,
+  initialIsFavorited = false,
 }: BreederLikeButtonProps) {
-  const { isSaved, toggleSaved } = useSavedStore();
-  const [isHydrated, setIsHydrated] = useState(false);
+  const [isLiked, setIsLiked] = useState(initialIsFavorited);
+  const { toggle, isLoading } = useToggleFavorite();
 
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  const isLiked = isHydrated ? isSaved(breederId) : false;
+    // 낙관적 업데이트 (Optimistic UI)
+    setIsLiked(!isLiked);
 
-  const handleClick = () => {
-    toggleSaved(breederId);
+    // API 호출
+    toggle(breederId, isLiked);
   };
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      className={cn("text-grayscale-white size-8 ", className)}
+      className={cn('text-grayscale-white size-8 ', className)}
       onClick={handleClick}
+      disabled={isLoading}
     >
-      {isLiked ? (
-        <HeartFill className="size-8 " />
-      ) : (
-        <Heart className="size-8 " />
-      )}
+      {isLiked ? <HeartFill className="size-8 " /> : <Heart className="size-8 " />}
     </Button>
   );
 }

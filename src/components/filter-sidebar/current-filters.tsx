@@ -1,6 +1,6 @@
-import Close from "@/assets/icons/close";
-import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
+import Close from '@/assets/icons/close';
+import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
 
 // --- 수정: props 타입 정의 및 onRemove 추가 ---
 type CurrentFiltersProps = {
@@ -12,7 +12,7 @@ export default function CurrentFilters({
   className,
   selectedLeaves,
   onRemove,
-}: CurrentFiltersProps & React.ComponentProps<"div">) {
+}: CurrentFiltersProps & React.ComponentProps<'div'>) {
   return (
     <div className={cn(`flex flex-wrap gap-2`, className)}>
       {(selectedLeaves || []).map((filter) => (

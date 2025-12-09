@@ -1,6 +1,6 @@
-import DogAndCat from "@/assets/icons/dog-and-cat.svg";
+import DogAndCat from '@/assets/icons/dog-and-cat.svg';
 
-import ExploreButton from "./explore-button";
+import ExploreButton from './explore-button';
 export default function EmptySavedList() {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-center gap-[var(--space-40)]">

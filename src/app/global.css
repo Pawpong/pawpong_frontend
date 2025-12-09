@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "../styles//button.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '../styles//button.css';
 @custom-variant dark (&:is(.dark *));
 
 /* shadcn 기본 테마 설정 */

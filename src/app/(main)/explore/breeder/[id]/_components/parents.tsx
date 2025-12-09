@@ -1,8 +1,8 @@
-import BreederProfileSection from "@/components/breeder-profile/breeder-profile-section";
-import BreederProfileSectionHeader from "@/components/breeder-profile/breeder-profile-section-header";
-import BreederProfileSectionMore from "@/components/breeder-profile/breeder-profile-section-more";
-import BreederProfileSectionTitle from "@/components/breeder-profile/breeder-profile-section-title";
-import AnimalProfile from "./animal-profile";
+import BreederProfileSection from '@/components/breeder-profile/breeder-profile-section';
+import BreederProfileSectionHeader from '@/components/breeder-profile/breeder-profile-section-header';
+import BreederProfileSectionMore from '@/components/breeder-profile/breeder-profile-section-more';
+import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
+import AnimalProfile from './animal-profile';
 
 export default function Parents({
   data,
@@ -11,7 +11,7 @@ export default function Parents({
     id: string;
     avatarUrl: string;
     name: string;
-    sex: "male" | "female";
+    sex: 'male' | 'female';
     birth: string;
     price: string;
     breed: string;
@@ -29,13 +29,13 @@ export default function Parents({
             id: string;
             avatarUrl: string;
             name: string;
-            sex: "male" | "female";
+            sex: 'male' | 'female';
             birth: string;
             price: string;
             breed: string;
           }) => (
             <AnimalProfile key={e.id} data={e} />
-          )
+          ),
         )}
       </div>
     </BreederProfileSection>

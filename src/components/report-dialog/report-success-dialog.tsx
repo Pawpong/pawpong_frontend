@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   AlertDialog,
@@ -7,10 +7,10 @@ import {
   AlertDialogOverlay,
   AlertDialogPortal,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
-import { cn } from "@/lib/utils";
-import Check from "@/assets/icons/check";
+} from '@/components/ui/alert-dialog';
+import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
+import { cn } from '@/lib/utils';
+import Check from '@/assets/icons/check';
 
 interface ReportSuccessDialogProps {
   open: boolean;
@@ -18,11 +18,7 @@ interface ReportSuccessDialogProps {
   onConfirm?: () => void;
 }
 
-export default function ReportSuccessDialog({
-  open,
-  onOpenChange,
-  onConfirm,
-}: ReportSuccessDialogProps) {
+export default function ReportSuccessDialog({ open, onOpenChange, onConfirm }: ReportSuccessDialogProps) {
   const handleConfirm = () => {
     onOpenChange(false);
     onConfirm?.();
@@ -34,7 +30,7 @@ export default function ReportSuccessDialog({
         <AlertDialogOverlay className="bg-[var(--color-alpha-dimmer)]" />
         <AlertDialogPrimitive.Content
           className={cn(
-            "bg-white data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 flex flex-col w-full max-w-[20rem] sm:max-w-[360px] translate-x-[-50%] translate-y-[-50%] rounded-[16px] shadow-lg duration-200 overflow-hidden"
+            'bg-white data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 flex flex-col w-full max-w-[20rem] sm:max-w-[360px] translate-x-[-50%] translate-y-[-50%] rounded-[16px] shadow-lg duration-200 overflow-hidden',
           )}
         >
           {/* 상단 영역 */}

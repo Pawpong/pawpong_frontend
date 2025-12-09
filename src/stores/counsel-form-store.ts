@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export interface CounselFormData {
   // 개인정보 동의
@@ -26,7 +26,6 @@ export interface CounselFormData {
   // 케어 관련
   basicCare: boolean;
   medicalExpense: boolean;
-  neuteringAgreement: boolean;
 
   // 선택 사항
   interestedAnimal: string;
@@ -49,7 +48,7 @@ export const useCounselFormStore = create<CounselFormStore>()(
       clearCounselFormData: () => set({ counselFormData: null }),
     }),
     {
-      name: "counsel-form-storage",
-    }
-  )
+      name: 'counsel-form-storage',
+    },
+  ),
 );

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import SignupFormItems from "@/components/signup-form-section/signup-form-items";
-import { LEVEL_INFO, type Animal, type Level } from "./document-constants";
-import DocumentUploadFields from "./document-upload-fields";
-import LevelTabs from "./level-tabs";
-import OathCheckbox from "./oath-checkbox";
+import SignupFormItems from '@/components/signup-form-section/signup-form-items';
+import { LEVEL_INFO, type Animal, type Level } from './document-constants';
+import DocumentUploadFields from './document-upload-fields';
+import LevelTabs from './level-tabs';
+import OathCheckbox from './oath-checkbox';
 
 interface DocumentFormContentProps {
   level: Level;
@@ -41,11 +41,7 @@ export default function DocumentFormContent({
           onFileUpload={onFileUpload}
           onFileDelete={onFileDelete}
         />
-        <OathCheckbox
-          level={level}
-          checked={oathChecked}
-          onCheckedChange={onOathCheckedChange}
-        />
+        <OathCheckbox level={level} checked={oathChecked} onCheckedChange={onOathCheckedChange} />
       </div>
     </SignupFormItems>
   );

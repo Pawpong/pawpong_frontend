@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, cloneElement, isValidElement } from "react";
-import { useRouter } from "next/navigation";
+import { useState, cloneElement, isValidElement } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,10 +10,10 @@ import {
   AlertDialogOverlay,
   AlertDialogPortal,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
-import { cn } from "@/lib/utils";
-import ErrorIcon from "@/assets/icons/error";
+} from '@/components/ui/alert-dialog';
+import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
+import { cn } from '@/lib/utils';
+import ErrorIcon from '@/assets/icons/error';
 
 interface ExitConfirmDialogProps {
   /**
@@ -59,12 +59,9 @@ export default function ExitConfirmDialog({
   // 외부 제어 또는 내부 제어
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : internalOpen;
-  const setOpen =
-    isControlled && controlledOnOpenChange
-      ? controlledOnOpenChange
-      : setInternalOpen;
+  const setOpen = isControlled && controlledOnOpenChange ? controlledOnOpenChange : setInternalOpen;
 
-  const check = () => (typeof hasData === "function" ? hasData() : hasData);
+  const check = () => (typeof hasData === 'function' ? hasData() : hasData);
 
   // 페이지 이동 시 호출 (예: 뒤로가기 버튼, router.push)
   const handleExit = () => {
@@ -84,7 +81,7 @@ export default function ExitConfirmDialog({
     if (onConfirm) {
       onConfirm();
     } else {
-      router.push("/");
+      router.push('/');
     }
   };
 
@@ -112,7 +109,7 @@ export default function ExitConfirmDialog({
               }
               handleExit();
             },
-          }
+          },
         )
       : children;
 
@@ -125,7 +122,7 @@ export default function ExitConfirmDialog({
           <AlertDialogOverlay className="bg-[var(--color-alpha-dimmer)]" />
           <AlertDialogPrimitive.Content
             className={cn(
-              "bg-white data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 flex flex-col w-full max-w-[360px] translate-x-[-50%] translate-y-[-50%] rounded-[16px] shadow-lg duration-200 overflow-hidden"
+              'bg-white data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 flex flex-col w-full max-w-[360px] translate-x-[-50%] translate-y-[-50%] rounded-[16px] shadow-lg duration-200 overflow-hidden',
             )}
           >
             {/* 상단 영역 */}
