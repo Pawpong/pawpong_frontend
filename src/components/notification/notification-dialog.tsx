@@ -174,7 +174,7 @@ export default function NotificationDialog({
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
-        className="fixed inset-x-0 top-[64px] bottom-0 w-full max-w-full p-0 flex flex-col overflow-hidden translate-x-0 translate-y-0 rounded-none border-0 lg:w-[480px] lg:h-[816px] lg:max-w-[480px] lg:max-h-[816px] lg:top-[64px] lg:right-[48px] lg:left-auto lg:rounded-2xl lg:shadow-[0px_0px_13px_0px_rgba(12,17,29,0.08)]"
+        className="fixed inset-x-0 top-[64px] bottom-0 w-full max-w-full p-0 flex flex-col overflow-hidden translate-x-0 translate-y-0 rounded-none border-0 lg:w-[480px] lg:h-[816px] lg:max-w-[480px] lg:max-h-[816px] lg:top-[64px] lg:right-[48px] lg:left-auto lg:rounded-2xl lg:shadow-[0px_0px_13px_0px_rgba(12,17,29,0.08)]  data-[state=open]:slide-in-from-right-full data-[state=closed]:slide-out-to-right-full "
         overlayClassName="inset-0 bg-transparent"
         showCloseButton={false}
       >
@@ -196,7 +196,7 @@ export default function NotificationDialog({
         </div>
 
         {/* 스크롤 가능한 콘텐츠 영역 */}
-        <ScrollArea className="flex-1 min-h-0 px-5 md:px-10">
+        <ScrollArea className="flex-1 min-h-0 px-5 md:px-10 lg:px-[12px] lg:pb-6">
           <div className="flex flex-col gap-6 ">
             {/* 신규 섹션 */}
             {newNotifications.length > 0 && (
