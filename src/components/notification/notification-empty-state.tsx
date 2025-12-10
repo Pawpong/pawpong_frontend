@@ -1,17 +1,14 @@
-"use client";
+import Alarm from "@/assets/icons/alarm";
 
 export default function NotificationEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 px-4">
-      <div className="w-16 h-16 mb-4 flex items-center justify-center bg-grayscale-gray1 rounded-full">
-        <span className="text-3xl">🔔</span>
+    <div className="flex flex-col items-center py-[120px]">
+      <div className="flex flex-col items-center gap-7">
+        <Alarm className="w-[2.70831rem] h-[2.54938rem] text-grayscale-gray4" />
+        <p className="text-body-l font-semibold text-grayscale-gray5">
+          아직 도착한 알림이 없어요.
+        </p>
       </div>
-      <p className="text-body-m font-medium text-primary mb-1">
-        알림이 없습니다
-      </p>
-      <p className="text-body-s text-grayscale-gray5 text-center">
-        새로운 알림이 도착하면 여기에 표시됩니다
-      </p>
     </div>
   );
 }

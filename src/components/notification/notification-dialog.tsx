@@ -102,6 +102,7 @@ export default function NotificationDialog({
             ? "lg:h-[816px] lg:max-h-[816px]"
             : "lg:h-auto lg:max-h-none"
         }`}
+        overlayClassName="inset-0 bg-transparent"
         showCloseButton={false}
       >
         {/* 접근성을 위한 DialogTitle */}
