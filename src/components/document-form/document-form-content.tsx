@@ -10,6 +10,7 @@ interface DocumentFormContentProps {
   level: Level;
   animal: Animal;
   documents: Record<string, File | null>;
+  existingFileNames?: Record<string, string>;
   oathChecked: boolean;
   onLevelChange: (level: Level) => void;
   onFileUpload: (key: string) => (file: File) => void;
@@ -21,6 +22,7 @@ export default function DocumentFormContent({
   level,
   animal,
   documents,
+  existingFileNames,
   oathChecked,
   onLevelChange,
   onFileUpload,
@@ -38,6 +40,7 @@ export default function DocumentFormContent({
           level={level}
           animal={animal}
           documents={documents}
+          existingFileNames={existingFileNames}
           onFileUpload={onFileUpload}
           onFileDelete={onFileDelete}
         />

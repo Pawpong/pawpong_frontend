@@ -47,6 +47,9 @@ export default function DocumentEditSection() {
         setIsLoading(true);
         const status = await getVerificationStatus();
 
+        console.log('Verification status:', status);
+        console.log('Documents:', status.documents);
+
         // 기존 레벨 설정
         if (status.level) {
           setLevel(status.level);
@@ -54,11 +57,20 @@ export default function DocumentEditSection() {
 
         // 기존 문서 상태 설정
         if (status.documents && status.documents.length > 0) {
+          // 문서 타입을 한글로 매핑
+          const docTypeToLabel: Record<string, string> = {
+            idCard: '신분증 사본',
+            businessLicense: '동물생산업 등록증',
+            contractSample: '표준 입양계약서 샘플',
+            breederDogCertificate: '강아지 브리더 인증 서류',
+            breederCatCertificate: '고양이 브리더 인증 서류',
+          };
+
           const docState: Record<string, DocumentState> = {};
           status.documents.forEach((doc) => {
             docState[doc.type] = {
               file: null,
-              fileName: doc.type,
+              fileName: docTypeToLabel[doc.type] || doc.type,
               url: doc.url,
               isUploaded: true,
             };
@@ -130,6 +142,18 @@ export default function DocumentEditSection() {
     const result: Record<string, File | null> = {};
     Object.entries(documents).forEach(([key, state]) => {
       result[key] = state.file;
+    });
+    return result;
+  }, [documents]);
+
+  // 기존 파일명 추출 (서버에서 이미 업로드된 파일들)
+  const getExistingFileNames = useCallback((): Record<string, string> => {
+    const result: Record<string, string> = {};
+    Object.entries(documents).forEach(([key, state]) => {
+      if (state.isUploaded && state.url) {
+        // URL에서 파일명 추출 또는 타입명 사용
+        result[key] = state.fileName || key;
+      }
     });
     return result;
   }, [documents]);
@@ -220,6 +244,7 @@ export default function DocumentEditSection() {
           level={level}
           animal={animal}
           documents={getDocumentsForForm()}
+          existingFileNames={getExistingFileNames()}
           oathChecked={oathChecked}
           onLevelChange={(newLevel) => {
             setLevel(newLevel);

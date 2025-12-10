@@ -12,6 +12,7 @@ interface FileButtonProps {
   onUpload?: (file: File) => void;
   onDelete?: () => void;
   file?: File | null;
+  existingFileName?: string; // 기존 업로드된 파일명 (서버에서 불러온 경우)
   maxSizeMB?: number;
   errorMessage?: string;
 }
@@ -22,6 +23,7 @@ export default function FileButton({
   onUpload,
   onDelete,
   file,
+  existingFileName,
   maxSizeMB = 10,
   errorMessage,
 }: FileButtonProps) {
@@ -35,6 +37,9 @@ export default function FileButton({
     errorMessage: resolvedErrorMessage,
   });
 
+  // 표시할 파일명: 새로 선택한 파일 > 기존 업로드된 파일
+  const displayFileName = fileName || existingFileName;
+
   return (
     <div className="flex flex-col gap-2 w-full">
       <input type="file" ref={inputRef} onChange={handleChange} className="hidden" />
@@ -43,12 +48,12 @@ export default function FileButton({
         onClick={handleClick}
       >
         <FileIcon className="fill-transparent stroke-grayscale-gray5 size-5 shrink-0" />
-        {fileName ? (
-          <span className="text-body-m font-medium text-[#4F3B2E] flex-1 truncate">{fileName}</span>
+        {displayFileName ? (
+          <span className="text-body-m font-medium text-[#4F3B2E] flex-1 truncate">{displayFileName}</span>
         ) : (
           <span className="text-body-m font-medium text-grayscale-gray5">{children}</span>
         )}
-        {fileName && (
+        {displayFileName && (
           <button
             type="button"
             onClick={handleDelete}

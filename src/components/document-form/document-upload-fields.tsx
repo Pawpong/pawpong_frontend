@@ -7,6 +7,7 @@ interface DocumentUploadFieldsProps {
   level: Level;
   animal: Animal;
   documents: Record<string, File | null>;
+  existingFileNames?: Record<string, string>; // 기존 업로드된 파일명들
   onFileUpload: (key: string) => (file: File) => void;
   onFileDelete: (key: string) => () => void;
 }
@@ -15,6 +16,7 @@ export default function DocumentUploadFields({
   level,
   animal,
   documents,
+  existingFileNames = {},
   onFileUpload,
   onFileDelete,
 }: DocumentUploadFieldsProps) {
@@ -26,6 +28,7 @@ export default function DocumentUploadFields({
       <div className="flex flex-col gap-2.5">
         <FileButton
           file={documents[DOCUMENT_KEYS.ID_CARD] ?? null}
+          existingFileName={existingFileNames[DOCUMENT_KEYS.ID_CARD]}
           onUpload={onFileUpload(DOCUMENT_KEYS.ID_CARD)}
           onDelete={onFileDelete(DOCUMENT_KEYS.ID_CARD)}
         >
@@ -40,6 +43,7 @@ export default function DocumentUploadFields({
       <div className="flex flex-col gap-3">
         <FileButton
           file={documents[DOCUMENT_KEYS.BUSINESS_LICENSE] ?? null}
+          existingFileName={existingFileNames[DOCUMENT_KEYS.BUSINESS_LICENSE]}
           onUpload={onFileUpload(DOCUMENT_KEYS.BUSINESS_LICENSE)}
           onDelete={onFileDelete(DOCUMENT_KEYS.BUSINESS_LICENSE)}
         >
@@ -48,6 +52,7 @@ export default function DocumentUploadFields({
         {level === 'elite' && (
           <FileButton
             file={documents[DOCUMENT_KEYS.CONTRACT_SAMPLE] ?? null}
+            existingFileName={existingFileNames[DOCUMENT_KEYS.CONTRACT_SAMPLE]}
             onUpload={onFileUpload(DOCUMENT_KEYS.CONTRACT_SAMPLE)}
             onDelete={onFileDelete(DOCUMENT_KEYS.CONTRACT_SAMPLE)}
           >
@@ -61,6 +66,7 @@ export default function DocumentUploadFields({
         <div className="flex flex-col gap-2.5">
           <FileButton
             file={documents[breederDocKey] ?? null}
+            existingFileName={existingFileNames[breederDocKey]}
             onUpload={onFileUpload(breederDocKey)}
             onDelete={onFileDelete(breederDocKey)}
           >
