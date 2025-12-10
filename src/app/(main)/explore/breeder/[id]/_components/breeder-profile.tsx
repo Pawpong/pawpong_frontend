@@ -13,6 +13,7 @@ import type { Animal } from '@/stores/signup-form-store';
 export default function BreederProfile({
   data: { avatarUrl, nickname, level, location, priceRange, breeds, animal },
   breederId,
+  isOwnProfile = false,
 }: {
   data: {
     avatarUrl: string;
@@ -24,6 +25,7 @@ export default function BreederProfile({
     animal: Animal;
   };
   breederId: string;
+  isOwnProfile?: boolean;
 }) {
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
@@ -74,8 +76,8 @@ export default function BreederProfile({
             </div>
           </div>
         </div>
-        {/* 데스크탑(lg)에서만 버튼 표시 */}
-        {isLg && (
+        {/* 데스크탑(lg)에서만 버튼 표시, 브리더 본인이면 숨김 */}
+        {isLg && !isOwnProfile && (
           <Button
             variant="counsel"
             className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"

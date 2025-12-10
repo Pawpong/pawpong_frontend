@@ -19,7 +19,7 @@ export interface BreederPetItem {
 
 interface BreederPetsResponse {
   items: BreederPetItem[];
-  statusCounts: {
+  statusCounts?: {
     available: number;
     reserved: number;
     adopted: number;
@@ -40,7 +40,7 @@ export function useBreederPets(breederId: string) {
     queryFn: async () => {
       // 분양 가능한 개체만 조회 (status=available)
       const result = await getBreederPets(breederId, 1, 50);
-      return result;
+      return result as BreederPetsResponse;
     },
     enabled: !!breederId,
     staleTime: 1000 * 60 * 5, // 5분
