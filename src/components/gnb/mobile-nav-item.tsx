@@ -156,38 +156,38 @@ function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolea
                 const isLogout = child.action === 'logout';
 
                 return (
-                <SheetClose asChild key={child.name}>
-                  <Link
-                    href={child.href}
-                    onClick={(e) => {
-                      if (isDisabled) {
-                        e.preventDefault();
-                        return;
-                      }
-                      if (isLogout) {
-                        handleLogout(e);
-                        return;
-                      }
-                      handleLinkClick(e, child.href);
-                    }}
-                    className={cn(
-                      'flex items-center gap-2 rounded bg-white pl-0 pr-4 py-2',
-                      isDisabled && 'pointer-events-none',
-                    )}
-                  >
-                    {ChildIcon && <ChildIcon className="size-5 shrink-0" />}
-                    <p
+                  <SheetClose asChild key={child.name}>
+                    <Link
+                      href={child.href}
+                      onClick={(e) => {
+                        if (isDisabled) {
+                          e.preventDefault();
+                          return;
+                        }
+                        if (isLogout) {
+                          handleLogout(e);
+                          return;
+                        }
+                        handleLinkClick(e, child.href);
+                      }}
                       className={cn(
-                        'text-body-s font-medium',
-                        isMuted ? 'text-grayscale-gray5' : isDisabled ? 'text-[#e1e1e1]' : 'text-grayscale-gray6',
+                        'flex items-center gap-2 rounded bg-white pl-0 pr-4 py-2',
+                        isDisabled && 'pointer-events-none',
                       )}
                     >
-                      {child.name}
-                    </p>
-                  </Link>
-                </SheetClose>
-              );
-            })}
+                      {ChildIcon && <ChildIcon className="size-5 shrink-0" />}
+                      <p
+                        className={cn(
+                          'text-body-s font-medium',
+                          isMuted ? 'text-grayscale-gray5' : isDisabled ? 'text-[#e1e1e1]' : 'text-grayscale-gray6',
+                        )}
+                      >
+                        {child.name}
+                      </p>
+                    </Link>
+                  </SheetClose>
+                );
+              })}
           </div>
         </CollapsibleContent>
         {!isLast && <Separator className="mt-6" />}

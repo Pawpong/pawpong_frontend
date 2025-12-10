@@ -73,11 +73,15 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
           ? (item.children?.some((child) => currNav === child.href.slice(1)) ?? false)
           : false;
 
-        const active = isApplicationMenu
-          ? currNav === 'application' || currNav === 'receivedApplications'
-          : hasChildren
-            ? currNav === item.href.slice(1) || isChildActive
-            : currNav === item.href.slice(1);
+        // 홈화면일 때는 아무것도 활성화하지 않음
+        const isHomePage = pathname === '/';
+        const active = isHomePage
+          ? false
+          : isApplicationMenu
+            ? currNav === 'application' || currNav === 'receivedApplications'
+            : hasChildren
+              ? currNav === item.href.slice(1) || isChildActive
+              : currNav === item.href.slice(1);
 
         const Icon = active ? item.iconFill : item.icon;
 

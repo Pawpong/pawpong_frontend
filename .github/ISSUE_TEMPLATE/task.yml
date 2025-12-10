@@ -9,3 +9,12 @@ body:
       placeholder: '55'
     validations:
       required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 작업 설명
+      placeholder: |
+        - 구현할 기능
+        - 작업 내용
+    validations:
+      required: true
