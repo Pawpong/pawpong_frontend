@@ -30,6 +30,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!hasHydrated) return;
 
+    // 이미 완전한 user 정보가 있으면 조회하지 않음
+    // userId가 있고, 브리더인 경우 verificationStatus도 있어야 완전한 상태
+    const isCompleteUser =
+      user?.userId && (user.role !== 'breeder' || user.verificationStatus !== undefined);
+    if (isCompleteUser) return;
+
     const initAuth = async () => {
       try {
         const cookieRole = getUserRoleFromCookie();
@@ -40,8 +46,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (cookieRole === 'breeder') {
           const profile = await getMyBreederProfile();
-          // API 응답에서 verificationInfo는 breeder.verification 객체를 직접 반환
-          // 따라서 verificationInfo.status로 접근해야 함
           const verificationStatus =
             (profile.verificationInfo as any)?.status ||
             profile.verificationInfo?.verificationStatus ||
@@ -68,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     initAuth();
-  }, [hasHydrated, setUser]);
+  }, [hasHydrated, setUser, user?.userId, user?.role, user?.verificationStatus]);
 
   return <>{children}</>;
 }
