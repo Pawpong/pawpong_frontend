@@ -1,123 +1,95 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import Breeder from "@/components/breeder-list/breeder";
-import BreederContent from "@/components/breeder-list/breeder-content";
-import BreederDescription from "@/components/breeder-list/breader-description";
-import BreederHeader from "@/components/breeder-list/breeder-header";
-import BreederImage from "@/components/breeder-list/breeder-image";
-import BreederLocation from "@/components/breeder-list/breeder-location";
-import BreederName from "@/components/breeder-list/breeder-name";
-import BreederPrice from "@/components/breeder-list/breeder-price";
-import BreederProfile from "@/components/breeder-list/breeder-profile";
-import BreederTags from "@/components/breeder-list/breeder-tags";
-import BreederAvatar from "@/components/breeder-list/breeder-avatar";
-import BreederLikeButton from "@/components/breeder-list/breader-like-button";
-import AdoptionStatusBadge from "@/components/adoption-status-badge";
-import LevelBadge from "@/components/level-badge";
-import GrayDot from "@/assets/icons/gray-dot.svg";
-import { useSavedStore } from "@/stores/saved-store";
-import BreederList from "@/components/breeder-list/breeder-list";
-import Container from "@/components/ui/container";
-import EmptySavedList from "./empty-saved-list";
-
-// SiteBreederList와 동일한 데이터 사용
-const breederListInfo = [
-  {
-    id: "1",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite" as const,
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "available" as const,
-  },
-  {
-    id: "2",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite" as const,
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "reserved" as const,
-  },
-  {
-    id: "3",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite" as const,
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "completed" as const,
-  },
-  {
-    id: "4",
-    avatar: "/avatar-sample.png",
-    name: "범과같이",
-    level: "elite" as const,
-    location: "경기도 용인시",
-    price: "500,000 - 1,000,000원",
-    tags: ["시베리안(트래디셔널, 네바마스커레이드)", "브리티쉬 롱헤어"],
-    image: "/main-img-sample.png",
-    status: "available" as const,
-  },
-];
+import { Button } from '@/components/ui/button';
+import Breeder from '@/components/breeder-list/breeder';
+import BreederContent from '@/components/breeder-list/breeder-content';
+import BreederDescription from '@/components/breeder-list/breader-description';
+import BreederHeader from '@/components/breeder-list/breeder-header';
+import BreederImage from '@/components/breeder-list/breeder-image';
+import BreederLocation from '@/components/breeder-list/breeder-location';
+import BreederName from '@/components/breeder-list/breeder-name';
+import BreederPrice from '@/components/breeder-list/breeder-price';
+import BreederProfile from '@/components/breeder-list/breeder-profile';
+import BreederTags from '@/components/breeder-list/breeder-tags';
+import BreederAvatar from '@/components/breeder-list/breeder-avatar';
+import BreederLikeButton from '@/components/breeder-list/breader-like-button';
+import AdoptionStatusBadge from '@/components/adoption-status-badge';
+import LevelBadge from '@/components/level-badge';
+import GrayDot from '@/assets/icons/gray-dot.svg';
+import BreederList from '@/components/breeder-list/breeder-list';
+import Container from '@/components/ui/container';
+import EmptySavedList from './empty-saved-list';
+import { useFavorites } from '../_hooks/use-favorites';
 
 export default function SavedList() {
-  const { savedBreederIds } = useSavedStore();
+  const { data, isLoading, error } = useFavorites(1, 20);
 
-  const savedBreeders = breederListInfo.filter((breeder) =>
-    savedBreederIds.includes(breeder.id)
-  );
+  if (isLoading) {
+    return (
+      <Container>
+        <div className="flex-1 @container">
+          <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">찜한 브리더</div>
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-grayscale-500">즐겨찾기 목록을 불러오는 중...</div>
+          </div>
+        </div>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <div className="flex-1 @container">
+          <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">찜한 브리더</div>
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-red-500">즐겨찾기 목록을 불러오는 데 실패했습니다.</div>
+          </div>
+        </div>
+      </Container>
+    );
+  }
+
+  const savedBreeders = data?.items || [];
 
   return (
     <Container>
       <div className="flex-1 @container">
-        <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">
-          찜한 브리더
-        </div>
+        <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">찜한 브리더</div>
         {savedBreeders.length === 0 ? (
           <EmptySavedList />
         ) : (
           <BreederList>
-            {savedBreeders.map((breeder, index) => (
-              <Breeder key={index}>
+            {savedBreeders.map((breeder: any, index: number) => (
+              <Breeder key={breeder.breederId || index}>
                 <BreederProfile>
                   <BreederHeader>
-                    <BreederAvatar src={breeder.avatar} />
+                    <BreederAvatar src={breeder.profileImageUrl || '/avatar-sample.png'} />
                     <div className="flex items-center gap-2">
-                      <BreederName>{breeder.name}</BreederName>
-                      <LevelBadge level={breeder.level} />
+                      <BreederName>{breeder.breederName}</BreederName>
+                      <LevelBadge level={'new' as 'elite' | 'new'} />
                     </div>
                   </BreederHeader>
                   <BreederContent>
                     <BreederDescription>
                       <BreederLocation>{breeder.location}</BreederLocation>
                       <GrayDot className="block sm:hidden lg:block align-middle" />
-                      <BreederPrice>{breeder.price}</BreederPrice>
+                      <BreederPrice>평점 {breeder.averageRating} ({breeder.reviewCount})</BreederPrice>
                     </BreederDescription>
                     <BreederTags>
-                      {breeder.tags.map((tag, idx) => (
-                        <Button variant="secondary" key={idx}>
-                          {tag}
-                        </Button>
-                      ))}
+                      <Button variant="secondary">
+                        찜한 날짜: {new Date(breeder.addedAt).toLocaleDateString('ko-KR')}
+                      </Button>
                     </BreederTags>
                   </BreederContent>
                 </BreederProfile>
                 <div className="relative">
-                  <BreederImage src="/main-img-sample.png" />
+                  <BreederImage src={breeder.profileImageUrl || '/avatar-sample.png'} />
                   <div className="absolute top-0 right-0 p-3">
-                    <BreederLikeButton breederId={breeder.id} />
+                    <BreederLikeButton breederId={breeder.breederId} initialIsFavorited={true} />
                   </div>
                   <div className="absolute bottom-0 right-0 p-3">
-                    <AdoptionStatusBadge status={breeder.status} />
+                    <AdoptionStatusBadge status={'available'} />
                   </div>
                 </div>
               </Breeder>

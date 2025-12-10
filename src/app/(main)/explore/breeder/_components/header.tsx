@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import ArrowRight from "@/assets/icons/arrow-right";
-import Paw from "@/assets/icons/paw";
-import Siren from "@/assets/icons/siren";
-import { Button } from "@/components/ui/button";
-import ReportDialog from "@/components/report-dialog/report-dialog";
+import { useState } from 'react';
+import ArrowRight from '@/assets/icons/arrow-right';
+import Paw from '@/assets/icons/paw';
+import Siren from '@/assets/icons/siren';
+import { Button } from '@/components/ui/button';
+import ReportDialog from '@/components/report-dialog/report-dialog';
 
 interface HeaderProps {
   breederNickname: string;
@@ -22,12 +22,7 @@ export default function Header({ breederNickname, breederId }: HeaderProps) {
           <ArrowRight className="size-7" />
         </Button>
         <div className="flex gap-3">
-          <Button
-            variant="secondary"
-            size="icon"
-            className="size-9"
-            onClick={() => setIsReportDialogOpen(true)}
-          >
+          <Button variant="secondary" size="icon" className="size-9" onClick={() => setIsReportDialogOpen(true)}>
             <Siren className="size-7" />
           </Button>
           <Button variant="secondary" size="icon" className="size-9">

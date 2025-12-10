@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Close from "@/assets/icons/close";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import Close from '@/assets/icons/close';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import {
   LargeDialog,
   LargeDialogClose,
@@ -13,28 +13,76 @@ import {
   LargeDialogHeader,
   LargeDialogTitle,
   LargeDialogTrigger,
-} from "@/components/ui/large-dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { locationFilters } from "@/constants/filter";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
+} from '@/components/ui/large-dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { cn } from '@/lib/utils';
+import { useState, useEffect } from 'react';
+import { getAllDistricts, type District } from '@/lib/districts';
 
 export default function LocationSelectDialogTrigger({
   onSubmitLocation,
+  initialValue = null,
   ...props
-}: { onSubmitLocation: (value: string | null) => void } & React.ComponentProps<
+}: { onSubmitLocation: (value: string | null) => void; initialValue?: string | null } & React.ComponentProps<
   typeof DialogTrigger
 >) {
-  const isMobile = useBreakpoint("md") === false;
-  const [selectedGroup, setSelectedGroup] = useState(
-    locationFilters.children![0].label
-  );
-  const [selected, setSelected] = useState<string | null>(null);
+  const isMobile = useBreakpoint('md') === false;
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedGroup, setSelectedGroup] = useState('');
+  const [selected, setSelected] = useState<string | null>(initialValue);
+
+  // Sync with initialValue when it changes
+  useEffect(() => {
+    setSelected(initialValue);
+    // Set selectedGroup based on initialValue
+    if (initialValue) {
+      const city = initialValue.split(' ')[0];
+      if (city) {
+        setSelectedGroup(city);
+      }
+    }
+  }, [initialValue]);
+
+  // API에서 지역 데이터 가져오기
+  useEffect(() => {
+    const fetchDistricts = async () => {
+      try {
+        setLoading(true);
+        const data = await getAllDistricts();
+        setDistricts(data);
+        if (data.length > 0) {
+          setSelectedGroup(data[0].city);
+        }
+      } catch (error) {
+        console.error('지역 데이터 로딩 실패:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDistricts();
+  }, []);
 
   const onSelect = (value: string | null) => {
     setSelected(value);
   };
+  if (loading) {
+    return (
+      <LargeDialog>
+        <LargeDialogTrigger {...props} />
+        <LargeDialogContent className="h-full md:size-150">
+          <div className="flex items-center justify-center h-full">
+            <p className="text-grayscale-gray5">지역 데이터 로딩 중...</p>
+          </div>
+        </LargeDialogContent>
+      </LargeDialog>
+    );
+  }
+
+  const currentDistrict = districts.find((d) => d.city === selectedGroup);
+
   return (
     <LargeDialog>
       <LargeDialogTrigger {...props} />
@@ -53,22 +101,19 @@ export default function LocationSelectDialogTrigger({
           {isMobile && (
             <div className="overflow-auto w-full">
               <div className="flex gap-4 px-padding">
-                {locationFilters.children!.map(({ label }) => (
+                {districts.map(({ city }) => (
                   <Button
-                    variant={"ghost"}
-                    key={label}
-                    className={cn(
-                      "flex-col gap-2 p-0 text-grayscale-gray5 font-semibold text-body-m",
-                      {
-                        "text-primary": selectedGroup === label,
-                      }
-                    )}
-                    onClick={() => setSelectedGroup(label)}
+                    variant={'ghost'}
+                    key={city}
+                    className={cn('flex-col gap-2 p-0 text-grayscale-gray5 font-semibold text-body-m', {
+                      'text-primary': selectedGroup === city,
+                    })}
+                    onClick={() => setSelectedGroup(city)}
                   >
-                    {label}
+                    {city}
                     <div
-                      className={cn("h-0.5 w-full bg-transparent", {
-                        "bg-primary-500": selectedGroup === label,
+                      className={cn('h-0.5 w-full bg-transparent', {
+                        'bg-primary-500': selectedGroup === city,
                       })}
                     />
                   </Button>
@@ -82,41 +127,32 @@ export default function LocationSelectDialogTrigger({
           {!isMobile && (
             <ScrollArea className="h-full border-r">
               <div className="flex-shrink-0 py-2 pl-3.5 pr-3">
-                {locationFilters.children!.map(({ label }) => (
+                {districts.map(({ city }) => (
                   <Button
-                    key={label}
-                    variant={"category"}
-                    className={cn("py-2 px-2.5", {
-                      "bg-[#F6F6EA]": selectedGroup === label,
+                    key={city}
+                    variant={'category'}
+                    className={cn('py-2 px-2.5', {
+                      'bg-[#F6F6EA]': selectedGroup === city,
                     })}
-                    onClick={() => setSelectedGroup(label)}
+                    onClick={() => setSelectedGroup(city)}
                   >
-                    {label}
+                    {city}
                   </Button>
                 ))}
               </div>
             </ScrollArea>
           )}
-          <ScrollArea className={cn("w-38.25 md:w-auto h-full", "flex-1")}>
-            <div
-              className={cn("flex-shrink-0 py-2 pl-3.5 pr-3", " pl-5 pr-3.5")}
-            >
-              {locationFilters
-                .children!.find((item) => item.label === selectedGroup)!
-                .children!.map((childItem) => (
-                  <Label
-                    key={childItem.label}
-                    className="py-2 pr-2.5 gap-2 text-body-xs text-grayscale-gray6 flex items-center"
-                  >
-                    <Checkbox
-                      checked={selected === childItem.label}
-                      onCheckedChange={(checked) =>
-                        onSelect(checked ? childItem.label : null)
-                      }
-                    />
-                    <div className="whitespace-wrap">{childItem.label}</div>
-                  </Label>
-                ))}
+          <ScrollArea className={cn('w-38.25 md:w-auto h-full', 'flex-1')}>
+            <div className={cn('flex-shrink-0 py-2 pl-3.5 pr-3', ' pl-5 pr-3.5')}>
+              {currentDistrict?.districts.map((district) => (
+                <Label key={district} className="py-2 pr-2.5 gap-2 text-body-xs text-grayscale-gray6 flex items-center">
+                  <Checkbox
+                    checked={selected === `${selectedGroup} ${district}`}
+                    onCheckedChange={(checked) => onSelect(checked ? `${selectedGroup} ${district}` : null)}
+                  />
+                  <div className="whitespace-wrap">{district}</div>
+                </Label>
+              ))}
             </div>
           </ScrollArea>
         </div>

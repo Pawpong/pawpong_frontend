@@ -1,11 +1,11 @@
-import ArrowRight from "@/assets/icons/arrow-right";
-import BannerSvg from "@/assets/images/banner-small.svg";
-import Banner from "@/assets/images/banner.svg";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
+import ArrowRight from '@/assets/icons/arrow-right';
+import BannerSvg from '@/assets/images/banner-small.svg';
+import Banner from '@/assets/images/banner.svg';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
 
 const ServiceIntroBanner = () => {
-  const isMd = useBreakpoint("md");
-  const isLg = useBreakpoint("lg");
+  const isMd = useBreakpoint('md');
+  const isLg = useBreakpoint('lg');
 
   // 모바일 (md 미만)
   if (!isMd) {

@@ -1,15 +1,14 @@
 name: Task
 description: Jira 하위 작업 생성
-title: "[FE] "
+title: '[FE] '
 body:
   - type: input
     id: jira-story-number
     attributes:
       label: Story 번호 (PP- 뒤의 숫자만)
-      placeholder: "55"
+      placeholder: '55'
     validations:
       required: true
-  
   - type: textarea
     id: description
     attributes:

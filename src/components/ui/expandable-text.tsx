@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface ExpandableTextProps extends React.HTMLAttributes<HTMLDivElement> {
   data: string;
@@ -15,7 +15,7 @@ export function ExpandableText({
   data,
   className,
 
-  gradientColor = "white",
+  gradientColor = 'white',
   ...props
 }: ExpandableTextProps) {
   const textRef = useRef<HTMLDivElement>(null);
@@ -29,14 +29,12 @@ export function ExpandableText({
 
   return (
     <div>
-      <div className={cn("relative w-full", className)} {...props}>
+      <div className={cn('relative w-full', className)} {...props}>
         {/* 텍스트 영역 */}
         <div
           ref={textRef}
-          className={cn(
-            "overflow-hidden text-body-s text-primary transition-all"
-          )}
-          style={expanded ? {} : { maxHeight: "200px" }}
+          className={cn('overflow-hidden text-body-s text-primary transition-all')}
+          style={expanded ? {} : { maxHeight: '200px' }}
         >
           {data}
         </div>
@@ -47,7 +45,7 @@ export function ExpandableText({
             <div
               className="absolute bottom-0 left-0 w-full flex justify-center pt-6 pb-2"
               style={{
-                height: "84px",
+                height: '84px',
                 background: `linear-gradient(to top, ${gradientColor}, rgba(255,255,255,0) 100%)`,
               }}
             ></div>

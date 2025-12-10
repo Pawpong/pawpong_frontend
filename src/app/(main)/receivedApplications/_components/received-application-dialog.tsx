@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   LargeDialog,
   LargeDialogClose,
@@ -9,24 +9,24 @@ import {
   LargeDialogHeader,
   LargeDialogTitle,
   LargeDialogTrigger,
-} from "@/components/ui/large-dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import Close from "@/assets/icons/close";
-import RequestStatusBadge from "./request-status-badge";
-import SmallDot from "@/assets/icons/small-dot.svg";
-import ErrorIcon from "@/assets/icons/error-gray.svg";
-import type { CounselFormData } from "@/stores/counsel-form-store";
-import { useUpdateApplicationStatus } from "../_hooks/use-received-applications";
-import { formatPhoneNumber } from "@/utils/phone";
+} from '@/components/ui/large-dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import Close from '@/assets/icons/close';
+import RequestStatusBadge from './request-status-badge';
+import SmallDot from '@/assets/icons/small-dot.svg';
+import ErrorIcon from '@/assets/icons/error-gray.svg';
+import type { CounselFormData } from '@/stores/counsel-form-store';
+import { useUpdateApplicationStatus } from '../_hooks/use-received-applications';
+import { formatPhoneNumber } from '@/utils/phone';
 
 interface ReceivedApplicationDialogProps {
   id: string;
   applicantNickname: string;
   animalInfo: string;
-  status: "before" | "done";
+  status: 'before' | 'done';
   applicationDate: string;
   formData?: CounselFormData | null;
   children: React.ReactNode;
@@ -41,7 +41,7 @@ export default function ReceivedApplicationDialog({
   children,
 }: ReceivedApplicationDialogProps) {
   const [open, setOpen] = useState(false);
-  const [status, setStatus] = useState<"before" | "done">(initialStatus);
+  const [status, setStatus] = useState<'before' | 'done'>(initialStatus);
   const updateStatusMutation = useUpdateApplicationStatus();
 
   useEffect(() => {
@@ -50,25 +50,25 @@ export default function ReceivedApplicationDialog({
 
   const handleCompleteCounsel = () => {
     updateStatusMutation.mutate(
-      { id, status: "done" },
+      { id, status: 'done' },
       {
         onSuccess: () => {
-          setStatus("done");
+          setStatus('done');
           setOpen(false);
         },
-      }
+      },
     );
   };
 
   const handleCancelComplete = () => {
     updateStatusMutation.mutate(
-      { id, status: "before" },
+      { id, status: 'before' },
       {
         onSuccess: () => {
-          setStatus("before");
+          setStatus('before');
           setOpen(false);
         },
-      }
+      },
     );
   };
 
@@ -92,14 +92,10 @@ export default function ReceivedApplicationDialog({
         <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-[32px] min-h-0 overflow-y-auto px-6 pt-5 pb-10 ">
           {/* 신청자 정보 */}
           <div className="flex flex-col gap-2">
-            <span className="text-body-l font-semibold text-primary-500">
-              {applicantNickname}
-            </span>
+            <span className="text-body-l font-semibold text-primary-500">{applicantNickname}</span>
             <div className="flex items-center gap-[0.625rem]">
               <RequestStatusBadge status={status} />
-              <span className="text-body-s font-normal text-grayscale-gray5">
-                {applicationDate}
-              </span>
+              <span className="text-body-s font-normal text-grayscale-gray5">{applicationDate}</span>
             </div>
           </div>
 
@@ -116,13 +112,8 @@ export default function ReceivedApplicationDialog({
               </h2>
               <div className="flex flex-col gap-2.5 w-full">
                 <label className="bg-white flex gap-2 h-12 items-center px-4 py-2 rounded-lg cursor-pointer">
-                  <Checkbox
-                    checked={formData?.privacyAgreement || false}
-                    disabled
-                  />
-                  <span className="text-body-s font-medium text-grayscale-gray6">
-                    동의합니다
-                  </span>
+                  <Checkbox checked={formData?.privacyAgreement || false} disabled />
+                  <span className="text-body-s font-medium text-grayscale-gray6">동의합니다</span>
                 </label>
                 <div className="flex flex-col gap-2 pl-1.5">
                   <div className="flex gap-1 items-start">
@@ -148,19 +139,19 @@ export default function ReceivedApplicationDialog({
             </div>
             <div className="flex flex-col gap-3 w-full">
               <Input
-                value={formData?.name || ""}
+                value={formData?.name || ''}
                 readOnly
                 placeholder="이름"
                 className="overflow-hidden text-ellipsis whitespace-nowrap"
               />
               <Input
-                value={formData?.phone ? formatPhoneNumber(formData.phone) : ""}
+                value={formData?.phone ? formatPhoneNumber(formData.phone) : ''}
                 readOnly
                 placeholder="휴대폰 번호"
                 className="overflow-hidden text-ellipsis whitespace-nowrap"
               />
               <Input
-                value={formData?.email || ""}
+                value={formData?.email || ''}
                 readOnly
                 placeholder="이메일 주소"
                 type="email"
@@ -175,16 +166,14 @@ export default function ReceivedApplicationDialog({
           {/* 자기소개 섹션 */}
           <div className="flex flex-col gap-8 items-start w-full">
             <div className="flex flex-col gap-3 w-full">
-              <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                간단하게 자기소개 부탁드려요.
-              </h2>
+              <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">간단하게 자기소개 부탁드려요.</h2>
               <Textarea
-                value={formData?.introduction || ""}
+                value={formData?.introduction || ''}
                 readOnly
                 placeholder="성별, 연령대, 거주지, 결혼 계획, 생활 패턴 등"
                 maxLength={1500}
-                showLength={(formData?.introduction || "").length > 0}
-                currentLength={(formData?.introduction || "").length}
+                showLength={(formData?.introduction || '').length > 0}
+                currentLength={(formData?.introduction || '').length}
               />
             </div>
             <div className="flex flex-col gap-3 w-full">
@@ -192,7 +181,7 @@ export default function ReceivedApplicationDialog({
                 함께 거주하는 가족 구성원을 알려주세요.
               </h2>
               <Input
-                value={formData?.familyMembers || ""}
+                value={formData?.familyMembers || ''}
                 readOnly
                 placeholder="인원 수, 관계, 연령대 등"
                 className="h-12"
@@ -203,13 +192,8 @@ export default function ReceivedApplicationDialog({
                 모든 가족 구성원들이 입양에 동의하셨나요?
               </h2>
               <label className="bg-white flex gap-2 h-12 w-full items-center px-4 py-2 rounded-lg cursor-pointer">
-                <Checkbox
-                  checked={formData?.familyAgreement || false}
-                  disabled
-                />
-                <span className="text-body-s font-medium text-grayscale-gray6">
-                  네
-                </span>
+                <Checkbox checked={formData?.familyAgreement || false} disabled />
+                <span className="text-body-s font-medium text-grayscale-gray6">네</span>
               </label>
             </div>
             <div className="flex flex-col gap-3 w-full">
@@ -217,7 +201,7 @@ export default function ReceivedApplicationDialog({
                 본인을 포함한 모든 가족 구성원분들께서 알러지 검사를 마치셨나요?
               </h2>
               <Input
-                value={formData?.allergyCheck || ""}
+                value={formData?.allergyCheck || ''}
                 readOnly
                 placeholder="알러지 검사 여부와 결과(유무), 혹은 향후 계획"
                 className="h-12"
@@ -235,7 +219,7 @@ export default function ReceivedApplicationDialog({
                 평균적으로 집을 비우는 시간은 얼마나 되나요?
               </h2>
               <Input
-                value={formData?.awayTime || ""}
+                value={formData?.awayTime || ''}
                 readOnly
                 placeholder="출퇴근·외출 시간을 포함해 하루 중 집을 비우는 시간"
                 className="h-12"
@@ -247,16 +231,15 @@ export default function ReceivedApplicationDialog({
               </h2>
               <div className="w-full">
                 <Textarea
-                  value={formData?.livingSpace || ""}
+                  value={formData?.livingSpace || ''}
                   readOnly
                   placeholder="반려동물이 주로 생활할 공간(예: 거실 등)과 환경(크기, 구조 등)"
                   maxLength={800}
-                  showLength={(formData?.livingSpace || "").length > 0}
-                  currentLength={(formData?.livingSpace || "").length}
+                  showLength={(formData?.livingSpace || '').length > 0}
+                  currentLength={(formData?.livingSpace || '').length}
                 />
                 <p className="text-caption font-medium text-grayscale-gray5 mt-2.5">
-                  아이들은 철장, 베란다, 야외 등 열악한 공간에서는 지낼 수
-                  없어요
+                  아이들은 철장, 베란다, 야외 등 열악한 공간에서는 지낼 수 없어요
                 </p>
               </div>
             </div>
@@ -265,12 +248,12 @@ export default function ReceivedApplicationDialog({
                 현재 함께하는, 또는 이전에 함께했던 반려동물에 대해 알려주세요.
               </h2>
               <Textarea
-                value={formData?.previousPets || ""}
+                value={formData?.previousPets || ''}
                 readOnly
                 placeholder="반려동물의 품종, 성격, 함께한 기간, 이별 사유 등"
                 maxLength={800}
-                showLength={(formData?.previousPets || "").length > 0}
-                currentLength={(formData?.previousPets || "").length}
+                showLength={(formData?.previousPets || '').length > 0}
+                currentLength={(formData?.previousPets || '').length}
               />
             </div>
           </div>
@@ -282,44 +265,20 @@ export default function ReceivedApplicationDialog({
           <div className="flex flex-col gap-8 items-start w-full">
             <div className="flex flex-col gap-3 w-full">
               <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                정기 예방접종·건강검진·훈련 등 기본 케어를 책임지고 해주실 수
-                있나요?
+                정기 예방접종·건강검진·훈련 등 기본 케어를 책임지고 해주실 수 있나요?
               </h2>
               <label className="bg-white flex gap-2 h-12 w-full items-center px-4 py-2 rounded-lg cursor-pointer">
                 <Checkbox checked={formData?.basicCare || false} disabled />
-                <span className="text-body-s font-medium text-grayscale-gray6">
-                  네
-                </span>
+                <span className="text-body-s font-medium text-grayscale-gray6">네</span>
               </label>
             </div>
             <div className="flex flex-col gap-3 w-full">
               <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                예상치 못한 질병이나 사고 등으로 치료비가 발생할 경우 감당
-                가능하신가요?
+                예상치 못한 질병이나 사고 등으로 치료비가 발생할 경우 감당 가능하신가요?
               </h2>
               <label className="bg-white flex gap-2 h-12 w-full items-center px-4 py-2 rounded-lg cursor-pointer">
-                <Checkbox
-                  checked={formData?.medicalExpense || false}
-                  disabled
-                />
-                <span className="text-body-s font-medium text-grayscale-gray6">
-                  네
-                </span>
-              </label>
-            </div>
-            <div className="flex flex-col gap-3 w-full">
-              <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                모든 아이들은 중성화 후 분양되거나, 입양 후 중성화를 진행해야
-                합니다. 동의하십니까?
-              </h2>
-              <label className="bg-white flex gap-2 h-12 w-full items-center px-4 py-2 rounded-lg cursor-pointer">
-                <Checkbox
-                  checked={formData?.neuteringAgreement || false}
-                  disabled
-                />
-                <span className="text-body-s font-medium text-grayscale-gray6">
-                  동의합니다
-                </span>
+                <Checkbox checked={formData?.medicalExpense || false} disabled />
+                <span className="text-body-s font-medium text-grayscale-gray6">네</span>
               </label>
             </div>
           </div>
@@ -330,40 +289,22 @@ export default function ReceivedApplicationDialog({
           {/* 선택 사항 섹션 */}
           <div className="flex flex-col gap-8 items-start w-full">
             <div className="flex flex-col gap-3 w-full">
-              <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                마음에 두신 아이가 있으신가요?
-              </h2>
-              {formData?.interestedAnimal && (
-                <Input
-                  value={formData.interestedAnimal}
-                  readOnly
-                  className="h-12"
-                />
-              )}
-              {formData?.interestedAnimal === "특징 직접 입력" && (
+              <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">마음에 두신 아이가 있으신가요?</h2>
+              {formData?.interestedAnimal && <Input value={formData.interestedAnimal} readOnly className="h-12" />}
+              {formData?.interestedAnimal === '특징 직접 입력' && (
                 <Textarea
-                  value={formData?.interestedAnimalDetails || ""}
+                  value={formData?.interestedAnimalDetails || ''}
                   readOnly
                   placeholder="원하시는 아이의 특징을 자유롭게 입력해주세요"
                   maxLength={800}
-                  showLength={
-                    (formData?.interestedAnimalDetails || "").length > 0
-                  }
-                  currentLength={
-                    (formData?.interestedAnimalDetails || "").length
-                  }
+                  showLength={(formData?.interestedAnimalDetails || '').length > 0}
+                  currentLength={(formData?.interestedAnimalDetails || '').length}
                 />
               )}
             </div>
             <div className="flex flex-col gap-3 w-full">
-              <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-                원하시는 입양 시기가 있나요?
-              </h2>
-              <Input
-                value={formData?.adoptionTiming || ""}
-                readOnly
-                className="h-12"
-              />
+              <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">원하시는 입양 시기가 있나요?</h2>
+              <Input value={formData?.adoptionTiming || ''} readOnly className="h-12" />
             </div>
           </div>
 
@@ -376,11 +317,11 @@ export default function ReceivedApplicationDialog({
               마지막으로 궁금하신 점이나 남기시고 싶으신 말씀이 있나요?
             </h2>
             <Textarea
-              value={formData?.additionalMessage || ""}
+              value={formData?.additionalMessage || ''}
               readOnly
               maxLength={800}
-              showLength={(formData?.additionalMessage || "").length > 0}
-              currentLength={(formData?.additionalMessage || "").length}
+              showLength={(formData?.additionalMessage || '').length > 0}
+              currentLength={(formData?.additionalMessage || '').length}
             />
           </div>
         </div>
@@ -389,34 +330,28 @@ export default function ReceivedApplicationDialog({
 
         {/* 하단 버튼 */}
         <LargeDialogFooter className="flex flex-row justify-between items-center gap-[10px]">
-          {status === "before" && (
+          {status === 'before' && (
             <>
               <div className="flex items-start gap-1 md:items-center">
                 <div className="size-3 flex justify-center items-center shrink-0 mt-0.5 md:mt-0">
                   <ErrorIcon className="w-3 h-3" />
                 </div>
                 <div className="flex flex-col gap-1 md:flex-row md:gap-0">
-                  <p className="text-caption font-medium text-[#A0A0A0] md:hidden">
-                    상담이 끝나면 [상담 완료]를 눌러
-                  </p>
+                  <p className="text-caption font-medium text-[#A0A0A0] md:hidden">상담이 끝나면 [상담 완료]를 눌러</p>
                   <p className="text-caption font-medium text-[#A0A0A0] md:hidden">
                     상대방이 후기를 남길 수 있게 해주세요.
                   </p>
                   <p className="text-caption font-medium text-[#A0A0A0] hidden md:block">
-                    상담이 끝나면 [상담 완료]를 눌러 상대방이 후기를 남길 수
-                    있게 해주세요.
+                    상담이 끝나면 [상담 완료]를 눌러 상대방이 후기를 남길 수 있게 해주세요.
                   </p>
                 </div>
               </div>
-              <button
-                className="button-brown leading-[140%]"
-                onClick={handleCompleteCounsel}
-              >
+              <button className="button-brown leading-[140%]" onClick={handleCompleteCounsel}>
                 상담 완료
               </button>
             </>
           )}
-          {status === "done" && (
+          {status === 'done' && (
             <div className="flex items-center gap-2 w-full justify-end">
               <Button
                 variant="tertiary"
@@ -425,10 +360,7 @@ export default function ReceivedApplicationDialog({
               >
                 완료 취소
               </Button>
-              <button
-                className="button-disabled h-9 py-2 px-4 text-sm font-medium leading-[140%] "
-                disabled
-              >
+              <button className="button-disabled h-9 py-2 px-4 text-sm font-medium leading-[140%] " disabled>
                 상담 완료
               </button>
             </div>

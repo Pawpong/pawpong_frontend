@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import Cat from "@/assets/icons/cat";
+import Cat from '@/assets/icons/cat';
 
-import Dog from "@/assets/icons/dog";
-import { Button } from "@/components/ui/button";
-import Container from "@/components/ui/container";
-import useAnimal from "@/hooks/use-animal";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+import Dog from '@/assets/icons/dog';
+import { Button } from '@/components/ui/button';
+import Container from '@/components/ui/container';
+import useAnimal from '@/hooks/use-animal';
+import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 const animalTabsItems = [
-  { name: "강아지", href: "/explore/dog", icon: Dog },
-  { name: "고양이", href: "/explore/cat", icon: Cat },
+  { name: '강아지', href: '/explore/dog', icon: Dog },
+  { name: '고양이', href: '/explore/cat', icon: Cat },
 ];
 
 export default function AnimalTabs() {
@@ -20,21 +20,17 @@ export default function AnimalTabs() {
   return (
     <Container className="pt-6 md:pt-7 lg:pt-10 flex gap-5">
       {animalTabsItems.map((item) => {
-        const active = currTab === item.href.split("/").at(-1);
+        const active = currTab === item.href.split('/').at(-1);
 
         return (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="flex items-center gap-2"
-          >
+          <Link key={item.href} href={item.href} className="flex items-center gap-2">
             <Button
-              variant={"ghost"}
+              variant={'ghost'}
               className={cn(
-                "h-auto text-heading-3! text-grayscale-gray5 font-semibold -mx-2.5 -my-1.5 hover:bg-transparent flex-col gap-2 hover:text-primary",
+                'h-auto text-heading-3! text-grayscale-gray5 font-semibold -mx-2.5 -my-1.5 hover:bg-transparent flex-col gap-2 hover:text-primary',
                 {
-                  "text-primary": active,
-                }
+                  'text-primary': active,
+                },
               )}
             >
               <div className="flex gap-2 items-center">
@@ -42,8 +38,8 @@ export default function AnimalTabs() {
                 {item.name}
               </div>
               <div
-                className={cn("h-[2px] bg-transparent w-full", {
-                  "bg-primary-500!": active,
+                className={cn('h-[2px] bg-transparent w-full', {
+                  'bg-primary-500!': active,
                 })}
               />
             </Button>

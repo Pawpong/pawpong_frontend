@@ -1,7 +1,7 @@
-import LogoButton from "./logo-button";
-import NoticeButton from "./notice-button";
-import Close from "@/assets/icons/close";
-import { SheetClose } from "../ui/sheet";
+import LogoButton from './logo-button';
+import NoticeButton from './notice-button';
+import Close from '@/assets/icons/close';
+import { SheetClose } from '../ui/sheet';
 
 export default function MobileNavHeader() {
   return (

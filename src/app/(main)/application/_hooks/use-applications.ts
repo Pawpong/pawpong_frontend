@@ -1,17 +1,25 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import {
-  allApplicationMockData,
-  catApplicationMockData,
-  dogApplicationMockData,
-} from "../_mocks/application-mock-data";
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { getMyApplications, type ApplicationListItemDto } from '@/lib/application';
+import { getReceivedApplications, type ReceivedApplicationItemDto } from '@/lib/breeder';
+import { useAuthStore } from '@/stores/auth-store';
+import { getUserRoleFromCookie } from '@/lib/cookie-utils';
 
 export interface ApplicationItem {
-  breederId: string;
-  breederName: string;
-  breederLevel: "elite" | "new";
+  breederId?: string;
+  breederName?: string;
+  breederLevel?: 'elite' | 'new';
   applicationDate: string;
   profileImage: string;
-  animalType: "cat" | "dog";
+  animalType?: 'cat' | 'dog';
+  applicationId: string;
+  petId?: string;
+  petBreed?: string;
+  petName?: string;
+  adopterId?: string;
+  adopterName?: string;
+  adopterEmail?: string;
+  adopterPhone?: string;
+  status: 'consultation_pending' | 'consultation_completed' | 'adoption_approved' | 'adoption_rejected';
 }
 
 interface ApplicationsResponse {
@@ -21,39 +29,68 @@ interface ApplicationsResponse {
 
 const PAGE_SIZE = 10;
 
-const fetchApplications = async (
-  page: number,
-  animalType?: "cat" | "dog"
-): Promise<ApplicationsResponse> => {
-  // TODO: API 연동 시 아래 주석 해제
-  // const response = await api.get(`/applications`, {
-  //   params: { page, limit: PAGE_SIZE, animalType },
-  // });
-  // return response.data;
+/**
+ * 입양자용 DTO를 프론트엔드 ApplicationItem으로 변환
+ */
+const mapAdopterDtoToApplicationItem = (dto: ApplicationListItemDto): ApplicationItem => ({
+  applicationId: dto.applicationId,
+  breederId: dto.breederId,
+  breederName: dto.breederName,
+  breederLevel: dto.breederLevel,
+  applicationDate: dto.applicationDate,
+  profileImage: dto.profileImage || '/avatar-sample.png',
+  animalType: dto.animalType,
+  petId: dto.petId,
+  petBreed: dto.petBreed,
+  status: dto.status,
+});
 
-  // 목 데이터
-  const data =
-    animalType === "cat"
-      ? catApplicationMockData
-      : animalType === "dog"
-      ? dogApplicationMockData
-      : allApplicationMockData;
+/**
+ * 브리더용 DTO를 프론트엔드 ApplicationItem으로 변환
+ */
+const mapBreederDtoToApplicationItem = (dto: ReceivedApplicationItemDto): ApplicationItem => ({
+  applicationId: dto.applicationId,
+  adopterId: dto.adopterId,
+  adopterName: dto.adopterName,
+  adopterEmail: dto.adopterEmail,
+  adopterPhone: dto.adopterPhone,
+  applicationDate: new Date(dto.appliedAt).toLocaleDateString('ko-KR'),
+  profileImage: '/avatar-sample.png', // 입양자 프로필 이미지는 나중에 추가
+  petId: dto.petId,
+  petName: dto.petName,
+  status: dto.status,
+});
 
-  const startIndex = (page - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
+const fetchAdopterApplications = async (page: number, animalType?: 'cat' | 'dog'): Promise<ApplicationsResponse> => {
+  const result = await getMyApplications(page, PAGE_SIZE, animalType);
 
   return {
-    data: data.slice(startIndex, endIndex),
-    hasMore: endIndex < data.length,
+    data: result.applications.map(mapAdopterDtoToApplicationItem),
+    hasMore: result.pagination.hasNextPage,
   };
 };
 
-export function useApplications(animalType?: "cat" | "dog") {
+const fetchBreederApplications = async (page: number): Promise<ApplicationsResponse> => {
+  const result = await getReceivedApplications(page, PAGE_SIZE);
+
+  return {
+    data: result.applications.map(mapBreederDtoToApplicationItem),
+    hasMore: result.pagination.hasNextPage,
+  };
+};
+
+export function useApplications(animalType?: 'cat' | 'dog') {
+  const { user } = useAuthStore();
+  // 쿠키의 userRole을 우선적으로 사용
+  const cookieRole = getUserRoleFromCookie();
+  const userRole = cookieRole || user?.role;
+  const isBreeder = userRole === 'breeder';
+
   return useInfiniteQuery({
-    queryKey: ["applications", animalType],
-    queryFn: ({ pageParam }) => fetchApplications(pageParam, animalType),
-    getNextPageParam: (lastPage, allPages) =>
-      lastPage.hasMore ? allPages.length + 1 : undefined,
+    queryKey: ['applications', isBreeder ? 'breeder' : 'adopter', animalType],
+    queryFn: ({ pageParam }) =>
+      isBreeder ? fetchBreederApplications(pageParam) : fetchAdopterApplications(pageParam, animalType),
+    getNextPageParam: (lastPage, allPages) => (lastPage.hasMore ? allPages.length + 1 : undefined),
     initialPageParam: 1,
   });
 }

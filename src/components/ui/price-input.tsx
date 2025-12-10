@@ -1,22 +1,13 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
-interface PriceInputProps extends Omit<React.ComponentProps<"input">, "type"> {
+interface PriceInputProps extends Omit<React.ComponentProps<'input'>, 'type'> {
   className?: string;
 }
 
-export function PriceInput({
-  className,
-  placeholder = "0",
-  ...props
-}: PriceInputProps) {
+export function PriceInput({ className, placeholder = '0', ...props }: PriceInputProps) {
   return (
-    <div
-      className={cn(
-        "bg-white flex h-12 items-center overflow-hidden rounded-lg w-full",
-        className
-      )}
-    >
+    <div className={cn('bg-white flex h-12 items-center overflow-hidden rounded-lg w-full', className)}>
       {/* Input 영역 */}
       <div className="flex gap-2.5 grow items-center justify-center min-h-px min-w-px pl-4 pr-3 py-3 relative shrink">
         <input

@@ -1,11 +1,11 @@
-import { create } from "zustand";
-import { formatPhoneNumber } from "@/utils/phone";
+import { create } from 'zustand';
+import { formatPhoneNumber } from '@/utils/phone';
 
 // usertype 타입 정의
-export type UserType = "guest" | "breeder";
-export type Animal = "cat" | "dog";
-export type Plan = "basic" | "pro";
-export type AgreementName = "term" | "privacy" | "marketing";
+export type UserType = 'guest' | 'breeder';
+export type Animal = 'cat' | 'dog';
+export type Plan = 'basic' | 'pro';
+export type AgreementName = 'term' | 'privacy' | 'marketing';
 
 interface SignupFormStore {
   userType?: UserType;
@@ -29,6 +29,9 @@ interface SignupFormStore {
 
   profileImage: string;
   setProfileImage: (url: string) => void;
+
+  needsEmail: boolean;
+  setNeedsEmail: (needsEmail: boolean) => void;
 
   // user info
   agreements: { term: boolean; privacy: boolean; marketing: boolean };
@@ -56,8 +59,8 @@ interface SignupFormStore {
   setBreeds: (breed: string[]) => void;
 
   // document
-  level: "elite" | "new";
-  setLevel: (level: "elite" | "new") => void;
+  level: 'elite' | 'new';
+  setLevel: (level: 'elite' | 'new') => void;
 
   oathChecked: boolean;
   setOathChecked: (checked: boolean) => void;
@@ -84,17 +87,20 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
   setPlan: (plan: Plan) => set({ plan }),
 
   // social login info
-  tempId: "",
+  tempId: '',
   setTempId: (tempId: string) => set({ tempId }),
 
-  provider: "",
+  provider: '',
   setProvider: (provider: string) => set({ provider }),
 
-  socialName: "",
+  socialName: '',
   setSocialName: (name: string) => set({ socialName: name }),
 
-  profileImage: "",
+  profileImage: '',
   setProfileImage: (url: string) => set({ profileImage: url }),
+
+  needsEmail: false,
+  setNeedsEmail: (needsEmail: boolean) => set({ needsEmail }),
 
   agreements: { term: false, privacy: false, marketing: false },
   setAgreements: (name, value) =>
@@ -102,37 +108,36 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
       const newAgreements = { ...state.agreements, [name]: value };
       return { agreements: newAgreements };
     }),
-  phoneNumber: "",
+  phoneNumber: '',
   setPhoneNumber: (phoneNumber: string) => {
     const formatted = formatPhoneNumber(phoneNumber);
     set({ phoneNumber: formatted });
   },
 
-  email: "",
+  email: '',
   setEmail: (email: string) => set({ email }),
 
   photo: null,
   setPhoto: (photo: File | null) => set({ photo }),
-  photoPreview: "",
+  photoPreview: '',
   setPhotoPreview: (preview: string) => set({ photoPreview: preview }),
 
-  breederName: "",
+  breederName: '',
   setBreederName: (name: string) => set({ breederName: name }),
 
-  breederLocation: "",
-  setBreederLocation: (location: string | null) =>
-    set({ breederLocation: location }),
+  breederLocation: '',
+  setBreederLocation: (location: string | null) => set({ breederLocation: location }),
 
   breeds: [],
   setBreeds: (breeds: string[]) => set({ breeds }),
 
-  level: "elite",
-  setLevel: (level: "elite" | "new") => set({ level }),
+  level: 'elite',
+  setLevel: (level: 'elite' | 'new') => set({ level }),
 
   oathChecked: false,
   setOathChecked: (checked: boolean) => set({ oathChecked: checked }),
 
-  nickname: "",
+  nickname: '',
   setNickname: (nickname: string) => set({ nickname }),
 
   flowIndex: 0,

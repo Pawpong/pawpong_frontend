@@ -1,5 +1,5 @@
-import { ComponentProps } from "react";
+import { ComponentProps } from 'react';
 
-export default function CheckboxFormList(props: ComponentProps<"div">) {
+export default function CheckboxFormList(props: ComponentProps<'div'>) {
   return <div className="" {...props} />;
 }

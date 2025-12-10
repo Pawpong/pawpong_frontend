@@ -1,21 +1,18 @@
-"use client";
-import { useBreakpoint } from "@/hooks/use-breakpoint";
-import Container from "../ui/container";
-import LogoButton from "./logo-button";
-import NavBar from "./nav-bar";
-import NavButton from "./nav-button";
-import NoticeButton from "./notice-button";
+'use client';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import Container from '../ui/container';
+import LogoButton from './logo-button';
+import NavBar from './nav-bar';
+import NavButton from './nav-button';
+import NoticeButton from './notice-button';
 interface GnbProps {
-  variant?: "default" | "tertiary";
-  navVariant?: "default" | "breeder";
+  variant?: 'default' | 'tertiary';
+  navVariant?: 'default' | 'breeder';
 }
 
-export default function Gnb({
-  variant = "default",
-  navVariant = "breeder",
-}: GnbProps) {
-  const isLg = useBreakpoint("lg");
-  const bgClass = variant === "tertiary" ? "bg-tertiary-500" : "bg-background";
+export default function Gnb({ variant = 'default', navVariant = 'breeder' }: GnbProps) {
+  const isLg = useBreakpoint('lg');
+  const bgClass = variant === 'tertiary' ? 'bg-tertiary-500' : 'bg-background';
 
   return (
     <div className={bgClass}>

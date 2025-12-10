@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import Menu from "@/assets/icons/menu.svg";
-import { Button } from "../ui/button";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
-import MobileNavMenu from "./mobile-nav-menu";
+import Menu from '@/assets/icons/menu.svg';
+import { Button } from '../ui/button';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '../ui/sheet';
+import MobileNavMenu from './mobile-nav-menu';
 
 interface NavButtonProps {
-  navVariant?: "default" | "breeder";
+  navVariant?: 'default' | 'breeder';
 }
 
-export default function NavButton({ navVariant = "breeder" }: NavButtonProps) {
+export default function NavButton({ navVariant = 'breeder' }: NavButtonProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
