@@ -50,6 +50,7 @@ export default function BreederProfile({
               width={204}
               height={204}
               className="object-cover w-full h-full rounded-[0.452rem]"
+              unoptimized={avatarUrl.startsWith('http')}
             />
           ) : (
             <IconComponent className="w-[9.5625rem] h-[9.5625rem] text-grayscale-gray5" />
