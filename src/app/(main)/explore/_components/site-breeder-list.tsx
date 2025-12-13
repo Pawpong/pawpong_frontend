@@ -93,7 +93,9 @@ export default function SiteBreederList() {
                   <BreederLocation>{breeder.location}</BreederLocation>
                   <GrayDot className="block sm:hidden lg:block align-middle" />
                   <BreederPrice>
-                    {breeder.priceRange?.min} - {breeder.priceRange?.max}
+                    {breeder.priceRange?.min || breeder.priceRange?.max
+                      ? `${breeder.priceRange.min?.toLocaleString()} - ${breeder.priceRange.max?.toLocaleString()}원`
+                      : '상담 후 비용 확인 가능'}
                   </BreederPrice>
                 </BreederDescription>
                 <BreederTags>
