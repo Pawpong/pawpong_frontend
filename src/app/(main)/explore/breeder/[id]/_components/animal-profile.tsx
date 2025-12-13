@@ -44,6 +44,7 @@ export default function AnimalProfile({
           width={200}
           height={200}
           className="w-full h-full object-cover"
+          unoptimized={getValidImageUrl(avatarUrl).startsWith('http')}
         />
         {status && (
           <div className="absolute top-3 left-3">

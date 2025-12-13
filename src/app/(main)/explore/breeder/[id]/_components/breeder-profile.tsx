@@ -8,11 +8,13 @@ import { useCounselFormStore } from '@/stores/counsel-form-store';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import Cat from '@/assets/icons/cat';
 import Dog from '@/assets/icons/dog';
+import LevelUpgradeDialog from '@/components/document-form/level-upgrade-dialog';
 import type { Animal } from '@/stores/signup-form-store';
 
 export default function BreederProfile({
   data: { avatarUrl, nickname, level, location, priceRange, breeds, animal },
   breederId,
+  isOwnProfile = false,
 }: {
   data: {
     avatarUrl: string;
@@ -24,6 +26,7 @@ export default function BreederProfile({
     animal: Animal;
   };
   breederId: string;
+  isOwnProfile?: boolean;
 }) {
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
@@ -47,6 +50,7 @@ export default function BreederProfile({
               width={204}
               height={204}
               className="object-cover w-full h-full rounded-[0.452rem]"
+              unoptimized={avatarUrl.startsWith('http')}
             />
           ) : (
             <IconComponent className="w-[9.5625rem] h-[9.5625rem] text-grayscale-gray5" />
@@ -56,6 +60,16 @@ export default function BreederProfile({
           <div className="flex items-center flex-wrap gap-2">
             <span className="text-heading-3 text-primary font-semibold">{nickname}</span>
             <LevelBadge level={level} />
+            {isOwnProfile && (
+              <LevelUpgradeDialog currentLevel={level} animal={animal}>
+                <button
+                  type="button"
+                  className="text-caption text-grayscale-gray5 underline underline-offset-2 hover:text-grayscale-gray6"
+                >
+                  레벨 변경
+                </button>
+              </LevelUpgradeDialog>
+            )}
           </div>
           <div className="space-y-3">
             <div className="text-body-s mb-2 text-grayscale-gray5">
@@ -74,8 +88,8 @@ export default function BreederProfile({
             </div>
           </div>
         </div>
-        {/* 데스크탑(lg)에서만 버튼 표시 */}
-        {isLg && (
+        {/* 데스크탑(lg)에서만 버튼 표시, 브리더 본인이면 숨김 */}
+        {isLg && !isOwnProfile && (
           <Button
             variant="counsel"
             className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"

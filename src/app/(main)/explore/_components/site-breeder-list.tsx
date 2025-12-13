@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import AdoptionStatusBadge from '@/components/adoption-status-badge';
 import BreederDescription from '@/components/breeder-list/breader-description';
 import BreederLikeButton from '@/components/breeder-list/breader-like-button';
@@ -22,10 +23,15 @@ import { useBreeders } from '../_hooks/use-breeders';
 import { useFilterStore } from '@/stores/filter-store';
 import { mapFiltersToParams } from '@/lib/filter-mapper';
 import { useSegment } from '@/hooks/use-segment';
+import type { SearchBreederParams } from '@/lib/breeder';
 
 export default function SiteBreederList() {
   // URL 경로에서 petType 자동 감지 (useSegment 사용)
   const petType = (useSegment(1) as 'cat' | 'dog') || 'cat';
+
+  // URL 쿼리 파라미터에서 정렬 옵션 가져오기
+  const searchParams = useSearchParams();
+  const sortBy = (searchParams.get('sort') || 'latest') as SearchBreederParams['sortBy'];
 
   // 필터 스토어에서 활성화된 필터 가져오기
   const activeFilters = useFilterStore((state) => state.activeFilters);
@@ -36,7 +42,8 @@ export default function SiteBreederList() {
   const { data, isLoading, error } = useBreeders({
     petType, // URL 경로에 따라 자동으로 설정
     page: 1,
-    limit: 20,
+    take: 20,
+    sortBy, // 정렬 파라미터 추가
     ...filterParams, // 필터 파라미터 추가
   });
 

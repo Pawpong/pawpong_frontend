@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Breeder from '@/components/breeder-list/breeder';
 import BreederContent from '@/components/breeder-list/breeder-content';
@@ -61,10 +62,11 @@ export default function SavedList() {
         ) : (
           <BreederList>
             {savedBreeders.map((breeder: any, index: number) => (
-              <Breeder key={breeder.breederId || index}>
+              <Link key={breeder.breederId || index} href={`/explore/breeder/${breeder.breederId}`} className="block">
+              <Breeder>
                 <BreederProfile>
                   <BreederHeader>
-                    <BreederAvatar src={breeder.profileImageUrl || '/avatar-sample.png'} />
+                    <BreederAvatar src={breeder.profileImageFileName || '/avatar-sample.png'} />
                     <div className="flex items-center gap-2">
                       <BreederName>{breeder.breederName}</BreederName>
                       <LevelBadge level={'new' as 'elite' | 'new'} />
@@ -74,7 +76,7 @@ export default function SavedList() {
                     <BreederDescription>
                       <BreederLocation>{breeder.location}</BreederLocation>
                       <GrayDot className="block sm:hidden lg:block align-middle" />
-                      <BreederPrice>평점 {breeder.averageRating} ({breeder.reviewCount})</BreederPrice>
+                      <BreederPrice>평점 {breeder.averageRating} ({breeder.totalReviews})</BreederPrice>
                     </BreederDescription>
                     <BreederTags>
                       <Button variant="secondary">
@@ -84,15 +86,16 @@ export default function SavedList() {
                   </BreederContent>
                 </BreederProfile>
                 <div className="relative">
-                  <BreederImage src={breeder.profileImageUrl || '/avatar-sample.png'} />
+                  <BreederImage src={breeder.profileImageFileName || '/avatar-sample.png'} />
                   <div className="absolute top-0 right-0 p-3">
                     <BreederLikeButton breederId={breeder.breederId} initialIsFavorited={true} />
                   </div>
                   <div className="absolute bottom-0 right-0 p-3">
-                    <AdoptionStatusBadge status={'available'} />
+                    <AdoptionStatusBadge status={breeder.availablePets > 0 ? 'available' : 'completed'} />
                   </div>
                 </div>
               </Breeder>
+              </Link>
             ))}
           </BreederList>
         )}

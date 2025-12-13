@@ -219,6 +219,8 @@ export interface SearchBreederParams {
   breederLevel?: string[];
   sortBy?: 'latest' | 'favorite' | 'review' | 'price_asc' | 'price_desc';
   page?: number;
+  take?: number;
+  /** @deprecated use take instead */
   limit?: number;
 }
 
