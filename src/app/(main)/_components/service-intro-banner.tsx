@@ -2,6 +2,7 @@ import ArrowRight from '@/assets/icons/arrow-right';
 import BannerSvg from '@/assets/images/banner-small.svg';
 import Banner from '@/assets/images/banner.svg';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
+import Link from 'next/link';
 
 const ServiceIntroBanner = () => {
   const isMd = useBreakpoint('md');
@@ -17,10 +18,13 @@ const ServiceIntroBanner = () => {
             <br />
             포퐁에서 만나요
           </h2>
-          <button className="bg-tertiary-700 text-grayscale-gray6 flex items-center gap-1 pl-5 pr-3 py-2.5 rounded-full text-body-s font-medium hover:bg-tertiary-800 transition-colors w-fit">
+          <Link
+            href="/introduction"
+            className="bg-tertiary-700 text-grayscale-gray6 flex items-center gap-1 pl-5 pr-3 py-2.5 rounded-full text-body-s font-medium hover:bg-tertiary-800 transition-colors w-fit"
+          >
             <span>서비스 소개</span>
             <ArrowRight className="size-7 rotate-180" />
-          </button>
+          </Link>
         </div>
         <div className="absolute top-[54%] left-1/2 transform -translate-x-1/2 ">
           <Banner />
@@ -39,10 +43,13 @@ const ServiceIntroBanner = () => {
             <br />
             포퐁에서 만나요
           </h2>
-          <button className="bg-tertiary-700 text-grayscale-gray6 flex items-center gap-1 pl-5 pr-3 py-2.5 rounded-full text-body-s font-medium hover:bg-tertiary-800 transition-colors w-fit shrink-0">
+          <Link
+            href="/introduction"
+            className="bg-tertiary-700 text-grayscale-gray6 flex items-center gap-1 pl-5 pr-3 py-2.5 rounded-full text-body-s font-medium hover:bg-tertiary-800 transition-colors w-fit shrink-0"
+          >
             <span>서비스 소개</span>
             <ArrowRight className="size-7 rotate-180" />
-          </button>
+          </Link>
         </div>
         <div className="absolute top-[34%] left-1/2 transform -translate-x-1/2 ">
           <Banner />
@@ -61,10 +68,13 @@ const ServiceIntroBanner = () => {
           <br />
           포퐁에서 만나요
         </h2>
-        <button className="bg-tertiary-700 text-grayscale-gray6 flex items-center gap-1 pl-5 pr-3 py-2.5 rounded-full text-body-s font-medium hover:bg-tertiary-800 transition-colors w-fit">
+        <Link
+          href="/introduction"
+          className="bg-tertiary-700 text-grayscale-gray6 flex items-center gap-1 pl-5 pr-3 py-2.5 rounded-full text-body-s font-medium hover:bg-tertiary-800 transition-colors w-fit"
+        >
           <span>서비스 소개</span>
           <ArrowRight className="size-7 rotate-180" />
-        </button>
+        </Link>
       </div>
 
       {/* 배너 이미지 */}
