@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useNavigationGuardContext } from '@/contexts/navigation-guard-context';
 import { cn } from '@/lib/utils';
 import type { NavItem } from './nav-items';
@@ -36,10 +36,19 @@ export default function MobileNavItem({ item, isLast }: MobileNavItemProps) {
 
 function NavLink({ item, isActive, isLast }: { item: NavItem; isActive: boolean; isLast: boolean }) {
   const pathname = usePathname();
+  const router = useRouter();
   const guardContext = useNavigationGuardContext();
+  const { isAuthenticated } = useAuthStore();
   const Icon = isActive ? item.iconFill : item.icon;
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // 비회원이 인증 필요 메뉴 클릭 시 로그인 페이지로 이동
+    if (item.requiresAuth && !isAuthenticated) {
+      e.preventDefault();
+      router.push('/login');
+      return;
+    }
+
     if (!guardContext?.guardNavigation || pathname === href) {
       return;
     }
@@ -76,10 +85,20 @@ function NavLink({ item, isActive, isLast }: { item: NavItem; isActive: boolean;
 function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolean }) {
   const { open, setOpen } = useCollapsible();
   const pathname = usePathname();
+  const router = useRouter();
   const guardContext = useNavigationGuardContext();
   const { toast } = useToast();
   const { isAuthenticated, clearAuth, user } = useAuthStore();
   const Icon = open ? item.iconFill : item.icon;
+
+  // 비회원이 인증 필요 메뉴 클릭 시 로그인 페이지로 이동
+  const handleOpenChange = (newOpen: boolean) => {
+    if (newOpen && item.requiresAuth && !isAuthenticated) {
+      router.push('/login');
+      return;
+    }
+    setOpen(newOpen);
+  };
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (!guardContext?.guardNavigation || pathname === href) {
@@ -111,7 +130,7 @@ function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolea
   };
 
   return (
-    <Collapsible open={open} onOpenChange={setOpen}>
+    <Collapsible open={open} onOpenChange={handleOpenChange}>
       <div className="flex flex-col">
         <CollapsibleTrigger asChild>
           <button type="button" className="flex items-center gap-3 rounded bg-white pl-0 pr-4 w-full">
