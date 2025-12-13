@@ -81,7 +81,7 @@ export default function Page({ params }: PageProps) {
     level: levelFromApi as 'new' | 'elite',
     location: locationFromApi,
     priceRange: priceRangeStr,
-    breeds: profileInfo?.specializationAreas || [],
+    breeds: (profileData as any)?.breeds || profileInfo?.specializationAreas || [],
     animal: 'dog' as const,
   };
 
