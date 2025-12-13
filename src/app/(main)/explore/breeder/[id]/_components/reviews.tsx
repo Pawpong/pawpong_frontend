@@ -9,7 +9,7 @@ export default function Reviews({ data }: { data: { id: string; nickname: string
     <BreederProfileSection>
       <BreederProfileSectionHeader>
         <BreederProfileSectionTitle>후기</BreederProfileSectionTitle>
-        <BreederProfileSectionMore />
+        {data.length > 5 && <BreederProfileSectionMore />}
       </BreederProfileSectionHeader>
       <div className="flex flex-col gap-8">
         {data.map((e: { id: string; nickname: string; date: string; content: string }) => (

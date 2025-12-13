@@ -21,7 +21,7 @@ export default function Parents({
     <BreederProfileSection>
       <BreederProfileSectionHeader>
         <BreederProfileSectionTitle>엄마 · 아빠</BreederProfileSectionTitle>
-        <BreederProfileSectionMore />
+        {data.length > 3 && <BreederProfileSectionMore />}
       </BreederProfileSectionHeader>
       <div className="space-y-7 md:grid md:grid-cols-3 md:gap-gutter">
         {data.map(
