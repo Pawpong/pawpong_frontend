@@ -6,6 +6,7 @@ import { getAdopterFaqs, type FaqDto } from '@/lib/home';
 import BreederProfileSectionHeader from '@/components/breeder-profile/breeder-profile-section-header';
 import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
 import BreederProfileSectionMore from '@/components/breeder-profile/breeder-profile-section-more';
+import Link from 'next/link';
 
 const FAQ = () => {
   const isMd = useBreakpoint('md');
@@ -39,7 +40,9 @@ const FAQ = () => {
       <div className="flex flex-col gap-7">
         <BreederProfileSectionHeader>
           <BreederProfileSectionTitle>자주 묻는 질문</BreederProfileSectionTitle>
-          <BreederProfileSectionMore />
+          <Link href="/faq">
+            <BreederProfileSectionMore />
+          </Link>
         </BreederProfileSectionHeader>
         <div className="h-40 flex items-center justify-center">
           <p className="text-body-m text-gray-400">FAQ 로딩 중...</p>
@@ -53,7 +56,9 @@ const FAQ = () => {
       <div className="flex flex-col gap-7">
         <BreederProfileSectionHeader>
           <BreederProfileSectionTitle>자주 묻는 질문</BreederProfileSectionTitle>
-          <BreederProfileSectionMore />
+          <Link href="/faq">
+            <BreederProfileSectionMore />
+          </Link>
         </BreederProfileSectionHeader>
         <div className="h-40 flex items-center justify-center">
           <p className="text-body-m text-gray-400">{error || '표시할 FAQ가 없습니다.'}</p>
@@ -66,7 +71,9 @@ const FAQ = () => {
     <div className="flex flex-col gap-7">
       <BreederProfileSectionHeader>
         <BreederProfileSectionTitle>자주 묻는 질문</BreederProfileSectionTitle>
-        <BreederProfileSectionMore />
+        <Link href="/faq">
+          <BreederProfileSectionMore />
+        </Link>
       </BreederProfileSectionHeader>
       {/* 모바일: 모든 질문을 하나의 열로 */}
       {!isMd && (

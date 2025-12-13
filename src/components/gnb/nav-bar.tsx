@@ -70,18 +70,17 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
 
         // children이 있는 경우, children 중 하나가 활성화되어 있으면 부모도 활성화
         const isChildActive = hasChildren
-          ? (item.children?.some((child) => currNav === child.href.slice(1)) ?? false)
+          ? item.children?.some((child) => currNav === child.href.slice(1)) ?? false
           : false;
-
         // 홈화면일 때는 아무것도 활성화하지 않음
         const isHomePage = pathname === '/';
         const active = isHomePage
           ? false
           : isApplicationMenu
-            ? currNav === 'application' || currNav === 'receivedApplications'
-            : hasChildren
-              ? currNav === item.href.slice(1) || isChildActive
-              : currNav === item.href.slice(1);
+          ? currNav === 'application' || currNav === 'receivedApplications'
+          : hasChildren
+          ? currNav === item.href.slice(1) || isChildActive
+          : currNav === item.href.slice(1);
 
         const Icon = active ? item.iconFill : item.icon;
 
@@ -132,52 +131,52 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
               className="border border-grayscale-gray2/50 rounded-lg p-1 shadow-[0px_8px_24px_rgba(12,17,29,0.12)] "
             >
               {item.children
-              ?.filter((child) => {
-                // 로그아웃 항목은 인증된 경우에만 표시
-                if (child.action === 'logout' && !isAuthenticated) {
-                  return false;
-                }
-                // showForVerificationStatus가 설정된 경우, 해당 status에 맞는 경우에만 표시
-                if (child.showForVerificationStatus && user?.role === 'breeder') {
-                  return child.showForVerificationStatus.includes(user.verificationStatus || 'pending');
-                }
-                return true;
-              })
-              .map((child) => {
-                const ChildIcon = child.icon;
-                const isMuted = child.variant === 'muted';
-                const isDisabled = child.variant === 'disabled';
-                const isLogout = child.action === 'logout';
+                ?.filter((child) => {
+                  // 로그아웃 항목은 인증된 경우에만 표시
+                  if (child.action === 'logout' && !isAuthenticated) {
+                    return false;
+                  }
+                  // showForVerificationStatus가 설정된 경우, 해당 status에 맞는 경우에만 표시
+                  if (child.showForVerificationStatus && user?.role === 'breeder') {
+                    return child.showForVerificationStatus.includes(user.verificationStatus || 'pending');
+                  }
+                  return true;
+                })
+                .map((child) => {
+                  const ChildIcon = child.icon;
+                  const isMuted = child.variant === 'muted';
+                  const isDisabled = child.variant === 'disabled';
+                  const isLogout = child.action === 'logout';
 
-                return (
-                  <DropdownMenuItem
-                    key={child.name}
-                    asChild
-                    className={cn(
-                      'px-4 py-2 text-body-s text-grayscale-gray7 gap-3 cursor-pointer w-[9.5625rem]',
-                      isMuted && 'text-grayscale-gray5 font-medium',
-                      isDisabled && 'text-[#e1e1e1] font-medium cursor-default pointer-events-none',
-                    )}
-                  >
-                    <Link
-                      href={child.href}
-                      onClick={(e) => {
-                        if (isLogout) {
-                          handleLogout(e);
-                          return;
-                        }
-                        handleLinkClick(e, child.href);
-                      }}
-                      aria-disabled={isDisabled}
+                  return (
+                    <DropdownMenuItem
+                      key={child.name}
+                      asChild
+                      className={cn(
+                        'px-4 py-2 text-body-s text-grayscale-gray7 gap-3 cursor-pointer w-[9.5625rem]',
+                        isMuted && 'text-grayscale-gray5 font-medium',
+                        isDisabled && 'text-[#e1e1e1] font-medium cursor-default pointer-events-none',
+                      )}
                     >
-                      <div className={cn('flex items-center gap-3', !ChildIcon && 'gap-0')}>
-                        {ChildIcon && <ChildIcon className="size-5 text-grayscale-gray5" />}
-                        <span>{child.name}</span>
-                      </div>
-                    </Link>
-                  </DropdownMenuItem>
-                );
-              })}
+                      <Link
+                        href={child.href}
+                        onClick={(e) => {
+                          if (isLogout) {
+                            handleLogout(e);
+                            return;
+                          }
+                          handleLinkClick(e, child.href);
+                        }}
+                        aria-disabled={isDisabled}
+                      >
+                        <div className={cn('flex items-center gap-3', !ChildIcon && 'gap-0')}>
+                          {ChildIcon && <ChildIcon className="size-5 text-grayscale-gray5" />}
+                          <span>{child.name}</span>
+                        </div>
+                      </Link>
+                    </DropdownMenuItem>
+                  );
+                })}
             </DropdownMenuContent>
           </DropdownMenu>
         );
