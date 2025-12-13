@@ -1,0 +1,105 @@
+'use client';
+
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import LevelBadge from '../../../../../../components/level-badge';
+import { useCounselFormStore } from '@/stores/counsel-form-store';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import Cat from '@/assets/icons/cat';
+import Dog from '@/assets/icons/dog';
+import LevelUpgradeDialog from '@/components/document-form/level-upgrade-dialog';
+import type { Animal } from '@/stores/signup-form-store';
+
+export default function BreederProfile({
+  data: { avatarUrl, nickname, level, location, priceRange, breeds, animal },
+  breederId,
+  isOwnProfile = false,
+}: {
+  data: {
+    avatarUrl: string;
+    nickname: string;
+    level: 'new' | 'elite';
+    location: string;
+    priceRange: string;
+    breeds: string[];
+    animal: Animal;
+  };
+  breederId: string;
+  isOwnProfile?: boolean;
+}) {
+  const router = useRouter();
+  const { clearCounselFormData } = useCounselFormStore();
+  const isLg = useBreakpoint('lg');
+
+  const handleCounselClick = () => {
+    clearCounselFormData();
+    router.push(`/counselform?breederId=${breederId}`);
+  };
+
+  const IconComponent = animal === 'cat' ? Cat : Dog;
+
+  return (
+    <div className="flex flex-col gap-4 lg:w-51">
+      <div className="flex gap-4 lg:flex-col lg:gap-8">
+        <div className="w-[8.25rem] h-[8.25rem] md:w-[10rem] md:h-[10rem] lg:w-[12.75rem] lg:h-[12.75rem] rounded-lg overflow-hidden shrink-0 bg-grayscale-gray1 flex items-center justify-center">
+          {avatarUrl ? (
+            <Image
+              src={avatarUrl}
+              alt={nickname}
+              width={204}
+              height={204}
+              className="object-cover w-full h-full rounded-[0.452rem]"
+              unoptimized={avatarUrl.startsWith('http')}
+            />
+          ) : (
+            <IconComponent className="w-[9.5625rem] h-[9.5625rem] text-grayscale-gray5" />
+          )}
+        </div>
+        <div className="flex-1 space-y-4 flex flex-col md:justify-between">
+          <div className="flex items-center flex-wrap gap-2">
+            <span className="text-heading-3 text-primary font-semibold">{nickname}</span>
+            <LevelBadge level={level} />
+            {isOwnProfile && (
+              <LevelUpgradeDialog currentLevel={level} animal={animal}>
+                <button
+                  type="button"
+                  className="text-caption text-grayscale-gray5 underline underline-offset-2 hover:text-grayscale-gray6"
+                >
+                  레벨 변경
+                </button>
+              </LevelUpgradeDialog>
+            )}
+          </div>
+          <div className="space-y-3">
+            <div className="text-body-s mb-2 text-grayscale-gray5">
+              <div>{location}</div>
+              <div>{priceRange}</div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {breeds.map((breed) => (
+                <div
+                  key={breed}
+                  className="bg-tertiary-500 py-1.5 px-2.5 rounded-[--spacing(1)] text-medium text-body-xs text-primary"
+                >
+                  {breed}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        {/* 데스크탑(lg)에서만 버튼 표시, 브리더 본인이면 숨김 */}
+        {isLg && !isOwnProfile && (
+          <Button
+            variant="counsel"
+            className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"
+            type="button"
+            onClick={handleCounselClick}
+          >
+            상담 신청하기
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,697 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '../styles//button.css';
+@custom-variant dark (&:is(.dark *));
+
+/* shadcn 기본 테마 설정 */
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--color-branding-bg);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--color-grayscale-gray3);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --spacing: 4px;
+  --radius: 0.5rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* 반응형 브레이크포인트 설정 */
+@theme {
+  --breakpoint-lg: 80rem;
+}
+
+/* 피그마 디자인 토큰 : Color */
+@theme inline {
+  /* Primary Colors */
+  /* Primary Colors */
+  --color-primary-500-basic: #f6f6ea;
+  --color-primary-500: #4f3b2e;
+  --color-primary-600: #3f2f25;
+
+  /* Secondary Colors */
+  --color-secondary-100: oklch(91.7% 0.071 259.9);
+  --color-secondary-300: oklch(87.1% 0.076 251.1);
+  --color-secondary-500: #a0c8f4;
+  --color-secondary-500-basic: #a0c8f4;
+  --color-secondary-600: #77b2f3;
+  --color-secondary-700: oklch(68.8% 0.122 231.9);
+  --color-secondary-800: oklch(62.4% 0.138 231.4);
+  --color-secondary-900: oklch(55.9% 0.154 230.9);
+
+  /* Tertiary Colors */
+  --color-tertiary-500: #f6f6ea;
+  --color-tertiary-600: #eeebde;
+  --color-tertiary-700: oklch(85.2% 0.024 94.6);
+  --color-tertiary-800: oklch(76.2% 0.032 91.1);
+
+  /* Status Colors */
+  --color-status-disabled: oklch(87.5% 0 0);
+  --color-status-error-500: oklch(63.5% 0.223 26.8);
+  --color-status-error-100: oklch(94.6% 0.032 22.4);
+  --color-status-warning-500: oklch(74.6% 0.183 65.7);
+  --color-status-warning-100: oklch(93.5% 0.045 78.3);
+  --color-status-success-500: #005df9;
+  --color-status-success-100: #d9ebff;
+
+  /* Grayscale Colors */
+  --color-grayscale-black: oklch(23.5% 0 0);
+  --color-grayscale-gray7: oklch(30.5% 0 0);
+  --color-grayscale-gray6: #545454;
+  --color-grayscale-gray5: #888;
+  --color-grayscale-gray4: oklch(63.5% 0 0);
+  --color-grayscale-gray3: #cccccc;
+  --color-grayscale-gray2: #e1e1e1;
+  --color-grayscale-gray1: #f5f5f5;
+  --color-grayscale-white: oklch(100% 0 0);
+
+  /* Alpha Colors */
+  --color-alpha-w-4: oklch(100% 0 0 / 0.04);
+  --color-alpha-w-40: oklch(100% 0 0 / 0.4);
+  --color-alpha-primary-80: rgba(79, 59, 46, 0.8);
+  --Alpha-Primary-80: rgba(79, 59, 46, 0.8);
+  --color-alpha-dimmer: oklch(0% 0 0 / 0.6);
+
+  /* Level Colors */
+  --color-level-elite-500: oklch(80.5% 0.179 79.2);
+  --color-level-elite-100: oklch(80.5% 0.179 79.2 / 0.1);
+  --color-level-new-500: oklch(73.5% 0.187 142.2);
+  --color-level-new-100: oklch(73.5% 0.187 142.2 / 0.1);
+
+  /* Gender Colors */
+  --color-gender-female-500: oklch(65.2% 0.259 17.4);
+  --color-gender-female-100: oklch(94.6% 0.032 22.4);
+  --color-gender-male-500: oklch(60.9% 0.152 255.5);
+  --color-gender-male-100: oklch(91.7% 0.071 259.9);
+
+  /* Typography Font Sizes - Responsive (Mobile First) */
+  --Typo-Size-Display: 48px;
+  --Typo-Size-Heading-1: 40px;
+  --Typo-Size-Heading-2: 24px;
+  --Typo-Size-Heading-3: 24px;
+  --Typo-Size-Body-L: 20px;
+  --Typo-Size-Body-M: 16px;
+  --Typo-Size-Body-S: 14px;
+  --Typo-Size-Body-XS: 12px;
+  --Typo-Size-Caption: 12px;
+
+  /* Typography Line Heights - Responsive (Mobile First) */
+  --Typo-Line-height-Display: 44px;
+  --Typo-Line-height-Heading-1: 40px;
+  --Typo-Line-height-Heading-2: 36px;
+  --Typo-Line-height-Heading-3: 28px;
+  --Typo-Line-height-Body-L: 28px;
+  --Typo-Line-height-Body-M: 24px;
+  --Typo-Line-height-Body-S: 22px;
+  --Typo-Line-height-Body-XS: 18px;
+  --Typo-Line-height-Caption: 11px;
+
+  /* Typography Font Sizes - Mobile (기본) - Legacy */
+  --typo-size-display-mobile: 48px;
+  --typo-size-heading1-mobile: 40px;
+  --typo-size-heading2-mobile: 24px;
+  --typo-size-heading3-mobile: 18px;
+  --typo-size-body-l-mobile: 18px;
+  --typo-size-body-m-mobile: 16px;
+  --typo-size-body-s-mobile: 14px;
+  --typo-size-body-xs-mobile: 12px;
+  --typo-size-caption-mobile: 11px;
+
+  /* Typography Line Heights - Mobile (기본) - Legacy */
+  --typo-line-height-display-mobile: 44px;
+  --typo-line-height-heading1-mobile: 40px;
+  --typo-line-height-heading2-mobile: 36px;
+  --typo-line-height-heading3-mobile: 28px;
+  --typo-line-height-body-l-mobile: 28px;
+  --typo-line-height-body-m-mobile: 24px;
+  --typo-line-height-body-s-mobile: 22px;
+  --typo-line-height-body-xs-mobile: 18px;
+  --typo-line-height-caption-mobile: 11px;
+
+  /* Typography Font Sizes - Tablet - Legacy */
+  --typo-size-display-tablet: 40px;
+  --typo-size-heading1-tablet: 32px;
+  --typo-size-heading2-tablet: 28px;
+  --typo-size-heading3-tablet: 20px;
+  --typo-size-body-l-tablet: 20px;
+  --typo-size-body-m-tablet: 18px;
+  --typo-size-body-s-tablet: 16px;
+  --typo-size-body-xs-tablet: 14px;
+  --typo-size-caption-tablet: 12px;
+
+  /* Typography Line Heights - Tablet - Legacy */
+  --typo-line-height-display-tablet: 56px;
+  --typo-line-height-heading1-tablet: 48px;
+  --typo-line-height-heading2-tablet: 40px;
+  --typo-line-height-heading3-tablet: 32px;
+  --typo-line-height-body-l-tablet: 32px;
+  --typo-line-height-body-m-tablet: 28px;
+  --typo-line-height-body-s-tablet: 24px;
+  --typo-line-height-body-xs-tablet: 20px;
+  --typo-line-height-caption-tablet: 12px;
+
+  /* Typography Font Sizes - Desktop - Legacy */
+  --typo-size-display-desktop: 32px;
+  --typo-size-heading1-desktop: 28px;
+  --typo-size-heading2-desktop: 32px;
+  --typo-size-heading3-desktop: 24px;
+  --typo-size-body-l-desktop: 20px;
+  --typo-size-body-m-desktop: 18px;
+  --typo-size-body-s-desktop: 16px;
+  --typo-size-body-xs-desktop: 14px;
+  --typo-size-caption-desktop: 12px;
+
+  /* Typography Line Heights - Desktop - Legacy */
+  --typo-line-height-display-desktop: 64px;
+  --typo-line-height-heading1-desktop: 60px;
+  --typo-line-height-heading2-desktop: 48px;
+  --typo-line-height-heading3-desktop: 36px;
+  --typo-line-height-body-l-desktop: 32px;
+  --typo-line-height-body-m-desktop: 28px;
+  --typo-line-height-body-s-desktop: 24px;
+  --typo-line-height-body-xs-desktop: 20px;
+  --typo-line-height-caption-desktop: 12px;
+
+  /* General Sizes */
+  --size-24: 24px;
+  --size-28: 28px;
+  --size-32: 32px;
+  --size-36: 36px;
+  --size-40: 40px;
+  --size-48: 48px;
+  --size-60: 60px;
+
+  /* Responsive Sizes */
+  --size-40-mobile: 40px;
+  --size-40-tablet: 28px;
+  --size-40-desktop: 24px;
+
+  --size-80-mobile: 80px;
+  --size-80-tablet: 60px;
+  --size-80-desktop: 40px;
+
+  --size-80-variant-mobile: 80px;
+  --size-80-variant-tablet: 80px;
+  --size-80-variant-desktop: 60px;
+
+  --size-120-mobile: 120px;
+  --size-120-tablet: 100px;
+  --size-120-desktop: 80px;
+
+  --size-160-mobile: 160px;
+  --size-160-tablet: 160px;
+  --size-160-desktop: 120px;
+
+  --size-200-mobile: 200px;
+  --size-200-tablet: 200px;
+  --size-200-desktop: 160px;
+
+  /* Layout Sizes */
+  --layout-gutter-mobile: 12px;
+  --layout-gutter-tablet: 16px;
+  --layout-gutter-desktop: 24px;
+
+  --layout-padding-mobile: 20px;
+  --layout-padding-tablet: 40px;
+  --layout-padding-desktop: 48px;
+
+  --layout-width-mobile: 393px;
+  --layout-width-tablet: 768px;
+  --layout-width-desktop: 1440px;
+
+  --layout-width-popup-mobile: 320px;
+  --layout-width-popup-tablet: 360px;
+  --layout-width-popup-desktop: 360px;
+
+  /* Radius Sizes */
+  --radius-4: 4px;
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+
+  /* Space Sizes */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-28: 28px;
+  --space-32: 32px;
+  --space-40: 40px;
+}
+
+/* 피그마 디자인 토큰 : 반응형 */
+
+/* Typography Responsive Overrides */
+@layer theme {
+  :root {
+    @media (width >= 48rem) {
+      /* Tablet */
+      --Typo-Size-Display: 40px;
+      --Typo-Size-Heading-1: 32px;
+
+      --Typo-Size-Heading-2: 28px;
+      --Typo-Size-Heading-3: 20px;
+      --Typo-Size-Body-L: 20px;
+      --Typo-Size-Body-M: 18px;
+      --Typo-Size-Body-S: 16px;
+      --Typo-Size-Body-XS: 12px;
+      --Typo-Size-Caption: 12px;
+
+      --Typo-Line-height-Display: 56px;
+      --Typo-Line-height-Heading-1: 48px;
+      --Typo-Line-height-Heading-2: 40px;
+      --Typo-Line-height-Heading-3: 32px;
+      --Typo-Line-height-Body-L: 32px;
+      --Typo-Line-height-Body-M: 28px;
+      --Typo-Line-height-Body-S: 24px;
+      --Typo-Line-height-Body-XS: 20px;
+      --Typo-Line-height-Caption: 12px;
+    }
+
+    @media (width >= 80rem) {
+      /* Desktop */
+      --Typo-Size-Display: 32px;
+      --Typo-Size-Heading-1: 28px;
+      --Typo-Size-Heading-2: 32px;
+      --Typo-Size-Heading-3: 18px;
+      --Typo-Size-Body-L: 18px;
+      --Typo-Size-Body-M: 16px;
+      --Typo-Size-Body-S: 16px;
+      --Typo-Size-Body-XS: 14px;
+      --Typo-Size-Caption: 12px;
+
+      --Typo-Line-height-Display: 64px;
+      --Typo-Line-height-Heading-1: 60px;
+      --Typo-Line-height-Heading-2: 48px;
+      --Typo-Line-height-Heading-3: 36px;
+      --Typo-Line-height-Body-L: 32px;
+      --Typo-Line-height-Body-M: 28px;
+      --Typo-Line-height-Body-S: 24px;
+      --Typo-Line-height-Body-XS: 20px;
+      --Typo-Line-height-Caption: 12px;
+    }
+  }
+}
+
+/* 모바일 (기본) */
+@theme {
+  --text-display: --spacing(8);
+  --text-display--line-height: --spacing(11);
+  --text-display--font-weight: 600;
+
+  --text-heading-1: --spacing(7);
+  --text-heading-1--line-height: --spacing(10);
+  --text-heading-1--font-weight: 600;
+
+  --text-heading-2: --spacing(6);
+  --text-heading-2--line-height: --spacing(9);
+
+  --text-heading-3: --spacing(4.5);
+  --text-heading-3--line-height: --spacing(7);
+
+  --text-body-l: --spacing(4.5);
+  --text-body-1--line-height: --spacing(7);
+
+  --text-body-m: --spacing(4);
+  --text-body-m--line-height: --spacing(6);
+
+  --text-body-s: --spacing(3.5);
+  --text-body-s--line-height: --spacing(5.5);
+
+  --text-body-xs: --spacing(3);
+  --text-body-xs--line-height: --spacing(5.5);
+
+  --text-caption-s: --spacing(2.75);
+  --text-caption-s--line-height: --spacing(2.75);
+
+  --spacing-gutter: --spacing(3);
+  --spacing-padding: --spacing(5);
+
+  --default-span: 5;
+  --inner-span: 5;
+  --inner-start: 1;
+}
+/* 태블릿 */
+
+@layer theme {
+  :root {
+    @media (width >= 48rem) {
+      --text-display: --spacing(10);
+      --text-display--line-height: --spacing(14);
+      --text-display--font-weight: 600;
+
+      --text-heading-1: --spacing(8);
+      --text-heading-1--line-height: --spacing(12);
+      --text-heading-1--font-weight: 600;
+
+      --text-heading-2: --spacing(7);
+      --text-heading-2--line-height: --spacing(10);
+
+      --text-heading-3: --spacing(5);
+      --text-heading-3--line-height: --spacing(8);
+
+      --text-body-l: --spacing(5);
+      --text-body-1--line-height: --spacing(8);
+
+      --text-body-m: --spacing(4.5);
+      --text-body-m--line-height: --spacing(7);
+
+      --text-body-s: --spacing(4);
+      --text-body-s--line-height: --spacing(6);
+
+      --text-body-xs: --spacing(3.5);
+      --text-body-xs--line-height: --spacing(5);
+
+      --text-caption-s: --spacing(3);
+      --text-caption-s--line-height: --spacing(3);
+
+      --spacing-gutter: --spacing(4);
+      --spacing-padding: --spacing(8);
+
+      --default-span: 8;
+      --inner-span: 6;
+      --inner-start: 2;
+    }
+  }
+}
+
+/* 데스크탑 */
+
+@layer theme {
+  :root {
+    @media (width >= 80rem) {
+      --text-display: --spacing(12);
+      --text-display--line-height: --spacing(16);
+      --text-display--font-weight: 600;
+
+      --text-heading-1: --spacing(10);
+      --text-heading-1--line-height: --spacing(15);
+      --text-heading-1--font-weight: 600;
+
+      --text-heading-2: --spacing(8);
+      --text-heading-2--line-height: --spacing(12);
+
+      --text-heading-3: --spacing(6);
+      --text-heading-3--line-height: --spacing(9);
+
+      --text-body-l: --spacing(5);
+      --text-body-1--line-height: --spacing(8);
+
+      --text-body-m: --spacing(4.5);
+      --text-body-m--line-height: --spacing(7);
+
+      --text-body-s: --spacing(4);
+      --text-body-s--line-height: --spacing(6);
+
+      --text-body-xs: --spacing(3.5);
+      --text-body-xs--line-height: --spacing(5);
+
+      --text-caption-s: --spacing(3);
+      --text-caption-s--line-height: --spacing(3);
+
+      --spacing-gutter: --spacing(6);
+      --spacing-padding: --spacing(12);
+
+      --default-span: 6;
+      --inner-span: 4;
+      --inner-start: 2;
+    }
+  }
+}
+
+/* Typography Utility Classes */
+@layer utilities {
+  /* Display */
+  .text-display {
+    font-size: var(--typo-size-display-mobile);
+    line-height: var(--typo-line-height-display-mobile);
+    font-weight: 600;
+  }
+  @media (width >= 48rem) {
+    .text-display {
+      font-size: var(--typo-size-display-tablet);
+      line-height: var(--typo-line-height-display-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-display {
+      font-size: var(--typo-size-display-desktop);
+      line-height: var(--typo-line-height-display-desktop);
+    }
+  }
+
+  /* Heading 1 */
+  .text-heading-1 {
+    font-size: var(--typo-size-heading1-mobile);
+    line-height: var(--typo-line-height-heading1-mobile);
+    font-weight: 600;
+  }
+  @media (width >= 48rem) {
+    .text-heading-1 {
+      font-size: var(--typo-size-heading1-tablet);
+      line-height: var(--typo-line-height-heading1-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-heading-1 {
+      font-size: var(--typo-size-heading1-desktop);
+      line-height: var(--typo-line-height-heading1-desktop);
+    }
+  }
+
+  /* Heading 2 */
+  .text-heading-2 {
+    font-size: var(--typo-size-heading2-mobile);
+    line-height: var(--typo-line-height-heading2-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-heading-2 {
+      font-size: var(--typo-size-heading2-tablet);
+      line-height: var(--typo-line-height-heading2-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-heading-2 {
+      font-size: var(--typo-size-heading2-desktop);
+      line-height: var(--typo-line-height-heading2-desktop);
+    }
+  }
+
+  /* Heading 3 */
+  .text-heading-3 {
+    font-size: var(--typo-size-heading3-mobile);
+    line-height: var(--typo-line-height-heading3-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-heading-3 {
+      font-size: var(--typo-size-heading3-tablet);
+      line-height: var(--typo-line-height-heading3-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-heading-3 {
+      font-size: var(--typo-size-heading3-desktop);
+      line-height: var(--typo-line-height-heading3-desktop);
+    }
+  }
+
+  /* Body L */
+  .text-body-l {
+    font-size: var(--typo-size-body-l-mobile);
+    line-height: var(--typo-line-height-body-l-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-body-l {
+      font-size: var(--typo-size-body-l-tablet);
+      line-height: var(--typo-line-height-body-l-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-body-l {
+      font-size: var(--typo-size-body-l-desktop);
+      line-height: var(--typo-line-height-body-l-desktop);
+    }
+  }
+
+  /* Body M */
+  .text-body-m {
+    font-size: var(--typo-size-body-m-mobile);
+    line-height: var(--typo-line-height-body-m-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-body-m {
+      font-size: var(--typo-size-body-m-tablet);
+      line-height: var(--typo-line-height-body-m-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-body-m {
+      font-size: var(--typo-size-body-m-desktop);
+      line-height: var(--typo-line-height-body-m-desktop);
+    }
+  }
+
+  /* Body S */
+  .text-body-s {
+    font-size: var(--typo-size-body-s-mobile);
+    line-height: var(--typo-line-height-body-s-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-body-s {
+      font-size: var(--typo-size-body-s-tablet);
+      line-height: var(--typo-line-height-body-s-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-body-s {
+      font-size: var(--typo-size-body-s-desktop);
+      line-height: var(--typo-line-height-body-s-desktop);
+    }
+  }
+
+  /* Body XS */
+  .text-body-xs {
+    font-size: var(--typo-size-body-xs-mobile);
+    line-height: var(--typo-line-height-body-xs-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-body-xs {
+      font-size: var(--typo-size-body-xs-tablet);
+      line-height: var(--typo-line-height-body-xs-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-body-xs {
+      font-size: var(--typo-size-body-xs-desktop);
+      line-height: var(--typo-line-height-body-xs-desktop);
+    }
+  }
+
+  /* Caption */
+  .text-caption {
+    font-size: var(--typo-size-caption-mobile);
+    line-height: var(--typo-line-height-caption-mobile);
+  }
+  @media (width >= 48rem) {
+    .text-caption {
+      font-size: var(--typo-size-caption-tablet);
+      line-height: var(--typo-line-height-caption-tablet);
+    }
+  }
+  @media (width >= 80rem) {
+    .text-caption {
+      font-size: var(--typo-size-caption-desktop);
+      line-height: var(--typo-line-height-caption-desktop);
+    }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

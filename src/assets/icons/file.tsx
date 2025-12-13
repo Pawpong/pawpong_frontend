@@ -1,0 +1,13 @@
+export default function FileIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path
+        d="M15.3957 11.1187L11.3804 15.134C9.68465 16.8298 6.93523 16.8298 5.23944 15.134C3.54365 13.4382 3.54365 10.6888 5.23944 8.99298L10.3569 3.87548C11.4875 2.74495 13.3204 2.74495 14.4509 3.87548C15.5815 5.00601 15.5815 6.83895 14.4509 7.96948L9.64837 12.7721C9.0831 13.3373 8.16663 13.3373 7.60137 12.7721C7.0361 12.2068 7.0361 11.2903 7.60137 10.7251L11.3017 7.02471"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
