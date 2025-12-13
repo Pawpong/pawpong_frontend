@@ -44,7 +44,7 @@ export default function FaqPage() {
   };
 
   return (
-    <Container className="pt-10 pb-20 px-12">
+    <Container className="pt-10 pb-20 px-5 md:px-12">
       <div className="max-w-[1344px] w-full mx-auto flex flex-col gap-7">
         {/* 제목 및 탭 */}
         <div className="flex flex-col gap-6">
