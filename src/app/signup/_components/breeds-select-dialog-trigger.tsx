@@ -5,7 +5,6 @@ import ClearFilters from '@/components/filter-sidebar/clear-filters';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import {
   LargeDialog,
   LargeDialogClose,
@@ -152,27 +151,28 @@ export default function BreedsSelectDialogTrigger({
           <ScrollArea className={cn('w-38.25 md:w-auto h-full', 'flex-1')}>
             <div className={cn('flex-shrink-0 py-2 pl-3.5 pr-3', ' pl-5 pr-3.5')}>
               {currentCategory?.breeds.map((breed) => (
-                <Label key={breed} className="py-2 pr-2.5 gap-2 text-body-xs text-grayscale-gray6 flex items-center">
-                  <Checkbox
-                    checked={selected.includes(breed)}
-                    onCheckedChange={() =>
-                      setSelected((prev) => {
-                        const isSelected = prev.includes(breed);
-                        if (isSelected) {
-                          // 이미 선택된 항목이면 제거
-                          return prev.filter((item) => item !== breed);
-                        } else {
-                          // 새로 선택하려는 항목이 5개 이상이면 막기
-                          if (prev.length >= 5) {
-                            return prev;
-                          }
-                          return [...prev, breed];
+                <div
+                  key={breed}
+                  className="py-2 pr-2.5 gap-2 text-body-xs text-grayscale-gray6 flex items-center cursor-pointer"
+                  onClick={() =>
+                    setSelected((prev) => {
+                      const isSelected = prev.includes(breed);
+                      if (isSelected) {
+                        // 이미 선택된 항목이면 제거
+                        return prev.filter((item) => item !== breed);
+                      } else {
+                        // 새로 선택하려는 항목이 5개 이상이면 막기
+                        if (prev.length >= 5) {
+                          return prev;
                         }
-                      })
-                    }
-                  />
+                        return [...prev, breed];
+                      }
+                    })
+                  }
+                >
+                  <Checkbox checked={selected.includes(breed)} />
                   <div className="whitespace-wrap">{breed}</div>
-                </Label>
+                </div>
               ))}
             </div>
           </ScrollArea>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import NotificationItem from './notification-item';
@@ -8,28 +8,43 @@ import NotificationEmptyState from './notification-empty-state';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { NOTIFICATION_CONFIG, NotificationType } from '@/constants/notification-messages';
+import { useNotifications, useMarkAllAsRead, transformNotificationForUI } from '@/hooks/use-notifications';
 
-// 목 데이터 인터페이스
+// UI에서 사용할 알림 데이터 인터페이스
 interface NotificationData {
-  id: number;
+  id: string;
   type: NotificationType;
   date: string;
   isRead: boolean;
   variables?: { [key: string]: string };
 }
 
-// 목 데이터
-const mockNotifications: NotificationData[] = [];
-
 interface NotificationDialogProps {
   children: React.ReactNode;
 }
 
 export default function NotificationDialog({ children }: NotificationDialogProps) {
-  const [notifications, setNotifications] = useState<NotificationData[]>(mockNotifications);
+  // API에서 알림 목록 조회
+  const { data, isLoading } = useNotifications(1, 50);
+  const markAllAsReadMutation = useMarkAllAsRead();
+
+  // API 응답을 UI 형식으로 변환
+  const notifications: NotificationData[] = useMemo(() => {
+    if (!data?.items) return [];
+    return data.items.map((item) => {
+      const transformed = transformNotificationForUI(item);
+      return {
+        id: transformed.id,
+        type: transformed.type as NotificationType,
+        date: transformed.date,
+        isRead: transformed.isRead,
+        variables: transformed.metadata,
+      };
+    });
+  }, [data?.items]);
 
   const handleMarkAllAsRead = () => {
-    setNotifications((prev) => prev.map((notif) => ({ ...notif, isRead: true })));
+    markAllAsReadMutation.mutate();
   };
 
   const newNotifications = notifications.filter((n) => !n.isRead);
@@ -91,7 +106,11 @@ export default function NotificationDialog({ children }: NotificationDialogProps
         <ScrollArea
           className={`${notifications.length > 0 ? 'flex-1 min-h-0' : 'flex-none'} px-5 md:px-10 lg:px-[12px] lg:pb-6`}
         >
-          {notifications.length === 0 ? (
+          {isLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
+            </div>
+          ) : notifications.length === 0 ? (
             <NotificationEmptyState />
           ) : (
             <div className="flex flex-col gap-6 ">

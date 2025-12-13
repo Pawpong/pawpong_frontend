@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { useCounselFormStore } from '@/stores/counsel-form-store';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useBreederProfile, useBreederPets, useParentPets, useBreederReviews } from './_hooks/use-breeder-detail';
+import { useAuthStore } from '@/stores/auth-store';
 
 interface PageProps {
   params: Promise<{
@@ -26,6 +27,10 @@ export default function Page({ params }: PageProps) {
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
   const isLg = useBreakpoint('lg');
+  const { user } = useAuthStore();
+
+  // 브리더 본인인지 확인
+  const isOwnProfile = user?.role === 'breeder' && user?.userId === breederId;
 
   const { data: profileData, isLoading: isProfileLoading } = useBreederProfile(breederId);
   const { data: petsData, isLoading: isPetsLoading } = useBreederPets(breederId);
@@ -54,23 +59,35 @@ export default function Page({ params }: PageProps) {
   }
 
   // 프로필 데이터 매핑
+  const profileInfo = profileData.profileInfo;
+  const locationStr = profileInfo?.locationInfo
+    ? `${profileInfo.locationInfo.cityName} ${profileInfo.locationInfo.districtName}`
+    : '';
+  const priceRangeStr = profileInfo?.priceRangeInfo
+    ? `${profileInfo.priceRangeInfo.minPrice?.toLocaleString()} - ${profileInfo.priceRangeInfo.maxPrice?.toLocaleString()}원`
+    : '상담 후 결정';
+
+  // API 응답에서 직접 값 추출 (profileImage, location, breederLevel 등)
+  const apiData = profileData as any;
+  const avatarUrl = apiData?.profileImage || profileData.profileImageFileName || '/avatar-sample.png';
+  const locationFromApi = apiData?.location || locationStr;
+  const levelFromApi = apiData?.breederLevel === 'elite' ? 'elite' : 'new';
+
   const breederProfileData = {
-    avatarUrl: profileData.profileImage || '/avatar-sample.png',
+    avatarUrl,
     nickname: profileData.breederName,
-    level: profileData.breederLevel || 'new',
-    location: profileData.location || '',
-    priceRange: profileData.priceRange
-      ? `${profileData.priceRange.min?.toLocaleString()} - ${profileData.priceRange.max?.toLocaleString()}원`
-      : '상담 후 결정',
-    breeds: profileData.detailBreed ? [profileData.detailBreed] : [],
-    animal: (profileData.petType as 'cat' | 'dog') || 'dog',
+    level: levelFromApi as 'new' | 'elite',
+    location: locationFromApi,
+    priceRange: priceRangeStr,
+    breeds: profileInfo?.specializationAreas || [],
+    animal: 'dog' as const,
   };
 
-  // 환경 사진
-  const envPhotos = profileData.representativePhotos || [];
+  // 환경 사진 - API 응답 구조에 맞게 처리
+  const envPhotos = (profileData as any)?.representativePhotos || profileInfo?.profilePhotos || [];
 
-  // 브리더 소개
-  const breederDescription = profileData.description || '';
+  // 브리더 소개 - API 응답 구조에 맞게 처리
+  const breederDescription = (profileData as any)?.description || profileInfo?.profileDescription || '';
 
   // 분양 가능 개체 매핑
   const breedingAnimals = (petsData?.items || []).map((pet: any) => ({
@@ -83,8 +100,10 @@ export default function Page({ params }: PageProps) {
     breed: pet.breed,
   }));
 
-  // 부모견/부모묘 매핑 - 백엔드가 배열을 직접 반환하는 경우 처리
-  const parentPetsArray = Array.isArray(parentPetsData) ? parentPetsData : parentPetsData?.items || [];
+  // 부모견/부모묘 매핑 - 배열 또는 객체 형태 모두 처리
+  const parentPetsArray = Array.isArray(parentPetsData)
+    ? parentPetsData
+    : (parentPetsData as any)?.items || [];
   const parentPets = parentPetsArray.map((pet: any) => ({
     id: pet.petId,
     avatarUrl: pet.photoUrl || '/animal-sample.png',
@@ -126,7 +145,7 @@ export default function Page({ params }: PageProps) {
       <Header breederNickname={profileData.breederName} breederId={breederId} />
       <div className="pt-4 lg:flex lg:gap-24.5 space-y-10 md:space-y-15 pb-10 md:pb-15 lg:lg-80">
         <div>
-          <BreederProfile data={breederProfileData} breederId={breederId} />
+          <BreederProfile data={breederProfileData} breederId={breederId} isOwnProfile={isOwnProfile} />
         </div>
         <div className="space-y-12 mt-10 md:mt-0">
           {envPhotos.length > 0 && (
@@ -160,7 +179,7 @@ export default function Page({ params }: PageProps) {
           {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} />}
         </div>
       </div>
-      {!isLg && (
+      {!isLg && !isOwnProfile && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2  w-full max-w-[22.0625rem]">
           <Button
             variant="counsel"

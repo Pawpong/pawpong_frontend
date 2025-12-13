@@ -81,6 +81,7 @@ const HomeBanner = () => {
         fill
         className="object-cover"
         priority
+        unoptimized={currentBanner.imageUrl.startsWith('http')}
       />
       {(currentBanner.title || currentBanner.description) && (
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">

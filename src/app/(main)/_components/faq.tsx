@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { getAdopterFaqs, type FaqDto } from '@/lib/home';
+import { getAdopterFaqs, getBreederFaqs, type FaqDto } from '@/lib/home';
+import { useAuthStore } from '@/stores/auth-store';
 import BreederProfileSectionHeader from '@/components/breeder-profile/breeder-profile-section-header';
 import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
 import BreederProfileSectionMore from '@/components/breeder-profile/breeder-profile-section-more';
@@ -13,12 +14,17 @@ const FAQ = () => {
   const [faqs, setFaqs] = useState<FaqDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { user, hasHydrated } = useAuthStore();
 
   useEffect(() => {
+    // hydration이 완료될 때까지 대기
+    if (!hasHydrated) return;
+
     const fetchFaqs = async () => {
       try {
         setIsLoading(true);
-        const data = await getAdopterFaqs();
+        // role에 따라 다른 FAQ 조회
+        const data = user?.role === 'breeder' ? await getBreederFaqs() : await getAdopterFaqs();
         setFaqs(data);
         setError(null);
       } catch (err) {
@@ -30,7 +36,7 @@ const FAQ = () => {
     };
 
     fetchFaqs();
-  }, []);
+  }, [hasHydrated, user?.role]);
 
   const leftColumn = faqs.slice(0, Math.ceil(faqs.length / 2));
   const rightColumn = faqs.slice(Math.ceil(faqs.length / 2));

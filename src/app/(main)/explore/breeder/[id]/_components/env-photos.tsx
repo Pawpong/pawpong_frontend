@@ -11,6 +11,7 @@ export default function EnvPhotos({ photos }: { photos: string[] }) {
             width={400}
             height={400}
             className="object-cover w-full h-full rounded-lg"
+            unoptimized={photo.startsWith('http')}
           />
         </div>
       ))}

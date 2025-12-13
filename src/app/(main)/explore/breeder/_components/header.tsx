@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import ArrowRight from '@/assets/icons/arrow-right';
 import Paw from '@/assets/icons/paw';
 import Siren from '@/assets/icons/siren';
@@ -13,12 +14,17 @@ interface HeaderProps {
 }
 
 export default function Header({ breederNickname, breederId }: HeaderProps) {
+  const router = useRouter();
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
+
+  const handleBack = () => {
+    router.back();
+  };
 
   return (
     <>
       <div className="flex items-center justify-between text-grayscale-gray6 py-6">
-        <Button variant="secondary" size="icon" className="size-9">
+        <Button variant="secondary" size="icon" className="size-9" onClick={handleBack}>
           <ArrowRight className="size-7" />
         </Button>
         <div className="flex gap-3">

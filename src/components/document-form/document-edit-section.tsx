@@ -29,6 +29,7 @@ export default function DocumentEditSection() {
 
   // 상태 관리
   const [level, setLevel] = useState<Level>('new');
+  const [submittedLevel, setSubmittedLevel] = useState<Level | null>(null); // 기존 제출된 레벨
   const [animal] = useState<Animal>('cat');
   const [oathChecked, setOathChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -39,6 +40,8 @@ export default function DocumentEditSection() {
 
   // 문서 상태 (각 타입별로 관리)
   const [documents, setDocuments] = useState<Record<string, DocumentState>>({});
+  // 기존 제출된 문서 (레벨 변경 시에도 유지)
+  const [submittedDocuments, setSubmittedDocuments] = useState<Record<string, DocumentState>>({});
 
   // 기존 데이터 로드
   useEffect(() => {
@@ -54,16 +57,42 @@ export default function DocumentEditSection() {
 
         // 기존 문서 상태 설정
         if (status.documents && status.documents.length > 0) {
+          // API 타입 -> 프론트엔드 키 매핑
+          const apiTypeToKey: Record<string, string> = {
+            id_card: 'idCard',
+            animal_production_license: 'businessLicense',
+            contract_sample: 'contractSample',
+            breeder_dog_certificate: 'breederDogCertificate',
+            breeder_cat_certificate: 'breederCatCertificate',
+          };
+
+          // URL에서 파일명 추출 함수
+          const extractFileNameFromUrl = (url: string): string => {
+            try {
+              // URL에서 path 부분 추출 (쿼리 파라미터 제외)
+              const urlPath = url.split('?')[0];
+              // 마지막 / 이후의 파일명 추출
+              const fileName = urlPath.split('/').pop() || '';
+              return fileName;
+            } catch {
+              return '';
+            }
+          };
+
           const docState: Record<string, DocumentState> = {};
           status.documents.forEach((doc) => {
-            docState[doc.type] = {
+            const frontendKey = apiTypeToKey[doc.type] || doc.type;
+            const fileName = extractFileNameFromUrl(doc.url);
+            docState[frontendKey] = {
               file: null,
-              fileName: doc.type,
+              fileName,
               url: doc.url,
               isUploaded: true,
             };
           });
           setDocuments(docState);
+          setSubmittedDocuments(docState); // 기존 제출 문서 저장
+          setSubmittedLevel(status.level || null); // 기존 제출 레벨 저장
           setOathChecked(true);
         }
       } catch (error) {
@@ -130,6 +159,18 @@ export default function DocumentEditSection() {
     const result: Record<string, File | null> = {};
     Object.entries(documents).forEach(([key, state]) => {
       result[key] = state.file;
+    });
+    return result;
+  }, [documents]);
+
+  // 기존 파일명 추출 (서버에서 이미 업로드된 파일들)
+  const getExistingFileNames = useCallback((): Record<string, string> => {
+    const result: Record<string, string> = {};
+    Object.entries(documents).forEach(([key, state]) => {
+      if (state.isUploaded && state.url) {
+        // URL에서 파일명 추출 또는 타입명 사용
+        result[key] = state.fileName || key;
+      }
     });
     return result;
   }, [documents]);
@@ -220,10 +261,21 @@ export default function DocumentEditSection() {
           level={level}
           animal={animal}
           documents={getDocumentsForForm()}
+          existingFileNames={getExistingFileNames()}
           oathChecked={oathChecked}
           onLevelChange={(newLevel) => {
             setLevel(newLevel);
             setHasUnsavedChanges(true);
+            // 레벨 변경 시 기존 제출 문서 처리
+            if (newLevel === submittedLevel) {
+              // 기존 제출 레벨로 돌아오면 기존 문서 복원
+              setDocuments(submittedDocuments);
+              setOathChecked(true);
+            } else {
+              // 다른 레벨로 변경하면 문서 초기화
+              setDocuments({});
+              setOathChecked(false);
+            }
           }}
           onFileUpload={handleFileUpload}
           onFileDelete={handleFileDelete}

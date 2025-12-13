@@ -144,11 +144,14 @@ export interface FavoriteRemoveResponseDto {
 export interface FavoriteItemDto {
   breederId: string;
   breederName: string;
-  profileImageUrl?: string;
+  profileImageFileName?: string;
   location: string;
+  specialization?: string[];
   averageRating: number;
-  reviewCount: number;
+  totalReviews: number;
+  availablePets?: number;
   addedAt: string;
+  isActive?: boolean;
 }
 
 /** 즐겨찾기 목록 응답 DTO */

@@ -26,7 +26,7 @@ export default function ProfileImageWithBadge({
     >
       {src ? (
         <>
-          <Image src={src} alt={alt} width={size} height={size} className="object-cover w-full h-full" />
+          <Image src={src} alt={alt} width={size} height={size} className="object-cover w-full h-full" unoptimized={src.startsWith('http')} />
           <div className="absolute bottom-0 left-0 right-0 bg-[var(--color-grayscale-gray1)] flex items-center justify-center py-1.5 px-1.5">
             <p className="text-caption font-medium text-grayscale-gray6 text-center">
               {animalType === 'cat' ? '고양이' : '강아지'}
