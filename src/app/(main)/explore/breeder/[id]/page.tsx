@@ -32,6 +32,7 @@ export default function Page({ params }: PageProps) {
 
   // 브리더 본인인지 확인
   const isOwnProfile = user?.role === 'breeder' && user?.userId === breederId;
+  const isBreeder = user?.role === 'breeder';
 
   const { data: profileData, isLoading: isProfileLoading } = useBreederProfile(breederId);
   const { data: petsData, isLoading: isPetsLoading } = useBreederPets(breederId);
@@ -211,7 +212,7 @@ export default function Page({ params }: PageProps) {
             className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"
             type="button"
             onClick={handleCounselClick}
-            disabled={isOwnProfile}
+            disabled={isOwnProfile || isBreeder}
           >
             상담 신청하기
           </Button>

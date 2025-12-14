@@ -34,7 +34,8 @@ export default function BreederProfile({
   const { clearCounselFormData } = useCounselFormStore();
   const isLg = useBreakpoint('lg');
 
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
+  const isBreeder = user?.role === 'breeder';
 
   const handleCounselClick = () => {
     if (!isAuthenticated) {
@@ -103,7 +104,7 @@ export default function BreederProfile({
             className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"
             type="button"
             onClick={handleCounselClick}
-            disabled={isOwnProfile}
+            disabled={isOwnProfile || isBreeder}
           >
             상담 신청하기
           </Button>
