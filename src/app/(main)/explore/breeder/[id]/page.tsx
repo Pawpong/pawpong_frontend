@@ -28,7 +28,7 @@ export default function Page({ params }: PageProps) {
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
   const isLg = useBreakpoint('lg');
-  const { user } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
 
   // 브리더 본인인지 확인
   const isOwnProfile = user?.role === 'breeder' && user?.userId === breederId;
@@ -39,6 +39,10 @@ export default function Page({ params }: PageProps) {
   const { data: reviewsData, isLoading: isReviewsLoading } = useBreederReviews(breederId);
 
   const handleCounselClick = () => {
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
+    }
     clearCounselFormData();
     router.push(`/counselform?breederId=${breederId}`);
   };

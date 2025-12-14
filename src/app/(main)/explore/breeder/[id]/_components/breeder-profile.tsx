@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import LevelBadge from '../../../../../../components/level-badge';
 import { useCounselFormStore } from '@/stores/counsel-form-store';
+import { useAuthStore } from '@/stores/auth-store';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import Cat from '@/assets/icons/cat';
 import Dog from '@/assets/icons/dog';
@@ -33,7 +34,13 @@ export default function BreederProfile({
   const { clearCounselFormData } = useCounselFormStore();
   const isLg = useBreakpoint('lg');
 
+  const { isAuthenticated } = useAuthStore();
+
   const handleCounselClick = () => {
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
+    }
     clearCounselFormData();
     router.push(`/counselform?breederId=${breederId}`);
   };
