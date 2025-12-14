@@ -148,7 +148,7 @@ export default function NicknameSection() {
 
       <SignupFormItems className="flex flex-col gap-8">
         {/* Social Login Info Display */}
-        {isSocialLogin && (
+        {/* {isSocialLogin && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-2">
             <div className="text-sm font-semibold text-green-800">회원가입 정보 확인 (디버깅용)</div>
             <div className="text-xs space-y-1 text-green-700">
@@ -161,7 +161,7 @@ export default function NicknameSection() {
               <div>Marketing: {agreements.marketing ? '동의' : '비동의'}</div>
             </div>
           </div>
-        )}
+        )} */}
 
         <div className="flex flex-col gap-[10px]">
           <div className="flex gap-3">

@@ -16,6 +16,7 @@ import useSignupFormStore from '@/stores/signup-form-store';
 import { useRouter } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 import DocumentSkipDialogTrigger from '../document-skip-dialog-trigger';
 import OathDialogTrigger from '../oath-dialog-trigger';
 import FileButton from './file-button';
@@ -78,6 +79,7 @@ export default function DocumentSection() {
   const [submitting, setSubmitting] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<{ type: string; file: File }[]>([]);
   const [uploading, setUploading] = useState(false);
+  const { toast } = useToast();
 
   // 파일 업로드 핸들러 - 파일을 복제하여 저장 (ERR_UPLOAD_FILE_CHANGED 방지)
   const handleFileUpload = (type: string) => async (file: File) => {
@@ -104,12 +106,18 @@ export default function DocumentSection() {
   // Complete breeder registration
   const handleSubmit = async () => {
     if (!check) {
-      alert('브리더 입점 서약서에 동의해주세요.');
+      toast({
+        title: '서약서 동의 필요',
+        description: '브리더 입점 서약서에 동의해주세요.',
+      });
       return;
     }
 
     if (!tempId) {
-      alert('소셜 로그인 정보가 없습니다. 다시 로그인해주세요.');
+      toast({
+        title: '로그인 정보 없음',
+        description: '소셜 로그인 정보가 없습니다. 다시 로그인해주세요.',
+      });
       router.push('/login');
       return;
     }
@@ -180,9 +188,15 @@ export default function DocumentSection() {
     } catch (error) {
       console.error('=== Breeder Registration Error ===', error);
       if (error instanceof Error) {
-        alert(error.message);
+        toast({
+          title: '회원가입 실패',
+          description: error.message,
+        });
       } else {
-        alert('회원가입에 실패했습니다.');
+        toast({
+          title: '회원가입 실패',
+          description: '회원가입에 실패했습니다.',
+        });
       }
     } finally {
       setSubmitting(false);
