@@ -9,6 +9,7 @@ import { useBreakpoint } from '@/hooks/use-breakpoint';
 import Cat from '@/assets/icons/cat';
 import Dog from '@/assets/icons/dog';
 import LevelUpgradeDialog from '@/components/document-form/level-upgrade-dialog';
+import { Lock } from 'lucide-react';
 import type { Animal } from '@/stores/signup-form-store';
 
 export default function BreederProfile({
@@ -21,7 +22,7 @@ export default function BreederProfile({
     nickname: string;
     level: 'new' | 'elite';
     location: string;
-    priceRange: string;
+    priceRange: string | null;
     breeds: string[];
     animal: Animal;
   };
@@ -64,7 +65,16 @@ export default function BreederProfile({
           <div className="space-y-3">
             <div className="text-body-s mb-2 text-grayscale-gray5">
               <div>{location}</div>
-              <div>{priceRange}</div>
+              <div>
+                {priceRange !== null ? (
+                  priceRange
+                ) : (
+                  <span className="inline-flex items-center gap-1">
+                    <Lock className="w-3 h-3" />
+                    로그인 후 비용 확인 가능
+                  </span>
+                )}
+              </div>
             </div>
             <div className="flex flex-wrap gap-2">
               {breeds.map((breed) => (

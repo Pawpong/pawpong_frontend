@@ -3,6 +3,7 @@ import Male from '@/assets/icons/male';
 import AdoptionStatusBadge from '@/components/adoption-status-badge';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { Lock } from 'lucide-react';
 
 const sexInfo = {
   male: { icon: Male, className: 'text-gender-male-500' },
@@ -17,7 +18,7 @@ export default function AnimalProfile({
     name: string;
     sex: 'male' | 'female';
     birth: string;
-    price: string;
+    price: string | null;
     breed: string;
     status?: 'available' | 'reserved' | 'completed';
   };
@@ -61,7 +62,16 @@ export default function AnimalProfile({
           </div>
 
           <div className="text-body-s text-grayscale-gray5">{birth}</div>
-          <div className="text-body-s text-grayscale-gray5">{price}</div>
+          <div className="text-body-s text-grayscale-gray5">
+            {price !== null ? (
+              price
+            ) : (
+              <span className="inline-flex items-center gap-1">
+                <Lock className="w-3 h-3" />
+                로그인 후 확인
+              </span>
+            )}
+          </div>
         </div>
         <div className="rounded bg-tertiary-500 py-1.5 px-2.5 w-fit text-body-xs font-medium text-primary-500">
           {breed}
