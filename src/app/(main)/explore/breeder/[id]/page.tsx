@@ -63,8 +63,10 @@ export default function Page({ params }: PageProps) {
   const locationStr = profileInfo?.locationInfo
     ? `${profileInfo.locationInfo.cityName} ${profileInfo.locationInfo.districtName}`
     : '';
-  const priceRangeStr = profileInfo?.priceRangeInfo
-    ? `${profileInfo.priceRangeInfo.minPrice?.toLocaleString()} - ${profileInfo.priceRangeInfo.maxPrice?.toLocaleString()}원`
+  // API 응답에서 직접 priceRange 추출 (백엔드가 priceRange: { min, max } 형식으로 반환)
+  const apiPriceRange = (profileData as any)?.priceRange;
+  const priceRangeStr = apiPriceRange?.min || apiPriceRange?.max
+    ? `${apiPriceRange.min?.toLocaleString()} - ${apiPriceRange.max?.toLocaleString()}원`
     : '상담 후 결정';
 
   // API 응답에서 직접 값 추출 (profileImage, location, breederLevel 등)
@@ -79,7 +81,7 @@ export default function Page({ params }: PageProps) {
     level: levelFromApi as 'new' | 'elite',
     location: locationFromApi,
     priceRange: priceRangeStr,
-    breeds: profileInfo?.specializationAreas || [],
+    breeds: (profileData as any)?.breeds || profileInfo?.specializationAreas || [],
     animal: 'dog' as const,
   };
 
@@ -89,13 +91,28 @@ export default function Page({ params }: PageProps) {
   // 브리더 소개 - API 응답 구조에 맞게 처리
   const breederDescription = (profileData as any)?.description || profileInfo?.profileDescription || '';
 
+  // 날짜 포맷팅 함수 (YYYY년 MM월 DD일 생 형식)
+  const formatBirthDate = (dateString: string | Date | undefined) => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return '';
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      return `${year}년 ${month}월 ${day}일 생`;
+    } catch {
+      return '';
+    }
+  };
+
   // 분양 가능 개체 매핑
   const breedingAnimals = (petsData?.items || []).map((pet: any) => ({
     id: pet.petId,
     avatarUrl: pet.mainPhoto || '/animal-sample.png',
     name: pet.name,
     sex: pet.gender,
-    birth: pet.birthDate,
+    birth: formatBirthDate(pet.birthDate),
     price: `${pet.price.toLocaleString()}원`,
     breed: pet.breed,
   }));
@@ -109,7 +126,7 @@ export default function Page({ params }: PageProps) {
     avatarUrl: pet.photoUrl || '/animal-sample.png',
     name: pet.name,
     sex: pet.gender,
-    birth: pet.birthDate,
+    birth: formatBirthDate(pet.birthDate),
     price: '', // 부모견은 가격이 없음
     breed: pet.breed,
   }));

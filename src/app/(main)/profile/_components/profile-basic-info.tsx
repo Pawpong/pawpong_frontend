@@ -88,7 +88,7 @@ export default function ProfileBasicInfo({ form, profileImagePreview, onProfileI
           <Controller
             name="breederName"
             control={control}
-            render={({ field }) => <Input placeholder="브리더명(상호명)" {...field} />}
+            render={({ field }) => <Input placeholder="브리더명(상호명)" {...field} disabled className="bg-grayscale-gray1 text-grayscale-gray5 cursor-not-allowed" />}
           />
           {errors.breederName && <ErrorMessage message={errors.breederName.message as string} />}
         </div>

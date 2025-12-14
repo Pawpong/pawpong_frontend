@@ -27,6 +27,7 @@ import { useBreederPets } from './_hooks/use-breeder-pets';
 import { useSearchParams, useRouter } from 'next/navigation';
 import type { ApplicationCreateRequest } from '@/lib/application';
 import { formatPhoneNumber } from '@/utils/phone';
+import CounselBannerCarousel from '@/components/counsel-banner/counsel-banner-carousel';
 
 export default function CounselFormPage() {
   const isMdUp = useBreakpoint('md');
@@ -125,6 +126,9 @@ export default function CounselFormPage() {
 
     // 프론트엔드 폼 데이터를 백엔드 API 요청 형식으로 변환
     const applicationData: ApplicationCreateRequest = {
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
       breederId,
       petId,
       privacyConsent: formData.privacyAgreement,
@@ -181,8 +185,14 @@ export default function CounselFormPage() {
         </ExitConfirmDialog>
       </div>
       <div className="min-h-screen flex w-full flex-col md:flex-row">
-        {/* 왼쪽 영역: md 이상에서만 표시 (배경 여백) */}
-        {isMdUp && <div className="md:w-1/2" />}
+        {/* 왼쪽 배너 영역: md 이상에서만 표시 */}
+        {isMdUp && (
+          <div className="md:w-1/2 md:p-8 bg-tertiary-500">
+            <div className="md:h-[calc(100vh-4rem)]">
+              <CounselBannerCarousel />
+            </div>
+          </div>
+        )}
 
         <div className="w-full md:w-1/2 flex flex-col">
           <div className="flex w-full flex-col items-center pb-20 md:pb-24  md:px-4 lg:px-0.5">

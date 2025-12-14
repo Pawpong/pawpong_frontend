@@ -55,28 +55,30 @@ export function ExpandableText({
         {/* 접기 버튼 */}
       </div>
 
-      {!expanded ? (
-        <Button
-          className="p-0 pt-4 w-full flex items-center justify-center text-grayscale-gray5! hover:text-primary!"
-          variant="ghost"
-          onClick={() => setExpanded(true)}
-        >
-          <div className="flex items-center gap-1">
-            <div>더보기</div>
-            <ChevronDown className="size-3.5" />
-          </div>
-        </Button>
-      ) : (
-        <Button
-          className="p-0 w-full pt-4 flex items-center justify-center text-grayscale-gray5! hover:text-primary!"
-          variant="ghost"
-          onClick={() => setExpanded(false)}
-        >
-          <div className="flex items-center gap-1">
-            <div>접기</div>
-            <ChevronUp className="size-3.5" />
-          </div>
-        </Button>
+      {overflow && (
+        !expanded ? (
+          <Button
+            className="p-0 pt-4 w-full flex items-center justify-center text-grayscale-gray5! hover:text-primary!"
+            variant="ghost"
+            onClick={() => setExpanded(true)}
+          >
+            <div className="flex items-center gap-1">
+              <div>더보기</div>
+              <ChevronDown className="size-3.5" />
+            </div>
+          </Button>
+        ) : (
+          <Button
+            className="p-0 w-full pt-4 flex items-center justify-center text-grayscale-gray5! hover:text-primary!"
+            variant="ghost"
+            onClick={() => setExpanded(false)}
+          >
+            <div className="flex items-center gap-1">
+              <div>접기</div>
+              <ChevronUp className="size-3.5" />
+            </div>
+          </Button>
+        )
       )}
     </div>
   );
