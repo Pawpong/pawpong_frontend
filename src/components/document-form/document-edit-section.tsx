@@ -61,9 +61,9 @@ export default function DocumentEditSection() {
           const apiTypeToKey: Record<string, string> = {
             id_card: 'idCard',
             animal_production_license: 'businessLicense',
-            contract_sample: 'contractSample',
-            breeder_dog_certificate: 'breederDogCertificate',
-            breeder_cat_certificate: 'breederCatCertificate',
+            adoption_contract_sample: 'contractSample',
+            recent_pedigree_document: 'pedigree',
+            breeder_certification: 'breederCatCertificate',
           };
 
           // URL에서 파일명 추출 함수

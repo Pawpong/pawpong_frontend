@@ -236,7 +236,7 @@ export default function UserInfoSection() {
       </SignupFormHeader>
       <SignupFormItems className="gap-8">
         {/* Social Login Info Display */}
-        {isSocialLogin && (
+        {/* {isSocialLogin && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
             <div className="text-sm font-semibold text-blue-800">소셜 로그인 정보 (디버깅용)</div>
             <div className="text-xs space-y-1 text-blue-700">
@@ -246,7 +246,7 @@ export default function UserInfoSection() {
               <div>TempId: {tempId}</div>
             </div>
           </div>
-        )}
+        )} */}
 
         <div className="gap-2.5 flex flex-col">
           <Input
