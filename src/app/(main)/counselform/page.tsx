@@ -584,7 +584,7 @@ export default function CounselFormPage() {
           </div>
 
           {/* 제출 버튼 */}
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 px-8 w-full max-w-[424px] md:bottom-10 md:left-[calc(50%+20%)] md:-translate-x-1/2 md:w-[424px] md:px-0">
+          <div className="sticky bottom-6 flex w-full justify-center px-8 md:bottom-10 md:px-4 lg:px-0.5">
             <Button
               variant={undefined}
               disabled={isDisabled}
