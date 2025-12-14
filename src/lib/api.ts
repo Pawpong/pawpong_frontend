@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 // trailing slash 제거하여 이중 슬래시 방지
-const BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '') || '';
+const BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '') || 'https://dev-api.pawpong.kr';
 
 // 토큰 리프레시 상태 관리 (중복 요청 방지)
 let isRefreshing = false;
