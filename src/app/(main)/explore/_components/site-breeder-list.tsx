@@ -100,9 +100,11 @@ export default function SiteBreederList() {
                   <GrayDot className="block sm:hidden lg:block align-middle" />
                   <BreederPrice>
                     {isLoggedIn ? (
-                      breeder.priceRange?.min || breeder.priceRange?.max
-                        ? `${breeder.priceRange.min?.toLocaleString()} - ${breeder.priceRange.max?.toLocaleString()}원`
-                        : '상담 후 비용 확인 가능'
+                      breeder.priceRange?.min || breeder.priceRange?.max ? (
+                        `${breeder.priceRange.min?.toLocaleString()} - ${breeder.priceRange.max?.toLocaleString()}원`
+                      ) : (
+                        '상담 후 비용 확인 가능'
+                      )
                     ) : (
                       <span className="inline-flex items-center gap-1">
                         <Lock className="w-3 h-3" />
@@ -112,18 +114,24 @@ export default function SiteBreederList() {
                   </BreederPrice>
                 </BreederDescription>
                 <BreederTags>
-                  {(breeder.specializationTypes || [breeder.mainBreed]).filter(Boolean).map((area: string, idx: number) => (
-                    <Button variant="secondary" key={idx}>
-                      {area}
-                    </Button>
-                  ))}
+                  {(breeder.specializationTypes || [breeder.mainBreed])
+                    .filter(Boolean)
+                    .map((area: string, idx: number) => (
+                      <Button variant="secondary" key={idx}>
+                        {area}
+                      </Button>
+                    ))}
                 </BreederTags>
               </BreederContent>
             </BreederProfile>
             <div className="relative">
               <BreederImage src={breeder.representativePhotos[0]} />
               <div className="absolute top-0 right-0 p-3">
-                <BreederLikeButton breederId={breeder.breederId} initialIsFavorited={breeder.isFavorited} />
+                <BreederLikeButton
+                  breederId={breeder.breederId}
+                  initialIsFavorited={breeder.isFavorited}
+                  hasImage={!!breeder.representativePhotos?.[0]}
+                />
               </div>
               {breeder.isAdoptionAvailable && (
                 <div className="absolute bottom-0 right-0 p-3">
