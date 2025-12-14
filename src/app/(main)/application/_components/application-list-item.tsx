@@ -157,7 +157,10 @@ export default function ApplicationListItem({
 
     return (
       <>
-        <div className="bg-[#F8F8EE] flex flex-col gap-3 p-5 rounded-lg w-full">
+        <div
+          className="bg-[#F8F8EE] flex flex-col gap-3 p-5 rounded-lg w-full cursor-pointer hover:bg-[#F0F0E5] transition-colors"
+          onClick={() => setIsModalOpen(true)}
+        >
           {/* 신청자 정보 */}
           <div className="flex flex-col gap-1 w-full">
             {/* 신청자 닉네임 */}
