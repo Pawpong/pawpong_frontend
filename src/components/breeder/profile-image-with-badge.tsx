@@ -27,9 +27,6 @@ export default function ProfileImageWithBadge({
   const IconComponent = animalType === 'cat' ? Cat : Dog;
   const hasValidImage = src && isValidImageUrl(src);
 
-  // src가 유효한 URL인지 확인 (http:// 또는 https://로 시작하는 경우만)
-  const isValidUrl = src && src.trim().length > 0 && (src.startsWith('http://') || src.startsWith('https://'));
-
   return (
     <div
       className={`relative shrink-0 rounded-lg overflow-hidden bg-grayscale-gray1 ${className}`}

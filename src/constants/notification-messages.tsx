@@ -5,14 +5,6 @@ import Dog from "@/assets/icons/dog";
 import Letter from "@/assets/icons/heart-letter.svg";
 
 export type NotificationType =
-  | "BREEDER_APPROVED"
-  | "BREEDER_UNAPPROVED"
-  | "BREEDER_ONBOARDING_INCOMPLETE"
-  | "NEW_CONSULT_REQUEST"
-  | "NEW_REVIEW_REGISTERED"
-  | "CONSULT_COMPLETED"
-  | "NEW_PET_REGISTERED"
-  | "new_application";
   | "breeder_approved"
   | "breeder_unapproved"
   | "breeder_onboarding_incomplete"
@@ -81,11 +73,6 @@ export const NOTIFICATION_CONFIG: Record<NotificationType, NotificationConfig> =
       message:
         "$breederName$님이 새로운 아이를 등록했어요!\n지금 바로 확인해보세요",
       defaultVariables: { breederName: "" },
-    },
-
-    new_application: {
-      icon: () => <Letter />,
-      message: "새로운 입양 상담 신청이 도착했어요!\n지금 확인해 보세요.",
     },
 
     document_reminder: {
