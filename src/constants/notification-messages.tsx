@@ -11,7 +11,8 @@ export type NotificationType =
   | "NEW_CONSULT_REQUEST"
   | "NEW_REVIEW_REGISTERED"
   | "CONSULT_COMPLETED"
-  | "NEW_PET_REGISTERED";
+  | "NEW_PET_REGISTERED"
+  | "new_application";
 
 interface NotificationConfig {
   message: string;
@@ -64,5 +65,10 @@ export const NOTIFICATION_CONFIG: Record<NotificationType, NotificationConfig> =
       message:
         "$breederName$님이 새로운 아이를 등록했어요!\n지금 바로 확인해보세요",
       defaultVariables: { breederName: "" },
+    },
+
+    new_application: {
+      icon: () => <Letter />,
+      message: "새로운 입양 상담 신청이 도착했어요!\n지금 확인해 보세요.",
     },
   };

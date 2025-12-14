@@ -63,6 +63,9 @@ export default function ApplicationListItem({
 }: ApplicationListItemProps) {
   // 입양자 화면 (브리더 정보 표시)
   if (!isBreeder && breederName && breederLevel) {
+    // 상담 완료 또는 입양 승인 상태에서만 후기 작성 가능
+    const canWriteReview = status === 'consultation_completed' || status === 'adoption_approved';
+
     return (
       <div className="flex gap-5 items-center w-full md:flex-row">
         {/* 프로필 이미지 */}
@@ -78,45 +81,49 @@ export default function ApplicationListItem({
           <BreederInfo breederName={breederName} breederLevel={breederLevel} />
           <div className="flex justify-between items-center gap-2">
             <p className="text-body-s font-normal text-grayscale-gray5 whitespace-nowrap">{applicationDate}</p>
-            {/* 후기 작성 버튼 */}
-            <ReviewDialog
-              applicationId={applicationId}
-              breederId={breederId!}
-              breederName={breederName}
-              breederLevel={breederLevel}
-              applicationDate={applicationDate}
-              profileImage={profileImage}
-              animalType={(animalType || 'cat') as 'cat' | 'dog'}
-            >
-              <Button
-                variant="ghost"
-                className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 md:hidden"
+            {/* 후기 작성 버튼 - 상담 완료/입양 승인 상태에서만 표시 */}
+            {canWriteReview && (
+              <ReviewDialog
+                applicationId={applicationId}
+                breederId={breederId!}
+                breederName={breederName}
+                breederLevel={breederLevel}
+                applicationDate={applicationDate}
+                profileImage={profileImage}
+                animalType={(animalType || 'cat') as 'cat' | 'dog'}
               >
-                <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
-                <Pencil className="size-4" />
-              </Button>
-            </ReviewDialog>
+                <Button
+                  variant="ghost"
+                  className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 md:hidden"
+                >
+                  <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
+                  <Pencil className="size-4" />
+                </Button>
+              </ReviewDialog>
+            )}
           </div>
         </div>
 
-        {/* 후기 작성 버튼 (데스크톱) */}
-        <ReviewDialog
-          applicationId={applicationId}
-          breederId={breederId!}
-          breederName={breederName}
-          breederLevel={breederLevel}
-          applicationDate={applicationDate}
-          profileImage={profileImage}
-          animalType={(animalType || 'cat') as 'cat' | 'dog'}
-        >
-          <Button
-            variant="ghost"
-            className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 hidden md:flex"
+        {/* 후기 작성 버튼 (데스크톱) - 상담 완료/입양 승인 상태에서만 표시 */}
+        {canWriteReview && (
+          <ReviewDialog
+            applicationId={applicationId}
+            breederId={breederId!}
+            breederName={breederName}
+            breederLevel={breederLevel}
+            applicationDate={applicationDate}
+            profileImage={profileImage}
+            animalType={(animalType || 'cat') as 'cat' | 'dog'}
           >
-            <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
-            <Pencil className="size-4" />
-          </Button>
-        </ReviewDialog>
+            <Button
+              variant="ghost"
+              className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 hidden md:flex"
+            >
+              <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
+              <Pencil className="size-4" />
+            </Button>
+          </ReviewDialog>
+        )}
       </div>
     );
   }
