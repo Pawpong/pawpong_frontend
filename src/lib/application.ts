@@ -2,6 +2,9 @@ import apiClient from './api';
 
 /** 입양 신청 요청 데이터 */
 export interface ApplicationCreateRequest {
+  name: string;
+  phone: string;
+  email: string;
   breederId: string;
   petId?: string;
   privacyConsent: boolean;

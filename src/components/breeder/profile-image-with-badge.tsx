@@ -27,6 +27,9 @@ export default function ProfileImageWithBadge({
   const IconComponent = animalType === 'cat' ? Cat : Dog;
   const hasValidImage = src && isValidImageUrl(src);
 
+  // src가 유효한 URL인지 확인 (http:// 또는 https://로 시작하는 경우만)
+  const isValidUrl = src && src.trim().length > 0 && (src.startsWith('http://') || src.startsWith('https://'));
+
   return (
     <div
       className={`relative shrink-0 rounded-lg overflow-hidden bg-grayscale-gray1 ${className}`}
@@ -34,7 +37,7 @@ export default function ProfileImageWithBadge({
     >
       {hasValidImage ? (
         <>
-          <Image src={src} alt={alt} width={size} height={size} className="object-cover w-full h-full" unoptimized={src.startsWith('http')} />
+          <Image src={src} alt={alt} width={size} height={size} className="object-cover w-full h-full" unoptimized />
           <div className="absolute bottom-0 left-0 right-0 bg-[var(--color-grayscale-gray1)] flex items-center justify-center py-1.5 px-1.5">
             <p className="text-caption font-medium text-grayscale-gray6 text-center">
               {animalType === 'cat' ? '고양이' : '강아지'}
