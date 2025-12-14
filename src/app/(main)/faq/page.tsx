@@ -7,15 +7,29 @@ import { cn } from '@/lib/utils';
 import DownArrow from '@/assets/icons/long-down-arrow.svg';
 import { Button } from '@/components/ui/button';
 import { useFaqs } from './_hooks/use-faqs';
+import { useAuthStore } from '@/stores/auth-store';
 
 type TabType = 'adopter' | 'breeder';
 
 export default function FaqPage() {
-  const [activeTab, setActiveTab] = useState<TabType>('adopter');
+  const { user } = useAuthStore();
+  const [activeTab, setActiveTab] = useState<TabType>(() => {
+    // 로그인한 사용자의 역할에 따라 초기 탭 설정
+    return user?.role === 'breeder' ? 'breeder' : 'adopter';
+  });
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [showAll, setShowAll] = useState(false);
 
   const { data: faqs = [], isLoading, error } = useFaqs(activeTab);
+
+  // 로그인 상태 변경 시 탭 업데이트
+  useEffect(() => {
+    if (user?.role === 'breeder') {
+      setActiveTab('breeder');
+    } else if (user?.role === 'adopter') {
+      setActiveTab('adopter');
+    }
+  }, [user?.role]);
 
   useEffect(() => {
     if (faqs.length > 0) {
