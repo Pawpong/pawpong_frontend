@@ -66,7 +66,10 @@ export default function NotificationDialog({ children }: NotificationDialogProps
 
     if (mergedVariables) {
       for (const key in mergedVariables) {
-        message = message.replace(`$${key}$`, mergedVariables[key] || '');
+        const value = mergedVariables[key];
+        // 값이 없으면 기본값 사용 (breederName이 비어있으면 "브리더"로 대체)
+        const replacement = value || (key === 'breederName' ? '브리더' : '');
+        message = message.replace(`$${key}$`, replacement);
       }
     }
     return message;

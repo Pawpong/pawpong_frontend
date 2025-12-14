@@ -47,8 +47,8 @@ export function useAuthGuard(options: UseAuthGuardOptions = {}) {
           const profile = await getAdopterProfile();
           setUser({
             userId: profile.adopterId,
-            email: profile.email,
-            name: profile.name || profile.nickname,
+            email: profile.emailAddress,
+            name: profile.nickname,
             role: 'adopter',
           });
         }
