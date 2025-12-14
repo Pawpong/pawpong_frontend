@@ -8,7 +8,7 @@ export default function LoginSection() {
       <div className="gap-3 flex flex-col items-center mt-[6rem]">
         <Logo className=" text-secondary-600 h-12 w-auto" />
 
-        <div className="text-body-m font-medium text-tertiary-600">윤리적인 브리더와 입양자를 연결해요</div>
+        <div className="text-body-m font-medium text-tertiary-600">전문적인 브리더와 입양자를 연결해요</div>
       </div>
 
       <div className="flex flex-col items-center gap-[3.75rem] md:gap-[6.25rem] lg:gap-[7.5rem] w-full max-w-md">
