@@ -24,8 +24,14 @@ import { useFilterStore } from '@/stores/filter-store';
 import { mapFiltersToParams } from '@/lib/filter-mapper';
 import { useSegment } from '@/hooks/use-segment';
 import type { SearchBreederParams } from '@/lib/breeder';
+import { useAuthStore } from '@/stores/auth-store';
+import { Lock } from 'lucide-react';
 
 export default function SiteBreederList() {
+  // 로그인 상태 확인
+  const { user } = useAuthStore();
+  const isLoggedIn = !!user;
+
   // URL 경로에서 petType 자동 감지 (useSegment 사용)
   const petType = (useSegment(1) as 'cat' | 'dog') || 'cat';
 
@@ -93,9 +99,16 @@ export default function SiteBreederList() {
                   <BreederLocation>{breeder.location}</BreederLocation>
                   <GrayDot className="block sm:hidden lg:block align-middle" />
                   <BreederPrice>
-                    {breeder.priceRange?.min || breeder.priceRange?.max
-                      ? `${breeder.priceRange.min?.toLocaleString()} - ${breeder.priceRange.max?.toLocaleString()}원`
-                      : '상담 후 비용 확인 가능'}
+                    {isLoggedIn ? (
+                      breeder.priceRange?.min || breeder.priceRange?.max
+                        ? `${breeder.priceRange.min?.toLocaleString()} - ${breeder.priceRange.max?.toLocaleString()}원`
+                        : '상담 후 비용 확인 가능'
+                    ) : (
+                      <span className="inline-flex items-center gap-1">
+                        <Lock className="w-3 h-3" />
+                        로그인 후 비용 확인 가능
+                      </span>
+                    )}
                   </BreederPrice>
                 </BreederDescription>
                 <BreederTags>

@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { noticeMockData } from "../_mocks/notice-mock-data";
+import { getAnnouncements, type AnnouncementDto } from "@/lib/announcement";
 
 export interface NoticeItem {
-  id: number;
+  id: string;
   title: string;
   date: string;
   content: string;
@@ -15,21 +15,33 @@ interface NoticesResponse {
 
 const PAGE_SIZE = 10;
 
-const fetchNotices = async (page: number): Promise<NoticesResponse> => {
-  // TODO: API 연동 시 아래 주석 해제
-  // const response = await api.get(`/notices`, {
-  //   params: { page, limit: PAGE_SIZE },
-  // });
-  // return response.data;
-
-  // 목 데이터
-  const startIndex = (page - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-
+/**
+ * 백엔드 AnnouncementDto를 프론트엔드 NoticeItem으로 변환
+ */
+const mapDtoToNoticeItem = (dto: AnnouncementDto): NoticeItem => {
   return {
-    data: noticeMockData.slice(startIndex, endIndex),
-    hasMore: endIndex < noticeMockData.length,
+    id: dto.announcementId,
+    title: dto.title,
+    date: new Date(dto.createdAt).toISOString().split('T')[0],
+    content: dto.content,
   };
+};
+
+const fetchNotices = async (page: number): Promise<NoticesResponse> => {
+  try {
+    const result = await getAnnouncements(page, PAGE_SIZE);
+
+    return {
+      data: result.announcements.map(mapDtoToNoticeItem),
+      hasMore: result.pagination.hasNextPage,
+    };
+  } catch (error) {
+    console.error('공지사항 목록 조회 실패:', error);
+    return {
+      data: [],
+      hasMore: false,
+    };
+  }
 };
 
 export function useNotices() {

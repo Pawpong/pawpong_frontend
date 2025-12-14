@@ -13,7 +13,7 @@ export default function BreedingAnimals({
     name: string;
     sex: 'male' | 'female';
     birth: string;
-    price: string;
+    price: string | null;
     breed: string;
   }[];
 }) {
@@ -31,7 +31,7 @@ export default function BreedingAnimals({
             name: string;
             sex: 'male' | 'female';
             birth: string;
-            price: string;
+            price: string | null;
             breed: string;
           }) => (
             <AnimalProfile key={e.id} data={e} />

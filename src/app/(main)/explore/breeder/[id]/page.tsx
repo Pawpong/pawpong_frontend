@@ -15,6 +15,7 @@ import { useCounselFormStore } from '@/stores/counsel-form-store';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useBreederProfile, useBreederPets, useParentPets, useBreederReviews } from './_hooks/use-breeder-detail';
 import { useAuthStore } from '@/stores/auth-store';
+import { Lock } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{
@@ -27,7 +28,7 @@ export default function Page({ params }: PageProps) {
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
   const isLg = useBreakpoint('lg');
-  const { user } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
 
   // 브리더 본인인지 확인
   const isOwnProfile = user?.role === 'breeder' && user?.userId === breederId;
@@ -38,6 +39,10 @@ export default function Page({ params }: PageProps) {
   const { data: reviewsData, isLoading: isReviewsLoading } = useBreederReviews(breederId);
 
   const handleCounselClick = () => {
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
+    }
     clearCounselFormData();
     router.push(`/counselform?breederId=${breederId}`);
   };
@@ -64,10 +69,13 @@ export default function Page({ params }: PageProps) {
     ? `${profileInfo.locationInfo.cityName} ${profileInfo.locationInfo.districtName}`
     : '';
   // API 응답에서 직접 priceRange 추출 (백엔드가 priceRange: { min, max } 형식으로 반환)
+  // 비회원은 가격 정보를 볼 수 없음
   const apiPriceRange = (profileData as any)?.priceRange;
-  const priceRangeStr = apiPriceRange?.min || apiPriceRange?.max
-    ? `${apiPriceRange.min?.toLocaleString()} - ${apiPriceRange.max?.toLocaleString()}원`
-    : '상담 후 결정';
+  const priceRangeStr = user
+    ? apiPriceRange?.min || apiPriceRange?.max
+      ? `${apiPriceRange.min?.toLocaleString()} - ${apiPriceRange.max?.toLocaleString()}원`
+      : '상담 후 결정'
+    : null;
 
   // API 응답에서 직접 값 추출 (profileImage, location, breederLevel 등)
   const apiData = profileData as any;
@@ -106,14 +114,14 @@ export default function Page({ params }: PageProps) {
     }
   };
 
-  // 분양 가능 개체 매핑
+  // 분양 가능 개체 매핑 (비회원은 가격 정보를 볼 수 없음)
   const breedingAnimals = (petsData?.items || []).map((pet: any) => ({
     id: pet.petId,
     avatarUrl: pet.mainPhoto || '/animal-sample.png',
     name: pet.name,
     sex: pet.gender,
     birth: formatBirthDate(pet.birthDate),
-    price: `${pet.price.toLocaleString()}원`,
+    price: user ? `${pet.price?.toLocaleString() || 0}원` : null,
     breed: pet.breed,
   }));
 
