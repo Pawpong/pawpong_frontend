@@ -300,7 +300,7 @@ export interface ReceivedApplicationItemDto {
   petId?: string;
   petName?: string;
   status: 'consultation_pending' | 'consultation_completed' | 'adoption_approved' | 'adoption_rejected';
-  applicationData: {
+  standardResponses: {
     privacyConsent: boolean;
     selfIntroduction: string;
     familyMembers: string;
@@ -309,7 +309,13 @@ export interface ReceivedApplicationItemDto {
     timeAwayFromHome: string;
     livingSpaceDescription: string;
     previousPetExperience: string;
+    canProvideBasicCare?: boolean;
+    canAffordMedicalExpenses?: boolean;
+    preferredPetDescription?: string;
+    desiredAdoptionTiming?: string;
+    additionalNotes?: string;
   };
+  customResponses?: any[];
   appliedAt: string;
   processedAt?: string;
   breederNotes?: string;

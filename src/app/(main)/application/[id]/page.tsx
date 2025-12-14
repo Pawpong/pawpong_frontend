@@ -131,58 +131,104 @@ const ApplicationDetailPage = () => {
             <div>
               <p className="text-body-s font-medium text-[#4F3B2E] mb-2">개인정보 수집 및 이용 동의</p>
               <p className="text-body-m text-grayscale-gray6">
-                {application.applicationData.privacyConsent ? '동의함' : '동의하지 않음'}
+                {application.standardResponses.privacyConsent ? '동의함' : '동의하지 않음'}
               </p>
             </div>
 
             <div>
               <p className="text-body-s font-medium text-[#4F3B2E] mb-2">자기소개</p>
               <p className="text-body-m text-grayscale-gray6 whitespace-pre-wrap">
-                {application.applicationData.selfIntroduction}
+                {application.standardResponses.selfIntroduction}
               </p>
             </div>
 
             <div>
               <p className="text-body-s font-medium text-[#4F3B2E] mb-2">가족 구성원</p>
               <p className="text-body-m text-grayscale-gray6 whitespace-pre-wrap">
-                {application.applicationData.familyMembers}
+                {application.standardResponses.familyMembers}
               </p>
             </div>
 
             <div>
               <p className="text-body-s font-medium text-[#4F3B2E] mb-2">가족 구성원 동의 여부</p>
               <p className="text-body-m text-grayscale-gray6">
-                {application.applicationData.allFamilyConsent ? '모두 동의함' : '일부 미동의'}
+                {application.standardResponses.allFamilyConsent ? '모두 동의함' : '일부 미동의'}
               </p>
             </div>
 
             <div>
               <p className="text-body-s font-medium text-[#4F3B2E] mb-2">알러지 검사 정보</p>
               <p className="text-body-m text-grayscale-gray6 whitespace-pre-wrap">
-                {application.applicationData.allergyTestInfo}
+                {application.standardResponses.allergyTestInfo}
               </p>
             </div>
 
             <div>
               <p className="text-body-s font-medium text-[#4F3B2E] mb-2">집을 비우는 시간</p>
               <p className="text-body-m text-grayscale-gray6 whitespace-pre-wrap">
-                {application.applicationData.timeAwayFromHome}
+                {application.standardResponses.timeAwayFromHome}
               </p>
             </div>
 
             <div>
               <p className="text-body-s font-medium text-[#4F3B2E] mb-2">거주 공간 소개</p>
               <p className="text-body-m text-grayscale-gray6 whitespace-pre-wrap">
-                {application.applicationData.livingSpaceDescription}
+                {application.standardResponses.livingSpaceDescription}
               </p>
             </div>
 
             <div>
               <p className="text-body-s font-medium text-[#4F3B2E] mb-2">반려동물 경험</p>
               <p className="text-body-m text-grayscale-gray6 whitespace-pre-wrap">
-                {application.applicationData.previousPetExperience}
+                {application.standardResponses.previousPetExperience}
               </p>
             </div>
+
+            {/* 추가 필드들 (선택사항) */}
+            {application.standardResponses.canProvideBasicCare !== undefined && (
+              <div>
+                <p className="text-body-s font-medium text-[#4F3B2E] mb-2">기본 돌봄 제공 가능 여부</p>
+                <p className="text-body-m text-grayscale-gray6">
+                  {application.standardResponses.canProvideBasicCare ? '가능' : '불가능'}
+                </p>
+              </div>
+            )}
+
+            {application.standardResponses.canAffordMedicalExpenses !== undefined && (
+              <div>
+                <p className="text-body-s font-medium text-[#4F3B2E] mb-2">의료비 부담 가능 여부</p>
+                <p className="text-body-m text-grayscale-gray6">
+                  {application.standardResponses.canAffordMedicalExpenses ? '가능' : '불가능'}
+                </p>
+              </div>
+            )}
+
+            {application.standardResponses.preferredPetDescription && (
+              <div>
+                <p className="text-body-s font-medium text-[#4F3B2E] mb-2">선호하는 반려동물 설명</p>
+                <p className="text-body-m text-grayscale-gray6 whitespace-pre-wrap">
+                  {application.standardResponses.preferredPetDescription}
+                </p>
+              </div>
+            )}
+
+            {application.standardResponses.desiredAdoptionTiming && (
+              <div>
+                <p className="text-body-s font-medium text-[#4F3B2E] mb-2">희망 입양 시기</p>
+                <p className="text-body-m text-grayscale-gray6 whitespace-pre-wrap">
+                  {application.standardResponses.desiredAdoptionTiming}
+                </p>
+              </div>
+            )}
+
+            {application.standardResponses.additionalNotes && (
+              <div>
+                <p className="text-body-s font-medium text-[#4F3B2E] mb-2">추가 메모</p>
+                <p className="text-body-m text-grayscale-gray6 whitespace-pre-wrap">
+                  {application.standardResponses.additionalNotes}
+                </p>
+              </div>
+            )}
           </div>
         </section>
 
