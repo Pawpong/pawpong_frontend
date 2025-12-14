@@ -133,13 +133,7 @@ export default function ApplicationListItem({
     return (
       <div className="flex gap-5 items-start w-full md:flex-row">
         {/* 프로필 이미지 */}
-        <div className="relative shrink-0">
-          <img
-            src={profileImage}
-            alt={adopterName}
-            className="size-[68px] rounded-full object-cover bg-grayscale-gray2"
-          />
-        </div>
+        <ProfileImageWithBadge src={profileImage} alt={adopterName} animalType="profile" size={68} />
 
         {/* 입양자 정보 */}
         <div className="flex-1 flex flex-col gap-2">
