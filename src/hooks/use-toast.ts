@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
 
 const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 1000000;
+const TOAST_REMOVE_DELAY = 1000; // Toast가 사라지기까지의 지연 시간 (1초)
 
 type ToasterToast = ToastProps & {
   id: string;
@@ -145,7 +145,7 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
-      duration: props.duration ?? 100000,
+      duration: props.duration ?? 2000, // 기본 2초 후 자동으로 사라짐
       onOpenChange: (open) => {
         if (!open) dismiss();
       },
