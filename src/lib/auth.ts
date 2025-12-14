@@ -281,12 +281,18 @@ export const logout = async (): Promise<LogoutResponseDto> => {
   try {
     const response = await apiClient.post<ApiResponse<LogoutResponseDto>>('/api/auth/logout');
 
+    // 프론트엔드 쿠키 삭제 (백엔드 응답과 관계없이 실행)
+    await fetch('/api/auth/clear-cookie', { method: 'POST' });
+
     if (!response.data.success || !response.data.data) {
       throw new Error('로그아웃에 실패했습니다.');
     }
 
     return response.data.data;
   } catch (error: unknown) {
+    // 에러가 발생해도 쿠키는 삭제 시도
+    await fetch('/api/auth/clear-cookie', { method: 'POST' }).catch(() => {});
+
     if (error instanceof Error) {
       console.error('Logout error:', error.message);
       throw error;

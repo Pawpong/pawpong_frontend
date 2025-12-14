@@ -9,25 +9,32 @@ import {
   deleteNotification,
   NotificationResponseDto,
 } from "@/lib/notification";
+import { useAuthStore } from "@/stores/auth-store";
 
 /** 알림 목록 조회 훅 */
 export function useNotifications(page: number = 1, limit: number = 50) {
+  const { isAuthenticated, hasHydrated } = useAuthStore();
+
   return useQuery({
     queryKey: ["notifications", page, limit],
     queryFn: () => getNotifications(page, limit),
     staleTime: 1000 * 60, // 1분
     refetchOnWindowFocus: true,
+    enabled: hasHydrated && isAuthenticated, // 인증된 사용자만 조회
   });
 }
 
 /** 읽지 않은 알림 수 조회 훅 */
 export function useUnreadCount() {
+  const { isAuthenticated, hasHydrated } = useAuthStore();
+
   return useQuery({
     queryKey: ["notifications", "unread-count"],
     queryFn: getUnreadCount,
     staleTime: 1000 * 30, // 30초
     refetchInterval: 1000 * 60, // 1분마다 자동 갱신
     refetchOnWindowFocus: true,
+    enabled: hasHydrated && isAuthenticated, // 인증된 사용자만 조회
   });
 }
 

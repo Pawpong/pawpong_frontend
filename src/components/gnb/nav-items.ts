@@ -30,6 +30,8 @@ export interface NavItem {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   iconFill: ComponentType<SVGProps<SVGSVGElement>>;
   children?: NavChildItem[];
+  /** 인증이 필요한 메뉴인지 여부 (비회원 클릭 시 로그인 페이지로 이동) */
+  requiresAuth?: boolean;
 }
 
 export const NAV_ITEMS: NavItem[] = [
@@ -48,12 +50,14 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/application',
     icon: Letter,
     iconFill: LetterFill,
+    requiresAuth: true,
   },
   {
     name: '마이',
     href: '/profile',
     icon: Profile,
     iconFill: ProfileFill,
+    requiresAuth: true,
     children: [
       { name: '내 후기', href: '/myapplication' },
       { name: '찜한 브리더', href: '/saved' },
@@ -77,12 +81,14 @@ export const NAV_ITEMS_BREEDER: NavItem[] = [
     href: '/application',
     icon: Letter,
     iconFill: LetterFill,
+    requiresAuth: true,
   },
   {
     name: '마이',
     href: '/profile',
     icon: Profile,
     iconFill: ProfileFill,
+    requiresAuth: true,
     children: [
       { name: '내 프로필', href: '/profile', showForVerificationStatus: ['approved'] },
       { name: '입점 서류 수정', href: '/profile/documents' },

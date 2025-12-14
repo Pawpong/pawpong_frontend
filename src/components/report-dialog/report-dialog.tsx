@@ -77,7 +77,7 @@ export default function ReportDialog({
         await reportBreeder({
           breederId,
           reason: selectedReason!,
-          description: otherReasonDescription || undefined,
+          description: isOtherSelected ? otherReasonDescription : undefined,
         });
       }
 

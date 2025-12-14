@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 // trailing slash 제거하여 이중 슬래시 방지
-const BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '') || '';
+const BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '') || 'https://dev-api.pawpong.kr';
 
 // 토큰 리프레시 상태 관리 (중복 요청 방지)
 let isRefreshing = false;
@@ -80,8 +80,8 @@ function createApi(): AxiosInstance {
         } catch (refreshError) {
           processQueue(refreshError as Error);
 
-          // 리프레시 실패 시 로그인 페이지로 리다이렉트
-          if (typeof window !== 'undefined') {
+          // 리프레시 실패 시 로그인 페이지로 리다이렉트 (이미 로그인 페이지면 제외)
+          if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
             window.location.href = '/login';
           }
 

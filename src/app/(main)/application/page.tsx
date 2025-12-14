@@ -66,7 +66,7 @@ const ApplicationPage = () => {
           <>
             <div className="flex flex-col gap-7">
               {allApplications.map((item, index) => (
-                <div key={item.applicationId} className="flex flex-col">
+                <div key={item.applicationId || `application-${index}`} className="flex flex-col">
                   <ApplicationListItem {...item} isBreeder={isBreeder} />
                   {(isMdUp ? index !== allApplications.length - 1 : true) && <Separator className="mt-7" />}
                 </div>

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { MouseEvent, useState } from 'react';
 import { useSegment } from '@/hooks/use-segment';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { useNavigationGuardContext } from '@/contexts/navigation-guard-context';
@@ -37,13 +37,23 @@ function DropdownMenuWithState({
   handleLogout,
 }: DropdownMenuWithStateProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  // 비회원이 인증 필요 메뉴 클릭 시 로그인 페이지로 이동
+  const handleOpenChange = (open: boolean) => {
+    if (open && item.requiresAuth && !isAuthenticated) {
+      router.push('/login');
+      return;
+    }
+    setIsOpen(open);
+  };
 
   // 드롭다운이 열려있거나 실제로 active 상태면 활성화
   const isActiveState = active || isOpen;
   const ActiveIcon = isActiveState ? item.iconFill : item.icon;
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+    <DropdownMenu open={isOpen} onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -129,12 +139,24 @@ function DropdownMenuWithState({
 export default function NavBar({ navVariant = 'default' }: NavBarProps) {
   const currNav = useSegment(0);
   const pathname = usePathname();
+  const router = useRouter();
   const guardContext = useNavigationGuardContext();
   const { toast } = useToast();
   const { isAuthenticated, clearAuth, user, hasHydrated } = useAuthStore();
   const navConfig = navVariant === 'breeder' ? NAV_ITEMS_BREEDER : NAV_ITEMS;
 
-  const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleLinkClick = (
+    e: MouseEvent<HTMLAnchorElement>,
+    href: string,
+    requiresAuth?: boolean,
+  ) => {
+    // 비회원이 인증 필요 메뉴 클릭 시 로그인 페이지로 이동
+    if (requiresAuth && !isAuthenticated) {
+      e.preventDefault();
+      router.push('/login');
+      return;
+    }
+
     // Context가 없거나 같은 페이지면 기본 동작 허용
     if (!guardContext?.guardNavigation || pathname === href) {
       return;
@@ -195,7 +217,7 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
 
         if (!hasChildren) {
           return (
-            <Link href={item.href} key={item.name} onClick={(e) => handleLinkClick(e, item.href)}>
+            <Link href={item.href} key={item.name} onClick={(e) => handleLinkClick(e, item.href, item.requiresAuth)}>
               <Button
                 key={item.name}
                 variant="ghost"

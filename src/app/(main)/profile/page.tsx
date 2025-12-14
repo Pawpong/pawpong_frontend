@@ -19,6 +19,7 @@ import {
 import { useBreederProfile, useUpdateBreederProfile } from './_hooks/use-breeder-profile';
 import { syncParentPets, syncAvailablePets } from '@/utils/profile-sync';
 import { uploadSingleFile, uploadRepresentativePhotos } from '@/lib/upload';
+import ProfileBannerCarousel from '@/components/profile-banner/profile-banner-carousel';
 
 export default function ProfilePage() {
   const isMdUp = useBreakpoint('md');
@@ -326,9 +327,16 @@ export default function ProfilePage() {
   return (
     <FormProvider {...form}>
       <div className="min-h-screen flex w-full flex-col md:flex-row">
-        {/* 왼쪽 영역: md 이상에서만 표시 (배경 여백) */}
-        {isMdUp && <div className="md:w-1/2" />}
+        {/* 왼쪽 배너 영역: md 이상에서만 표시 */}
+        {isMdUp && (
+          <div className="md:w-1/2 md:p-8 bg-tertiary-500">
+            <div className="md:h-[calc(100vh-4rem)]">
+              <ProfileBannerCarousel />
+            </div>
+          </div>
+        )}
 
+        {/* 오른쪽 콘텐츠 영역 */}
         <div className="w-full md:w-1/2 flex flex-col">
           <div className="flex flex-col gap-8 md:gap-20 items-center pb-20 py-14  ">
             {/* 프로필 기본 정보 */}
@@ -350,7 +358,7 @@ export default function ProfilePage() {
           </div>
 
           {/* 수정하기 버튼 */}
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 px-8 w-full max-w-[424px] md:bottom-10 md:left-[calc(50%+20%)] md:-translate-x-1/2 md:w-[424px] md:px-0">
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 px-8 w-full max-w-[424px] md:bottom-10 md:left-[calc(50%+25%)] md:-translate-x-1/2 md:w-[424px] md:px-0">
             <Button
               variant={undefined}
               disabled={isDisabled}

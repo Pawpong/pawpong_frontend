@@ -21,7 +21,7 @@ export default function BreedingAnimals({
     <BreederProfileSection>
       <BreederProfileSectionHeader>
         <BreederProfileSectionTitle>분양 중인 아이들</BreederProfileSectionTitle>
-        <BreederProfileSectionMore />
+        {data.length > 3 && <BreederProfileSectionMore />}
       </BreederProfileSectionHeader>
       <div className="space-y-7 md:grid md:grid-cols-3 md:gap-gutter">
         {data.map(

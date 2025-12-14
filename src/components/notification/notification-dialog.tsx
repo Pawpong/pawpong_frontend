@@ -53,6 +53,11 @@ export default function NotificationDialog({ children }: NotificationDialogProps
   // 알림 메시지 가져오기 (변수 치환 포함)
   const getNotificationMessage = (type: NotificationType, variables?: { [key: string]: string }): string => {
     const config = NOTIFICATION_CONFIG[type];
+    if (!config) {
+      console.error(`Unknown notification type: ${type}`);
+      return '알림이 도착했습니다.';
+    }
+
     let message = config.message;
     const mergedVariables = {
       ...config.defaultVariables,
@@ -70,6 +75,10 @@ export default function NotificationDialog({ children }: NotificationDialogProps
   // 알림 아이콘 가져오기
   const getNotificationIcon = (type: NotificationType, variables?: { [key: string]: string }): React.ReactNode => {
     const config = NOTIFICATION_CONFIG[type];
+    if (!config) {
+      console.error(`Unknown notification type: ${type}`);
+      return null;
+    }
     return config.icon(variables);
   };
 
