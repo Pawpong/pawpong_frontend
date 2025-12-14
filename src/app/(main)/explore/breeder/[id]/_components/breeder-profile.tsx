@@ -93,25 +93,17 @@ export default function BreederProfile({
                 </div>
               ))}
             </div>
-            {isOwnProfile && (
-              <LevelUpgradeDialog currentLevel={level} animal={animal}>
-                <button
-                  type="button"
-                  className="text-caption text-grayscale-gray5 underline underline-offset-2 hover:text-grayscale-gray6"
-                >
-                  레벨 변경
-                </button>
-              </LevelUpgradeDialog>
-            )}
+
           </div>
         </div>
-        {/* 데스크탑(lg)에서만 버튼 표시, 브리더 본인이면 숨김 */}
-        {isLg && !isOwnProfile && (
+        {/* 데스크탑(lg)에서만 버튼 표시 */}
+        {isLg && (
           <Button
             variant="counsel"
             className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"
             type="button"
             onClick={handleCounselClick}
+            disabled={isOwnProfile}
           >
             상담 신청하기
           </Button>
