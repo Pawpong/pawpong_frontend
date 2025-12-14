@@ -237,3 +237,45 @@ export const removeFavorite = async (breederId: string): Promise<FavoriteRemoveR
     throw new Error('Unknown error during remove favorite');
   }
 };
+
+/** 후기 작성 요청 DTO */
+export interface ReviewCreateRequestDto {
+  applicationId: string;
+  reviewType: 'consultation' | 'adoption';
+  content: string;
+}
+
+/** 후기 작성 응답 DTO */
+export interface ReviewCreateResponseDto {
+  reviewId: string;
+  breederId: string;
+  breederName: string;
+  adopterId: string;
+  adopterName: string;
+  applicationId: string;
+  reviewType: string;
+  content: string;
+  createdAt: string;
+}
+
+/**
+ * 브리더 후기 작성 (입양자용)
+ * POST /api/adopter/review
+ */
+export const createReview = async (reviewData: ReviewCreateRequestDto): Promise<ReviewCreateResponseDto> => {
+  try {
+    const response = await apiClient.post<ApiResponse<ReviewCreateResponseDto>>('/api/adopter/review', reviewData);
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.message || 'Failed to create review');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Create review error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during review creation');
+  }
+};
