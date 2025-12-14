@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
+import React, { useMemo, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import NotificationItem from './notification-item';
 import NotificationEmptyState from './notification-empty-state';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { NOTIFICATION_CONFIG, NotificationType } from '@/constants/notification-messages';
-import { useNotifications, useMarkAllAsRead, transformNotificationForUI } from '@/hooks/use-notifications';
+import { useNotifications, useMarkAllAsRead, useMarkAsRead, transformNotificationForUI } from '@/hooks/use-notifications';
 
 // UI에서 사용할 알림 데이터 인터페이스
 interface NotificationData {
@@ -16,6 +17,7 @@ interface NotificationData {
   type: NotificationType;
   date: string;
   isRead: boolean;
+  targetUrl?: string;
   variables?: { [key: string]: string };
 }
 
@@ -24,9 +26,13 @@ interface NotificationDialogProps {
 }
 
 export default function NotificationDialog({ children }: NotificationDialogProps) {
+  const router = useRouter();
+  const dialogCloseRef = useRef<HTMLButtonElement>(null);
+
   // API에서 알림 목록 조회
   const { data, isLoading } = useNotifications(1, 50);
   const markAllAsReadMutation = useMarkAllAsRead();
+  const markAsReadMutation = useMarkAsRead();
 
   // API 응답을 UI 형식으로 변환
   const notifications: NotificationData[] = useMemo(() => {
@@ -38,6 +44,7 @@ export default function NotificationDialog({ children }: NotificationDialogProps
         type: transformed.type as NotificationType,
         date: transformed.date,
         isRead: transformed.isRead,
+        targetUrl: transformed.targetUrl,
         variables: transformed.metadata,
       };
     });
@@ -46,6 +53,25 @@ export default function NotificationDialog({ children }: NotificationDialogProps
   const handleMarkAllAsRead = () => {
     markAllAsReadMutation.mutate();
   };
+
+  // 알림 클릭 시 읽음 처리 및 페이지 이동
+  const handleNotificationClick = useCallback(
+    (notification: NotificationData) => {
+      // 읽지 않은 알림이면 읽음 처리
+      if (!notification.isRead) {
+        markAsReadMutation.mutate(notification.id);
+      }
+
+      // targetUrl이 있으면 해당 페이지로 이동
+      if (notification.targetUrl) {
+        // 다이얼로그 닫기
+        dialogCloseRef.current?.click();
+        // 페이지 이동
+        router.push(notification.targetUrl);
+      }
+    },
+    [markAsReadMutation, router],
+  );
 
   const newNotifications = notifications.filter((n) => !n.isRead);
   const readNotifications = notifications.filter((n) => n.isRead);
@@ -100,10 +126,14 @@ export default function NotificationDialog({ children }: NotificationDialogProps
           <DialogTitle>알림</DialogTitle>
         </VisuallyHidden>
 
+        {/* 숨겨진 다이얼로그 닫기 버튼 (프로그래밍 방식으로 닫기 위함) */}
+        <DialogClose ref={dialogCloseRef} className="hidden" />
+
         {/* 헤더 */}
         <div className="hidden lg:flex justify-between items-center px-6 pt-6 pb-[10px]">
           <h2 className="text-body-l font-semibold text-primary">알림</h2>
-          {notifications.length > 0 && (
+          {/* Figma 요구사항: 신규 알림이 1개 이상일 때만 표시 */}
+          {newNotifications.length > 0 && (
             <Button
               variant="ghost"
               onClick={handleMarkAllAsRead}
@@ -139,6 +169,7 @@ export default function NotificationDialog({ children }: NotificationDialogProps
                         icon={getNotificationIcon(notification.type, notification.variables)}
                         content={getNotificationMessage(notification.type, notification.variables)}
                         date={notification.date}
+                        onClick={() => handleNotificationClick(notification)}
                       />
                     ))}
                   </div>
@@ -158,6 +189,7 @@ export default function NotificationDialog({ children }: NotificationDialogProps
                         icon={getNotificationIcon(notification.type, notification.variables)}
                         content={getNotificationMessage(notification.type, notification.variables)}
                         date={notification.date}
+                        onClick={() => handleNotificationClick(notification)}
                       />
                     ))}
                   </div>
@@ -167,8 +199,8 @@ export default function NotificationDialog({ children }: NotificationDialogProps
           )}
         </ScrollArea>
 
-        {/* 하단 버튼 (모바일/패드용) */}
-        {notifications.length > 0 && (
+        {/* 하단 버튼 (모바일/패드용) - Figma 요구사항: 신규 알림이 있을 때만 표시 */}
+        {newNotifications.length > 0 && (
           <div className="lg:hidden flex  px-5 md:px-10 pb-4 border-grayscale-gray2 flex-shrink-0">
             <Button
               variant="ghost"
