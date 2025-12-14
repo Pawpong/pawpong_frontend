@@ -112,9 +112,11 @@ export default function SiteBreederList() {
               <div className="absolute top-0 right-0 p-3">
                 <BreederLikeButton breederId={breeder.breederId} initialIsFavorited={breeder.isFavorited} />
               </div>
-              <div className="absolute bottom-0 right-0 p-3">
-                <AdoptionStatusBadge status={breeder.isAdoptionAvailable ? 'available' : 'completed'} />
-              </div>
+              {breeder.isAdoptionAvailable && (
+                <div className="absolute bottom-0 right-0 p-3">
+                  <AdoptionStatusBadge status="available" />
+                </div>
+              )}
             </div>
           </Breeder>
         </Link>
