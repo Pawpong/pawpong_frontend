@@ -82,7 +82,8 @@ export default function DocumentEditSection() {
           const docState: Record<string, DocumentState> = {};
           status.documents.forEach((doc) => {
             const frontendKey = apiTypeToKey[doc.type] || doc.type;
-            const fileName = extractFileNameFromUrl(doc.url);
+            // 백엔드에서 제공하는 originalFileName을 우선 사용, 없으면 URL에서 추출
+            const fileName = doc.originalFileName || extractFileNameFromUrl(doc.url);
             docState[frontendKey] = {
               file: null,
               fileName,

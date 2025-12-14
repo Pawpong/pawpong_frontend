@@ -311,6 +311,7 @@ export interface VerificationStatusDto {
   documents?: Array<{
     type: string;
     url: string;
+    originalFileName?: string;
     uploadedAt?: string;
   }>;
 }
