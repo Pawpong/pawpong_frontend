@@ -301,8 +301,10 @@ export interface ReceivedApplicationItemDto {
   adopterPhone: string;
   petId?: string;
   petName?: string;
+  /** 입양 원하는 아이 정보 (드롭다운 선택 또는 직접 입력) */
+  preferredPetInfo?: string;
   status: 'consultation_pending' | 'consultation_completed' | 'adoption_approved' | 'adoption_rejected';
-  applicationData: {
+  standardResponses: {
     privacyConsent: boolean;
     selfIntroduction: string;
     familyMembers: string;
@@ -311,7 +313,13 @@ export interface ReceivedApplicationItemDto {
     timeAwayFromHome: string;
     livingSpaceDescription: string;
     previousPetExperience: string;
+    canProvideBasicCare?: boolean;
+    canAffordMedicalExpenses?: boolean;
+    preferredPetDescription?: string;
+    desiredAdoptionTiming?: string;
+    additionalNotes?: string;
   };
+  customResponses?: any[];
   appliedAt: string;
   processedAt?: string;
   breederNotes?: string;
@@ -460,5 +468,50 @@ export const getBreederReviews = async (
       throw error;
     }
     throw new Error('Unknown error during breeder reviews fetch');
+  }
+};
+
+/** 입양 신청 상태 타입 */
+export type ApplicationStatus = 'consultation_pending' | 'consultation_completed' | 'adoption_approved' | 'adoption_rejected';
+
+/** 입양 신청 상태 업데이트 요청 DTO */
+export interface ApplicationStatusUpdateRequestDto {
+  applicationId: string;
+  status: ApplicationStatus;
+  notes?: string;
+  actionTaken?: string;
+  nextSteps?: string;
+}
+
+/** 입양 신청 상태 업데이트 응답 DTO */
+export interface ApplicationStatusUpdateResponseDto {
+  message: string;
+}
+
+/**
+ * 입양 신청 상태 업데이트 (브리더용)
+ * PATCH /api/breeder-management/applications/:applicationId
+ */
+export const updateApplicationStatus = async (
+  applicationId: string,
+  updateData: ApplicationStatusUpdateRequestDto,
+): Promise<ApplicationStatusUpdateResponseDto> => {
+  try {
+    const response = await apiClient.patch<ApiResponse<ApplicationStatusUpdateResponseDto>>(
+      `/api/breeder-management/applications/${applicationId}`,
+      updateData,
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.message || 'Failed to update application status');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Update application status error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during application status update');
   }
 };

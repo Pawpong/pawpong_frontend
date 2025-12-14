@@ -1,12 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import ProfileImageWithBadge from '@/components/breeder/profile-image-with-badge';
 import BreederInfo from '@/components/breeder/breeder-info';
 import { Button } from '@/components/ui/button';
 import Pencil from '@/assets/icons/pencil.svg';
 import ReviewDialog from './review-dialog';
 import { Badge } from '@/components/ui/badge';
-import Link from 'next/link';
+import ApplicationDetailModal from './application-detail-modal';
 
 interface ApplicationListItemProps {
   applicationId: string;
@@ -26,19 +27,37 @@ interface ApplicationListItemProps {
   adopterEmail?: string;
   adopterPhone?: string;
   petName?: string;
+  /** 입양 원하는 아이 정보 (드롭다운 선택 또는 직접 입력 텍스트) */
+  preferredPetInfo?: string;
 }
 
-// 상태별 뱃지 스타일
+// 상태별 뱃지 스타일 (Figma 디자인 반영)
 const getStatusBadge = (status: string) => {
   switch (status) {
     case 'consultation_pending':
-      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">상담 대기</Badge>;
+      return (
+        <Badge className="bg-[#A0C8F4] text-[#4F3B2E] hover:bg-[#A0C8F4] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
+          <span className="text-caption font-medium">상담 전</span>
+        </Badge>
+      );
     case 'consultation_completed':
-      return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">상담 완료</Badge>;
+      return (
+        <Badge className="bg-[#A0A0A0] text-white hover:bg-[#A0A0A0] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
+          <span className="text-caption font-medium">상담 완료</span>
+        </Badge>
+      );
     case 'adoption_approved':
-      return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">입양 승인</Badge>;
+      return (
+        <Badge className="bg-[#A0A0A0] text-white hover:bg-[#A0A0A0] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
+          <span className="text-caption font-medium">입양 승인</span>
+        </Badge>
+      );
     case 'adoption_rejected':
-      return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">입양 거절</Badge>;
+      return (
+        <Badge className="bg-[#A0A0A0] text-white hover:bg-[#A0A0A0] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
+          <span className="text-caption font-medium">입양 거절</span>
+        </Badge>
+      );
     default:
       return null;
   }
@@ -60,6 +79,7 @@ export default function ApplicationListItem({
   adopterEmail,
   adopterPhone,
   petName,
+  preferredPetInfo,
 }: ApplicationListItemProps) {
   // 입양자 화면 (브리더 정보 표시)
   if (!isBreeder && breederName && breederLevel) {
@@ -128,49 +148,37 @@ export default function ApplicationListItem({
     );
   }
 
-  // 브리더 화면 (입양자 정보 표시)
+  // 브리더 화면 (입양자 정보 표시) - Figma 디자인 완벽 반영
   if (isBreeder && adopterName) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // 입양 원하는 아이 정보 표시 (preferredPetInfo 우선, 없으면 petName)
+    const displayPetInfo = preferredPetInfo || petName || '분양 중인 아이 정보';
+
     return (
-      <div className="flex gap-5 items-start w-full md:flex-row">
-        {/* 프로필 이미지 */}
-        <div className="relative shrink-0">
-          <img
-            src={profileImage}
-            alt={adopterName}
-            className="size-[68px] rounded-full object-cover bg-grayscale-gray2"
-          />
-        </div>
+      <>
+        <div className="bg-[#F8F8EE] flex flex-col gap-3 p-5 rounded-lg w-full">
+          {/* 신청자 정보 */}
+          <div className="flex flex-col gap-1 w-full">
+            {/* 신청자 닉네임 */}
+            <h3 className="text-body-m font-medium text-[#4F3B2E]">{adopterName}</h3>
 
-        {/* 입양자 정보 */}
-        <div className="flex-1 flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <h3 className="text-body-m font-semibold text-grayscale-gray7">{adopterName}</h3>
-            {getStatusBadge(status)}
-          </div>
-
-          {petName && (
-            <p className="text-body-s text-grayscale-gray6">
-              <span className="font-medium">반려동물:</span> {petName}
+            {/* 분양 중인 아이 정보 (드롭다운 선택 또는 직접 입력 텍스트) */}
+            <p className="text-body-s font-normal text-[#888888] overflow-ellipsis overflow-hidden whitespace-nowrap">
+              {displayPetInfo}
             </p>
-          )}
+          </div>
 
-          <div className="flex flex-col gap-1 text-body-xs text-grayscale-gray5">
-            {adopterEmail && <p>이메일: {adopterEmail}</p>}
-            {adopterPhone && <p>연락처: {adopterPhone}</p>}
-            <p>{applicationDate}</p>
+          {/* 뱃지 + 날짜 */}
+          <div className="flex items-center gap-3">
+            {getStatusBadge(status)}
+            <p className="text-body-s font-normal text-[#888888]">{applicationDate}</p>
           </div>
         </div>
 
-        {/* 상세보기 버튼 */}
-        <Link href={`/application/${applicationId}`}>
-          <Button
-            variant="ghost"
-            className="bg-[var(--color-primary-500)] hover:bg-[var(--color-primary-600)] h-8 px-4 py-2 rounded-lg shrink-0"
-          >
-            <span className="text-body-xs font-normal text-white">상세보기</span>
-          </Button>
-        </Link>
-      </div>
+        {/* 상세보기 모달 */}
+        <ApplicationDetailModal open={isModalOpen} onOpenChange={setIsModalOpen} applicationId={applicationId} />
+      </>
     );
   }
 

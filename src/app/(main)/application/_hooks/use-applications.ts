@@ -15,6 +15,8 @@ export interface ApplicationItem {
   petId?: string;
   petBreed?: string;
   petName?: string;
+  /** 입양 원하는 아이 정보 (드롭다운 선택 또는 직접 입력 텍스트) */
+  preferredPetInfo?: string;
   adopterId?: string;
   adopterName?: string;
   adopterEmail?: string;
@@ -58,6 +60,7 @@ const mapBreederDtoToApplicationItem = (dto: ReceivedApplicationItemDto): Applic
   profileImage: '/avatar-sample.png', // 입양자 프로필 이미지는 나중에 추가
   petId: dto.petId,
   petName: dto.petName,
+  preferredPetInfo: dto.preferredPetInfo, // 입양 원하는 아이 정보 (드롭다운 선택 또는 직접 입력)
   status: dto.status,
 });
 
