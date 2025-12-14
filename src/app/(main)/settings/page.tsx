@@ -17,10 +17,10 @@ import { useAuthStore } from '@/stores/auth-store';
 export default function SettingsPage() {
   const { isLoading: isAuthLoading } = useAuthGuard();
   const { user } = useAuthStore();
-  const [marketingAgreed, setMarketingAgreed] = useState(true);
+  const [marketingAgreed, setMarketingAgreed] = useState(false);
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
-  const [provider, setProvider] = useState<'kakao' | 'google' | 'naver'>('kakao');
+  const [provider, setProvider] = useState<'local' | 'kakao' | 'google' | 'naver' | 'apple'>('kakao');
   const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -38,13 +38,21 @@ export default function SettingsPage() {
           const profile = await getMyBreederProfile();
           setNickname(profile.breederName);
           setEmail(profile.breederEmail);
-          // 브리더는 마케팅 동의 정보가 없으므로 기본값 유지
+          if (profile.authProvider && profile.authProvider !== 'local') {
+            setProvider(profile.authProvider);
+          }
+          if (profile.marketingAgreed !== undefined) {
+            setMarketingAgreed(profile.marketingAgreed);
+          }
         } else {
           // 입양자 프로필 로드
           const profile = await getAdopterProfile();
-          setNickname(profile.name || profile.nickname);
-          setEmail(profile.email);
+          setNickname(profile.nickname);
+          setEmail(profile.emailAddress);
           setMarketingAgreed(profile.marketingAgreed);
+          if (profile.authProvider && profile.authProvider !== 'local') {
+            setProvider(profile.authProvider);
+          }
         }
       } catch (error) {
         toast({

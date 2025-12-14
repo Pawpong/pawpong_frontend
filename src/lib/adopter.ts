@@ -10,11 +10,12 @@ interface ApiResponse<T> {
 /** 입양자 프로필 응답 DTO (백엔드 응답) */
 export interface AdopterProfileDto {
   adopterId: string;
-  email: string;
-  name: string;
+  emailAddress: string;
   nickname: string;
-  phone?: string;
-  profileImage?: string;
+  phoneNumber?: string;
+  profileImageFileName?: string;
+  accountStatus: string;
+  authProvider: 'local' | 'google' | 'kakao' | 'naver' | 'apple';
   marketingAgreed: boolean;
   createdAt: string;
   updatedAt: string;

@@ -64,6 +64,8 @@ export interface BreederProfileResponseDto {
   breederId: string;
   breederName: string;
   breederEmail: string;
+  authProvider?: 'local' | 'google' | 'kakao' | 'naver' | 'apple';
+  marketingAgreed?: boolean;
   profileImageFileName?: string;
   profileInfo: BreederProfileInfoDto;
   parentPetInfo: any[];
