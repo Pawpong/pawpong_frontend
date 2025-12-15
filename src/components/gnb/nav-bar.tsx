@@ -145,11 +145,7 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
   const { isAuthenticated, clearAuth, user, hasHydrated } = useAuthStore();
   const navConfig = navVariant === 'breeder' ? NAV_ITEMS_BREEDER : NAV_ITEMS;
 
-  const handleLinkClick = (
-    e: MouseEvent<HTMLAnchorElement>,
-    href: string,
-    requiresAuth?: boolean,
-  ) => {
+  const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>, href: string, requiresAuth?: boolean) => {
     // 비회원이 인증 필요 메뉴 클릭 시 로그인 페이지로 이동
     if (requiresAuth && !isAuthenticated) {
       e.preventDefault();
@@ -200,18 +196,23 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
 
         // children이 있는 경우, children 중 하나가 활성화되어 있으면 부모도 활성화
         const isChildActive = hasChildren
-          ? (item.children?.some((child) => currNav === child.href.slice(1)) ?? false)
+          ? item.children?.some((child) => currNav === child.href.slice(1)) ?? false
           : false;
 
         // 홈화면일 때는 아무것도 활성화하지 않음
         const isHomePage = pathname === '/';
+        // 탐색 메뉴는 /explore 또는 /counselform일 때 활성화
+        const isExploreMenu = item.href === '/explore';
+        const isCounselFormPage = pathname === '/counselform';
         const active = isHomePage
           ? false
           : isApplicationMenu
-            ? currNav === 'application' || currNav === 'receivedApplications'
-            : hasChildren
-              ? currNav === item.href.slice(1) || isChildActive
-              : currNav === item.href.slice(1);
+          ? currNav === 'application' || currNav === 'receivedApplications'
+          : isExploreMenu
+          ? currNav === item.href.slice(1) || isChildActive || isCounselFormPage
+          : hasChildren
+          ? currNav === item.href.slice(1) || isChildActive
+          : currNav === item.href.slice(1);
 
         const Icon = active ? item.iconFill : item.icon;
 
