@@ -2,6 +2,7 @@
 
 import Container from '@/components/ui/container';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import ApplicationListItem from './_components/application-list-item';
 import DownArrow from '@/assets/icons/long-down-arrow.svg';
 import { useApplications } from './_hooks/use-applications';
@@ -52,7 +53,7 @@ const ApplicationPage = () => {
 
   return (
     <Container>
-      <div className="flex-1 @container flex flex-col gap-10 pt-10 pb-20 px-12">
+      <div className="flex-1 @container flex flex-col gap-3 pt-10 pb-20 px-12">
         <div className="text-[#4F3B2E] text-heading-3 font-semibold">{pageTitle}</div>
 
         {allApplications.length === 0 ? (
@@ -61,9 +62,14 @@ const ApplicationPage = () => {
           </div>
         ) : (
           <>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col">
               {allApplications.map((item, index) => (
-                <ApplicationListItem key={item.applicationId || `application-${index}`} {...item} isBreeder={isBreeder} />
+                <div key={item.applicationId || `application-${index}`}>
+                  <div className="py-[28px]">
+                    <ApplicationListItem {...item} isBreeder={isBreeder} />
+                  </div>
+                  {index < allApplications.length - 1 && <Separator className="bg-grayscale-gray2" />}
+                </div>
               ))}
             </div>
 

@@ -40,7 +40,8 @@ const mapAdopterDtoToApplicationItem = (dto: ApplicationListItemDto): Applicatio
   breederName: dto.breederName,
   breederLevel: dto.breederLevel,
   applicationDate: dto.applicationDate,
-  profileImage: dto.profileImage || '/profile-empty.svg',
+  // 프로필 이미지가 있으면 그대로 사용, 없으면 빈 문자열 (기본 아이콘 표시)
+  profileImage: dto.profileImage || '',
   animalType: dto.animalType,
   petId: dto.petId,
   petBreed: dto.petBreed,
@@ -57,7 +58,7 @@ const mapBreederDtoToApplicationItem = (dto: ReceivedApplicationItemDto): Applic
   adopterEmail: dto.adopterEmail,
   adopterPhone: dto.adopterPhone,
   applicationDate: new Date(dto.appliedAt).toLocaleDateString('ko-KR'),
-  profileImage: '/avatar-sample.png', // 입양자 프로필 이미지는 나중에 추가
+  profileImage: '/profile-empty.svg', // 입양자 프로필 이미지는 나중에 추가
   petId: dto.petId,
   petName: dto.petName,
   preferredPetInfo: dto.preferredPetInfo, // 입양 원하는 아이 정보 (드롭다운 선택 또는 직접 입력)
