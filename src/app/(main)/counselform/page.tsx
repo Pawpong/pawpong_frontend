@@ -79,8 +79,10 @@ export default function CounselFormPage() {
 
   const formValues = useWatch({ control: form.control });
   const data = formValues || form.getValues();
-  const isDisabled = !isFormComplete(data as CounselFormData);
+  const isFormValid = isFormComplete(data as CounselFormData);
   const hasFormData = !isFormEmpty(data as CounselFormData);
+  // 제출 중이거나 폼이 유효하지 않으면 버튼 비활성화
+  const isDisabled = !isFormValid || createApplicationMutation.isPending;
 
   // 네비게이션 가드 훅 사용
   const {
@@ -588,10 +590,10 @@ export default function CounselFormPage() {
             <Button
               variant={undefined}
               disabled={isDisabled}
-              className="button-edit-default text-primary-500 hover:bg-secondary-600 flex h-12 items-center justify-center min-w-20 px-4 py-3 rounded-lg w-full md:w-[424px]"
+              className="button-edit-default text-primary-500 hover:bg-secondary-600 flex h-12 items-center justify-center min-w-20 px-4 py-3 rounded-lg w-full md:w-[424px] disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleSubmit}
             >
-              상담 신청하기
+              {createApplicationMutation.isPending ? '제출 중...' : '상담 신청하기'}
             </Button>
           </div>
         </div>

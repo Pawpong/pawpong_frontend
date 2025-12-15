@@ -823,3 +823,27 @@ export const updateApplicationForm = async (data: ApplicationFormUpdateRequest):
     throw new Error('Unknown error during application form update');
   }
 };
+
+/**
+ * 브리더 계정 탈퇴 (소프트 딜리트)
+ * DELETE /api/breeder-management/account
+ */
+export const deleteBreederAccount = async (): Promise<{ deletedAt: Date }> => {
+  try {
+    const response = await apiClient.delete<ApiResponse<{ deletedAt: Date }>>(
+      '/api/breeder-management/account',
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error('Failed to delete breeder account');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Breeder account deletion error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during breeder account deletion');
+  }
+};
