@@ -20,7 +20,6 @@ export default function HomeBreederGrid() {
       <div className="flex flex-col gap-7">
         <BreederProfileSectionHeader>
           <BreederProfileSectionTitle>분양 중인 아이들</BreederProfileSectionTitle>
-          <BreederProfileSectionMore />
         </BreederProfileSectionHeader>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {animals.map((animal) => (
