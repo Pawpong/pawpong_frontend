@@ -181,7 +181,7 @@ export default function BreedsSelectDialogTrigger({
           <ClearFilters onClick={clearActiveFilters} />
           <LargeDialogClose asChild>
             <Button
-              className="py-2 px-4 text-sm leading-[140%] tracking-[-2%] bg-[#A0C8F4] w-18 text-primary-500!"
+              className="py-2 px-4 text-sm leading-[140%] tracking-[-2%] bg-[#A0C8F4] w-18 text-white bg-primary-500 rounded"
               onClick={() => onSubmitBreeds(selected)}
             >
               입력
