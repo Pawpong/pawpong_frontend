@@ -80,7 +80,7 @@ export default function Page({ params }: PageProps) {
 
   // API 응답에서 직접 값 추출 (profileImage, location, breederLevel 등)
   const apiData = profileData as any;
-  const avatarUrl = apiData?.profileImage || profileData.profileImageFileName || '/avatar-sample.png';
+  const avatarUrl = apiData?.profileImage || profileData.profileImageFileName || '/profile-empty.svg';
   const locationFromApi = apiData?.location || locationStr;
   const levelFromApi = apiData?.breederLevel === 'elite' ? 'elite' : 'new';
 
@@ -127,9 +127,7 @@ export default function Page({ params }: PageProps) {
   }));
 
   // 부모견/부모묘 매핑 - 배열 또는 객체 형태 모두 처리
-  const parentPetsArray = Array.isArray(parentPetsData)
-    ? parentPetsData
-    : (parentPetsData as any)?.items || [];
+  const parentPetsArray = Array.isArray(parentPetsData) ? parentPetsData : (parentPetsData as any)?.items || [];
   const parentPets = parentPetsArray.map((pet: any) => ({
     id: pet.petId,
     avatarUrl: pet.photoUrl || '/animal-sample.png',

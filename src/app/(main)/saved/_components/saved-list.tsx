@@ -63,38 +63,40 @@ export default function SavedList() {
           <BreederList>
             {savedBreeders.map((breeder: any, index: number) => (
               <Link key={breeder.breederId || index} href={`/explore/breeder/${breeder.breederId}`} className="block">
-              <Breeder>
-                <BreederProfile>
-                  <BreederHeader>
-                    <BreederAvatar src={breeder.profileImageFileName || '/avatar-sample.png'} />
-                    <div className="flex items-center gap-2">
-                      <BreederName>{breeder.breederName}</BreederName>
-                      <LevelBadge level={'new' as 'elite' | 'new'} />
+                <Breeder>
+                  <BreederProfile>
+                    <BreederHeader>
+                      <BreederAvatar src={breeder.profileImageFileName || '/profile-empty.svg'} />
+                      <div className="flex items-center gap-2">
+                        <BreederName>{breeder.breederName}</BreederName>
+                        <LevelBadge level={'new' as 'elite' | 'new'} />
+                      </div>
+                    </BreederHeader>
+                    <BreederContent>
+                      <BreederDescription>
+                        <BreederLocation>{breeder.location}</BreederLocation>
+                        <GrayDot className="block sm:hidden lg:block align-middle" />
+                        <BreederPrice>
+                          평점 {breeder.averageRating} ({breeder.totalReviews})
+                        </BreederPrice>
+                      </BreederDescription>
+                      <BreederTags>
+                        <Button variant="secondary">
+                          찜한 날짜: {new Date(breeder.addedAt).toLocaleDateString('ko-KR')}
+                        </Button>
+                      </BreederTags>
+                    </BreederContent>
+                  </BreederProfile>
+                  <div className="relative">
+                    <BreederImage src={breeder.profileImageFileName || '/avatar-sample.png'} />
+                    <div className="absolute top-0 right-0 p-3">
+                      <BreederLikeButton breederId={breeder.breederId} initialIsFavorited={true} />
                     </div>
-                  </BreederHeader>
-                  <BreederContent>
-                    <BreederDescription>
-                      <BreederLocation>{breeder.location}</BreederLocation>
-                      <GrayDot className="block sm:hidden lg:block align-middle" />
-                      <BreederPrice>평점 {breeder.averageRating} ({breeder.totalReviews})</BreederPrice>
-                    </BreederDescription>
-                    <BreederTags>
-                      <Button variant="secondary">
-                        찜한 날짜: {new Date(breeder.addedAt).toLocaleDateString('ko-KR')}
-                      </Button>
-                    </BreederTags>
-                  </BreederContent>
-                </BreederProfile>
-                <div className="relative">
-                  <BreederImage src={breeder.profileImageFileName || '/avatar-sample.png'} />
-                  <div className="absolute top-0 right-0 p-3">
-                    <BreederLikeButton breederId={breeder.breederId} initialIsFavorited={true} />
+                    <div className="absolute bottom-0 right-0 p-3">
+                      <AdoptionStatusBadge status={breeder.availablePets > 0 ? 'available' : 'completed'} />
+                    </div>
                   </div>
-                  <div className="absolute bottom-0 right-0 p-3">
-                    <AdoptionStatusBadge status={breeder.availablePets > 0 ? 'available' : 'completed'} />
-                  </div>
-                </div>
-              </Breeder>
+                </Breeder>
               </Link>
             ))}
           </BreederList>
