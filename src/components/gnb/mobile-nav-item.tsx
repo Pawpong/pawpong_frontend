@@ -21,10 +21,18 @@ interface MobileNavItemProps {
 }
 
 export default function MobileNavItem({ item, isLast }: MobileNavItemProps) {
+  const pathname = usePathname();
   const hasChildren = Boolean(item.children?.length);
 
+  // 탐색 메뉴는 /explore 또는 /counselform일 때 활성화
+  const isExploreMenu = item.href === '/explore';
+  const isCounselFormPage = pathname === '/counselform';
+  const isActive = isExploreMenu
+    ? pathname.startsWith('/explore') || isCounselFormPage
+    : pathname.startsWith(item.href);
+
   if (!hasChildren) {
-    return <NavLink item={item} isActive={false} isLast={isLast} />;
+    return <NavLink item={item} isActive={isActive} isLast={isLast} />;
   }
 
   return (
@@ -89,7 +97,15 @@ function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolea
   const guardContext = useNavigationGuardContext();
   const { toast } = useToast();
   const { isAuthenticated, clearAuth, user } = useAuthStore();
-  const Icon = open ? item.iconFill : item.icon;
+
+  // 탐색 메뉴는 /explore 또는 /counselform일 때 활성화
+  const isExploreMenu = item.href === '/explore';
+  const isCounselFormPage = pathname === '/counselform';
+  const isActive = isExploreMenu
+    ? pathname.startsWith('/explore') || isCounselFormPage
+    : pathname.startsWith(item.href);
+
+  const Icon = open || isActive ? item.iconFill : item.icon;
 
   // 비회원이 인증 필요 메뉴 클릭 시 로그인 페이지로 이동
   const handleOpenChange = (newOpen: boolean) => {
