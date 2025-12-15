@@ -588,7 +588,7 @@ export default function CounselFormPage() {
             <Button
               variant={undefined}
               disabled={isDisabled}
-              className="button-edit-default hover:bg-secondary-600 flex h-12 items-center justify-center min-w-20 px-4 py-3 rounded-lg w-full md:w-[424px]"
+              className="button-edit-default text-primary-500 hover:bg-secondary-600 flex h-12 items-center justify-center min-w-20 px-4 py-3 rounded-lg w-full md:w-[424px]"
               onClick={handleSubmit}
             >
               상담 신청하기
