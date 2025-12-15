@@ -186,7 +186,13 @@ export default function ProfilePage() {
   // 폼 값들을 watch하여 실시간으로 disabled 상태 체크
   const formValues = useWatch({ control: form.control });
   const data = formValues || form.getValues();
-  const isDisabled = isFormEmpty(data as ProfileFormData);
+  const isEmpty = isFormEmpty(data as ProfileFormData);
+  const {
+    formState: { isDirty },
+  } = form;
+  // 프로필 이미지 파일 변경도 감지
+  const hasChanges = isDirty || !!profileImageFile;
+  const isDisabled = isEmpty || !hasChanges;
 
   // 프로필 이미지 변경 핸들러
   const handleProfileImageChange = (file: File, preview: string) => {
