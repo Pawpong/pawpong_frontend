@@ -49,7 +49,7 @@ const mapDtoToMyReviewItem = (dto: MyReviewItemDto): MyReviewItem => {
     breederName: dto.breederNickname,
     breederLevel: dto.breederLevel === 'gold' || dto.breederLevel === 'platinum' ? 'elite' : 'new',
     applicationDate: formatDate(dto.writtenAt), // 작성일을 신청일로 사용
-    profileImage: dto.breederProfileImage || '/avatar-sample.png',
+    profileImage: dto.breederProfileImage || '/profile-empty.svg',
     animalType: dto.breedingPetType as 'cat' | 'dog',
     reviewType: reviewTypeMap[dto.reviewType] || '상담 후기',
     reviewContent: dto.content,
