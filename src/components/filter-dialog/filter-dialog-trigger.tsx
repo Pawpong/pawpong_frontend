@@ -275,7 +275,7 @@ export default function FilterDialogTrigger({ ...props }: React.ComponentProps<t
             <DialogClose asChild>
               <Button
                 onClick={handleApplyAndClose}
-                className="rounded-[--spacing(1)] py-2 px-4 text-sm leading-[140%] tracking-[-2%] w-18 text-white!"
+                className="rounded-[--spacing(1)] py-2 px-4 text-sm leading-[140%] tracking-[-2%] w-18 text-white bg-primary-500"
                 type="submit"
               >
                 설정
