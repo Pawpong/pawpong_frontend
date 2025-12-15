@@ -22,7 +22,7 @@ import { uploadSingleFile, uploadRepresentativePhotos } from '@/lib/upload';
 import ProfileBannerCarousel from '@/components/profile-banner/profile-banner-carousel';
 
 export default function ProfilePage() {
-  const isMdUp = useBreakpoint('md');
+  const isLgUp = useBreakpoint('lg');
   const { toast } = useToast();
   const { setProfileData } = useProfileStore();
   const { data: apiProfileData, isLoading } = useBreederProfile();
@@ -326,19 +326,19 @@ export default function ProfilePage() {
 
   return (
     <FormProvider {...form}>
-      <div className="min-h-screen flex w-full flex-col md:flex-row">
-        {/* 왼쪽 배너 영역: md 이상에서만 표시 */}
-        {isMdUp && (
-          <div className="md:w-1/2 md:p-8 bg-tertiary-500">
-            <div className="md:h-[calc(100vh-4rem)]">
+      <div className="min-h-screen flex w-full flex-col lg:flex-row">
+        {/* 왼쪽 배너 영역: lg 이상에서만 표시 */}
+        {isLgUp && (
+          <div className="lg:w-1/2 lg:px-12 lg:pt-5 bg-tertiary-500">
+            <div className="lg:h-[calc(100vh-4rem)]">
               <ProfileBannerCarousel />
             </div>
           </div>
         )}
 
         {/* 오른쪽 콘텐츠 영역 */}
-        <div className="w-full md:w-1/2 flex flex-col">
-          <div className="flex flex-col gap-8 md:gap-20 items-center pb-20 py-14  ">
+        <div className="w-full lg:w-1/2 flex flex-col px-[1.25rem] md:px-[2.5rem] lg:pr-12">
+          <div className="flex flex-col gap-8 md:gap-20 items-center pb-20 py-14">
             {/* 프로필 기본 정보 */}
             <ProfileBasicInfo
               form={form}
@@ -350,15 +350,10 @@ export default function ProfilePage() {
             {/* 분양 중인 아이 */}
             <BreedingAnimals form={form} />
             {/* 탈퇴하기 링크 */}
-            <div className="flex gap-0.5 items-center relative shrink-0">
-              <p className="font-normal leading-[1.4] relative shrink-0 text-14 text-grayscale-gray5 text-nowrap tracking-[-0.28px] underline">
-                탈퇴하기
-              </p>
-            </div>
           </div>
 
           {/* 수정하기 버튼 */}
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 px-8 w-full max-w-[424px] md:bottom-10 md:left-[calc(50%+25%)] md:-translate-x-1/2 md:w-[424px] md:px-0">
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 px-8 w-full max-w-[424px] md:bottom-10 md:left-1/2 md:-translate-x-1/2 md:w-[424px] md:px-0 lg:left-[calc(50%+25%)]">
             <Button
               variant={undefined}
               disabled={isDisabled}
