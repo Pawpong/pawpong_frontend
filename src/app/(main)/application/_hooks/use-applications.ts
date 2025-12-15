@@ -40,7 +40,7 @@ const mapAdopterDtoToApplicationItem = (dto: ApplicationListItemDto): Applicatio
   breederName: dto.breederName,
   breederLevel: dto.breederLevel,
   applicationDate: dto.applicationDate,
-  profileImage: dto.profileImage || '/avatar-sample.png',
+  profileImage: dto.profileImage || '/profile-empty.svg',
   animalType: dto.animalType,
   petId: dto.petId,
   petBreed: dto.petBreed,
