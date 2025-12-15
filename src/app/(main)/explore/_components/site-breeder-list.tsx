@@ -33,7 +33,7 @@ export default function SiteBreederList() {
   const isLoggedIn = !!user;
 
   // URL 경로에서 petType 자동 감지 (useSegment 사용)
-  const petType = (useSegment(1) as 'cat' | 'dog') || 'cat';
+  const petType = (useSegment(1) as 'cat' | 'dog') || 'dog';
 
   // URL 쿼리 파라미터에서 정렬 옵션 가져오기
   const searchParams = useSearchParams();
