@@ -87,64 +87,57 @@ export default function ApplicationListItem({
     const canWriteReview = status === 'consultation_completed' || status === 'adoption_approved';
 
     return (
-      <div className="flex gap-5 items-center w-full md:flex-row">
-        {/* 프로필 이미지 */}
-        <ProfileImageWithBadge
-          src={profileImage}
-          alt={breederName}
-          animalType={(animalType || 'cat') as 'cat' | 'dog'}
-          size={68}
-        />
+      <ReviewDialog
+        applicationId={applicationId}
+        breederId={breederId!}
+        breederName={breederName}
+        breederLevel={breederLevel}
+        applicationDate={applicationDate}
+        profileImage={profileImage}
+        animalType={(animalType || 'cat') as 'cat' | 'dog'}
+        canWriteReview={canWriteReview}
+      >
+        <div className="flex gap-5 items-center w-full md:flex-row cursor-pointer hover:opacity-80 transition-opacity">
+          {/* 프로필 이미지 */}
+          <ProfileImageWithBadge
+            src={profileImage}
+            alt={breederName}
+            animalType={(animalType || 'cat') as 'cat' | 'dog'}
+            size={68}
+          />
 
-        {/* 브리더 정보 + 날짜/버튼 영역 */}
-        <div className="flex-1 flex flex-col gap-2 md:gap-3">
-          <BreederInfo breederName={breederName} breederLevel={breederLevel} />
-          <div className="flex justify-between items-center gap-2">
-            <p className="text-body-s font-normal text-grayscale-gray5 whitespace-nowrap">{applicationDate}</p>
-            {/* 후기 작성 버튼 - 상담 완료/입양 승인 상태에서만 표시 */}
-            {canWriteReview && (
-              <ReviewDialog
-                applicationId={applicationId}
-                breederId={breederId!}
-                breederName={breederName}
-                breederLevel={breederLevel}
-                applicationDate={applicationDate}
-                profileImage={profileImage}
-                animalType={(animalType || 'cat') as 'cat' | 'dog'}
-              >
+          {/* 브리더 정보 + 날짜/버튼 영역 */}
+          <div className="flex-1 flex flex-col gap-2 md:gap-3">
+            <BreederInfo breederName={breederName} breederLevel={breederLevel} />
+            <div className="flex justify-between items-center gap-2">
+              <p className="text-body-s font-normal text-grayscale-gray5 whitespace-nowrap">{applicationDate}</p>
+              {/* 후기 작성 버튼 - 상담 완료/입양 승인 상태에서만 표시 */}
+              {canWriteReview && (
                 <Button
                   variant="ghost"
                   className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 md:hidden"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
                   <Pencil className="size-4" />
                 </Button>
-              </ReviewDialog>
-            )}
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* 후기 작성 버튼 (데스크톱) - 상담 완료/입양 승인 상태에서만 표시 */}
-        {canWriteReview && (
-          <ReviewDialog
-            applicationId={applicationId}
-            breederId={breederId!}
-            breederName={breederName}
-            breederLevel={breederLevel}
-            applicationDate={applicationDate}
-            profileImage={profileImage}
-            animalType={(animalType || 'cat') as 'cat' | 'dog'}
-          >
+          {/* 후기 작성 버튼 (데스크톱) - 상담 완료/입양 승인 상태에서만 표시 */}
+          {canWriteReview && (
             <Button
               variant="ghost"
               className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 hidden md:flex"
+              onClick={(e) => e.stopPropagation()}
             >
               <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
               <Pencil className="size-4" />
             </Button>
-          </ReviewDialog>
-        )}
-      </div>
+          )}
+        </div>
+      </ReviewDialog>
     );
   }
 
