@@ -1,27 +1,84 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Container from '@/components/ui/container';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import LoginSection from './_components/login-section';
 import ProfileBannerCarousel from '@/components/profile-banner/profile-banner-carousel';
+import {
+  SimpleDialog,
+  SimpleDialogContent,
+  SimpleDialogHeader,
+  SimpleDialogTitle,
+  SimpleDialogDescription,
+  SimpleDialogFooter,
+} from '@/components/ui/simple-dialog';
+import { Button } from '@/components/ui/button';
 
 export default function Login() {
   const isPC = useBreakpoint('lg');
-  return (
-    <Container className="grid grid-cols-1 lg:grid-cols-2 gap-padding min-h-[calc(100vh-(--spacing(16)))]">
-      {/* 왼쪽 배너 영역 */}
-      {isPC && (
-        <div className="h-full w-full pt-4 pb-padding ">
-          <div className="relative pl-12 pb-10 h-full">
-            <ProfileBannerCarousel />
-          </div>
-        </div>
-      )}
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorType, setErrorType] = useState<'deleted' | 'error'>('error');
 
-      {/* 오른쪽 콘텐츠 */}
-      <div className="flex items-center">
-        <LoginSection />
-      </div>
-    </Container>
+  useEffect(() => {
+    const error = searchParams.get('error');
+    const type = searchParams.get('type');
+
+    if (error) {
+      console.log('[Login Page] 에러 감지:', error, '타입:', type);
+      setErrorType(type === 'deleted_account' ? 'deleted' : 'error');
+      setShowErrorModal(true);
+
+      // 에러 파라미터 제거 (URL 정리)
+      router.replace('/login');
+    }
+  }, [searchParams, router]);
+
+  const handleModalClose = () => {
+    setShowErrorModal(false);
+  };
+
+  return (
+    <>
+      <Container className="grid grid-cols-1 lg:grid-cols-2 gap-padding min-h-[calc(100vh-(--spacing(16)))]">
+        {/* 왼쪽 배너 영역 */}
+        {isPC && (
+          <div className="h-full w-full pt-4 pb-padding ">
+            <div className="relative pl-12 pb-10 h-full">
+              <ProfileBannerCarousel />
+            </div>
+          </div>
+        )}
+
+        {/* 오른쪽 콘텐츠 */}
+        <div className="flex items-center">
+          <LoginSection />
+        </div>
+      </Container>
+
+      {/* 탈퇴한 계정 에러 모달 */}
+      <SimpleDialog open={showErrorModal} onOpenChange={handleModalClose}>
+        <SimpleDialogContent>
+          <SimpleDialogHeader>
+            <SimpleDialogTitle className="text-primary">
+              {errorType === 'deleted' ? '탈퇴한 계정이에요' : '로그인에 실패했어요'}
+            </SimpleDialogTitle>
+            <SimpleDialogDescription className="text-grayscale-gray5">
+              {errorType === 'deleted'
+                ? '이미 탈퇴 처리된 계정이에요.\n다른 계정으로 로그인해 주세요.'
+                : '로그인 중 문제가 발생했어요.\n잠시 후 다시 시도해 주세요.'}
+            </SimpleDialogDescription>
+          </SimpleDialogHeader>
+          <SimpleDialogFooter className="grid-cols-1">
+            <Button variant="tertiary" className="w-full" onClick={handleModalClose}>
+              확인
+            </Button>
+          </SimpleDialogFooter>
+        </SimpleDialogContent>
+      </SimpleDialog>
+    </>
   );
 }

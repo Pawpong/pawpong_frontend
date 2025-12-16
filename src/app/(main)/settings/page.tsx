@@ -10,6 +10,7 @@ import WithdrawDialog from './_components/withdraw-dialog';
 import { getAdopterProfile, updateAdopterProfile, deleteAccount, WithdrawReason } from '@/lib/adopter';
 import { getMyBreederProfile } from '@/lib/breeder';
 import { deleteBreederAccount } from '@/lib/breeder-management';
+import { logout } from '@/lib/auth';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { useAuthGuard } from '@/hooks/use-auth-guard';
@@ -17,7 +18,7 @@ import { useAuthStore } from '@/stores/auth-store';
 
 export default function SettingsPage() {
   const { isLoading: isAuthLoading } = useAuthGuard();
-  const { user } = useAuthStore();
+  const { user, clearAuth } = useAuthStore();
   const [marketingAgreed, setMarketingAgreed] = useState(false);
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
@@ -152,9 +153,12 @@ export default function SettingsPage() {
         });
       }
 
-      // 탈퇴 성공 시 로그인 페이지로 리다이렉트
+      // 탈퇴 성공 시 로그아웃 처리 후 로그인 페이지로 리다이렉트
+      await logout();
+      clearAuth();
+
       setTimeout(() => {
-        router.push('/login');
+        window.location.href = '/login';
       }, 1500);
     } catch (error) {
       toast({
