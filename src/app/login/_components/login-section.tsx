@@ -15,7 +15,7 @@ export default function LoginSection() {
           <SocialLoginList />
           <div className="mt-8">
             <Link
-              href="https://pf.kakao.com/_xlmxjjn"
+              href="https://pf.kakao.com/_Wqxekn"
               target="_blank"
               rel="noopener noreferrer"
               className="text-secondary-700 hover:text-secondary-800 underline text-sm font-normal tracking-[-0.28px] leading-[1.4]"
