@@ -33,7 +33,7 @@ export default function SignupComplete() {
             홈으로
           </Button>
         </Link>
-        <Link href="/">
+        <Link href="https://pf.kakao.com/_Wqxekn" target="_blank" rel="noopener noreferrer">
           <Button className="bg-tertiary-700 !text-grayscale-gray6 py-3 px-4 w-full hover:bg-tertiary-800 hover:!text-grayscale-gray6">
             문의하기
           </Button>

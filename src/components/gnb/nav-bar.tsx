@@ -102,6 +102,8 @@ function DropdownMenuWithState({
             const isDisabled = child.variant === 'disabled';
             const isLogout = child.action === 'logout';
 
+            const isExternalLink = child.href.startsWith('http://') || child.href.startsWith('https://');
+
             return (
               <DropdownMenuItem
                 key={child.name}
@@ -114,12 +116,16 @@ function DropdownMenuWithState({
               >
                 <Link
                   href={child.href}
+                  target={isExternalLink ? '_blank' : undefined}
+                  rel={isExternalLink ? 'noopener noreferrer' : undefined}
                   onClick={(e) => {
                     if (isLogout) {
                       handleLogout(e);
                       return;
                     }
-                    handleLinkClick(e, child.href);
+                    if (!isExternalLink) {
+                      handleLinkClick(e, child.href);
+                    }
                   }}
                   aria-disabled={isDisabled}
                 >

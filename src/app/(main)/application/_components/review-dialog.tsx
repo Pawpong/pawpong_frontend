@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogTrigger, DialogClose, DialogTitle } from '@/components/ui/dialog';
 import SmallDot from '@/assets/icons/small-dot.svg';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
@@ -30,6 +31,7 @@ interface ReviewDialogProps {
 
 export default function ReviewDialog({
   applicationId,
+  breederId,
   breederName,
   breederLevel,
   applicationDate,
@@ -37,6 +39,7 @@ export default function ReviewDialog({
   animalType,
   children,
 }: ReviewDialogProps) {
+  const router = useRouter();
   const [showReviewWriteDialog, setShowReviewWriteDialog] = useState(false);
   const [open, setOpen] = useState(false);
   const [applicationData, setApplicationData] = useState<ApplicationDetailDto | null>(null);
@@ -102,7 +105,13 @@ export default function ReviewDialog({
                   className="gap-3"
                 />
               </div>
-              <Button className="gap-1 text-grayscale-gray5 text-body-xs h-auto p-0 has-[>svg]:px-0 hover:bg-transparent">
+              <Button
+                className="gap-1 text-grayscale-gray5 text-body-xs h-auto p-0 has-[>svg]:px-0 hover:bg-transparent"
+                onClick={() => {
+                  setOpen(false);
+                  router.push(`/explore/breeder/${breederId}`);
+                }}
+              >
                 <span>보기</span>
                 <RightArrow className="size-5" />
               </Button>
@@ -361,6 +370,7 @@ export default function ReviewDialog({
       {/* 후기 작성 다이얼로그 */}
       <ReviewWriteDialog
         applicationId={applicationId}
+        breederId={breederId}
         open={showReviewWriteDialog}
         onOpenChange={setShowReviewWriteDialog}
         breederName={breederName}
