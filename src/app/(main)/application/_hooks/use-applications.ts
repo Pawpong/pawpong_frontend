@@ -40,7 +40,7 @@ const mapAdopterDtoToApplicationItem = (dto: ApplicationListItemDto): Applicatio
   breederName: dto.breederName,
   breederLevel: dto.breederLevel,
   applicationDate: dto.applicationDate,
-  // 프로필 이미지가 있으면 그대로 사용, 없으면 빈 문자열 (기본 아이콘 표시)
+  // 탐색 화면과 동일하게 API에서 받은 profileImage를 그대로 사용
   profileImage: dto.profileImage || '',
   animalType: dto.animalType,
   petId: dto.petId,
