@@ -88,7 +88,7 @@ export default function SavedList() {
                     </BreederContent>
                   </BreederProfile>
                   <div className="relative">
-                    <BreederImage src={breeder.profileImageFileName || '/avatar-sample.png'} />
+                    <BreederImage src={breeder.profileImageFileName || '/profile-empty.svg'} />
                     <div className="absolute top-0 right-0 p-3">
                       <BreederLikeButton breederId={breeder.breederId} initialIsFavorited={true} />
                     </div>
