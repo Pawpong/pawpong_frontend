@@ -90,26 +90,26 @@ export default function ApplicationListItem({
   breederName,
   breederLevel,
   animalType,
-  petBreed,
   adopterId,
   adopterName,
-  adopterEmail,
-  adopterPhone,
   petName,
   preferredPetInfo,
 }: ApplicationListItemProps) {
+  // 🔧 모든 hooks는 컴포넌트 최상단에서 호출 (React Hooks 규칙 준수)
+  // 입양자 화면용 상태
+  const canWriteReview = status === 'consultation_completed' || status === 'adoption_approved';
+  const [showReviewWriteDialog, setShowReviewWriteDialog] = useState(false);
+  const { data: existingReview } = useQuery({
+    queryKey: ['review-by-application', applicationId],
+    queryFn: () => getReviewByApplicationId(applicationId),
+    enabled: !isBreeder && canWriteReview, // 입양자이고 후기 작성 가능할 때만 쿼리 실행
+  });
+
+  // 브리더 화면용 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // 입양자 화면 (브리더 정보 표시)
   if (!isBreeder && breederName && breederLevel) {
-    // 상담 완료 또는 입양 승인 상태에서만 후기 작성/보기 가능
-    const canWriteReview = status === 'consultation_completed' || status === 'adoption_approved';
-    const [showReviewWriteDialog, setShowReviewWriteDialog] = useState(false);
-
-    // 기존 후기 조회
-    const { data: existingReview } = useQuery({
-      queryKey: ['review-by-application', applicationId],
-      queryFn: () => getReviewByApplicationId(applicationId),
-      enabled: canWriteReview,
-    });
 
     const hasReview = !!existingReview;
     const buttonText = hasReview ? '후기 보기' : '후기 작성';
@@ -191,8 +191,6 @@ export default function ApplicationListItem({
 
   // 브리더 화면 (입양자 정보 표시) - Figma 디자인 완벽 반영
   if (isBreeder && adopterName) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
     // 입양 원하는 아이 정보 표시 (preferredPetInfo 우선, 없으면 petName)
     const displayPetInfo = preferredPetInfo || petName || '분양 중인 아이 정보';
 
