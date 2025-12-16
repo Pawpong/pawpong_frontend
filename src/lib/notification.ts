@@ -8,7 +8,8 @@ export type NotificationType =
   | "NEW_CONSULT_REQUEST"
   | "NEW_REVIEW_REGISTERED"
   | "CONSULT_COMPLETED"
-  | "NEW_PET_REGISTERED";
+  | "NEW_PET_REGISTERED"
+  | "DOCUMENT_REMINDER";
 
 /** 알림 응답 DTO */
 export interface NotificationResponseDto {
