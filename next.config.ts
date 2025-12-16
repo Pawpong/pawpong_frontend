@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  output: 'standalone', // Vercel optimized build
   images: {
     remotePatterns: [
       {
@@ -18,6 +19,12 @@ const nextConfig: NextConfig = {
         hostname: "**", // (옵션) HTTP 도메인도 허용
       },
     ],
+  },
+  // 정적 생성 중 에러 페이지 건너뛰기 (개발 중에만 사용)
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
   turbopack: {
     rules: {
