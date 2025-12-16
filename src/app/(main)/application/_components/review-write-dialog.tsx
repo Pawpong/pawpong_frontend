@@ -106,8 +106,14 @@ export default function ReviewWriteDialog({
 
         {/* 스크롤 가능한 콘텐츠 영역 */}
         <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-5 min-h-0 px-5 pt-6 pb-[9.25rem] md:px-6 md:pb-[4.5rem]">
-          {/* 브리더 정보 */}
-          <div className="flex items-center justify-between w-full">
+          {/* 브리더 정보 - 전체 클릭 시 브리더 페이지로 이동 */}
+          <div
+            className="flex items-center justify-between w-full cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => {
+              onOpenChange(false);
+              router.push(`/explore/breeder/${breederId}`);
+            }}
+          >
             <div className="flex gap-5 items-center grow">
               <ProfileImageWithBadge src={profileImage} alt={breederName} animalType={animalType} size={68} />
               <BreederInfo
@@ -119,10 +125,7 @@ export default function ReviewWriteDialog({
             </div>
             <Button
               className="gap-1 text-grayscale-gray5 text-body-xs h-auto p-0 has-[>svg]:px-0 hover:bg-transparent"
-              onClick={() => {
-                onOpenChange(false);
-                router.push(`/explore/breeder/${breederId}`);
-              }}
+              onClick={(e) => e.stopPropagation()}
             >
               <span>보기</span>
               <RightArrow className="size-5" />

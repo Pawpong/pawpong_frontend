@@ -6,6 +6,7 @@ import BreederInfo from '@/components/breeder/breeder-info';
 import { Button } from '@/components/ui/button';
 import Pencil from '@/assets/icons/pencil.svg';
 import ReviewDialog from './review-dialog';
+import ReviewWriteDialog from './review-write-dialog';
 import { Badge } from '@/components/ui/badge';
 import ApplicationDetailModal from './application-detail-modal';
 
@@ -85,59 +86,80 @@ export default function ApplicationListItem({
   if (!isBreeder && breederName && breederLevel) {
     // 상담 완료 또는 입양 승인 상태에서만 후기 작성 가능
     const canWriteReview = status === 'consultation_completed' || status === 'adoption_approved';
+    const [showReviewWriteDialog, setShowReviewWriteDialog] = useState(false);
+
+    const handleReviewButtonClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setShowReviewWriteDialog(true);
+    };
 
     return (
-      <ReviewDialog
-        applicationId={applicationId}
-        breederId={breederId!}
-        breederName={breederName}
-        breederLevel={breederLevel}
-        applicationDate={applicationDate}
-        profileImage={profileImage}
-        animalType={(animalType || 'cat') as 'cat' | 'dog'}
-        canWriteReview={canWriteReview}
-      >
-        <div className="flex gap-5 items-center w-full md:flex-row cursor-pointer hover:opacity-80 transition-opacity">
-          {/* 프로필 이미지 */}
-          <ProfileImageWithBadge
-            src={profileImage}
-            alt={breederName}
-            animalType={(animalType || 'cat') as 'cat' | 'dog'}
-            size={68}
-          />
+      <>
+        <ReviewDialog
+          applicationId={applicationId}
+          breederId={breederId!}
+          breederName={breederName}
+          breederLevel={breederLevel}
+          applicationDate={applicationDate}
+          profileImage={profileImage}
+          animalType={(animalType || 'cat') as 'cat' | 'dog'}
+          canWriteReview={canWriteReview}
+        >
+          <div className="flex gap-5 items-center w-full md:flex-row cursor-pointer hover:opacity-80 transition-opacity">
+            {/* 프로필 이미지 */}
+            <ProfileImageWithBadge
+              src={profileImage}
+              alt={breederName}
+              animalType={(animalType || 'cat') as 'cat' | 'dog'}
+              size={68}
+            />
 
-          {/* 브리더 정보 + 날짜/버튼 영역 */}
-          <div className="flex-1 flex flex-col gap-2 md:gap-3">
-            <BreederInfo breederName={breederName} breederLevel={breederLevel} />
-            <div className="flex justify-between items-center gap-2">
-              <p className="text-body-s font-normal text-grayscale-gray5 whitespace-nowrap">{applicationDate}</p>
-              {/* 후기 작성 버튼 - 상담 완료/입양 승인 상태에서만 표시 */}
-              {canWriteReview && (
-                <Button
-                  variant="ghost"
-                  className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 md:hidden"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
-                  <Pencil className="size-4" />
-                </Button>
-              )}
+            {/* 브리더 정보 + 날짜/버튼 영역 */}
+            <div className="flex-1 flex flex-col gap-2 md:gap-3">
+              <BreederInfo breederName={breederName} breederLevel={breederLevel} />
+              <div className="flex justify-between items-center gap-2">
+                <p className="text-body-s font-normal text-grayscale-gray5 whitespace-nowrap">{applicationDate}</p>
+                {/* 후기 작성 버튼 - 상담 완료/입양 승인 상태에서만 표시 */}
+                {canWriteReview && (
+                  <Button
+                    variant="ghost"
+                    className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 md:hidden"
+                    onClick={handleReviewButtonClick}
+                  >
+                    <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
+                    <Pencil className="size-4" />
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* 후기 작성 버튼 (데스크톱) - 상담 완료/입양 승인 상태에서만 표시 */}
-          {canWriteReview && (
-            <Button
-              variant="ghost"
-              className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 hidden md:flex"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
-              <Pencil className="size-4" />
-            </Button>
-          )}
-        </div>
-      </ReviewDialog>
+            {/* 후기 작성 버튼 (데스크톱) - 상담 완료/입양 승인 상태에서만 표시 */}
+            {canWriteReview && (
+              <Button
+                variant="ghost"
+                className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 hidden md:flex"
+                onClick={handleReviewButtonClick}
+              >
+                <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
+                <Pencil className="size-4" />
+              </Button>
+            )}
+          </div>
+        </ReviewDialog>
+
+        {/* 후기 작성 다이얼로그 - 버튼 클릭 시 바로 열림 */}
+        <ReviewWriteDialog
+          applicationId={applicationId}
+          breederId={breederId!}
+          open={showReviewWriteDialog}
+          onOpenChange={setShowReviewWriteDialog}
+          breederName={breederName}
+          breederLevel={breederLevel}
+          applicationDate={applicationDate}
+          profileImage={profileImage}
+          animalType={(animalType || 'cat') as 'cat' | 'dog'}
+        />
+      </>
     );
   }
 
