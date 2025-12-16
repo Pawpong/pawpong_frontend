@@ -53,7 +53,7 @@ const ApplicationPage = () => {
 
   return (
     <Container>
-      <div className="flex-1 @container flex flex-col gap-3 pt-10 pb-20 px-12">
+      <div className="flex-1 @container flex flex-col gap-3 pt-10 pb-20">
         <div className="text-[#4F3B2E] text-heading-3 font-semibold">{pageTitle}</div>
 
         {allApplications.length === 0 ? (
