@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useCallback, useRef } from 'react';
+import React, { useMemo, useCallback, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
@@ -8,8 +8,9 @@ import NotificationItem from './notification-item';
 import NotificationEmptyState from './notification-empty-state';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { NOTIFICATION_CONFIG, NotificationType } from '@/constants/notification-messages';
+import { NOTIFICATION_CONFIG, NotificationType, getNotificationTargetUrl } from '@/constants/notification-messages';
 import { useNotifications, useMarkAllAsRead, useMarkAsRead, transformNotificationForUI } from '@/hooks/use-notifications';
+import ReviewWriteDialog from '@/app/(main)/application/_components/review-write-dialog';
 
 // UI에서 사용할 알림 데이터 인터페이스
 interface NotificationData {
@@ -21,6 +22,17 @@ interface NotificationData {
   variables?: { [key: string]: string };
 }
 
+// 후기 작성 다이얼로그에 필요한 데이터
+interface ReviewWriteData {
+  applicationId: string;
+  breederId: string;
+  breederName: string;
+  breederLevel: 'elite' | 'new';
+  applicationDate: string;
+  profileImage: string;
+  animalType: 'cat' | 'dog';
+}
+
 interface NotificationDialogProps {
   children: React.ReactNode;
 }
@@ -28,6 +40,10 @@ interface NotificationDialogProps {
 export default function NotificationDialog({ children }: NotificationDialogProps) {
   const router = useRouter();
   const dialogCloseRef = useRef<HTMLButtonElement>(null);
+
+  // 후기 작성 다이얼로그 상태
+  const [showReviewWriteDialog, setShowReviewWriteDialog] = useState(false);
+  const [reviewWriteData, setReviewWriteData] = useState<ReviewWriteData | null>(null);
 
   // API에서 알림 목록 조회
   const { data, isLoading } = useNotifications(1, 50);
@@ -62,12 +78,39 @@ export default function NotificationDialog({ children }: NotificationDialogProps
         markAsReadMutation.mutate(notification.id);
       }
 
+      // consult_completed 타입인 경우 후기 작성 다이얼로그 띄우기
+      if (notification.type === 'consult_completed' && notification.variables) {
+        const { applicationId, breederId, breederName, breederLevel, applicationDate, profileImage, animalType } =
+          notification.variables;
+
+        if (applicationId && breederId) {
+          // 다이얼로그 닫기
+          dialogCloseRef.current?.click();
+
+          // 후기 작성 다이얼로그 데이터 설정
+          setReviewWriteData({
+            applicationId,
+            breederId,
+            breederName: breederName || '브리더',
+            breederLevel: (breederLevel as 'elite' | 'new') || 'new',
+            applicationDate: applicationDate || '',
+            profileImage: profileImage || '',
+            animalType: (animalType as 'cat' | 'dog') || 'cat',
+          });
+          setShowReviewWriteDialog(true);
+          return;
+        }
+      }
+
+      // targetUrl 결정: API에서 받은 targetUrl 우선, 없으면 기본 경로 사용
+      const targetUrl = notification.targetUrl || getNotificationTargetUrl(notification.type, notification.variables);
+
       // targetUrl이 있으면 해당 페이지로 이동
-      if (notification.targetUrl) {
+      if (targetUrl) {
         // 다이얼로그 닫기
         dialogCloseRef.current?.click();
         // 페이지 이동
-        router.push(notification.targetUrl);
+        router.push(targetUrl);
       }
     },
     [markAsReadMutation, router],
@@ -212,6 +255,21 @@ export default function NotificationDialog({ children }: NotificationDialogProps
           </div>
         )}
       </DialogContent>
+
+      {/* 후기 작성 다이얼로그 */}
+      {reviewWriteData && (
+        <ReviewWriteDialog
+          applicationId={reviewWriteData.applicationId}
+          breederId={reviewWriteData.breederId}
+          open={showReviewWriteDialog}
+          onOpenChange={setShowReviewWriteDialog}
+          breederName={reviewWriteData.breederName}
+          breederLevel={reviewWriteData.breederLevel}
+          applicationDate={reviewWriteData.applicationDate}
+          profileImage={reviewWriteData.profileImage}
+          animalType={reviewWriteData.animalType}
+        />
+      )}
     </Dialog>
   );
 }
