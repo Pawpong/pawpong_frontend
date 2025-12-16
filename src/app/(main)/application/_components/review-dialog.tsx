@@ -26,6 +26,7 @@ interface ReviewDialogProps {
   applicationDate: string;
   profileImage: string;
   animalType: 'cat' | 'dog';
+  canWriteReview?: boolean;
   children: React.ReactNode;
 }
 
@@ -37,6 +38,7 @@ export default function ReviewDialog({
   applicationDate,
   profileImage,
   animalType,
+  canWriteReview = true,
   children,
 }: ReviewDialogProps) {
   const router = useRouter();
@@ -94,8 +96,14 @@ export default function ReviewDialog({
 
           {/* 스크롤 가능한 콘텐츠 영역 */}
           <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-9 min-h-0 overflow-y-auto pl-6 pr-6 pt-6 pb-10 ">
-            {/* 브리더 정보 */}
-            <div className="flex items-center justify-between w-full">
+            {/* 브리더 정보 - 전체 클릭 시 브리더 페이지로 이동 */}
+            <div
+              className="flex items-center justify-between w-full cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => {
+                setOpen(false);
+                router.push(`/explore/breeder/${breederId}`);
+              }}
+            >
               <div className="flex gap-5 items-center grow">
                 <ProfileImageWithBadge src={profileImage} alt={breederName} animalType={animalType} size={68} />
                 <BreederInfo
@@ -107,10 +115,7 @@ export default function ReviewDialog({
               </div>
               <Button
                 className="gap-1 text-grayscale-gray5 text-body-xs h-auto p-0 has-[>svg]:px-0 hover:bg-transparent"
-                onClick={() => {
-                  setOpen(false);
-                  router.push(`/explore/breeder/${breederId}`);
-                }}
+                onClick={(e) => e.stopPropagation()}
               >
                 <span>보기</span>
                 <RightArrow className="size-5" />
@@ -355,15 +360,17 @@ export default function ReviewDialog({
             )}
           </div>
 
-          {/* 구분선 */}
-          <div className="h-px bg-grayscale-gray2 w-full shrink-0" />
+          {/* 구분선 - 후기 작성 가능할 때만 표시 */}
+          {canWriteReview && <div className="h-px bg-grayscale-gray2 w-full shrink-0" />}
 
-          {/* 하단 버튼 */}
-          <div className="bg-white flex gap-2.5 items-start justify-end overflow-clip pb-6 pt-4 px-6 shrink-0">
-            <button className="button-brown" onClick={handleReviewWriteClick}>
-              후기 작성하기
-            </button>
-          </div>
+          {/* 하단 버튼 - 후기 작성 가능할 때만 표시 */}
+          {canWriteReview && (
+            <div className="bg-white flex gap-2.5 items-start justify-end overflow-clip pb-6 pt-4 px-6 shrink-0">
+              <button className="button-brown" onClick={handleReviewWriteClick}>
+                후기 작성하기
+              </button>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
 
