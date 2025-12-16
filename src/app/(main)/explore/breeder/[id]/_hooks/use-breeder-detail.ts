@@ -12,6 +12,7 @@ export function useBreederProfile(breederId: string) {
     queryFn: () => getBreederProfile(breederId),
     enabled: !!breederId,
     staleTime: 1000 * 60 * 5, // 5분
+    retry: false, // 에러 발생 시 재시도하지 않음 (탈퇴한 브리더 체크용)
   });
 }
 
