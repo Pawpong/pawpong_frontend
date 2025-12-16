@@ -19,6 +19,7 @@ interface ReviewWriteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   applicationId: string;
+  breederId: string;
   breederName: string;
   breederLevel: 'elite' | 'new';
   applicationDate: string;
@@ -30,6 +31,7 @@ export default function ReviewWriteDialog({
   open,
   onOpenChange,
   applicationId,
+  breederId,
   breederName,
   breederLevel,
   applicationDate,
@@ -115,7 +117,13 @@ export default function ReviewWriteDialog({
                 className="gap-3"
               />
             </div>
-            <Button className="gap-1 text-grayscale-gray5 text-body-xs h-auto p-0 has-[>svg]:px-0 hover:bg-transparent">
+            <Button
+              className="gap-1 text-grayscale-gray5 text-body-xs h-auto p-0 has-[>svg]:px-0 hover:bg-transparent"
+              onClick={() => {
+                onOpenChange(false);
+                router.push(`/explore/breeder/${breederId}`);
+              }}
+            >
               <span>보기</span>
               <RightArrow className="size-5" />
             </Button>
