@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import ProfileImageWithBadge from '@/components/breeder/profile-image-with-badge';
 import BreederInfo from '@/components/breeder/breeder-info';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import ReviewDialog from './review-dialog';
 import ReviewWriteDialog from './review-write-dialog';
 import { Badge } from '@/components/ui/badge';
 import ApplicationDetailModal from './application-detail-modal';
+import { getReviewByApplicationId } from '@/lib/review';
 
 interface ApplicationListItemProps {
   applicationId: string;
@@ -98,9 +100,19 @@ export default function ApplicationListItem({
 }: ApplicationListItemProps) {
   // 입양자 화면 (브리더 정보 표시)
   if (!isBreeder && breederName && breederLevel) {
-    // 상담 완료 또는 입양 승인 상태에서만 후기 작성 가능
+    // 상담 완료 또는 입양 승인 상태에서만 후기 작성/보기 가능
     const canWriteReview = status === 'consultation_completed' || status === 'adoption_approved';
     const [showReviewWriteDialog, setShowReviewWriteDialog] = useState(false);
+
+    // 기존 후기 조회
+    const { data: existingReview } = useQuery({
+      queryKey: ['review-by-application', applicationId],
+      queryFn: () => getReviewByApplicationId(applicationId),
+      enabled: canWriteReview,
+    });
+
+    const hasReview = !!existingReview;
+    const buttonText = hasReview ? '후기 보기' : '후기 작성';
 
     const handleReviewButtonClick = (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -133,35 +145,35 @@ export default function ApplicationListItem({
               <BreederInfo breederName={breederName} breederLevel={breederLevel} />
               <div className="flex justify-between items-center gap-2">
                 <p className="text-body-s font-normal text-grayscale-gray5 whitespace-nowrap">{applicationDate}</p>
-                {/* 후기 작성 버튼 - 상담 완료/입양 승인 상태에서만 표시 */}
+                {/* 후기 버튼 - 상담 완료/입양 승인 상태에서만 표시 */}
                 {canWriteReview && (
                   <Button
                     variant="ghost"
                     className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 md:hidden"
                     onClick={handleReviewButtonClick}
                   >
-                    <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
-                    <Pencil className="size-4" />
+                    <span className="text-body-xs font-normal text-grayscale-gray6">{buttonText}</span>
+                    {!hasReview && <Pencil className="size-4" />}
                   </Button>
                 )}
               </div>
             </div>
 
-            {/* 후기 작성 버튼 (데스크톱) - 상담 완료/입양 승인 상태에서만 표시 */}
+            {/* 후기 버튼 (데스크톱) - 상담 완료/입양 승인 상태에서만 표시 */}
             {canWriteReview && (
               <Button
                 variant="ghost"
                 className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 hidden md:flex"
                 onClick={handleReviewButtonClick}
               >
-                <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
-                <Pencil className="size-4" />
+                <span className="text-body-xs font-normal text-grayscale-gray6">{buttonText}</span>
+                {!hasReview && <Pencil className="size-4" />}
               </Button>
             )}
           </div>
         </ReviewDialog>
 
-        {/* 후기 작성 다이얼로그 - 버튼 클릭 시 바로 열림 */}
+        {/* 후기 작성/보기 다이얼로그 - 버튼 클릭 시 바로 열림 */}
         <ReviewWriteDialog
           applicationId={applicationId}
           breederId={breederId!}

@@ -50,20 +50,22 @@ export default function NotificationDialog({ children }: NotificationDialogProps
   const markAllAsReadMutation = useMarkAllAsRead();
   const markAsReadMutation = useMarkAsRead();
 
-  // API 응답을 UI 형식으로 변환
+  // API 응답을 UI 형식으로 변환 (지원하지 않는 타입은 필터링)
   const notifications: NotificationData[] = useMemo(() => {
     if (!data?.items) return [];
-    return data.items.map((item) => {
-      const transformed = transformNotificationForUI(item);
-      return {
-        id: transformed.id,
-        type: transformed.type as NotificationType,
-        date: transformed.date,
-        isRead: transformed.isRead,
-        targetUrl: transformed.targetUrl,
-        variables: transformed.metadata,
-      };
-    });
+    return data.items
+      .map((item) => {
+        const transformed = transformNotificationForUI(item);
+        return {
+          id: transformed.id,
+          type: transformed.type as NotificationType,
+          date: transformed.date,
+          isRead: transformed.isRead,
+          targetUrl: transformed.targetUrl,
+          variables: transformed.metadata,
+        };
+      })
+      .filter((notification) => NOTIFICATION_CONFIG[notification.type]);
   }, [data?.items]);
 
   const handleMarkAllAsRead = () => {

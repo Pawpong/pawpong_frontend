@@ -143,3 +143,21 @@ export const getReviewDetail = async (reviewId: string): Promise<MyReviewDetailD
     throw new Error('Unknown error during review detail fetch');
   }
 };
+
+/**
+ * 특정 신청에 대한 후기 조회
+ * 내 후기 목록에서 applicationId로 필터링
+ */
+export const getReviewByApplicationId = async (applicationId: string): Promise<MyReviewItemDto | null> => {
+  try {
+    // 모든 후기를 조회해서 applicationId로 필터링
+    const result = await getMyReviews(1, 100);
+    const review = result.reviews.find((r) => r.applicationId === applicationId);
+    return review || null;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Fetch review by application error:', error.message);
+    }
+    return null;
+  }
+};
