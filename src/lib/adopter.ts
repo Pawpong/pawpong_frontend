@@ -82,12 +82,13 @@ export const updateAdopterProfile = async (
   }
 };
 
-/** 회원 탈퇴 사유 */
+/** 입양자 회원 탈퇴 사유 (백엔드 AdopterWithdrawReason과 동기화) */
 export enum WithdrawReason {
-  SERVICE_DISSATISFACTION = 'service_dissatisfaction',
+  ALREADY_ADOPTED = 'already_adopted',
+  NO_SUITABLE_PET = 'no_suitable_pet',
+  ADOPTION_FEE_BURDEN = 'adoption_fee_burden',
+  UNCOMFORTABLE_UI = 'uncomfortable_ui',
   PRIVACY_CONCERN = 'privacy_concern',
-  LOW_USAGE = 'low_usage',
-  ADOPTION_COMPLETED = 'adoption_completed',
   OTHER = 'other',
 }
 
