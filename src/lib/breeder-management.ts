@@ -824,18 +824,36 @@ export const updateApplicationForm = async (data: ApplicationFormUpdateRequest):
   }
 };
 
+/** 브리더 회원 탈퇴 요청 DTO */
+export interface BreederAccountDeleteRequest {
+  reason?: string;
+  otherReason?: string;
+}
+
+/** 브리더 회원 탈퇴 응답 DTO */
+export interface BreederAccountDeleteResponse {
+  breederId: string;
+  deletedAt: string;
+  message: string;
+}
+
 /**
  * 브리더 계정 탈퇴 (소프트 딜리트)
  * DELETE /api/breeder-management/account
  */
-export const deleteBreederAccount = async (): Promise<{ deletedAt: Date }> => {
+export const deleteBreederAccount = async (
+  deleteData?: BreederAccountDeleteRequest,
+): Promise<BreederAccountDeleteResponse> => {
   try {
-    const response = await apiClient.delete<ApiResponse<{ deletedAt: Date }>>(
+    const response = await apiClient.delete<ApiResponse<BreederAccountDeleteResponse>>(
       '/api/breeder-management/account',
+      {
+        data: deleteData,
+      },
     );
 
     if (!response.data.success || !response.data.data) {
-      throw new Error('Failed to delete breeder account');
+      throw new Error(response.data.message || 'Failed to delete breeder account');
     }
 
     return response.data.data;

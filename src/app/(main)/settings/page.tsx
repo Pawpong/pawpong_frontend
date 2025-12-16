@@ -133,15 +133,18 @@ export default function SettingsPage() {
 
     try {
       if (user.role === 'breeder') {
-        // 브리더 회원 탈퇴 API 호출
-        await deleteBreederAccount();
+        // 브리더 회원 탈퇴 API 호출 (탈퇴 사유 포함)
+        await deleteBreederAccount({
+          reason,
+          otherReason,
+        });
 
         toast({
           title: '브리더 계정 탈퇴 완료',
           description: '그동안 이용해 주셔서 감사합니다.',
         });
       } else {
-        // 입양자 회원 탈퇴 API 호출
+        // 입양자 회원 탈퇴 API 호출 (탈퇴 사유 포함)
         await deleteAccount({
           reason: reason as WithdrawReason,
           otherReason,
@@ -153,13 +156,12 @@ export default function SettingsPage() {
         });
       }
 
-      // 탈퇴 성공 시 로그아웃 처리 후 로그인 페이지로 리다이렉트
+      // 탈퇴 성공 시 즉시 로그아웃 처리
       await logout();
       clearAuth();
 
-      setTimeout(() => {
-        window.location.href = '/login';
-      }, 1500);
+      // 로그인 페이지로 리다이렉트
+      window.location.href = '/login';
     } catch (error) {
       toast({
         title: '탈퇴 처리 실패',
