@@ -139,7 +139,7 @@ export default function BreederInfoSection() {
             >
               {photoPreview ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={photoPreview} alt="Uploaded" className="object-cover w-full h-full" />
+                <img src={photoPreview} alt="Uploaded" className="object-cover w-full h-full rounded-lg" />
               ) : (
                 <Camera className="text-grayscale-gray6 size-7" />
               )}
