@@ -87,9 +87,11 @@ const FAQ = () => {
           {faqs.map((item) => (
             <div key={item.faqId}>
               <div className="h-px bg-[#e4e7ec] w-full" />
-              <div className="py-5">
-                <p className="text-body-m font-medium text-primary-500">{item.question}</p>
-              </div>
+              <Link href={`/faq?faqId=${item.faqId}&userType=${user?.role === 'breeder' ? 'breeder' : 'adopter'}`}>
+                <div className="py-5 cursor-pointer">
+                  <p className="text-body-m font-medium text-primary-500">{item.question}</p>
+                </div>
+              </Link>
             </div>
           ))}
           <div className="h-px bg-[#e4e7ec] w-full" />
@@ -104,9 +106,11 @@ const FAQ = () => {
             {leftColumn.map((item) => (
               <div key={item.faqId}>
                 <div className="h-px bg-[#e4e7ec] w-full" />
-                <div className="py-5">
-                  <p className="text-body-m font-medium text-primary">{item.question}</p>
-                </div>
+                <Link href={`/faq?faqId=${item.faqId}&userType=${user?.role === 'breeder' ? 'breeder' : 'adopter'}`}>
+                  <div className="py-5 cursor-pointer ">
+                    <p className="text-body-m font-medium text-primary">{item.question}</p>
+                  </div>
+                </Link>
               </div>
             ))}
             <div className="h-px bg-[#e4e7ec] w-full" />
@@ -117,9 +121,11 @@ const FAQ = () => {
             {rightColumn.map((item) => (
               <div key={item.faqId}>
                 <div className="h-px bg-[#e4e7ec] w-full" />
-                <div className="py-5">
-                  <p className="text-body-m font-medium text-primary">{item.question}</p>
-                </div>
+                <Link href={`/faq?faqId=${item.faqId}&userType=${user?.role === 'breeder' ? 'breeder' : 'adopter'}`}>
+                  <div className="py-5 cursor-pointer hover:bg-[#F6F6EA] transition-colors">
+                    <p className="text-body-m font-medium text-primary">{item.question}</p>
+                  </div>
+                </Link>
               </div>
             ))}
             <div className="h-px bg-[#e4e7ec] w-full" />

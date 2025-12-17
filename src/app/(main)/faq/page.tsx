@@ -2,60 +2,25 @@
 
 import Container from '@/components/ui/container';
 import FaqItemComponent from './_components/faq-item';
-import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import DownArrow from '@/assets/icons/long-down-arrow.svg';
 import { Button } from '@/components/ui/button';
-import { useFaqs } from './_hooks/use-faqs';
-import { useAuthStore } from '@/stores/auth-store';
-
-type TabType = 'adopter' | 'breeder';
+import { useFaqPage } from './_hooks/use-faq-page';
 
 export default function FaqPage() {
-  const { user } = useAuthStore();
-  const [activeTab, setActiveTab] = useState<TabType>(() => {
-    // 로그인한 사용자의 역할에 따라 초기 탭 설정
-    return user?.role === 'breeder' ? 'breeder' : 'adopter';
-  });
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const [showAll, setShowAll] = useState(false);
-
-  const { data: faqs = [], isLoading, error } = useFaqs(activeTab);
-
-  // 로그인 상태 변경 시 탭 업데이트
-  useEffect(() => {
-    if (user?.role === 'breeder') {
-      setActiveTab('breeder');
-    } else if (user?.role === 'adopter') {
-      setActiveTab('adopter');
-    }
-  }, [user?.role]);
-
-  useEffect(() => {
-    if (faqs.length > 0) {
-      setOpenIndex(0); // 첫 번째 아이템 열기
-    }
-  }, [faqs.length]);
-
-  const handleToggle = (index: number) => {
-    setOpenIndex((prev) => {
-      // 이미 열려있는 항목을 클릭하면 변화 없음
-      if (prev === index) {
-        return prev;
-      }
-
-      return index;
-    });
-  };
-
-  const displayedItems = showAll ? faqs : faqs.slice(0, 10);
-  const hasMore = faqs.length > 10;
-
-  // 탭 변경 시 첫 번째 아이템 열기
-  const handleTabChange = (tab: TabType) => {
-    setActiveTab(tab);
-    setShowAll(false);
-  };
+  const {
+    activeTab,
+    openIndex,
+    displayedItems,
+    hasMore,
+    showAll,
+    isLoading,
+    error,
+    handleToggle,
+    handleTabChange,
+    handleShowAll,
+    getRealIndex,
+  } = useFaqPage();
 
   return (
     <Container className="pt-10 pb-20 px-5 md:px-12">
@@ -103,14 +68,17 @@ export default function FaqPage() {
             </div>
           ) : (
             <div className="flex flex-col w-full">
-              {displayedItems.map((item, index) => (
-                <FaqItemComponent
-                  key={`${activeTab}-${item.faqId}-${index}`}
-                  item={item}
-                  isOpen={openIndex === index}
-                  onToggle={() => handleToggle(index)}
-                />
-              ))}
+              {displayedItems.map((item) => {
+                const realIndex = getRealIndex(item);
+                return (
+                  <FaqItemComponent
+                    key={`${activeTab}-${item.faqId}-${realIndex}`}
+                    item={item}
+                    isOpen={openIndex === realIndex}
+                    onToggle={() => handleToggle(realIndex)}
+                  />
+                );
+              })}
             </div>
           )}
 
@@ -118,7 +86,7 @@ export default function FaqPage() {
           {hasMore && !showAll && (
             <Button
               variant="ghost"
-              onClick={() => setShowAll(true)}
+              onClick={handleShowAll}
               className="bg-[#F5F5F5] hover:bg-[#F5F5F5] h-12 py-2.5 gap-1 rounded-full has-[>svg]:px-0 has-[>svg]:pl-5 has-[>svg]:pr-3"
             >
               <span className="text-body-s font-medium text-grayscale-gray6">더보기</span>
