@@ -401,10 +401,9 @@ export const getBreederPets = async (
   limit: number = 20,
 ): Promise<{ items: any[]; pagination: any }> => {
   try {
-    const response = await apiClient.get<ApiResponse<PaginationResponse<any>>>(
-      `/api/breeder/${breederId}/pets`,
-      { params: { page, limit } },
-    );
+    const response = await apiClient.get<ApiResponse<PaginationResponse<any>>>(`/api/breeder/${breederId}/pets`, {
+      params: { page, limit },
+    });
 
     if (!response.data.success || !response.data.data) {
       throw new Error('Failed to fetch breeder pets');
@@ -424,9 +423,16 @@ export const getBreederPets = async (
  * 브리더 부모견/부모묘 목록 조회
  * GET /api/breeder/:breederId/parent-pets
  */
-export const getParentPets = async (breederId: string): Promise<any[]> => {
+export const getParentPets = async (
+  breederId: string,
+  page: number = 1,
+  limit: number = 4,
+): Promise<{ items: any[]; pagination: any }> => {
   try {
-    const response = await apiClient.get<ApiResponse<any[]>>(`/api/breeder/${breederId}/parent-pets`);
+    const response = await apiClient.get<ApiResponse<PaginationResponse<any>>>(
+      `/api/breeder/${breederId}/parent-pets`,
+      { params: { page, limit } },
+    );
 
     if (!response.data.success || !response.data.data) {
       throw new Error('Failed to fetch parent pets');
@@ -452,10 +458,9 @@ export const getBreederReviews = async (
   limit: number = 10,
 ): Promise<{ items: any[]; pagination: any }> => {
   try {
-    const response = await apiClient.get<ApiResponse<PaginationResponse<any>>>(
-      `/api/breeder/${breederId}/reviews`,
-      { params: { page, limit } },
-    );
+    const response = await apiClient.get<ApiResponse<PaginationResponse<any>>>(`/api/breeder/${breederId}/reviews`, {
+      params: { page, limit },
+    });
 
     if (!response.data.success || !response.data.data) {
       throw new Error('Failed to fetch breeder reviews');
@@ -472,7 +477,11 @@ export const getBreederReviews = async (
 };
 
 /** 입양 신청 상태 타입 */
-export type ApplicationStatus = 'consultation_pending' | 'consultation_completed' | 'adoption_approved' | 'adoption_rejected';
+export type ApplicationStatus =
+  | 'consultation_pending'
+  | 'consultation_completed'
+  | 'adoption_approved'
+  | 'adoption_rejected';
 
 /** 입양 신청 상태 업데이트 요청 DTO */
 export interface ApplicationStatusUpdateRequestDto {

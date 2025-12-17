@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { getBreederProfile, getBreederPets, getParentPets, getBreederReviews } from '@/lib/breeder';
 
 /**
@@ -29,12 +29,28 @@ export function useBreederPets(breederId: string, page: number = 1, limit: numbe
 }
 
 /**
- * 브리더 부모견/부모묘 목록 조회 훅
+ * 브리더 부모견/부모묘 목록 조회 훅 (페이지네이션)
  */
-export function useParentPets(breederId: string) {
+export function useParentPets(breederId: string, page: number = 1, limit: number = 4) {
   return useQuery({
-    queryKey: ['parent-pets', breederId],
-    queryFn: () => getParentPets(breederId),
+    queryKey: ['parent-pets', breederId, page, limit],
+    queryFn: () => getParentPets(breederId, page, limit),
+    enabled: !!breederId,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+/**
+ * 브리더 부모견/부모묘 목록 조회 훅 (무한 스크롤)
+ */
+export function useParentPetsInfinite(breederId: string, limit: number = 4) {
+  return useInfiniteQuery({
+    queryKey: ['parent-pets-infinite', breederId, limit],
+    queryFn: ({ pageParam = 1 }) => getParentPets(breederId, pageParam, limit),
+    getNextPageParam: (lastPage) => {
+      return lastPage.pagination?.hasNextPage ? lastPage.pagination.currentPage + 1 : undefined;
+    },
+    initialPageParam: 1,
     enabled: !!breederId,
     staleTime: 1000 * 60 * 5,
   });
