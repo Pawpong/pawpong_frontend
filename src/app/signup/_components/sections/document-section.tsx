@@ -35,12 +35,7 @@ const levelInfo = [
     icon: Crown,
     label: 'Elite 엘리트',
     description: '엘리트 레벨은 전문성과 윤리적 기준을 증명해 차별화된 신뢰와 가치를 제공하는 상위 레벨이에요.',
-    documents: [
-      '신분증 사본',
-      '동물생산업 등록증',
-      '표준 입양계약서 샘플',
-      '고양이 브리더 인증 서류',
-    ],
+    documents: ['신분증 사본', '동물생산업 등록증', '표준 입양계약서 샘플', '고양이 브리더 인증 서류'],
   },
   {
     name: 'new',
@@ -53,6 +48,7 @@ const levelInfo = [
 
 export default function DocumentSection() {
   const router = useRouter();
+  const setDocumentsSkipped = useSignupFormStore((e) => e.setDocumentsSkipped);
   const level = useSignupFormStore((e) => e.level);
   const setLevel = useSignupFormStore((e) => e.setLevel);
   const nextFlowIndex = useSignupFormStore((e) => e.nextFlowIndex);
@@ -181,6 +177,9 @@ export default function DocumentSection() {
         }),
       });
 
+      // 서류 제출 완료 표시
+      setDocumentsSkipped(false);
+
       // 다음 단계 진행 (SignupComplete)
       nextFlowIndex();
     } catch (error) {
@@ -250,9 +249,7 @@ export default function DocumentSection() {
           <div className="space-y-3">
             <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.ANIMAL_LICENSE)}>동물생산업 등록증</FileButton>
             {level === 'elite' && (
-              <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.CONTRACT_SAMPLE)}>
-                표준 입양계약서 샘플
-              </FileButton>
+              <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.CONTRACT_SAMPLE)}>표준 입양계약서 샘플</FileButton>
             )}
           </div>
 
