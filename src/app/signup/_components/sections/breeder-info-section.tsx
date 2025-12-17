@@ -4,6 +4,7 @@ import Arrow from '@/assets/icons/arrow';
 import Camera from '@/assets/icons/camera';
 import ErrorIcon from '@/assets/icons/error';
 import Check from '@/assets/icons/check-blue.svg';
+import PictureRemove from '@/assets/icons/picture-delete.svg';
 import NextButton from '@/components/signup-form-section/next-button';
 import SignupFormHeader from '@/components/signup-form-section/signup-form-header';
 import SignupFormItems from '@/components/signup-form-section/signup-form-items';
@@ -110,38 +111,53 @@ export default function BreederInfoSection() {
       </SignupFormHeader>
       <SignupFormItems className="gap-8">
         <div className="flex flex-col gap-3 items-center">
-          <Button
-            size="icon"
-            variant="input"
-            className="size-20 justify-center"
-            onClick={() => {
-              const input = document.createElement('input');
-              input.type = 'file';
-              input.accept = 'image/*';
-              input.onchange = (e: Event) => {
-                const target = e.target as HTMLInputElement;
-                const file = target.files?.[0];
-                if (file) {
-                  setPhoto(file);
-                  const reader = new FileReader();
-                  reader.onload = (event: ProgressEvent<FileReader>) => {
-                    if (event.target?.result) {
-                      setPhotoPreview(event.target.result as string);
-                    }
-                  };
-                  reader.readAsDataURL(file);
-                }
-              };
-              input.click();
-            }}
-          >
-            {photoPreview ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={photoPreview} alt="Uploaded" className="object-cover w-full h-full" />
-            ) : (
-              <Camera className="text-grayscale-gray6 size-7" />
+          <div className="relative">
+            <Button
+              size="icon"
+              variant="input"
+              className="size-20 justify-center"
+              onClick={() => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = (e: Event) => {
+                  const target = e.target as HTMLInputElement;
+                  const file = target.files?.[0];
+                  if (file) {
+                    setPhoto(file);
+                    const reader = new FileReader();
+                    reader.onload = (event: ProgressEvent<FileReader>) => {
+                      if (event.target?.result) {
+                        setPhotoPreview(event.target.result as string);
+                      }
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                };
+                input.click();
+              }}
+            >
+              {photoPreview ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={photoPreview} alt="Uploaded" className="object-cover w-full h-full rounded-lg" />
+              ) : (
+                <Camera className="text-grayscale-gray6 size-7" />
+              )}
+            </Button>
+            {photoPreview && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPhoto(null);
+                  setPhotoPreview('');
+                }}
+                className="absolute top-1 right-1 bg-[var(--primary-500-basic,#4f3b2e)] rounded-full size-6 flex items-center justify-center hover:opacity-80 transition-opacity"
+              >
+                <PictureRemove />
+              </button>
             )}
-          </Button>
+          </div>
           <div className="flex flex-col gap-2.5 w-full">
             <div className="flex gap-3">
               <Controller
