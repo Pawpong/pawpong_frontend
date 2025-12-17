@@ -5,9 +5,6 @@ import AnimalCategoryButtons from './_components/animal-category-buttons';
 import HomeBreederGrid from './_components/home-breeder-grid';
 import FAQ from '@/app/(main)/_components/faq';
 import ServiceIntroBanner from './_components/service-intro-banner';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 
 export default function HomePage() {
   return (
