@@ -75,6 +75,14 @@ export default function DocumentSection() {
   const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
 
+  // 레벨별 필수 서류 개수
+  const getRequiredDocumentCount = () => {
+    return level === 'elite' ? 4 : 2; // elite: 4개, new: 2개
+  };
+
+  // 서류가 모두 업로드되었는지 확인
+  const hasAllRequiredDocuments = uploadedFiles.length >= getRequiredDocumentCount();
+
   // 파일 업로드 핸들러 - 파일을 복제하여 저장 (ERR_UPLOAD_FILE_CHANGED 방지)
   const handleFileUpload = (type: string) => async (file: File) => {
     try {
@@ -326,7 +334,7 @@ export default function DocumentSection() {
             variant={'tertiary'}
             className="py-3 px-4 w-full flex-1"
             onClick={handleSubmit}
-            disabled={submitting || !check}
+            disabled={submitting || !check || !hasAllRequiredDocuments}
           >
             {uploading ? '서류 업로드 중...' : submitting ? '회원가입 중...' : '제출'}
           </Button>
