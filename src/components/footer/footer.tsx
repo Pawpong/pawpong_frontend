@@ -10,52 +10,40 @@ export default function Footer() {
         <div className="flex flex-row justify-between gap-10 md:gap-0 mb-10 lg:mb-10">
           {/* 링크 목록 */}
           <div className="flex flex-col gap-4 md:gap-4">
-            <Link
-              href="/introduction"
-              className="text-[11px] md:text-xs font-semibold text-grayscale-gray5 hover:text-grayscale-gray6 transition-colors"
-            >
+            <Link href="/introduction" className="text-[11px] md:text-xs font-semibold text-grayscale-gray5 ">
               서비스 소개
             </Link>
-            <Link
-              href="/faq"
-              className="text-[11px] md:text-xs font-semibold text-grayscale-gray5 hover:text-grayscale-gray6 transition-colors"
-            >
+            <Link href="/faq" className="text-[11px] md:text-xs font-semibold text-grayscale-gray5 ">
               자주 묻는 질문
             </Link>
-            <Link
-              href="/terms-of-service"
-              className="text-[11px] md:text-xs font-semibold text-grayscale-gray5 hover:text-grayscale-gray6 transition-colors"
-            >
+            <Link href="/terms-of-service" className="text-[11px] md:text-xs font-semibold text-grayscale-gray5 ">
               이용 약관
             </Link>
-            <Link
-              href="/terms-of-privacy"
-              className="text-[11px] md:text-xs font-semibold text-grayscale-gray5 hover:text-grayscale-gray6 transition-colors"
-            >
+            <Link href="/terms-of-privacy" className="text-[11px] md:text-xs font-semibold text-grayscale-gray5 ">
               개인정보처리방침
             </Link>
           </div>
 
           {/* SNS 아이콘 */}
           <div className="flex items-start gap-3 md:gap-4 lg:gap-6">
-            <a
+            <Link
               href="https://pf.kakao.com/_Wqxekn"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-6 h-6 flex items-center justify-center"
+              className="cursor-pointer w-6 h-6 flex items-center justify-center hover:text-primary-500 active:text-primary-500 transition-colors group"
               aria-label="카카오톡 채널"
             >
-              <Kakao className="w-6 h-6" />
-            </a>
-            <a
-              href="#"
+              <Kakao className="w-6 h-6 pointer-events-none group-hover:[&_path]:fill-[var(--color-primary-500)] group-active:[&_path]:fill-[var(--color-primary-500)]" />
+            </Link>
+            <Link
+              href="https://www.instagram.com/pawpong_official/"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-6 h-6 flex items-center justify-center"
+              className="cursor-pointer w-6 h-6 flex items-center justify-center hover:text-primary-500 active:text-primary-500 transition-colors group"
               aria-label="인스타그램"
             >
-              <InstagramIcon className="w-6 h-6" />
-            </a>
+              <InstagramIcon className="w-6 h-6 pointer-events-none group-hover:[&_path]:fill-[var(--color-primary-500)] group-active:[&_path]:fill-[var(--color-primary-500)]" />
+            </Link>
           </div>
         </div>
 
