@@ -75,6 +75,9 @@ interface SignupFormStore {
   documents: Record<string, File | null>;
   setDocuments: (name: string, file: File | null) => void;
   resetFlowIndex: () => void;
+
+  documentsSkipped: boolean;
+  setDocumentsSkipped: (skipped: boolean) => void;
 }
 
 const useSignupFormStore = create<SignupFormStore>((set) => ({
@@ -156,6 +159,9 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
       documents: { ...state.documents, [name]: file },
     })),
   resetFlowIndex: () => set({ flowIndex: 0 }),
+
+  documentsSkipped: false,
+  setDocumentsSkipped: (skipped: boolean) => set({ documentsSkipped: skipped }),
 }));
 
 export default useSignupFormStore;
