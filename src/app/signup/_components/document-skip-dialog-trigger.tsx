@@ -21,8 +21,10 @@ interface DocumentSkipDialogTriggerProps extends React.ComponentProps<typeof Dia
 
 export default function DocumentSkipDialogTrigger({ onSkip, ...props }: DocumentSkipDialogTriggerProps) {
   const nextFlowIndex = useSignupFormStore((e) => e.nextFlowIndex);
+  const setDocumentsSkipped = useSignupFormStore((e) => e.setDocumentsSkipped);
 
   const handleSkip = async () => {
+    setDocumentsSkipped(true);
     if (onSkip) {
       await onSkip();
     } else {

@@ -21,9 +21,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   return (
     <Suspense>
       <NavigationGuardProvider>
-        {hasHydrated && <Gnb variant={useTertiaryVariant ? 'tertiary' : 'default'} navVariant={navVariant} />}
-        {children}
-        <Footer />
+        <div className="flex flex-col min-h-screen">
+          {hasHydrated && <Gnb variant={useTertiaryVariant ? 'tertiary' : 'default'} navVariant={navVariant} />}
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
       </NavigationGuardProvider>
     </Suspense>
   );
