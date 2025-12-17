@@ -45,6 +45,28 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
     },
   });
 
+  const cancelConsultationMutation = useMutation({
+    mutationFn: () =>
+      updateApplicationStatus(applicationId, {
+        applicationId,
+        status: 'consultation_pending',
+      }),
+    onSuccess: () => {
+      toast({
+        title: '완료 취소',
+        description: '상담 완료가 취소되었습니다.',
+      });
+      queryClient.invalidateQueries({ queryKey: ['application', applicationId] });
+      queryClient.invalidateQueries({ queryKey: ['applications'] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: '오류',
+        description: error.message || '완료 취소 처리 중 오류가 발생했습니다.',
+      });
+    },
+  });
+
   if (isLoading) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -80,6 +102,10 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
 
   const handleCompleteConsultation = () => {
     completeConsultationMutation.mutate();
+  };
+
+  const handleCancelConsultation = () => {
+    cancelConsultationMutation.mutate();
   };
 
   return (
@@ -341,15 +367,25 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
             </div>
           )}
           {application.status === 'consultation_completed' ? (
-            <Button
-              disabled
-              className="h-9 px-4 bg-[#E1E1E1] text-[#A0A0A0] text-sm font-medium rounded min-w-[72px] cursor-not-allowed ml-auto"
-            >
-              상담 완료
-            </Button>
+            <div className="flex items-center gap-2 ml-auto">
+              <Button
+                variant="tertiary"
+                className="h-9 px-4 bg-[#A0C8F4] hover:bg-[#77B2F3] text-[#4F3B2E] text-sm font-medium rounded"
+                onClick={handleCancelConsultation}
+                disabled={cancelConsultationMutation.isPending}
+              >
+                완료 취소
+              </Button>
+              <Button
+                disabled
+                className="h-9 px-4 bg-[#E1E1E1] text-[#A0A0A0] text-sm font-medium rounded min-w-[72px] cursor-not-allowed"
+              >
+                상담 완료
+              </Button>
+            </div>
           ) : (
             <Button
-              className="h-9 px-4 bg-[#4F3B2E] hover:bg-[#3E2F23] text-white text-sm font-medium rounded min-w-[72px]"
+              className="h-9 px-4 bg-[#4F3B2E] hover:bg-[#3E2F23] text-white text-sm font-medium rounded min-w-[72px] ml-auto"
               onClick={handleCompleteConsultation}
               disabled={completeConsultationMutation.isPending}
             >
