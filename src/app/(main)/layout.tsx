@@ -1,5 +1,6 @@
 'use client';
 import Gnb from '@/components/gnb/gnb';
+import Footer from '@/components/footer/footer';
 import { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import { NavigationGuardProvider } from '@/contexts/navigation-guard-context';
@@ -22,6 +23,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       <NavigationGuardProvider>
         {hasHydrated && <Gnb variant={useTertiaryVariant ? 'tertiary' : 'default'} navVariant={navVariant} />}
         {children}
+        <Footer />
       </NavigationGuardProvider>
     </Suspense>
   );
