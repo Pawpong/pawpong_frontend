@@ -29,6 +29,22 @@ export function useBreederPets(breederId: string, page: number = 1, limit: numbe
 }
 
 /**
+ * 브리더 분양 가능 개체 목록 조회 훅 (무한 스크롤)
+ */
+export function useBreederPetsInfinite(breederId: string, limit: number = 10) {
+  return useInfiniteQuery({
+    queryKey: ['breeder-pets-infinite', breederId, limit],
+    queryFn: ({ pageParam = 1 }) => getBreederPets(breederId, pageParam, limit),
+    getNextPageParam: (lastPage) => {
+      return lastPage.pagination?.hasNextPage ? lastPage.pagination.currentPage + 1 : undefined;
+    },
+    initialPageParam: 1,
+    enabled: !!breederId,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+/**
  * 브리더 부모견/부모묘 목록 조회 훅 (페이지네이션)
  */
 export function useParentPets(breederId: string, page: number = 1, limit: number = 4) {
