@@ -268,7 +268,7 @@ export default function Page({ params }: PageProps) {
 
           {!isPetsLoading && breedingAnimals.length > 0 && (
             <>
-              <BreedingAnimals data={breedingAnimals} />
+              <BreedingAnimals data={breedingAnimals} breederId={breederId} />
               <Separator className="my-12" />
             </>
           )}
