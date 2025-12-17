@@ -61,7 +61,7 @@ export const NAV_ITEMS: NavItem[] = [
     children: [
       { name: '내 후기', href: '/myapplication' },
       { name: '찜한 브리더', href: '/saved' },
-      { name: '공지사항', href: '/notice' },
+      { name: '공지사항', href: '/announcements' },
       { name: '설정', href: '/settings' },
       { name: '문의하기', href: 'https://pf.kakao.com/_Wqxekn' },
       { name: '로그아웃', href: '#', variant: 'muted', action: 'logout' },
@@ -93,7 +93,7 @@ export const NAV_ITEMS_BREEDER: NavItem[] = [
       { name: '내 프로필', href: '/profile', showForVerificationStatus: ['approved'] },
       { name: '입점 서류 수정', href: '/profile/documents' },
       { name: '찜한 브리더', href: '/saved' },
-      { name: '공지사항', href: '/notice' },
+      { name: '공지사항', href: '/announcements' },
       { name: '설정', href: '/settings' },
       { name: '문의하기', href: 'https://pf.kakao.com/_Wqxekn' },
       { name: '로그아웃', href: '#', variant: 'muted', action: 'logout' },
