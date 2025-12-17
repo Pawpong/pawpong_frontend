@@ -46,7 +46,7 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const MAX_PARENTS = 4;
+  const MAX_PARENTS = 100; // 충분히 큰 값으로 설정하여 제한 없음
 
   const addParent = () => {
     if (fields.length >= MAX_PARENTS) return;
@@ -182,8 +182,8 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                         !parent.gender && errors.parents?.[index]?.gender
                           ? '[&_path]:!fill-red-500'
                           : parent.gender === 'male'
-                            ? '[&_path]:fill-gender-male-500 group-hover:[&_path]:fill-gender-male-500'
-                            : 'group-hover:[&_path]:fill-gender-male-500',
+                          ? '[&_path]:fill-gender-male-500 group-hover:[&_path]:fill-gender-male-500'
+                          : 'group-hover:[&_path]:fill-gender-male-500',
                       )}
                     />
                   </Button>
@@ -206,8 +206,8 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                         !parent.gender && errors.parents?.[index]?.gender
                           ? '[&_path]:!fill-red-500'
                           : parent.gender === 'female'
-                            ? '[&_path]:fill-gender-female-500 group-hover:[&_path]:fill-gender-female-500'
-                            : 'group-hover:[&_path]:fill-gender-female-500',
+                          ? '[&_path]:fill-gender-female-500 group-hover:[&_path]:fill-gender-female-500'
+                          : 'group-hover:[&_path]:fill-gender-female-500',
                       )}
                     />
                   </Button>

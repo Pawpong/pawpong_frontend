@@ -14,9 +14,10 @@ import type { FavoriteItemDto } from '@/lib/adopter';
 interface HeaderProps {
   breederNickname: string;
   breederId: string;
+  hideActions?: boolean;
 }
 
-export default function Header({ breederNickname, breederId }: HeaderProps) {
+export default function Header({ breederNickname, breederId, hideActions = false }: HeaderProps) {
   const router = useRouter();
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
   const { toggle, isLoading } = useToggleFavorite();
@@ -46,18 +47,20 @@ export default function Header({ breederNickname, breederId }: HeaderProps) {
         <Button variant="secondary" size="icon" className="size-9" onClick={handleBack}>
           <ArrowRight className="size-7" />
         </Button>
-        <div className="flex gap-3">
-          <Button variant="secondary" size="icon" className="size-9" onClick={() => setIsReportDialogOpen(true)}>
-            <Siren className="size-7" />
-          </Button>
-          <Button variant="secondary" size="icon" className="size-9" onClick={handleLikeClick} disabled={isLoading}>
-            {isLiked ? (
-              <HeartGray className="size-7" style={{ shapeRendering: 'crispEdges' }} />
-            ) : (
-              <Paw className="size-7" />
-            )}
-          </Button>
-        </div>
+        {!hideActions && (
+          <div className="flex gap-3">
+            <Button variant="secondary" size="icon" className="size-9" onClick={() => setIsReportDialogOpen(true)}>
+              <Siren className="size-7" />
+            </Button>
+            <Button variant="secondary" size="icon" className="size-9" onClick={handleLikeClick} disabled={isLoading}>
+              {isLiked ? (
+                <HeartGray className="size-7" style={{ shapeRendering: 'crispEdges' }} />
+              ) : (
+                <Paw className="size-7" />
+              )}
+            </Button>
+          </div>
+        )}
       </div>
       <ReportDialog
         open={isReportDialogOpen}

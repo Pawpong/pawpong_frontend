@@ -43,7 +43,7 @@ export default function Page({ params }: PageProps) {
 
   const { data: profileData, isLoading: isProfileLoading, error: profileError } = useBreederProfile(breederId);
   const { data: petsData, isLoading: isPetsLoading } = useBreederPets(breederId);
-  const { data: parentPetsData, isLoading: isParentPetsLoading } = useParentPets(breederId);
+  const { data: parentPetsData, isLoading: isParentPetsLoading } = useParentPets(breederId, 1, 100);
   const { data: reviewsData, isLoading: isReviewsLoading } = useBreederReviews(breederId);
 
   // 탈퇴한 브리더 모달 상태
@@ -121,8 +121,8 @@ export default function Page({ params }: PageProps) {
                 {isNotFoundError
                   ? '브리더 정보가 존재하지 않거나\n접근할 수 없어요.'
                   : isOwnProfile
-                    ? '탈퇴 처리된 계정이에요.\n다시 로그인해 주세요.'
-                    : '이미 탈퇴한 브리더의 프로필은\n조회할 수 없어요.'}
+                  ? '탈퇴 처리된 계정이에요.\n다시 로그인해 주세요.'
+                  : '이미 탈퇴한 브리더의 프로필은\n조회할 수 없어요.'}
               </SimpleDialogDescription>
             </SimpleDialogHeader>
             <SimpleDialogFooter className="grid-cols-1">
@@ -206,8 +206,8 @@ export default function Page({ params }: PageProps) {
     breed: pet.breed,
   }));
 
-  // 부모견/부모묘 매핑 - 배열 또는 객체 형태 모두 처리
-  const parentPetsArray = Array.isArray(parentPetsData) ? parentPetsData : (parentPetsData as any)?.items || [];
+  // 부모견/부모묘 매핑 - 페이지네이션 응답 형태 처리
+  const parentPetsArray = parentPetsData?.items || [];
   const parentPets = parentPetsArray.map((pet: any) => ({
     id: pet.petId,
     avatarUrl: pet.photoUrl || '/animal-sample.png',
@@ -275,7 +275,7 @@ export default function Page({ params }: PageProps) {
 
           {!isParentPetsLoading && parentPets.length > 0 && (
             <>
-              <Parents data={parentPets} />
+              <Parents data={parentPets} breederId={breederId} />
               <Separator className="my-12" />
             </>
           )}
