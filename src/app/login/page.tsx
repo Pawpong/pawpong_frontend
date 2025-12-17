@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Container from '@/components/ui/container';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
@@ -16,7 +16,11 @@ import {
 } from '@/components/ui/simple-dialog';
 import { Button } from '@/components/ui/button';
 
-export default function Login() {
+/**
+ * 로그인 페이지 내부 컴포넌트
+ * useSearchParams를 사용하므로 Suspense 경계 내에 있어야 함
+ */
+function LoginContent() {
   const isPC = useBreakpoint('lg');
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -80,5 +84,17 @@ export default function Login() {
         </SimpleDialogContent>
       </SimpleDialog>
     </>
+  );
+}
+
+/**
+ * 로그인 페이지
+ * useSearchParams 사용을 위해 Suspense 경계로 감쌈
+ */
+export default function Login() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">로딩 중...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

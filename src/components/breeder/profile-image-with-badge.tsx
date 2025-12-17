@@ -38,8 +38,8 @@ export default function ProfileImageWithBadge({
         <>
           <Image src={src} alt={alt} width={size} height={size} className="object-cover w-full h-full" unoptimized />
           {!isHumanProfile && (
-            <div className="absolute bottom-0 left-0 right-0 bg-[var(--color-grayscale-gray1)] flex items-center justify-center py-1.5 px-1.5">
-              <p className="text-caption font-medium text-grayscale-gray6 text-center">
+            <div className="absolute bottom-0 left-0 right-0 h-6 bg-[#F5F5F5] flex items-center justify-center">
+              <p className="text-caption font-medium text-[#545454] text-center">
                 {animalType === 'cat' ? '고양이' : '강아지'}
               </p>
             </div>

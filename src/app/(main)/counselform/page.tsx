@@ -13,7 +13,7 @@ import Arrow from '@/assets/icons/arrow';
 import SmallDot from '@/assets/icons/small-dot.svg';
 import { useForm, FormProvider, Controller, useWatch } from 'react-hook-form';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { cn } from '@/lib/utils';
 import LeftArrow from '@/assets/icons/left-arrow.svg';
 import useNavigationGuard from '@/hooks/use-navigation-guard';
@@ -29,7 +29,11 @@ import type { ApplicationCreateRequest } from '@/lib/application';
 import { formatPhoneNumber } from '@/utils/phone';
 import CounselBannerCarousel from '@/components/counsel-banner/counsel-banner-carousel';
 
-export default function CounselFormPage() {
+/**
+ * 상담 폼 페이지 내부 컴포넌트
+ * useSearchParams를 사용하므로 Suspense 경계 내에 있어야 함
+ */
+function CounselFormContent() {
   const isMdUp = useBreakpoint('md');
   const { toast } = useToast();
   const router = useRouter();
@@ -614,5 +618,17 @@ export default function CounselFormPage() {
         />
       )}
     </FormProvider>
+  );
+}
+
+/**
+ * 상담 폼 페이지
+ * useSearchParams 사용을 위해 Suspense 경계로 감쌈
+ */
+export default function CounselFormPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">로딩 중...</div>}>
+      <CounselFormContent />
+    </Suspense>
   );
 }

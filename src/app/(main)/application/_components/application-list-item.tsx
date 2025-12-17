@@ -1,13 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import ProfileImageWithBadge from '@/components/breeder/profile-image-with-badge';
 import BreederInfo from '@/components/breeder/breeder-info';
 import { Button } from '@/components/ui/button';
 import Pencil from '@/assets/icons/pencil.svg';
 import ReviewDialog from './review-dialog';
+import ReviewWriteDialog from './review-write-dialog';
 import { Badge } from '@/components/ui/badge';
 import ApplicationDetailModal from './application-detail-modal';
+import { getReviewByApplicationId } from '@/lib/review';
 
 interface ApplicationListItemProps {
   applicationId: string;
@@ -37,24 +40,38 @@ const getStatusBadge = (status: string) => {
     case 'consultation_pending':
       return (
         <Badge className="bg-[#A0C8F4] text-[#4F3B2E] hover:bg-[#A0C8F4] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+            <rect x="3" y="7" width="2" height="2" fill="#4F3B2E" />
+            <rect x="7" y="7" width="2" height="2" fill="#4F3B2E" />
+            <rect x="11" y="7" width="2" height="2" fill="#4F3B2E" />
+          </svg>
           <span className="text-caption font-medium">상담 전</span>
         </Badge>
       );
     case 'consultation_completed':
       return (
         <Badge className="bg-[#A0A0A0] text-white hover:bg-[#A0A0A0] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+            <path d="M4 8L6.5 10.5L12 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
           <span className="text-caption font-medium">상담 완료</span>
         </Badge>
       );
     case 'adoption_approved':
       return (
         <Badge className="bg-[#A0A0A0] text-white hover:bg-[#A0A0A0] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+            <path d="M4 8L6.5 10.5L12 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
           <span className="text-caption font-medium">입양 승인</span>
         </Badge>
       );
     case 'adoption_rejected':
       return (
         <Badge className="bg-[#A0A0A0] text-white hover:bg-[#A0A0A0] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+            <path d="M5 5L11 11M11 5L5 11" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
           <span className="text-caption font-medium">입양 거절</span>
         </Badge>
       );
@@ -73,85 +90,107 @@ export default function ApplicationListItem({
   breederName,
   breederLevel,
   animalType,
-  petBreed,
   adopterId,
   adopterName,
-  adopterEmail,
-  adopterPhone,
   petName,
   preferredPetInfo,
 }: ApplicationListItemProps) {
+  // 🔧 모든 hooks는 컴포넌트 최상단에서 호출 (React Hooks 규칙 준수)
+  // 입양자 화면용 상태
+  const canWriteReview = status === 'consultation_completed' || status === 'adoption_approved';
+  const [showReviewWriteDialog, setShowReviewWriteDialog] = useState(false);
+  const { data: existingReview } = useQuery({
+    queryKey: ['review-by-application', applicationId],
+    queryFn: () => getReviewByApplicationId(applicationId),
+    enabled: !isBreeder && canWriteReview, // 입양자이고 후기 작성 가능할 때만 쿼리 실행
+  });
+
+  // 브리더 화면용 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // 입양자 화면 (브리더 정보 표시)
   if (!isBreeder && breederName && breederLevel) {
-    // 상담 완료 또는 입양 승인 상태에서만 후기 작성 가능
-    const canWriteReview = status === 'consultation_completed' || status === 'adoption_approved';
+
+    const hasReview = !!existingReview;
+    const buttonText = hasReview ? '후기 보기' : '후기 작성';
+
+    const handleReviewButtonClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setShowReviewWriteDialog(true);
+    };
 
     return (
-      <div className="flex gap-5 items-center w-full md:flex-row">
-        {/* 프로필 이미지 */}
-        <ProfileImageWithBadge
-          src={profileImage}
-          alt={breederName}
+      <>
+        <ReviewDialog
+          applicationId={applicationId}
+          breederId={breederId!}
+          breederName={breederName}
+          breederLevel={breederLevel}
+          applicationDate={applicationDate}
+          profileImage={profileImage}
           animalType={(animalType || 'cat') as 'cat' | 'dog'}
-          size={68}
-        />
+          canWriteReview={canWriteReview}
+        >
+          <div className="flex gap-5 items-center w-full md:flex-row cursor-pointer hover:opacity-80 transition-opacity">
+            {/* 프로필 이미지 */}
+            <ProfileImageWithBadge
+              src={profileImage}
+              alt={breederName}
+              animalType={(animalType || 'cat') as 'cat' | 'dog'}
+              size={68}
+            />
 
-        {/* 브리더 정보 + 날짜/버튼 영역 */}
-        <div className="flex-1 flex flex-col gap-2 md:gap-3">
-          <BreederInfo breederName={breederName} breederLevel={breederLevel} />
-          <div className="flex justify-between items-center gap-2">
-            <p className="text-body-s font-normal text-grayscale-gray5 whitespace-nowrap">{applicationDate}</p>
-            {/* 후기 작성 버튼 - 상담 완료/입양 승인 상태에서만 표시 */}
+            {/* 브리더 정보 + 날짜/버튼 영역 */}
+            <div className="flex-1 flex flex-col gap-2 md:gap-3">
+              <BreederInfo breederName={breederName} breederLevel={breederLevel} />
+              <div className="flex justify-between items-center gap-2">
+                <p className="text-body-s font-normal text-grayscale-gray5 whitespace-nowrap">{applicationDate}</p>
+                {/* 후기 버튼 - 상담 완료/입양 승인 상태에서만 표시 */}
+                {canWriteReview && (
+                  <Button
+                    variant="ghost"
+                    className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 md:hidden"
+                    onClick={handleReviewButtonClick}
+                  >
+                    <span className="text-body-xs font-normal text-grayscale-gray6">{buttonText}</span>
+                    {!hasReview && <Pencil className="size-4" />}
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* 후기 버튼 (데스크톱) - 상담 완료/입양 승인 상태에서만 표시 */}
             {canWriteReview && (
-              <ReviewDialog
-                applicationId={applicationId}
-                breederId={breederId!}
-                breederName={breederName}
-                breederLevel={breederLevel}
-                applicationDate={applicationDate}
-                profileImage={profileImage}
-                animalType={(animalType || 'cat') as 'cat' | 'dog'}
+              <Button
+                variant="ghost"
+                className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 hidden md:flex"
+                onClick={handleReviewButtonClick}
               >
-                <Button
-                  variant="ghost"
-                  className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 md:hidden"
-                >
-                  <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
-                  <Pencil className="size-4" />
-                </Button>
-              </ReviewDialog>
+                <span className="text-body-xs font-normal text-grayscale-gray6">{buttonText}</span>
+                {!hasReview && <Pencil className="size-4" />}
+              </Button>
             )}
           </div>
-        </div>
+        </ReviewDialog>
 
-        {/* 후기 작성 버튼 (데스크톱) - 상담 완료/입양 승인 상태에서만 표시 */}
-        {canWriteReview && (
-          <ReviewDialog
-            applicationId={applicationId}
-            breederId={breederId!}
-            breederName={breederName}
-            breederLevel={breederLevel}
-            applicationDate={applicationDate}
-            profileImage={profileImage}
-            animalType={(animalType || 'cat') as 'cat' | 'dog'}
-          >
-            <Button
-              variant="ghost"
-              className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 hidden md:flex"
-            >
-              <span className="text-body-xs font-normal text-grayscale-gray6">후기 작성</span>
-              <Pencil className="size-4" />
-            </Button>
-          </ReviewDialog>
-        )}
-      </div>
+        {/* 후기 작성/보기 다이얼로그 - 버튼 클릭 시 바로 열림 */}
+        <ReviewWriteDialog
+          applicationId={applicationId}
+          breederId={breederId!}
+          open={showReviewWriteDialog}
+          onOpenChange={setShowReviewWriteDialog}
+          breederName={breederName}
+          breederLevel={breederLevel}
+          applicationDate={applicationDate}
+          profileImage={profileImage}
+          animalType={(animalType || 'cat') as 'cat' | 'dog'}
+        />
+      </>
     );
   }
 
   // 브리더 화면 (입양자 정보 표시) - Figma 디자인 완벽 반영
   if (isBreeder && adopterName) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
     // 입양 원하는 아이 정보 표시 (preferredPetInfo 우선, 없으면 petName)
     const displayPetInfo = preferredPetInfo || petName || '분양 중인 아이 정보';
 
