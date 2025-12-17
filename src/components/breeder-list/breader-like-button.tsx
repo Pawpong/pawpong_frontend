@@ -9,6 +9,9 @@ import HeartFill from '@/assets/icons/heart-fill.svg';
 import { useToggleFavorite } from '@/app/(main)/saved/_hooks/use-favorites';
 import { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/stores/auth-store';
+
 interface BreederLikeButtonProps {
   className?: string;
   breederId: string;
@@ -24,10 +27,17 @@ export default function BreederLikeButton({
 }: BreederLikeButtonProps) {
   const [isLiked, setIsLiked] = useState(initialIsFavorited);
   const { toggle, isLoading } = useToggleFavorite();
+  const router = useRouter();
+  const { isAuthenticated } = useAuthStore();
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
+    }
 
     // 낙관적 업데이트 (Optimistic UI)
     setIsLiked(!isLiked);

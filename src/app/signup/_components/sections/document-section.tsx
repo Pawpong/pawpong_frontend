@@ -26,7 +26,6 @@ const DOCUMENT_TYPES = {
   ID_CARD: 'idCard',
   ANIMAL_LICENSE: 'animalProductionLicense',
   CONTRACT_SAMPLE: 'adoptionContractSample',
-  PEDIGREE: 'recentAssociationDocument',
   BREEDER_CERT: 'breederCertification',
 } as const;
 
@@ -40,7 +39,6 @@ const levelInfo = [
       '신분증 사본',
       '동물생산업 등록증',
       '표준 입양계약서 샘플',
-      '최근 발급된 혈통서 사본',
       '고양이 브리더 인증 서류',
     ],
   },
@@ -252,18 +250,9 @@ export default function DocumentSection() {
           <div className="space-y-3">
             <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.ANIMAL_LICENSE)}>동물생산업 등록증</FileButton>
             {level === 'elite' && (
-              <>
-                <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.CONTRACT_SAMPLE)}>
-                  표준 입양계약서 샘플
-                </FileButton>
-
-                <div className="space-y-2.5">
-                  <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.PEDIGREE)}>최근 발급된 혈통서 사본</FileButton>
-                  <div className="text-grayscale-gray5 font-medium text-caption-s">
-                    분양 예정인 개체의 혈통서를 첨부해 주세요
-                  </div>
-                </div>
-              </>
+              <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.CONTRACT_SAMPLE)}>
+                표준 입양계약서 샘플
+              </FileButton>
             )}
           </div>
 

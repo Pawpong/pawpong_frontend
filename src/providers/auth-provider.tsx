@@ -61,13 +61,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const profile = await getAdopterProfile();
           setUser({
             userId: profile.adopterId,
-            email: profile.email,
-            name: profile.name || profile.nickname,
+            email: profile.emailAddress,
+            name: profile.nickname,
             role: 'adopter',
           });
         }
-      } catch {
-        // 프로필 조회 실패 시 무시
+      } catch (error) {
+        // 탈퇴한 계정 에러는 무시 (각 페이지에서 개별 처리)
+        const errorMessage = error instanceof Error ? error.message : '';
+        console.log('[AuthProvider] 프로필 조회 실패:', errorMessage);
+
+        if (errorMessage.includes('탈퇴')) {
+          console.log('[AuthProvider] 탈퇴 계정 감지 - 페이지에서 처리하도록 에러 무시');
+          // 여기서 로그아웃하지 않고, 각 페이지에서 모달을 띄운 후 로그아웃하도록 함
+        }
       }
     };
 

@@ -8,7 +8,9 @@ import EmailSettingsSection from './_components/email-settings-section';
 import WithdrawSection from './_components/withdraw-section';
 import WithdrawDialog from './_components/withdraw-dialog';
 import { getAdopterProfile, updateAdopterProfile, deleteAccount, WithdrawReason } from '@/lib/adopter';
-import { getMyBreederProfile, updateBreederProfile } from '@/lib/breeder';
+import { getMyBreederProfile } from '@/lib/breeder';
+import { deleteBreederAccount } from '@/lib/breeder-management';
+import { logout } from '@/lib/auth';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { useAuthGuard } from '@/hooks/use-auth-guard';
@@ -16,7 +18,7 @@ import { useAuthStore } from '@/stores/auth-store';
 
 export default function SettingsPage() {
   const { isLoading: isAuthLoading } = useAuthGuard();
-  const { user } = useAuthStore();
+  const { user, clearAuth } = useAuthStore();
   const [marketingAgreed, setMarketingAgreed] = useState(false);
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
@@ -129,30 +131,34 @@ export default function SettingsPage() {
   const handleWithdrawConfirm = async (reason: string, otherReason?: string) => {
     if (!user) return;
 
-    // 브리더 탈퇴는 별도 처리 필요
-    if (user.role === 'breeder') {
-      toast({
-        title: '브리더 탈퇴',
-        description: '브리더 탈퇴는 관리자에게 문의해주세요.',
-      });
-      return;
-    }
-
     try {
-      // 입양자 회원 탈퇴 API 호출
-      await deleteAccount({
-        reason: reason as WithdrawReason,
-        otherReason,
-      });
+      if (user.role === 'breeder') {
+        // 브리더 회원 탈퇴 API 호출
+        await deleteBreederAccount();
 
-      toast({
-        title: '회원 탈퇴 완료',
-        description: '그동안 이용해 주셔서 감사합니다.',
-      });
+        toast({
+          title: '브리더 계정 탈퇴 완료',
+          description: '그동안 이용해 주셔서 감사합니다.',
+        });
+      } else {
+        // 입양자 회원 탈퇴 API 호출
+        await deleteAccount({
+          reason: reason as WithdrawReason,
+          otherReason,
+        });
 
-      // 탈퇴 성공 시 로그인 페이지로 리다이렉트
+        toast({
+          title: '회원 탈퇴 완료',
+          description: '그동안 이용해 주셔서 감사합니다.',
+        });
+      }
+
+      // 탈퇴 성공 시 로그아웃 처리 후 로그인 페이지로 리다이렉트
+      await logout();
+      clearAuth();
+
       setTimeout(() => {
-        router.push('/login');
+        window.location.href = '/login';
       }, 1500);
     } catch (error) {
       toast({
@@ -206,6 +212,7 @@ export default function SettingsPage() {
         open={withdrawDialogOpen}
         onOpenChange={setWithdrawDialogOpen}
         onConfirm={handleWithdrawConfirm}
+        userType={user?.role === 'breeder' ? 'breeder' : 'adopter'}
       />
     </div>
   );

@@ -46,6 +46,18 @@ function createApi(): AxiosInstance {
     async (error: AxiosError) => {
       const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
+      // 탈퇴한 계정 에러는 특별 처리 (자동 리다이렉트 안 함)
+      const errorMessage =
+        (error.response?.data && typeof error.response.data === 'object'
+          ? (error.response.data as { message?: string; error?: string }).message ||
+            (error.response.data as { message?: string; error?: string }).error
+          : undefined) || '';
+
+      if (errorMessage.includes('탈퇴')) {
+        console.log('[API Interceptor] 탈퇴 계정 에러 감지 - 자동 리다이렉트 안 함');
+        return Promise.reject(new Error(errorMessage));
+      }
+
       // 401 처리 (토큰 만료 시 리프레시 시도)
       if (error.response?.status === 401 && !originalRequest._retry) {
         // 리프레시 엔드포인트 자체의 401은 바로 에러 처리
@@ -80,9 +92,22 @@ function createApi(): AxiosInstance {
         } catch (refreshError) {
           processQueue(refreshError as Error);
 
-          // 리프레시 실패 시 로그인 페이지로 리다이렉트 (이미 로그인 페이지면 제외)
-          if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
-            window.location.href = '/login';
+          // 리프레시 실패 시 인증 상태 초기화 및 로그인 페이지로 리다이렉트
+          if (typeof window !== 'undefined') {
+            // 쿠키 삭제 시도
+            fetch('/api/auth/clear-cookie', { method: 'POST' }).catch(() => {});
+
+            // 로컬 스토리지 초기화 (auth-storage)
+            try {
+              localStorage.removeItem('auth-storage');
+            } catch (e) {
+              console.error('Failed to clear auth storage:', e);
+            }
+
+            // 로그인 페이지가 아니면 리다이렉트
+            if (!window.location.pathname.startsWith('/login')) {
+              window.location.href = '/login';
+            }
           }
 
           return Promise.reject(new Error('세션이 만료되었습니다. 다시 로그인해주세요.'));

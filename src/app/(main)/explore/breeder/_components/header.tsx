@@ -36,10 +36,7 @@ export default function Header({ breederNickname, breederId }: HeaderProps) {
   };
 
   const handleLikeClick = () => {
-    // 낙관적 업데이트 (Optimistic UI)
     setIsLiked(!isLiked);
-
-    // API 호출
     toggle(breederId, isLiked);
   };
 

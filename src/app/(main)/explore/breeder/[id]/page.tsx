@@ -1,6 +1,6 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState, useEffect } from 'react';
 import BreederProfile from '@/app/(main)/explore/breeder/[id]/_components/breeder-profile';
 import { Separator } from '@/components/ui/separator';
 import BreederDescription from './_components/breeder-description';
@@ -10,12 +10,19 @@ import Parents from './_components/parents';
 import Reviews from './_components/reviews';
 import Header from '../_components/header';
 import { Button } from '@/components/ui/button';
+import {
+  SimpleDialog,
+  SimpleDialogContent,
+  SimpleDialogHeader,
+  SimpleDialogTitle,
+  SimpleDialogDescription,
+  SimpleDialogFooter,
+} from '@/components/ui/simple-dialog';
 import { useRouter } from 'next/navigation';
 import { useCounselFormStore } from '@/stores/counsel-form-store';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useBreederProfile, useBreederPets, useParentPets, useBreederReviews } from './_hooks/use-breeder-detail';
 import { useAuthStore } from '@/stores/auth-store';
-import { Lock } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{
@@ -32,11 +39,29 @@ export default function Page({ params }: PageProps) {
 
   // 브리더 본인인지 확인
   const isOwnProfile = user?.role === 'breeder' && user?.userId === breederId;
+  const isBreeder = user?.role === 'breeder';
 
-  const { data: profileData, isLoading: isProfileLoading } = useBreederProfile(breederId);
+  const { data: profileData, isLoading: isProfileLoading, error: profileError } = useBreederProfile(breederId);
   const { data: petsData, isLoading: isPetsLoading } = useBreederPets(breederId);
   const { data: parentPetsData, isLoading: isParentPetsLoading } = useParentPets(breederId);
   const { data: reviewsData, isLoading: isReviewsLoading } = useBreederReviews(breederId);
+
+  // 탈퇴한 브리더 모달 상태
+  const [showDeletedAlert, setShowDeletedAlert] = useState(false);
+  const [isNotFoundError, setIsNotFoundError] = useState(false);
+
+  // 에러 발생 시 모달 표시
+  useEffect(() => {
+    if (profileError) {
+      console.log('[DEBUG] Profile error detected:', profileError);
+      const errorMessage = profileError instanceof Error ? profileError.message : '브리더 정보를 찾을 수 없습니다.';
+      console.log('[DEBUG] Error message:', errorMessage);
+      const isDeleted = errorMessage.includes('탈퇴');
+      console.log('[DEBUG] Is deleted breeder:', isDeleted);
+      setIsNotFoundError(!isDeleted);
+      setShowDeletedAlert(true);
+    }
+  }, [profileError]);
 
   const handleCounselClick = () => {
     if (!isAuthenticated) {
@@ -47,11 +72,67 @@ export default function Page({ params }: PageProps) {
     router.push(`/counselform?breederId=${breederId}`);
   };
 
+  const handleAlertClose = async () => {
+    setShowDeletedAlert(false);
+
+    // 본인 계정이 탈퇴한 경우에만 로그아웃 처리
+    if (isOwnProfile && !isNotFoundError) {
+      try {
+        console.log('[Breeder Profile] 본인 탈퇴 계정 - 로그아웃 처리 시작');
+
+        // 쿠키 삭제 API 호출
+        await fetch('/api/auth/clear-cookie', { method: 'POST' });
+
+        // 로컬 스토리지 auth-storage 삭제
+        localStorage.removeItem('auth-storage');
+
+        console.log('[Breeder Profile] 탈퇴 계정 로그아웃 처리 완료');
+      } catch (error) {
+        console.error('[Breeder Profile] 로그아웃 처리 실패:', error);
+      }
+    }
+
+    // 탐색 페이지로 이동
+    router.replace('/explore');
+  };
+
   if (isProfileLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
       </div>
+    );
+  }
+
+  // 탈퇴한 브리더 또는 에러 발생 시 모달 표시 + 정상 컴포넌트 렌더링 (모달 보이도록)
+  if (profileError) {
+    return (
+      <>
+        <div className="flex justify-center items-center min-h-[400px]">
+          <p className="text-body-s text-grayscale-gray5">브리더 정보를 불러오는 중...</p>
+        </div>
+        <SimpleDialog open={showDeletedAlert} onOpenChange={handleAlertClose}>
+          <SimpleDialogContent>
+            <SimpleDialogHeader>
+              <SimpleDialogTitle className="text-primary">
+                {isNotFoundError ? '브리더를 찾을 수 없어요' : '탈퇴한 브리더예요'}
+              </SimpleDialogTitle>
+              <SimpleDialogDescription className="text-grayscale-gray5">
+                {isNotFoundError
+                  ? '브리더 정보가 존재하지 않거나\n접근할 수 없어요.'
+                  : isOwnProfile
+                    ? '탈퇴 처리된 계정이에요.\n다시 로그인해 주세요.'
+                    : '이미 탈퇴한 브리더의 프로필은\n조회할 수 없어요.'}
+              </SimpleDialogDescription>
+            </SimpleDialogHeader>
+            <SimpleDialogFooter className="grid-cols-1">
+              <Button variant="tertiary" className="w-full" onClick={handleAlertClose}>
+                {isOwnProfile ? '확인' : '탐색 페이지로'}
+              </Button>
+            </SimpleDialogFooter>
+          </SimpleDialogContent>
+        </SimpleDialog>
+      </>
     );
   }
 
@@ -202,13 +283,14 @@ export default function Page({ params }: PageProps) {
           {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} />}
         </div>
       </div>
-      {!isLg && !isOwnProfile && (
+      {!isLg && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2  w-full max-w-[22.0625rem]">
           <Button
             variant="counsel"
             className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"
             type="button"
             onClick={handleCounselClick}
+            disabled={isOwnProfile || isBreeder}
           >
             상담 신청하기
           </Button>
