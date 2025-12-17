@@ -1,6 +1,7 @@
 'use client';
 
 import Close from '@/assets/icons/close';
+import ClearFilters from '@/components/filter-sidebar/clear-filters';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DialogTrigger } from '@/components/ui/dialog';
@@ -68,6 +69,11 @@ export default function LocationSelectDialogTrigger({
   const onSelect = (value: string | null) => {
     setSelected(value);
   };
+
+  const clearActiveFilters = () => {
+    setSelected(null);
+  };
+
   if (loading) {
     return (
       <LargeDialog>
@@ -157,9 +163,10 @@ export default function LocationSelectDialogTrigger({
           </ScrollArea>
         </div>
         <LargeDialogFooter>
+          <ClearFilters onClick={clearActiveFilters} />
           <LargeDialogClose asChild>
             <Button
-              className="py-2 px-4 text-sm leading-[140%] tracking-[-2%]  bg-[#A0C8F4] w-18 text-white bg-primary-500 rounded"
+              className="py-2 px-4 text-sm leading-[140%] tracking-[-2%] bg-[#A0C8F4] w-18 text-white bg-primary-500 rounded"
               onClick={() => onSubmitLocation(selected)}
             >
               입력
