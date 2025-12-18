@@ -19,6 +19,7 @@ import BreederTags from '@/components/breeder-list/breeder-tags';
 import LevelBadge from '@/components/level-badge';
 import { Button } from '@/components/ui/button';
 import GrayDot from '@/assets/icons/gray-dot.svg';
+import DownArrow from '@/assets/icons/long-down-arrow.svg';
 import { useBreeders } from '../_hooks/use-breeders';
 import { useFilterStore } from '@/stores/filter-store';
 import { mapFiltersToParams } from '@/lib/filter-mapper';
@@ -26,6 +27,7 @@ import { useSegment } from '@/hooks/use-segment';
 import type { SearchBreederParams } from '@/lib/breeder';
 import { useAuthStore } from '@/stores/auth-store';
 import { Lock } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 export default function SiteBreederList() {
   // 로그인 상태 확인
@@ -45,15 +47,11 @@ export default function SiteBreederList() {
   // 활성화된 필터를 백엔드 API 파라미터로 변환
   const filterParams = mapFiltersToParams(activeFilters, petType);
 
-  const { data, isLoading, error } = useBreeders({
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useBreeders({
     petType, // URL 경로에 따라 자동으로 설정
-    page: 1,
-    take: 20,
     sortBy, // 정렬 파라미터 추가
     ...filterParams, // 필터 파라미터 추가
   });
-
-  console.log(data?.items);
 
   if (isLoading) {
     return (
@@ -71,7 +69,7 @@ export default function SiteBreederList() {
     );
   }
 
-  const breeders = data?.items || [];
+  const breeders = data?.pages.flatMap((page) => page.items) || [];
 
   if (breeders.length === 0) {
     return (
@@ -83,65 +81,86 @@ export default function SiteBreederList() {
 
   return (
     <BreederList>
-      {breeders.map((breeder) => (
-        <Link key={breeder.breederId} href={`/explore/breeder/${breeder.breederId}`} className="block">
-          <Breeder>
-            <BreederProfile>
-              <BreederHeader>
-                <BreederAvatar src={breeder.profileImage} />
-                <div className="flex items-center gap-2">
-                  <BreederName>{breeder.breederName}</BreederName>
-                  <LevelBadge level={breeder.breederLevel as 'elite' | 'new'} />
+      {breeders.map((breeder, index) => {
+        const isLastBeforeMore = hasNextPage && index === breeders.length - 1;
+        return (
+          <div key={`${breeder.breederId}-${index}`}>
+            <Link href={`/explore/breeder/${breeder.breederId}`} className="block">
+              <Breeder>
+                <BreederProfile>
+                  <BreederHeader>
+                    <BreederAvatar src={breeder.profileImage} />
+                    <div className="flex items-center gap-2">
+                      <BreederName>{breeder.breederName}</BreederName>
+                      <LevelBadge level={breeder.breederLevel as 'elite' | 'new'} />
+                    </div>
+                  </BreederHeader>
+                  <BreederContent>
+                    <BreederDescription>
+                      <BreederLocation>{breeder.location}</BreederLocation>
+                      <GrayDot className="block sm:hidden lg:block align-middle" />
+                      <BreederPrice>
+                        {isLoggedIn ? (
+                          breeder.priceRange?.min || breeder.priceRange?.max ? (
+                            `${breeder.priceRange.min?.toLocaleString()} - ${breeder.priceRange.max?.toLocaleString()}원`
+                          ) : (
+                            '상담 후 비용 확인 가능'
+                          )
+                        ) : (
+                          <span className="inline-flex items-center gap-1">
+                            <Lock className="w-3 h-3" />
+                            로그인 후 비용 확인 가능
+                          </span>
+                        )}
+                      </BreederPrice>
+                    </BreederDescription>
+                    <BreederTags>
+                      {(breeder.specializationTypes || [breeder.mainBreed])
+                        .filter(Boolean)
+                        .map((area: string, idx: number) => (
+                          <Button variant="secondary" key={idx}>
+                            {area}
+                          </Button>
+                        ))}
+                    </BreederTags>
+                  </BreederContent>
+                </BreederProfile>
+                <div className="relative">
+                  <BreederImage src={breeder.representativePhotos[0]} />
+                  <div className="absolute top-0 right-0 p-3">
+                    <BreederLikeButton
+                      breederId={breeder.breederId}
+                      initialIsFavorited={breeder.isFavorited}
+                      hasImage={!!breeder.representativePhotos?.[0]}
+                    />
+                  </div>
+                  {breeder.isAdoptionAvailable && (
+                    <div className="absolute bottom-0 right-0 p-3">
+                      <AdoptionStatusBadge status="available" />
+                    </div>
+                  )}
                 </div>
-              </BreederHeader>
-              <BreederContent>
-                <BreederDescription>
-                  <BreederLocation>{breeder.location}</BreederLocation>
-                  <GrayDot className="block sm:hidden lg:block align-middle" />
-                  <BreederPrice>
-                    {isLoggedIn ? (
-                      breeder.priceRange?.min || breeder.priceRange?.max ? (
-                        `${breeder.priceRange.min?.toLocaleString()} - ${breeder.priceRange.max?.toLocaleString()}원`
-                      ) : (
-                        '상담 후 비용 확인 가능'
-                      )
-                    ) : (
-                      <span className="inline-flex items-center gap-1">
-                        <Lock className="w-3 h-3" />
-                        로그인 후 비용 확인 가능
-                      </span>
-                    )}
-                  </BreederPrice>
-                </BreederDescription>
-                <BreederTags>
-                  {(breeder.specializationTypes || [breeder.mainBreed])
-                    .filter(Boolean)
-                    .map((area: string, idx: number) => (
-                      <Button variant="secondary" key={idx}>
-                        {area}
-                      </Button>
-                    ))}
-                </BreederTags>
-              </BreederContent>
-            </BreederProfile>
-            <div className="relative">
-              <BreederImage src={breeder.representativePhotos[0]} />
-              <div className="absolute top-0 right-0 p-3">
-                <BreederLikeButton
-                  breederId={breeder.breederId}
-                  initialIsFavorited={breeder.isFavorited}
-                  hasImage={!!breeder.representativePhotos?.[0]}
-                />
-              </div>
-              {breeder.isAdoptionAvailable && (
-                <div className="absolute bottom-0 right-0 p-3">
-                  <AdoptionStatusBadge status="available" />
-                </div>
-              )}
-            </div>
-          </Breeder>
-        </Link>
-      ))}
+              </Breeder>
+            </Link>
+            {index < breeders.length - 1 && !isLastBeforeMore && <Separator className="my-4" />}
+          </div>
+        );
+      })}
+      {hasNextPage && (
+        <div className="col-span-full flex justify-center mt-8">
+          <Button
+            variant="ghost"
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            className="bg-[var(--color-grayscale-gray1)] hover:bg-[var(--color-grayscale-gray2)] h-12 py-2.5 gap-1 rounded-full has-[>svg]:px-0 has-[>svg]:pl-5 has-[>svg]:pr-3 disabled:opacity-50"
+          >
+            <span className="text-body-s font-medium text-grayscale-gray6">
+              {isFetchingNextPage ? '로딩 중...' : '더보기'}
+            </span>
+            <DownArrow />
+          </Button>
+        </div>
+      )}
     </BreederList>
   );
 }

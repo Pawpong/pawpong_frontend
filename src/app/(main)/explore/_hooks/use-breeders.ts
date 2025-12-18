@@ -1,15 +1,19 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { exploreBreeders, getPopularBreeders, type Breeder, type SearchBreederParams } from '@/lib/breeder';
 
+const PAGE_SIZE = 10;
+
 /**
- * 브리더 목록 검색/필터링 hook
+ * 브리더 목록 검색/필터링 hook (무한스크롤/페이지네이션)
  */
-export function useBreeders(params: SearchBreederParams = {}) {
-  return useQuery({
+export function useBreeders(params: Omit<SearchBreederParams, 'page' | 'take'> = {}) {
+  return useInfiniteQuery({
     queryKey: ['breeders', params],
-    queryFn: () => exploreBreeders(params),
+    queryFn: ({ pageParam = 1 }) => exploreBreeders({ ...params, page: pageParam, take: PAGE_SIZE }),
+    getNextPageParam: (lastPage) => (lastPage.pagination.hasNextPage ? lastPage.pagination.currentPage + 1 : undefined),
+    initialPageParam: 1,
     staleTime: 1000 * 60 * 5, // 5분
   });
 }
