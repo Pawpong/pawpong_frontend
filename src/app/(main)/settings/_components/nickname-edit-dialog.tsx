@@ -73,7 +73,6 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
       const isDuplicate = await checkNicknameDuplicate(nickname);
       if (isDuplicate) {
         setNicknameAvailable(false);
-        alert('이미 사용 중인 닉네임입니다. 다른 닉네임을 입력해주세요.');
         return;
       }
 
@@ -84,7 +83,7 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
       setNicknameAvailable(null);
     } catch (error) {
       console.error('닉네임 중복 확인 오류:', error);
-      alert('닉네임 중복 확인에 실패했습니다.');
+      setNicknameAvailable(false);
     } finally {
       setIsSaving(false);
     }

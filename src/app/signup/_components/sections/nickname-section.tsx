@@ -13,6 +13,7 @@ import useSignupFormStore from '@/stores/signup-form-store';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Check from '@/assets/icons/check-blue.svg';
+import ErrorIcon from '@/assets/icons/error';
 
 export default function NicknameSection() {
   const router = useRouter();
@@ -32,6 +33,7 @@ export default function NicknameSection() {
   const [nicknameAvailable, setNicknameAvailable] = useState(false);
   const [checkingNickname, setCheckingNickname] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
   const isSocialLogin = !!tempId;
 
@@ -57,14 +59,8 @@ export default function NicknameSection() {
 
     try {
       const isDuplicate = await checkNicknameDuplicate(nickname);
-      if (isDuplicate) {
-        alert('이미 사용 중인 닉네임입니다. 다른 닉네임을 입력해주세요.');
-        setNicknameChecked(false);
-        setNicknameAvailable(false);
-      } else {
-        setNicknameChecked(true);
-        setNicknameAvailable(true);
-      }
+      setNicknameChecked(true);
+      setNicknameAvailable(!isDuplicate);
     } catch (error) {
       alert('닉네임 중복 확인에 실패했습니다.');
       setNicknameChecked(false);
@@ -79,12 +75,14 @@ export default function NicknameSection() {
     setNickname(value);
     setNicknameChecked(false);
     setNicknameAvailable(false);
+    setSubmitAttempted(false);
   };
 
   // Complete registration
   const handleSubmit = async () => {
+    setSubmitAttempted(true);
+
     if (!nicknameChecked || !nicknameAvailable) {
-      alert('닉네임 중복 확인을 완료해주세요.');
       return;
     }
 
@@ -182,15 +180,27 @@ export default function NicknameSection() {
               {checkingNickname ? '확인 중...' : '중복 검사'}
             </Button>
           </div>
-          {nicknameAvailable && (
+          {nicknameChecked && nicknameAvailable && (
             <div className="flex items-center gap-0.5">
               <Check className="size-3 shrink-0" />
               <p className="text-caption font-medium text-status-success-500">사용할 수 있는 닉네임이에요</p>
             </div>
           )}
+          {nicknameChecked && !nicknameAvailable && (
+            <div className="flex items-center gap-[0.19rem]">
+              <ErrorIcon className="size-3 shrink-0" />
+              <p className="text-caption font-medium text-status-error-500">이미 사용 중인 닉네임이에요</p>
+            </div>
+          )}
+          {submitAttempted && !nicknameChecked && (
+            <div className="flex items-center gap-[0.19rem]">
+              <ErrorIcon className="size-3 shrink-0" />
+              <p className="text-caption font-medium text-status-error-500">닉네임 중복 검사를 진행해 주세요</p>
+            </div>
+          )}
         </div>
         <div className="flex flex-col gap-4">
-          <NextButton disabled={!nicknameAvailable || submitting} onClick={handleSubmit}>
+          <NextButton disabled={submitting} onClick={handleSubmit}>
             {submitting ? '가입 중...' : '제출'}
           </NextButton>
           <UndoButton />
