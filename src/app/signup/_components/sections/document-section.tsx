@@ -1,6 +1,7 @@
 'use client';
 
 import Crown from '@/assets/icons/crown';
+import ErrorIcon from '@/assets/icons/error';
 import Plant from '@/assets/icons/plant';
 import SignupFormDescription from '@/components/signup-form-section/signup-form-description';
 import SignupFormHeader from '@/components/signup-form-section/signup-form-header';
@@ -20,6 +21,7 @@ import { useToast } from '@/hooks/use-toast';
 import DocumentSkipDialogTrigger from '../document-skip-dialog-trigger';
 import OathDialogTrigger from '../oath-dialog-trigger';
 import FileButton from './file-button';
+import { DOCUMENT_ERROR_MESSAGES, BREEDER_CERT_INFO } from '@/constants/document';
 
 // 서류 타입 매핑 (백엔드 camelCase 형식에 맞춤)
 const DOCUMENT_TYPES = {
@@ -73,15 +75,12 @@ export default function DocumentSection() {
   const [submitting, setSubmitting] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<{ type: string; file: File }[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
   const { toast } = useToast();
 
-  // 레벨별 필수 서류 개수
-  const getRequiredDocumentCount = () => {
-    return level === 'elite' ? 4 : 2; // elite: 4개, new: 2개
-  };
-
-  // 서류가 모두 업로드되었는지 확인
-  const hasAllRequiredDocuments = uploadedFiles.length >= getRequiredDocumentCount();
+  // 각 서류 업로드 여부 확인 (필수 서류만)
+  const hasIdCard = uploadedFiles.some((f) => f.type === DOCUMENT_TYPES.ID_CARD);
+  const hasBreederCert = uploadedFiles.some((f) => f.type === DOCUMENT_TYPES.BREEDER_CERT);
 
   // 파일 업로드 핸들러 - 파일을 복제하여 저장 (ERR_UPLOAD_FILE_CHANGED 방지)
   const handleFileUpload = (type: string) => async (file: File) => {
@@ -107,11 +106,12 @@ export default function DocumentSection() {
 
   // Complete breeder registration
   const handleSubmit = async () => {
-    if (!check) {
-      toast({
-        title: '서약서 동의 필요',
-        description: '브리더 입점 서약서에 동의해주세요.',
-      });
+    setSubmitAttempted(true);
+
+    // 필수 서류 검증 (신분증 사본만 필수, 엘리트는 브리더 인증 서류도 필수)
+    const missingRequired = !hasIdCard || (level === 'elite' && !hasBreederCert);
+
+    if (missingRequired || !check) {
       return;
     }
 
@@ -250,6 +250,14 @@ export default function DocumentSection() {
         <div className="space-y-8">
           <div className="space-y-2.5">
             <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.ID_CARD)}>신분증 사본</FileButton>
+            {submitAttempted && !hasIdCard && (
+              <div className="flex items-center gap-[0.19rem]">
+                <ErrorIcon className="size-3 shrink-0" />
+                <p className="text-caption font-medium text-status-error-500">
+                  {DOCUMENT_ERROR_MESSAGES.REQUIRED_DOCUMENTS}
+                </p>
+              </div>
+            )}
             <div className="text-secondary-700 font-medium text-caption-s">
               이름과 생년월일 이외에는 가려서 제출하시길 권장드립니다.
             </div>
@@ -264,18 +272,30 @@ export default function DocumentSection() {
           {/* 브리더 인증 서류 - info 있음 (elite만) */}
           {level === 'elite' && (
             <div className="space-y-2.5">
-              <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.BREEDER_CERT)}>고양이 브리더 인증 서류</FileButton>
-              <div className="text-grayscale-gray5 font-medium text-caption-s space-y-2">
-                <p>해당되는 서류를 하나 골라 첨부해 주세요</p>
-                {[
-                  'TICA 또는 CFA 등록 확인서 (브리더 회원증/캐터리 등록증)',
-                  '캣쇼 참가 증빙 자료 (참가 확인증, 수상 기록, 공식 프로그램 또는 카탈로그에 게재된 기록 등)',
-                ].map((e, i) => (
+              <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.BREEDER_CERT)}>
+                {animal === 'cat' ? '고양이 브리더 인증 서류' : '강아지 브리더 인증 서류'}
+              </FileButton>
+              <div
+                className={cn('font-medium text-caption-s space-y-2', {
+                  'text-grayscale-gray5': hasBreederCert || !submitAttempted,
+                  'text-status-error-500': submitAttempted && !hasBreederCert,
+                })}
+              >
+                <div className="flex items-center gap-[0.19rem]">
+                  {submitAttempted && !hasBreederCert && <ErrorIcon className="size-3 shrink-0" />}
+                  <p>{DOCUMENT_ERROR_MESSAGES.BREEDER_CERT}</p>
+                </div>
+                {BREEDER_CERT_INFO[animal === 'cat' ? 'cat' : 'dog'].map((text, i) => (
                   <div className="flex gap-1" key={i}>
                     <div className="h-3 flex items-center">
-                      <div className="size-0.5 rounded-full bg-grayscale-gray5" />
+                      <div
+                        className={cn('size-0.5 rounded-full', {
+                          'bg-grayscale-gray5': hasBreederCert || !submitAttempted,
+                          'bg-status-error-500': submitAttempted && !hasBreederCert,
+                        })}
+                      />
                     </div>
-                    {e}
+                    {text}
                   </div>
                 ))}
               </div>
@@ -330,12 +350,7 @@ export default function DocumentSection() {
             </Button>
           </DocumentSkipDialogTrigger>
 
-          <Button
-            variant={'tertiary'}
-            className="py-3 px-4 w-full flex-1"
-            onClick={handleSubmit}
-            disabled={submitting || !check || !hasAllRequiredDocuments}
-          >
+          <Button variant={'tertiary'} className="py-3 px-4 w-full flex-1" onClick={handleSubmit} disabled={submitting}>
             {uploading ? '서류 업로드 중...' : submitting ? '회원가입 중...' : '제출'}
           </Button>
         </div>
