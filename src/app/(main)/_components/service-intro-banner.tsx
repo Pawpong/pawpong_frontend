@@ -2,11 +2,14 @@ import ArrowRight from '@/assets/icons/arrow-right';
 import BannerSvg from '@/assets/images/banner-small.svg';
 import Banner from '@/assets/images/banner.svg';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { useAuthStore } from '@/stores/auth-store';
 import Link from 'next/link';
 
 const ServiceIntroBanner = () => {
   const isMd = useBreakpoint('md');
   const isLg = useBreakpoint('lg');
+  const user = useAuthStore((state) => state.user);
+  const isBreeder = user?.role === 'breeder';
 
   // 모바일 (md 미만)
   if (!isMd) {
@@ -14,9 +17,19 @@ const ServiceIntroBanner = () => {
       <div className="bg-tertiary-500 rounded-2xl flex flex-col gap-8 h-[25rem] overflow-hidden relative">
         <div className="flex flex-col gap-8 shrink-0 px-7 pt-7">
           <h2 className="text-body-l font-semibold text-primary">
-            믿을 수 있는 브리더,
-            <br />
-            포퐁에서 만나요
+            {isBreeder ? (
+              <>
+                브리더의 가치와 전문성이 인정받는 공간,
+                <br />
+                Pawpong
+              </>
+            ) : (
+              <>
+                믿을 수 있는 브리더,
+                <br />
+                포퐁에서 만나요
+              </>
+            )}
           </h2>
           <Link
             href="/introduction"
@@ -39,9 +52,19 @@ const ServiceIntroBanner = () => {
       <div className="bg-tertiary-500 rounded-2xl flex flex-col h-[17.3125rem] overflow-hidden relative">
         <div className="flex flex-row justify-between items-start shrink-0 px-7 pt-7">
           <h2 className="text-body-l font-semibold text-primary whitespace-nowrap">
-            믿을 수 있는 브리더,
-            <br />
-            포퐁에서 만나요
+            {isBreeder ? (
+              <>
+                브리더의 가치와 전문성이 인정받는 공간,
+                <br />
+                Pawpong
+              </>
+            ) : (
+              <>
+                믿을 수 있는 브리더,
+                <br />
+                포퐁에서 만나요
+              </>
+            )}
           </h2>
           <Link
             href="/introduction"
@@ -64,9 +87,21 @@ const ServiceIntroBanner = () => {
       {/* 텍스트 및 버튼 영역 */}
       <div className="flex flex-col gap-8 shrink-0 px-7 pt-7">
         <h2 className="text-body-l font-semibold text-primary">
-          믿을 수 있는 브리더,
-          <br />
-          포퐁에서 만나요
+          {isBreeder ? (
+            <>
+              브리더의 가치와
+              <br />
+              전문성이 인정받는 공간,
+              <br />
+              Pawpong
+            </>
+          ) : (
+            <>
+              믿을 수 있는 브리더,
+              <br />
+              포퐁에서 만나요
+            </>
+          )}
         </h2>
         <Link
           href="/introduction"
