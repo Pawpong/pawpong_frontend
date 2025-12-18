@@ -122,7 +122,7 @@ const FAQ = () => {
               <div key={item.faqId}>
                 <div className="h-px bg-[#e4e7ec] w-full" />
                 <Link href={`/faq?faqId=${item.faqId}&userType=${user?.role === 'breeder' ? 'breeder' : 'adopter'}`}>
-                  <div className="py-5 cursor-pointer hover:bg-[#F6F6EA] transition-colors">
+                  <div className="py-5 cursor-pointer">
                     <p className="text-body-m font-medium text-primary">{item.question}</p>
                   </div>
                 </Link>
