@@ -83,3 +83,19 @@ export function useBreederReviews(breederId: string, page: number = 1, limit: nu
     staleTime: 1000 * 60 * 5,
   });
 }
+
+/**
+ * 브리더 후기 목록 조회 훅 (무한 스크롤)
+ */
+export function useBreederReviewsInfinite(breederId: string, limit: number = 5) {
+  return useInfiniteQuery({
+    queryKey: ['breeder-reviews-infinite', breederId, limit],
+    queryFn: ({ pageParam = 1 }) => getBreederReviews(breederId, pageParam, limit),
+    getNextPageParam: (lastPage) => {
+      return lastPage.pagination?.hasNextPage ? lastPage.pagination.currentPage + 1 : undefined;
+    },
+    initialPageParam: 1,
+    enabled: !!breederId,
+    staleTime: 1000 * 60 * 5,
+  });
+}

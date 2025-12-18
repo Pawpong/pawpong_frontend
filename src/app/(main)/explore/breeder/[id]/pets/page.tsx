@@ -24,7 +24,7 @@ export default function PetsPage({ params }: PageProps) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useBreederPetsInfinite(breederId, 10);
+  } = useBreederPetsInfinite(breederId, 8);
 
   // 날짜 포맷팅 함수 (브리더 상세 페이지와 동일)
   const formatBirthDate = (dateString: string | Date | undefined) => {
@@ -105,8 +105,8 @@ export default function PetsPage({ params }: PageProps) {
                   <AnimalProfile key={pet.id} data={pet} />
                 ))}
               </div>
-              {/* 더보기 버튼 - 첫 페이지가 10개 이상이고 다음 페이지가 있을 때만 표시 */}
-              {firstPageCount >= 10 && hasNextPage && (
+              {/* 더보기 버튼 - 첫 페이지가 8개 이상이고 다음 페이지가 있을 때만 표시 */}
+              {firstPageCount >= 8 && hasNextPage && (
                 <div className="flex justify-center">
                   <Button
                     variant="ghost"
