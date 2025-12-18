@@ -247,7 +247,8 @@ export default function DocumentSection() {
         <div className="text-primary-500/80 font-medium text-body-m text-balance text-center break-keep">
           {levelInfo.find((e) => e.name === level)?.description}
         </div>
-        <div className="space-y-8">
+        <div className="flex flex-col gap-8">
+          {/* 1덩이: 신분증 사본 */}
           <div className="space-y-2.5">
             <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.ID_CARD)}>신분증 사본</FileButton>
             {submitAttempted && !hasIdCard && (
@@ -262,6 +263,8 @@ export default function DocumentSection() {
               이름과 생년월일 이외에는 가려서 제출하시길 권장드립니다.
             </div>
           </div>
+
+          {/* 2덩이: 동물생산업 등록증 + 표준 입양계약서 샘플 */}
           <div className="space-y-3">
             <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.ANIMAL_LICENSE)}>동물생산업 등록증</FileButton>
             {level === 'elite' && (
@@ -269,7 +272,7 @@ export default function DocumentSection() {
             )}
           </div>
 
-          {/* 브리더 인증 서류 - info 있음 (elite만) */}
+          {/* 3덩이: 브리더 인증 서류 (elite만) */}
           {level === 'elite' && (
             <div className="space-y-2.5">
               <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.BREEDER_CERT)}>
