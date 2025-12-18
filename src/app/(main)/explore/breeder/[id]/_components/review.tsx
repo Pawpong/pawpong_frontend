@@ -20,7 +20,7 @@ export default function Review({ data }: { data: { id: string; nickname: string;
           </div>
           <Button
             variant="ghost"
-            className="p-0 gap-1 text-grayscale-gray5 text-body-xs"
+            className="gap-1 text-grayscale-gray5 text-body-xs px-0 has-[>svg]:px-0"
             onClick={() => setIsReportDialogOpen(true)}
           >
             <SirenMuted className="size-5" />

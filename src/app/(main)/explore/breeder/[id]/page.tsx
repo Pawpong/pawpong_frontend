@@ -280,7 +280,7 @@ export default function Page({ params }: PageProps) {
             </>
           )}
 
-          {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} />}
+          {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} breederId={breederId} />}
         </div>
       </div>
       {!isLg && (
