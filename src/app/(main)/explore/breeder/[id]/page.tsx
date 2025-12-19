@@ -204,6 +204,8 @@ export default function Page({ params }: PageProps) {
     birth: formatBirthDate(pet.birthDate),
     price: user ? `${pet.price?.toLocaleString() || 0}원` : null,
     breed: pet.breed,
+    status:
+      pet.status === 'adopted' ? 'completed' : ((pet.status || 'available') as 'available' | 'reserved' | 'completed'),
   }));
 
   // 부모견/부모묘 매핑 - 페이지네이션 응답 형태 처리
@@ -268,14 +270,14 @@ export default function Page({ params }: PageProps) {
 
           {!isPetsLoading && breedingAnimals.length > 0 && (
             <>
-              <BreedingAnimals data={breedingAnimals} breederId={breederId} />
+              <BreedingAnimals data={breedingAnimals} breederId={breederId} breederDescription={breederDescription} />
               <Separator className="my-12" />
             </>
           )}
 
           {!isParentPetsLoading && parentPets.length > 0 && (
             <>
-              <Parents data={parentPets} breederId={breederId} />
+              <Parents data={parentPets} breederId={breederId} breederDescription={breederDescription} />
               <Separator className="my-12" />
             </>
           )}
