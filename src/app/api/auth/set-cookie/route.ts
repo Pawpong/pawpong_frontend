@@ -41,6 +41,11 @@ export async function POST(req: Request) {
 
   const res = NextResponse.json({ ok: true });
 
+  // 기존 쿠키 먼저 삭제 (중복 방지 - 입양자/브리더 계정 전환 시)
+  res.cookies.delete('accessToken');
+  res.cookies.delete('refreshToken');
+  res.cookies.delete('userRole');
+
   // HttpOnly 쿠키에 토큰 저장 (보안)
   res.cookies.set('accessToken', accessToken, {
     httpOnly: true,

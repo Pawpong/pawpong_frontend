@@ -13,7 +13,7 @@ export interface AdopterRegistrationDto {
 /** Breeder DTO */
 export interface BreederRegistrationDto {
   tempId: string;
-  provider: string; // ✅ provider 필드 추가
+  provider: string;
   email: string;
   name: string;
   phone: string;
@@ -182,7 +182,7 @@ export const uploadBreederDocuments = async (
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        params: { tempId }, // ✅ tempId는 query parameter로 전송
+        params: { tempId },
       },
     );
 
@@ -254,9 +254,7 @@ export const uploadProfileImage = async (
       ? `/api/auth/upload-breeder-profile?tempId=${encodeURIComponent(tempId)}`
       : '/api/auth/upload-breeder-profile';
 
-    const response = await apiClient.post<
-      ApiResponse<{ url: string; filename: string; size: number }>
-    >(url, formData, {
+    const response = await apiClient.post<ApiResponse<{ url: string; filename: string; size: number }>>(url, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
