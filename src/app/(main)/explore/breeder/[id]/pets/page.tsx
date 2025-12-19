@@ -1,12 +1,13 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import Header from '../../_components/header';
 import AnimalProfile from '../_components/animal-profile';
-import { useBreederProfile, useBreederPetsInfinite } from '../_hooks/use-breeder-detail';
+import { useBreederProfile, useBreederPetsInfinite, useParentPets } from '../_hooks/use-breeder-detail';
 import { Button } from '@/components/ui/button';
 import DownArrow from '@/assets/icons/long-down-arrow.svg';
 import { useAuthStore } from '@/stores/auth-store';
+import PetDetailDialog, { type PetDetailData } from '../_components/pet-detail-dialog';
 
 interface PageProps {
   params: Promise<{
@@ -25,6 +26,9 @@ export default function PetsPage({ params }: PageProps) {
     hasNextPage,
     isFetchingNextPage,
   } = useBreederPetsInfinite(breederId, 8);
+  const { data: parentPetsData } = useParentPets(breederId, 1, 100);
+  const [selectedPet, setSelectedPet] = useState<PetDetailData | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // 날짜 포맷팅 함수 (브리더 상세 페이지와 동일)
   const formatBirthDate = (dateString: string | Date | undefined) => {
@@ -60,13 +64,14 @@ export default function PetsPage({ params }: PageProps) {
     birth: string;
     price: string | null;
     breed: string;
+    status?: 'available' | 'reserved' | 'completed';
   };
 
   // 모든 페이지의 데이터를 합쳐서 매핑
   const allPets: MappedPet[] =
     petsData?.pages
       .flatMap((page) => page.items || [])
-      .map((pet: Pet) => ({
+      .map((pet: Pet & { status?: string }) => ({
         id: pet.petId,
         avatarUrl: pet.mainPhoto || '/animal-sample.png',
         name: pet.name,
@@ -74,7 +79,52 @@ export default function PetsPage({ params }: PageProps) {
         birth: formatBirthDate(pet.birthDate),
         price: user ? `${pet.price?.toLocaleString() || 0}원` : null,
         breed: pet.breed,
+        status:
+          pet.status === 'adopted'
+            ? 'completed'
+            : ((pet.status || 'available') as 'available' | 'reserved' | 'completed'),
       })) || [];
+
+  // 브리더 소개글 가져오기
+  const breederDescription =
+    (profileData as any)?.description || (profileData as any)?.profileInfo?.profileDescription || '';
+
+  const handlePetClick = (pet: MappedPet) => {
+    // 부모 정보 찾기
+    const parents =
+      parentPetsData?.items?.map(
+        (parent: {
+          petId: string;
+          photoUrl?: string;
+          name: string;
+          gender: 'male' | 'female';
+          birthDate?: string;
+          breed: string;
+        }) => ({
+          id: parent.petId,
+          avatarUrl: parent.photoUrl || '/animal-sample.png',
+          name: parent.name,
+          sex: parent.gender,
+          birth: formatBirthDate(parent.birthDate),
+          breed: parent.breed,
+        }),
+      ) || [];
+
+    const petDetail: PetDetailData = {
+      id: pet.id,
+      avatarUrl: pet.avatarUrl,
+      name: pet.name,
+      sex: pet.sex,
+      birth: pet.birth,
+      price: pet.price,
+      breed: pet.breed,
+      status: pet.status || 'available',
+      parents: parents,
+    };
+
+    setSelectedPet(petDetail);
+    setIsDialogOpen(true);
+  };
 
   // 첫 페이지의 총 개수 확인 (더보기 버튼 표시 여부 결정용)
   const firstPageCount = petsData?.pages[0]?.items?.length || 0;
@@ -102,9 +152,17 @@ export default function PetsPage({ params }: PageProps) {
             <div className="w-full flex flex-col items-center gap-10 md:gap-[60px] lg:gap-20">
               <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {allPets.map((pet) => (
-                  <AnimalProfile key={pet.id} data={pet} />
+                  <AnimalProfile key={pet.id} data={pet} onClick={() => handlePetClick(pet)} />
                 ))}
               </div>
+              <PetDetailDialog
+                open={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+                pet={selectedPet}
+                type="pet"
+                breederId={breederId}
+                breederDescription={breederDescription}
+              />
               {/* 더보기 버튼 - 첫 페이지가 8개 이상이고 다음 페이지가 있을 때만 표시 */}
               {firstPageCount >= 8 && hasNextPage && (
                 <div className="flex justify-center">
