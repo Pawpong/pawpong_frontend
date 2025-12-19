@@ -1,11 +1,12 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import Header from '../../_components/header';
 import AnimalProfile from '../_components/animal-profile';
 import { useBreederProfile, useParentPetsInfinite } from '../_hooks/use-breeder-detail';
 import { Button } from '@/components/ui/button';
 import DownArrow from '@/assets/icons/long-down-arrow.svg';
+import PetDetailDialog, { type PetDetailData } from '../_components/pet-detail-dialog';
 
 interface PageProps {
   params: Promise<{
@@ -23,6 +24,8 @@ export default function ParentsPage({ params }: PageProps) {
     hasNextPage,
     isFetchingNextPage,
   } = useParentPetsInfinite(breederId, 8);
+  const [selectedPet, setSelectedPet] = useState<PetDetailData | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // 날짜 포맷팅 함수 (브리더 상세 페이지와 동일)
   const formatBirthDate = (dateString: string | Date | undefined) => {
@@ -76,6 +79,24 @@ export default function ParentsPage({ params }: PageProps) {
   // 첫 페이지의 총 개수 확인 (더보기 버튼 표시 여부 결정용)
   const firstPageCount = parentPetsData?.pages[0]?.items?.length || 0;
 
+  // 브리더 소개글 가져오기
+  const breederDescription =
+    (profileData as any)?.description || (profileData as any)?.profileInfo?.profileDescription || '';
+
+  const handlePetClick = (pet: MappedParentPet) => {
+    const petDetail: PetDetailData = {
+      id: pet.id,
+      avatarUrl: pet.avatarUrl,
+      name: pet.name,
+      sex: pet.sex,
+      birth: pet.birth,
+      breed: pet.breed,
+    };
+
+    setSelectedPet(petDetail);
+    setIsDialogOpen(true);
+  };
+
   return (
     <>
       <Header breederNickname={profileData?.breederName || ''} breederId={breederId} hideActions />
@@ -99,9 +120,17 @@ export default function ParentsPage({ params }: PageProps) {
             <div className="w-full flex flex-col items-center gap-10 md:gap-[60px] lg:gap-20">
               <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {allParentPets.map((parent) => (
-                  <AnimalProfile key={parent.id} data={parent} />
+                  <AnimalProfile key={parent.id} data={parent} onClick={() => handlePetClick(parent)} />
                 ))}
               </div>
+              <PetDetailDialog
+                open={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+                pet={selectedPet}
+                type="parent"
+                breederId={breederId}
+                breederDescription={breederDescription}
+              />
               {/* 더보기 버튼 - 첫 페이지가 8개 이상이고 다음 페이지가 있을 때만 표시 */}
               {firstPageCount >= 8 && hasNextPage && (
                 <div className="flex justify-center">

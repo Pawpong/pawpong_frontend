@@ -12,6 +12,7 @@ const sexInfo = {
 
 export default function AnimalProfile({
   data: { avatarUrl, name, sex, birth, price, breed, status },
+  onClick,
 }: {
   data: {
     avatarUrl: string;
@@ -22,6 +23,7 @@ export default function AnimalProfile({
     breed: string;
     status?: 'available' | 'reserved' | 'completed';
   };
+  onClick?: () => void;
 }) {
   const Icon = sexInfo[sex].icon;
 
@@ -37,7 +39,7 @@ export default function AnimalProfile({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 cursor-pointer" onClick={onClick}>
       <div className="relative aspect-square overflow-hidden rounded-lg">
         <Image
           src={getValidImageUrl(avatarUrl)}

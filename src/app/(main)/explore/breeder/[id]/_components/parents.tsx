@@ -1,15 +1,18 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import BreederProfileSection from '@/components/breeder-profile/breeder-profile-section';
 import BreederProfileSectionHeader from '@/components/breeder-profile/breeder-profile-section-header';
 import BreederProfileSectionMore from '@/components/breeder-profile/breeder-profile-section-more';
 import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
 import AnimalProfile from './animal-profile';
+import PetDetailDialog, { type PetDetailData } from './pet-detail-dialog';
 
 export default function Parents({
   data,
   breederId,
+  breederDescription,
 }: {
   data: {
     id: string;
@@ -19,13 +22,32 @@ export default function Parents({
     birth: string;
     price: string;
     breed: string;
+    description?: string;
   }[];
   breederId: string;
+  breederDescription?: string;
 }) {
   const router = useRouter();
+  const [selectedPet, setSelectedPet] = useState<PetDetailData | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleMoreClick = () => {
     router.push(`/explore/breeder/${breederId}/parents`);
+  };
+
+  const handlePetClick = (pet: (typeof data)[0]) => {
+    const petDetail: PetDetailData = {
+      id: pet.id,
+      avatarUrl: pet.avatarUrl,
+      name: pet.name,
+      sex: pet.sex,
+      birth: pet.birth,
+      breed: pet.breed,
+      description: pet.description,
+    };
+
+    setSelectedPet(petDetail);
+    setIsDialogOpen(true);
   };
 
   return (
@@ -50,11 +72,20 @@ export default function Parents({
               birth: string;
               price: string;
               breed: string;
+              description?: string;
             }) => (
-              <AnimalProfile key={e.id} data={e} />
+              <AnimalProfile key={e.id} data={e} onClick={() => handlePetClick(e)} />
             ),
           )}
       </div>
+      <PetDetailDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        pet={selectedPet}
+        type="parent"
+        breederId={breederId}
+        breederDescription={breederDescription}
+      />
     </BreederProfileSection>
   );
 }
