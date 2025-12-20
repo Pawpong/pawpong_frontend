@@ -4,7 +4,8 @@ import SignupFormItems from '@/components/signup-form-section/signup-form-items'
 import SignupFormSection from '@/components/signup-form-section/signup-form-section';
 import { Button } from '@/components/ui/button';
 import useSignupFormStore from '@/stores/signup-form-store';
-
+import Image from 'next/image';
+import welcomeImage from '@/assets/images/welcome.png';
 export default function SignupComplete() {
   const documentsSkipped = useSignupFormStore((e) => e.documentsSkipped);
   const userType = useSignupFormStore((e) => e.userType);
@@ -20,11 +21,20 @@ export default function SignupComplete() {
 
   return (
     <SignupFormSection className="gap-8 md:gap-8 lg:gap-8">
-      <div className="w-full max-w-100 aspect-[4/3] bg-accent" />
+      <div className="w-full flex items-center justify-center">
+        <Image
+          src={welcomeImage}
+          alt="환영 이미지"
+          className="object-contain max-w-full h-auto"
+          width={400}
+          height={300}
+          unoptimized
+        />
+      </div>
       <div className="space-y-3 text-center">
         {isAdopter ? (
           <>
-            <div className="text-balance text-body-m text-primary/80 font-medium">
+            <div className="text-balance text-body-m text-[var(--color-alpha-primary-80)] font-medium">
               포퐁에 오신 걸 환영해요!
               <br />
               좋은 아이와 따뜻한 인연을 맺을 수 있길 바라요.
@@ -34,7 +44,7 @@ export default function SignupComplete() {
           </>
         ) : isBreederSkipped ? (
           <>
-            <div className="text-balance text-body-m text-primary/80 font-medium">
+            <div className="text-balance text-body-m text-[var(--color-alpha-primary-80)] font-medium">
               포퐁에 오신 걸 환영해요!
               <br />
               미제출 서류는 <span className="text-secondary-700">&apos;마이&apos;</span>에서 추가로 제출하실 수 있어요.
@@ -57,7 +67,7 @@ export default function SignupComplete() {
           </>
         ) : (
           <>
-            <div className="text-balance text-body-m text-primary/80 font-medium">
+            <div className="text-balance text-body-m text-[var(--color-alpha-primary-80)] font-medium">
               포퐁에 오신 걸 환영해요!
               <br /> 브리더 심사는 <span className="text-secondary-700">최대 3영업일</span> 정도 소요될 수 있어요.
               <br />
