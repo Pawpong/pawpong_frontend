@@ -1,32 +1,42 @@
 import { NextResponse } from 'next/server';
 
+/**
+ * 로그아웃 시 모든 인증 쿠키 삭제
+ *
+ * POST /api/auth/clear-cookie
+ *
+ * 역할:
+ * - 로그아웃 시 accessToken, refreshToken, userRole 쿠키 완전 삭제
+ * - 중복 토큰 버그 방지를 위한 완전한 쿠키 정리
+ *
+ * 주요 기능:
+ * - HttpOnly 쿠키 삭제 (accessToken, refreshToken)
+ * - 일반 쿠키 삭제 (userRole)
+ * - 에러 발생 시에도 쿠키 삭제 보장
+ */
 export async function POST() {
-  const res = NextResponse.json({ ok: true });
+  try {
+    const res = NextResponse.json({ ok: true, message: '쿠키가 삭제되었습니다.' });
 
-  // 모든 인증 관련 쿠키 삭제
-  res.cookies.set('accessToken', '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 0, // 즉시 만료
-  });
+    // 모든 인증 관련 쿠키 삭제
+    res.cookies.delete('accessToken');
+    res.cookies.delete('refreshToken');
+    res.cookies.delete('userRole');
 
-  res.cookies.set('refreshToken', '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 0,
-  });
+    return res;
+  } catch (error) {
+    console.error('쿠키 삭제 실패:', error);
 
-  res.cookies.set('userRole', '', {
-    httpOnly: false,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 0,
-  });
+    // 에러가 발생해도 쿠키는 삭제 시도
+    const res = NextResponse.json(
+      { ok: false, message: '쿠키 삭제 중 오류가 발생했습니다.' },
+      { status: 500 },
+    );
 
-  return res;
+    res.cookies.delete('accessToken');
+    res.cookies.delete('refreshToken');
+    res.cookies.delete('userRole');
+
+    return res;
+  }
 }

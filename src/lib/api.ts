@@ -83,7 +83,22 @@ function createApi(): AxiosInstance {
 
         try {
           // 쿠키 기반 리프레시 - 백엔드가 쿠키에서 refreshToken을 읽어 처리
-          await instance.post('/api/auth/refresh');
+          const refreshResponse = await instance.post<{
+            success: boolean;
+            data?: { accessToken: string; refreshToken: string };
+          }>('/api/auth/refresh');
+
+          // 백엔드에서 새로운 토큰을 받으면 프론트엔드 쿠키에 저장
+          if (refreshResponse.data?.data?.accessToken && refreshResponse.data?.data?.refreshToken) {
+            await fetch('/api/auth/set-cookie', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                accessToken: refreshResponse.data.data.accessToken,
+                refreshToken: refreshResponse.data.data.refreshToken,
+              }),
+            });
+          }
 
           processQueue(null);
 

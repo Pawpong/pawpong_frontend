@@ -146,9 +146,10 @@ export interface FavoriteRemoveResponseDto {
 export interface FavoriteItemDto {
   breederId: string;
   breederName: string;
-  profileImageFileName?: string;
+  profileImage?: string; // ✅ profileImageFileName → profileImage (Signed URL)
+  representativePhotos?: string[]; // ✅ 대표 사진 배열 (Signed URLs)
   location: string;
-  specialization?: string[];
+  specialization?: string[]; // ✅ 품종 배열 (예: ["골든리트리버", "푸들"])
   averageRating: number;
   totalReviews: number;
   availablePets?: number;
