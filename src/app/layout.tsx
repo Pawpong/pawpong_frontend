@@ -16,9 +16,9 @@ export const metadata: Metadata = {
   description:
     '믿을 수 있는 전문 브리더의 강아지·고양이를 한 곳에서 만나보세요.\n브리더 정보부터 입양 가능한 아이, 상담과 후기까지 투명하게 확인할 수 있어요.',
   icons: {
-    icon: '/images/favicon.jpg',
-    shortcut: '/images/favicon.jpg',
-    apple: '/images/favicon.jpg',
+    icon: '/images/favicon.ico',
+    shortcut: '/images/favicon.ico',
+    apple: '/images/favicon.ico',
   },
   openGraph: {
     title: '포퐁(Pawpong) | 반려동물 브리더와 입양자를 연결해요',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
       '믿을 수 있는 전문 브리더의 강아지·고양이를 한 곳에서 만나보세요.\n브리더 정보부터 입양 가능한 아이, 상담과 후기까지 투명하게 확인할 수 있어요.',
     images: [
       {
-        url: '/images/open-graph.jpg',
+        url: '/images/open-graph.png',
         width: 1200,
         height: 630,
         alt: '포퐁(Pawpong)',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     title: '포퐁(Pawpong) | 반려동물 브리더와 입양자를 연결해요',
     description:
       '믿을 수 있는 전문 브리더의 강아지·고양이를 한 곳에서 만나보세요.\n브리더 정보부터 입양 가능한 아이, 상담과 후기까지 투명하게 확인할 수 있어요.',
-    images: ['/images/open-graph.jpg'],
+    images: ['/images/open-graph.png'],
   },
   verification: {
     google: 'QkaaoP-i1GL-IFK9fxAfMKa-csvd-ufMxiN5KOWafB4',
