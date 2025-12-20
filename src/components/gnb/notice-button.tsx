@@ -1,15 +1,27 @@
 'use client';
 
+import { useMemo } from 'react';
 import Alarm from '@/assets/icons/alarm';
 import { Button } from '../ui/button';
 import NotificationDialog from '../notification/notification-dialog';
-import { useUnreadCount } from '@/hooks/use-notifications';
+import { useNotifications } from '@/hooks/use-notifications';
+import { NOTIFICATION_CONFIG } from '@/constants/notification-messages';
 
 export default function NoticeButton() {
-  const { data: unreadCount } = useUnreadCount();
+  // 실제 알림 목록에서 읽지 않은 개수를 계산
+  const { data } = useNotifications(1, 50);
+
+  // 지원하는 타입의 알림만 필터링하여 읽지 않은 개수 계산
+  const unreadCount = useMemo(() => {
+    if (!data?.items) return 0;
+    return data.items.filter((item) => {
+      // 지원하는 타입이고 읽지 않은 알림만 카운트
+      return !item.isRead && NOTIFICATION_CONFIG[item.type as keyof typeof NOTIFICATION_CONFIG];
+    }).length;
+  }, [data?.items]);
 
   // 배지에 표시할 텍스트 (99+가 최대)
-  const badgeText = unreadCount && unreadCount > 0 ? (unreadCount > 99 ? '99+' : String(unreadCount)) : null;
+  const badgeText = unreadCount > 0 ? (unreadCount > 99 ? '99+' : String(unreadCount)) : null;
 
   return (
     <NotificationDialog>
