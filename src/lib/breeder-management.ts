@@ -22,6 +22,7 @@ export interface ProfileUpdateRequest {
   };
   specializationTypes?: string[];
   experienceYears?: number;
+  marketingAgreed?: boolean;
 }
 
 /** 부모 반려동물 추가 요청 */
