@@ -88,6 +88,7 @@ export default function ReportDialog({
       toast({
         title: '신고 실패',
         description: error instanceof Error ? error.message : '신고 처리 중 오류가 발생했습니다.',
+        position: 'default',
       });
     } finally {
       setIsSubmitting(false);

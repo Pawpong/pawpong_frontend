@@ -60,6 +60,7 @@ export default function SettingsPage() {
         toast({
           title: '프로필 로드 실패',
           description: '프로필 정보를 불러올 수 없습니다.',
+          position: 'default',
         });
       } finally {
         setIsLoading(false);
@@ -78,6 +79,7 @@ export default function SettingsPage() {
         toast({
           title: '브리더 이름 변경',
           description: '브리더 이름은 관리자에게 문의해주세요.',
+          position: 'default',
         });
         return;
       } else {
@@ -87,12 +89,14 @@ export default function SettingsPage() {
         toast({
           title: '닉네임 변경 완료',
           description: '닉네임이 성공적으로 변경되었습니다.',
+          position: 'default',
         });
       }
     } catch (error) {
       toast({
         title: '닉네임 변경 실패',
         description: error instanceof Error ? error.message : '다시 시도해주세요.',
+        position: 'default',
       });
     }
   };
@@ -113,11 +117,13 @@ export default function SettingsPage() {
       toast({
         title: checked ? '마케팅 수신 동의' : '마케팅 수신 거부',
         description: checked ? '광고성 정보 수신에 동의하셨습니다.' : '광고성 정보 수신을 거부하셨습니다.',
+        position: 'default',
       });
     } catch (error) {
       toast({
         title: '설정 변경 실패',
         description: error instanceof Error ? error.message : '다시 시도해주세요.',
+        position: 'default',
       });
     }
   };
@@ -140,6 +146,7 @@ export default function SettingsPage() {
         toast({
           title: '브리더 계정 탈퇴 완료',
           description: '그동안 이용해 주셔서 감사합니다.',
+          position: 'default',
         });
       } else {
         // 입양자 회원 탈퇴 API 호출 (탈퇴 사유 포함)
@@ -151,6 +158,7 @@ export default function SettingsPage() {
         toast({
           title: '회원 탈퇴 완료',
           description: '그동안 이용해 주셔서 감사합니다.',
+          position: 'default',
         });
       }
 
@@ -167,6 +175,7 @@ export default function SettingsPage() {
       toast({
         title: '탈퇴 처리 실패',
         description: error instanceof Error ? error.message : '다시 시도해주세요.',
+        position: 'default',
       });
     }
   };
@@ -194,11 +203,7 @@ export default function SettingsPage() {
           <Separator className="bg-grayscale-gray2" />
 
           {/* 닉네임 */}
-          <NicknameSection
-            nickname={nickname}
-            onEdit={handleNicknameEdit}
-            editable={user?.role !== 'breeder'}
-          />
+          <NicknameSection nickname={nickname} onEdit={handleNicknameEdit} editable={user?.role !== 'breeder'} />
           <Separator className="bg-grayscale-gray2" />
 
           {/* 이메일 수신 설정 */}

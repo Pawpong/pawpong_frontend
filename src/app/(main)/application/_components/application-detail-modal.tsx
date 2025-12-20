@@ -32,6 +32,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
       toast({
         title: '상담 완료',
         description: '상담이 완료되었습니다. 입양자에게 알림이 전송되었습니다.',
+        position: 'default',
       });
       queryClient.invalidateQueries({ queryKey: ['application', applicationId] });
       queryClient.invalidateQueries({ queryKey: ['applications'] });
@@ -41,6 +42,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
       toast({
         title: '오류',
         description: error.message || '상담 완료 처리 중 오류가 발생했습니다.',
+        position: 'default',
       });
     },
   });
@@ -55,6 +57,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
       toast({
         title: '완료 취소',
         description: '상담 완료가 취소되었습니다.',
+        position: 'default',
       });
       queryClient.invalidateQueries({ queryKey: ['application', applicationId] });
       queryClient.invalidateQueries({ queryKey: ['applications'] });
@@ -63,6 +66,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
       toast({
         title: '오류',
         description: error.message || '완료 취소 처리 중 오류가 발생했습니다.',
+        position: 'default',
       });
     },
   });

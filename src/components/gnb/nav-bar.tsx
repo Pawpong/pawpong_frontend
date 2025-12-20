@@ -170,6 +170,7 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
       toast({
         title: '로그아웃 완료',
         description: '성공적으로 로그아웃되었습니다.',
+        position: 'default',
       });
       // 하드 리다이렉트로 모든 상태 초기화
       window.location.href = '/';
@@ -177,6 +178,7 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
       toast({
         title: '로그아웃 실패',
         description: error instanceof Error ? error.message : '다시 시도해주세요.',
+        position: 'default',
       });
     }
   };

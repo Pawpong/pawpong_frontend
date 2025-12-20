@@ -4,22 +4,31 @@ import * as React from 'react';
 import * as ToastPrimitives from '@radix-ui/react-toast';
 import { cn } from '@/lib/utils';
 import Close from '@/assets/icons/close.svg';
+import type { ToastPosition } from '@/hooks/use-toast';
 
 const ToastProvider = ToastPrimitives.Provider;
 
 const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Viewport
-    ref={ref}
-    className={cn(
-      'fixed z-[100] flex max-h-screen flex-col-reverse p-0 bottom-[calc(1.5rem+3rem+0.75rem)] left-1/2 -translate-x-1/2  md:bottom-[calc(2.5rem+3rem+0.75rem)] md:left-[calc(50%+20%)] md:-translate-x-1/2',
-      className,
-    )}
-    {...props}
-  />
-));
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport> & {
+    position?: ToastPosition;
+  }
+>(({ className, position = 'default', ...props }, ref) => {
+  const positionClasses = {
+    default:
+      'bottom-[calc(1.5rem+3rem+0.75rem)] left-1/2 -translate-x-1/2 md:bottom-[calc(2.5rem+3rem+0.75rem)] md:left-1/2 md:-translate-x-1/2',
+    split:
+      'bottom-[calc(1.5rem+3rem+0.75rem)] left-1/2 -translate-x-1/2 md:bottom-[calc(2.5rem+3rem+0.75rem)] md:left-[75%] md:-translate-x-1/2',
+  };
+
+  return (
+    <ToastPrimitives.Viewport
+      ref={ref}
+      className={cn('fixed z-[100] flex max-h-screen flex-col-reverse p-0', positionClasses[position], className)}
+      {...props}
+    />
+  );
+});
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const Toast = React.forwardRef<
