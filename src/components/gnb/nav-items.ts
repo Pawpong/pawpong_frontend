@@ -90,7 +90,7 @@ export const NAV_ITEMS_BREEDER: NavItem[] = [
     iconFill: ProfileFill,
     requiresAuth: true,
     children: [
-      { name: '내 프로필', href: '/profile', showForVerificationStatus: ['approved'] },
+      { name: '내 프로필', href: '/profile' },
       { name: '입점 서류 수정', href: '/profile/documents' },
       { name: '찜한 브리더', href: '/saved' },
       { name: '공지사항', href: '/announcements' },

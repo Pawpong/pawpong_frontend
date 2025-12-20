@@ -96,7 +96,7 @@ function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolea
   const router = useRouter();
   const guardContext = useNavigationGuardContext();
   const { toast } = useToast();
-  const { isAuthenticated, clearAuth, user } = useAuthStore();
+  const { isAuthenticated, clearAuth } = useAuthStore();
 
   // 탐색 메뉴는 /explore 또는 /counselform일 때 활성화
   const isExploreMenu = item.href === '/explore';
@@ -177,10 +177,6 @@ function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolea
                 // 로그아웃 항목은 인증된 경우에만 표시
                 if (child.action === 'logout' && !isAuthenticated) {
                   return false;
-                }
-                // showForVerificationStatus가 설정된 경우, 해당 status에 맞는 경우에만 표시
-                if (child.showForVerificationStatus && user?.role === 'breeder') {
-                  return child.showForVerificationStatus.includes(user.verificationStatus || 'pending');
                 }
                 return true;
               })
