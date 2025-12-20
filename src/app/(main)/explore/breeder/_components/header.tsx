@@ -21,10 +21,10 @@ interface HeaderProps {
 
 export default function Header({ breederNickname, breederId, hideActions = false }: HeaderProps) {
   const router = useRouter();
-  const { user } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
   const { toggle, isLoading } = useToggleFavorite();
-  const { data: favoritesData } = useFavorites(1, 1000); // 즐겨찾기 목록 조회
+  const { data: favoritesData } = useFavorites(1, 1000, isAuthenticated); // 로그인 시에만 조회
   const [isLiked, setIsLiked] = useState(false);
 
   // 브리더 본인인지 확인

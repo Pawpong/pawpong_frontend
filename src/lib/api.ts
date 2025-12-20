@@ -35,6 +35,11 @@ function createApi(): AxiosInstance {
   // 요청 인터셉터
   // cross-origin 요청 시 쿠키가 자동 전송되지 않으므로 Authorization 헤더로 토큰 전송
   instance.interceptors.request.use((config) => {
+    // skipAuth 플래그가 있으면 인증 헤더를 추가하지 않음 (공개 API용)
+    if ((config as any).skipAuth) {
+      return config;
+    }
+
     // 브라우저 환경에서만 쿠키 읽기
     if (typeof window !== 'undefined') {
       // 쿠키에서 accessToken 읽기

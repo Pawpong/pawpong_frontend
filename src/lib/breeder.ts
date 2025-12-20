@@ -116,7 +116,9 @@ export interface BreederProfileUpdateResponseDto {
  */
 export const getBreederProfile = async (breederId: string): Promise<BreederProfileResponseDto> => {
   try {
-    const response = await apiClient.get<ApiResponse<BreederProfileResponseDto>>(`/api/breeder/${breederId}`);
+    const response = await apiClient.get<ApiResponse<BreederProfileResponseDto>>(`/api/breeder/${breederId}`, {
+      skipAuth: true, // 공개 API - 인증 불필요
+    } as any);
 
     if (!response.data.success || !response.data.data) {
       throw new Error('Failed to fetch breeder profile');
@@ -414,7 +416,8 @@ export const getBreederPets = async (
   try {
     const response = await apiClient.get<ApiResponse<PaginationResponse<any>>>(`/api/breeder/${breederId}/pets`, {
       params: { page, limit },
-    });
+      skipAuth: true, // 공개 API - 인증 불필요
+    } as any);
 
     if (!response.data.success || !response.data.data) {
       throw new Error('Failed to fetch breeder pets');
@@ -442,7 +445,10 @@ export const getParentPets = async (
   try {
     const response = await apiClient.get<ApiResponse<PaginationResponse<any>>>(
       `/api/breeder/${breederId}/parent-pets`,
-      { params: { page, limit } },
+      {
+        params: { page, limit },
+        skipAuth: true, // 공개 API - 인증 불필요
+      } as any,
     );
 
     if (!response.data.success || !response.data.data) {
@@ -471,7 +477,8 @@ export const getBreederReviews = async (
   try {
     const response = await apiClient.get<ApiResponse<PaginationResponse<any>>>(`/api/breeder/${breederId}/reviews`, {
       params: { page, limit },
-    });
+      skipAuth: true, // 공개 API - 인증 불필요
+    } as any);
 
     if (!response.data.success || !response.data.data) {
       throw new Error('Failed to fetch breeder reviews');

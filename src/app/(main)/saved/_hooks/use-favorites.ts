@@ -6,11 +6,12 @@ import { getFavorites, addFavorite, removeFavorite } from '@/lib/adopter';
 /**
  * 즐겨찾기 목록 조회 hook
  */
-export function useFavorites(page: number = 1, limit: number = 20) {
+export function useFavorites(page: number = 1, limit: number = 20, enabled: boolean = true) {
   return useQuery({
     queryKey: ['favorites', page, limit],
     queryFn: () => getFavorites(page, limit),
     staleTime: 1000 * 60 * 5, // 5분
+    enabled, // 로그인 여부에 따라 조건부 실행
   });
 }
 
