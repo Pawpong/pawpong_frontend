@@ -234,8 +234,6 @@ export interface SearchBreederParams {
   breederLevel?: string[];
   sortBy?: 'latest' | 'favorite' | 'review' | 'price_asc' | 'price_desc';
   page?: number;
-  take?: number;
-  /** @deprecated use take instead */
   limit?: number;
 }
 
@@ -344,7 +342,7 @@ export interface ReceivedApplicationItemDto {
  */
 export const getReceivedApplications = async (
   page: number = 1,
-  take: number = 10,
+  limit: number = 10,
 ): Promise<{
   applications: ReceivedApplicationItemDto[];
   pagination: {
@@ -360,7 +358,7 @@ export const getReceivedApplications = async (
     const response = await apiClient.get<ApiResponse<PaginationResponse<ReceivedApplicationItemDto>>>(
       '/api/breeder-management/applications',
       {
-        params: { page, take },
+        params: { page, limit },
       },
     );
 

@@ -37,7 +37,7 @@ export interface AnnouncementDto {
  */
 export const getAnnouncements = async (
   page: number = 1,
-  take: number = 10,
+  limit: number = 10,
 ): Promise<{
   announcements: AnnouncementDto[];
   pagination: {
@@ -50,12 +50,9 @@ export const getAnnouncements = async (
   };
 }> => {
   try {
-    const response = await apiClient.get<ApiResponse<PaginationResponse<AnnouncementDto>>>(
-      '/api/announcement/list',
-      {
-        params: { page, take },
-      },
-    );
+    const response = await apiClient.get<ApiResponse<PaginationResponse<AnnouncementDto>>>('/api/announcement/list', {
+      params: { page, limit },
+    });
 
     if (!response.data.success || !response.data.data) {
       throw new Error('Failed to fetch announcements');
