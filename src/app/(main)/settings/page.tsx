@@ -191,7 +191,11 @@ export default function SettingsPage() {
           <Separator className="bg-grayscale-gray2" />
 
           {/* 닉네임 */}
-          <NicknameSection nickname={nickname} onEdit={handleNicknameEdit} />
+          <NicknameSection
+            nickname={nickname}
+            onEdit={handleNicknameEdit}
+            editable={user?.role !== 'breeder'}
+          />
           <Separator className="bg-grayscale-gray2" />
 
           {/* 이메일 수신 설정 */}
