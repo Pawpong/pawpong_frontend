@@ -225,6 +225,8 @@ export default function ReportDialog({
         open={isSuccessDialogOpen}
         onOpenChange={setIsSuccessDialogOpen}
         onConfirm={handleSuccessDialogClose}
+        type={type}
+        breederNickname={breederNickname}
       />
     </>
   );

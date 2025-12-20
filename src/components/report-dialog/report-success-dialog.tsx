@@ -16,13 +16,24 @@ interface ReportSuccessDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm?: () => void;
+  type?: 'review' | 'breeder';
+  breederNickname?: string;
 }
 
-export default function ReportSuccessDialog({ open, onOpenChange, onConfirm }: ReportSuccessDialogProps) {
+export default function ReportSuccessDialog({
+  open,
+  onOpenChange,
+  onConfirm,
+  type = 'review',
+  breederNickname,
+}: ReportSuccessDialogProps) {
   const handleConfirm = () => {
     onOpenChange(false);
     onConfirm?.();
   };
+
+  const isBreederReport = type === 'breeder';
+  const title = isBreederReport ? `${breederNickname}님을 신고했어요` : '후기를 신고했어요';
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -45,7 +56,7 @@ export default function ReportSuccessDialog({ open, onOpenChange, onConfirm }: R
             {/* 텍스트 영역 */}
             <div className="flex flex-col gap-1.5 items-center text-center w-full">
               <AlertDialogTitle className="text-body-l font-semibold leading-[32px] text-grayscale-black mb-0">
-                후기를 신고했어요
+                {title}
               </AlertDialogTitle>
               <AlertDialogDescription className="text-body-s font-normal leading-[24px] text-grayscale-gray6 mt-0">
                 신고해주셔서 감사합니다.
