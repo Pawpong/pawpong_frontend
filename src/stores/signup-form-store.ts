@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { formatPhoneNumber } from '@/utils/phone';
 
 // usertype 타입 정의
-export type UserType = 'guest' | 'breeder';
+export type UserType = 'guest' | 'breeder' | 'adopter';
 export type Animal = 'cat' | 'dog';
 export type Plan = 'basic' | 'pro';
 export type AgreementName = 'term' | 'privacy' | 'marketing';

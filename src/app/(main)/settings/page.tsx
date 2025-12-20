@@ -12,7 +12,6 @@ import { getMyBreederProfile } from '@/lib/breeder';
 import { deleteBreederAccount } from '@/lib/breeder-management';
 import { logout } from '@/lib/auth';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
 import { useAuthGuard } from '@/hooks/use-auth-guard';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -26,7 +25,6 @@ export default function SettingsPage() {
   const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
-  const router = useRouter();
 
   // 프로필 정보 로드
   useEffect(() => {
@@ -59,7 +57,7 @@ export default function SettingsPage() {
       } catch (error) {
         toast({
           title: '프로필 로드 실패',
-          description: '프로필 정보를 불러올 수 없습니다.',
+          description: error instanceof Error ? error.message : '프로필 정보를 불러올 수 없습니다.',
         });
       } finally {
         setIsLoading(false);
@@ -82,7 +80,7 @@ export default function SettingsPage() {
         return;
       } else {
         // 입양자 닉네임 업데이트
-        await updateAdopterProfile({ name: newNickname });
+        await updateAdopterProfile({ nickname: newNickname });
         setNickname(newNickname);
         toast({
           title: '닉네임 변경 완료',
