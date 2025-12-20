@@ -66,20 +66,20 @@ export default function SignupProfileBannerDisplay() {
 
   if (isLoading) {
     return (
-      <div className="relative bg-primary-600 h-full flex items-center justify-center">
+      <div className="relative bg-primary-600 h-full flex items-center justify-center rounded-2xl">
         <div className="text-white">로딩 중...</div>
       </div>
     );
   }
 
   if (banners.length === 0) {
-    return <div className="relative bg-primary-600 h-full" />;
+    return <div className="relative bg-primary-600 h-full rounded-2xl" />;
   }
 
   const currentBanner = banners[currentIndex];
 
   return (
-    <div className="relative bg-primary-600 h-full overflow-hidden">
+    <div className="relative bg-primary-600 h-full overflow-hidden rounded-2xl">
       {/* 배너 이미지 */}
       <div
         className={`relative w-full h-full ${currentBanner.linkUrl ? 'cursor-pointer' : ''}`}
