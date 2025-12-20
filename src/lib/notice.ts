@@ -52,10 +52,10 @@ export interface NoticeDetailResponse {
 /**
  * 공지사항 목록 조회
  */
-export async function getNoticeList(page: number = 1, pageSize: number = 10): Promise<NoticePaginationResponse> {
+export async function getNoticeList(page: number = 1, limit: number = 10): Promise<NoticePaginationResponse> {
   try {
     const response = await apiClient.get<NoticePaginationResponse>('/api/notice', {
-      params: { page, pageSize },
+      params: { page, limit },
     });
 
     if (!response.data.success) {

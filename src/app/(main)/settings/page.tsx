@@ -9,7 +9,7 @@ import WithdrawSection from './_components/withdraw-section';
 import WithdrawDialog from './_components/withdraw-dialog';
 import { getAdopterProfile, updateAdopterProfile, deleteAccount, WithdrawReason } from '@/lib/adopter';
 import { getMyBreederProfile } from '@/lib/breeder';
-import { deleteBreederAccount } from '@/lib/breeder-management';
+import { deleteBreederAccount, updateBreederProfile } from '@/lib/breeder-management';
 import { logout } from '@/lib/auth';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
@@ -100,17 +100,15 @@ export default function SettingsPage() {
   const handleMarketingAgreedChange = async (checked: boolean) => {
     if (!user) return;
 
-    // 브리더는 마케팅 동의 기능이 없음
-    if (user.role === 'breeder') {
-      toast({
-        title: '브리더 설정',
-        description: '브리더는 마케팅 설정을 변경할 수 없습니다.',
-      });
-      return;
-    }
-
     try {
-      await updateAdopterProfile({ marketingConsent: checked });
+      if (user.role === 'breeder') {
+        // 브리더 마케팅 동의 변경
+        await updateBreederProfile({ marketingAgreed: checked });
+      } else {
+        // 입양자 마케팅 동의 변경
+        await updateAdopterProfile({ marketingConsent: checked });
+      }
+
       setMarketingAgreed(checked);
       toast({
         title: checked ? '마케팅 수신 동의' : '마케팅 수신 거부',
@@ -193,7 +191,11 @@ export default function SettingsPage() {
           <Separator className="bg-grayscale-gray2" />
 
           {/* 닉네임 */}
-          <NicknameSection nickname={nickname} onEdit={handleNicknameEdit} />
+          <NicknameSection
+            nickname={nickname}
+            onEdit={handleNicknameEdit}
+            editable={user?.role !== 'breeder'}
+          />
           <Separator className="bg-grayscale-gray2" />
 
           {/* 이메일 수신 설정 */}

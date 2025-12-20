@@ -22,6 +22,7 @@ export interface ProfileUpdateRequest {
   };
   specializationTypes?: string[];
   experienceYears?: number;
+  marketingAgreed?: boolean;
 }
 
 /** 부모 반려동물 추가 요청 */
@@ -494,7 +495,7 @@ interface PaginationResponse<T> {
  */
 export const getReceivedApplications = async (
   page: number = 1,
-  take: number = 10,
+  limit: number = 10,
 ): Promise<{
   applications: ReceivedApplicationItemDto[];
   pagination: {
@@ -510,7 +511,7 @@ export const getReceivedApplications = async (
     const response = await apiClient.get<ApiResponse<PaginationResponse<ReceivedApplicationItemDto>>>(
       '/api/breeder-management/applications',
       {
-        params: { page, take },
+        params: { page, limit },
       },
     );
 

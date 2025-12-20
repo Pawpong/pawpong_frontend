@@ -176,9 +176,9 @@ export interface FavoritesListResponseDto {
  */
 export const getFavorites = async (page: number = 1, limit: number = 20): Promise<FavoritesListResponseDto> => {
   try {
-    const response = await apiClient.get<ApiResponse<FavoritesListResponseDto>>(
-      `/api/adopter/favorites?page=${page}&limit=${limit}`,
-    );
+    const response = await apiClient.get<ApiResponse<FavoritesListResponseDto>>('/api/adopter/favorites', {
+      params: { page, limit },
+    });
 
     if (!response.data.success || !response.data.data) {
       throw new Error('Failed to fetch favorites');

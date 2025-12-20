@@ -8,9 +8,10 @@ import NicknameEditDialog from './nickname-edit-dialog';
 interface NicknameSectionProps {
   nickname: string;
   onEdit?: (newNickname: string) => void;
+  editable?: boolean;
 }
 
-export default function NicknameSection({ nickname, onEdit }: NicknameSectionProps) {
+export default function NicknameSection({ nickname, onEdit, editable = true }: NicknameSectionProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleSave = (newNickname: string) => {
@@ -23,23 +24,27 @@ export default function NicknameSection({ nickname, onEdit }: NicknameSectionPro
         <h3 className="text-body-s font-medium text-grayscale-gray5">닉네임</h3>
         <div className="flex items-center justify-between gap-2 w-full">
           <span className="text-body-s font-medium text-grayscale-gray6">{nickname}</span>
-          <Button
-            variant="ghost"
-            onClick={() => setDialogOpen(true)}
-            className="group gap-1 h-auto p-0 text-body-xs font-medium text-grayscale-gray5 hover:text-primary"
-          >
-            <span>수정하기</span>
-            <Pencil className="text-grayscale-gray5 group-hover:text-primary" />
-          </Button>
+          {editable && (
+            <Button
+              variant="ghost"
+              onClick={() => setDialogOpen(true)}
+              className="group gap-1 h-auto p-0 text-body-xs font-medium text-grayscale-gray5 hover:text-primary"
+            >
+              <span>수정하기</span>
+              <Pencil className="text-grayscale-gray5 group-hover:text-primary" />
+            </Button>
+          )}
         </div>
       </div>
 
-      <NicknameEditDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        currentNickname={nickname}
-        onSave={handleSave}
-      />
+      {editable && (
+        <NicknameEditDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          currentNickname={nickname}
+          onSave={handleSave}
+        />
+      )}
     </>
   );
 }

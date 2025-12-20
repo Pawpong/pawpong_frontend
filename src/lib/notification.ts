@@ -81,8 +81,8 @@ export async function getNotifications(
   isRead?: boolean
 ): Promise<NotificationListResponse> {
   const params: Record<string, any> = {
-    pageNumber: page,
-    itemsPerPage: limit,
+    page,
+    limit,
   };
   if (isRead !== undefined) {
     params.isRead = isRead;
