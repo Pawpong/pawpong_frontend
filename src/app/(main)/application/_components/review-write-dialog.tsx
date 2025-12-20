@@ -72,6 +72,7 @@ export default function ReviewWriteDialog({
       queryClient.invalidateQueries({ queryKey: ['review-by-application', applicationId] });
       toast({
         title: '후기가 작성되었습니다.',
+        position: 'default',
       });
       onOpenChange(false);
       router.push('/myapplication');
@@ -80,6 +81,7 @@ export default function ReviewWriteDialog({
       toast({
         title: '후기 작성에 실패했습니다.',
         description: error instanceof Error ? error.message : '다시 시도해주세요.',
+        position: 'default',
       });
     },
   });
@@ -88,6 +90,7 @@ export default function ReviewWriteDialog({
     if (!reviewText.trim()) {
       toast({
         title: '후기 내용을 입력해주세요.',
+        position: 'default',
       });
       return;
     }
@@ -205,9 +208,7 @@ export default function ReviewWriteDialog({
               <div className="box-border flex flex-col gap-[var(--space-16)] items-start overflow-clip pb-0 pt-[var(--space-12)] px-[var(--space-16)] relative shrink-0 w-full">
                 {existingReview ? (
                   // 기존 후기 표시 (읽기 전용)
-                  <div className="min-h-[140px] text-body-s text-grayscale-gray6 whitespace-pre-wrap">
-                    {reviewText}
-                  </div>
+                  <div className="min-h-[140px] text-body-s text-grayscale-gray6 whitespace-pre-wrap">{reviewText}</div>
                 ) : (
                   // 후기 작성 (편집 가능)
                   <Textarea

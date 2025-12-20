@@ -312,11 +312,13 @@ export default function ProfilePage() {
         setProfileData(formData);
         toast({
           title: '프로필이 수정되었습니다.',
+          position: 'split',
         });
       } catch (error) {
         toast({
           title: '프로필 수정에 실패했습니다.',
           description: error instanceof Error ? error.message : '다시 시도해주세요.',
+          position: 'split',
         });
       }
     }
