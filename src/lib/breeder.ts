@@ -56,7 +56,18 @@ export interface BreederStatsDto {
 
 /** 브리더 인증 정보 DTO */
 export interface BreederVerificationDto {
-  verificationStatus: 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'reviewing' | 'approved' | 'rejected';
+  plan?: string;
+  level?: string;
+  submittedAt?: string;
+  reviewedAt?: string;
+  rejectionReason?: string;
+  documents?: Array<{
+    type: string;
+    url: string;
+    originalFileName?: string;
+    uploadedAt?: string;
+  }>;
 }
 
 /** 브리더 프로필 응답 DTO */
