@@ -3,7 +3,7 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { exploreBreeders, getPopularBreeders, type Breeder, type SearchBreederParams } from '@/lib/breeder';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 
 /**
  * 브리더 목록 검색/필터링 hook (무한스크롤/페이지네이션)
