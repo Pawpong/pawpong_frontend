@@ -11,6 +11,18 @@ const HomeBanner = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 화면 크기 감지 (반응형)
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // 768px 미만은 모바일
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -73,15 +85,27 @@ const HomeBanner = () => {
 
   const currentBanner = banners[currentIndex];
 
+  // 반응형: 모바일이면 mobileImageUrl, 아니면 desktopImageUrl 사용
+  const currentImageUrl = isMobile ? currentBanner.mobileImageUrl : currentBanner.desktopImageUrl;
+
+  // 이미지 URL이 없으면 에러 UI 표시
+  if (!currentImageUrl) {
+    return (
+      <div className="w-full h-[20rem] md:h-[20rem] lg:h-[30rem] flex items-center justify-center bg-gray-50">
+        <p className="text-body-m text-gray-400">배너 이미지를 불러올 수 없습니다.</p>
+      </div>
+    );
+  }
+
   const renderBannerContent = () => (
     <div className="relative w-full h-full">
       <Image
-        src={currentBanner.imageUrl}
+        src={currentImageUrl}
         alt={currentBanner.title || '배너 이미지'}
         fill
         className="object-cover"
         priority
-        unoptimized={currentBanner.imageUrl.startsWith('http')}
+        unoptimized={currentImageUrl.startsWith('http')}
       />
       {(currentBanner.title || currentBanner.description) && (
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">

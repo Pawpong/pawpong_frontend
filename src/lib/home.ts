@@ -3,7 +3,10 @@ import apiClient from './api';
 /** 배너 응답 타입 (백엔드 DTO와 일치) */
 export interface BannerDto {
   bannerId: string;
-  imageUrl: string;
+  desktopImageUrl: string; // PC/Pad 버전 이미지 URL
+  mobileImageUrl: string; // 모바일 버전 이미지 URL
+  desktopImageFileName: string; // PC/Pad 버전 파일명
+  mobileImageFileName: string; // 모바일 버전 파일명
   linkType: 'internal' | 'external';
   linkUrl: string;
   title?: string;
