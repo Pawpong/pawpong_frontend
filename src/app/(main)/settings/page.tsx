@@ -154,12 +154,15 @@ export default function SettingsPage() {
         });
       }
 
-      // 탈퇴 성공 시 즉시 로그아웃 처리
-      await logout();
+      // 탈퇴 성공 시 쿠키 및 인증 상태 초기화 (logout API 호출 불필요 - 이미 탈퇴됨)
+      // 쿠키 삭제
+      await fetch('/api/auth/clear-cookie', { method: 'POST' }).catch(() => {});
+
+      // 로컬 스토리지 초기화
       clearAuth();
 
-      // 로그인 페이지로 리다이렉트
-      window.location.href = '/login';
+      // 홈으로 리다이렉트
+      window.location.href = '/';
     } catch (error) {
       toast({
         title: '탈퇴 처리 실패',

@@ -115,7 +115,11 @@ export default function ReviewDialog({
               </div>
               <Button
                 className="gap-1 text-grayscale-gray5 text-body-xs h-auto p-0 has-[>svg]:px-0 hover:bg-transparent"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpen(false);
+                  router.push(`/explore/breeder/${breederId}`);
+                }}
               >
                 <span>보기</span>
                 <RightArrow className="size-5" />
