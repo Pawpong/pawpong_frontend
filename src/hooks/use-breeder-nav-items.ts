@@ -36,7 +36,7 @@ export function useBreederNavItems(): { navItems: NavItem[]; isLoading: boolean 
   }
 
   // 인증 상태 확인
-  const verificationStatus = breederProfile.verificationInfo?.verificationStatus;
+  const verificationStatus = breederProfile.verificationInfo?.status;
   const isApproved = verificationStatus === 'approved';
 
   // 승인된 브리더는 모든 메뉴 활성화, pending 상태는 '내 프로필' 비활성화
