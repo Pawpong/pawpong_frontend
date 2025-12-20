@@ -118,6 +118,7 @@ function CounselFormContent() {
     if (!isValid) {
       toast({
         title: '입력 정보를 확인해주세요.',
+        position: 'split',
       });
       return;
     }
@@ -126,6 +127,7 @@ function CounselFormContent() {
       toast({
         title: '브리더 정보가 없습니다.',
         description: '브리더 페이지에서 다시 시도해주세요.',
+        position: 'split',
       });
       return;
     }
@@ -161,6 +163,7 @@ function CounselFormContent() {
       toast({
         title: '상담 신청이 완료되었습니다.',
         description: result.message,
+        position: 'split',
       });
 
       // 신청 목록 페이지로 이동
@@ -170,6 +173,7 @@ function CounselFormContent() {
       toast({
         title: '상담 신청에 실패했습니다.',
         description: error instanceof Error ? error.message : '다시 시도해주세요.',
+        position: 'split',
       });
     }
   };

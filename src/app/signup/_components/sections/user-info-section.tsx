@@ -99,6 +99,7 @@ export default function UserInfoSection() {
       toast({
         title: '올바른 휴대폰 번호를 입력해주세요',
         description: '휴대폰 번호 형식을 확인해주세요.',
+        position: 'split',
       });
       return;
     }
@@ -113,6 +114,7 @@ export default function UserInfoSection() {
       toast({
         title: '인증번호 발송 완료',
         description: '휴대폰으로 인증번호를 발송했습니다.',
+        position: 'split',
       });
     } catch (error) {
       // API 에러 메시지 파싱
@@ -169,6 +171,7 @@ export default function UserInfoSection() {
             toast({
               title: '이미 가입된 이메일입니다',
               description: '로그인 페이지로 이동합니다.',
+              position: 'split',
             });
             setTimeout(() => {
               router.push('/login');

@@ -110,6 +110,7 @@ export default function DocumentSection() {
       toast({
         title: '로그인 정보 없음',
         description: '소셜 로그인 정보가 없습니다. 다시 로그인해주세요.',
+        position: 'split',
       });
       router.push('/login');
       return;
@@ -171,11 +172,13 @@ export default function DocumentSection() {
         toast({
           title: '회원가입 실패',
           description: error.message,
+          position: 'split',
         });
       } else {
         toast({
           title: '회원가입 실패',
           description: '회원가입에 실패했습니다.',
+          position: 'split',
         });
       }
     } finally {
@@ -199,6 +202,7 @@ export default function DocumentSection() {
       toast({
         title: '로그인 정보 없음',
         description: '소셜 로그인 정보가 없습니다. 다시 로그인해주세요.',
+        position: 'split',
       });
       router.push('/login');
       return;
@@ -276,11 +280,13 @@ export default function DocumentSection() {
         toast({
           title: '회원가입 실패',
           description: error.message,
+          position: 'split',
         });
       } else {
         toast({
           title: '회원가입 실패',
           description: '회원가입에 실패했습니다.',
+          position: 'split',
         });
       }
     } finally {

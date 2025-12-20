@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -14,7 +14,7 @@ import { useAuthStore } from '@/stores/auth-store';
  * - Next.js 15에서 Server Component에서는 쿠키 수정 불가
  * - 브라우저에서 직접 fetch해야 Set-Cookie 헤더가 적용됨
  */
-export default function LoginSuccessPage() {
+function LoginSuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { setUser } = useAuthStore();
@@ -89,5 +89,22 @@ export default function LoginSuccessPage() {
         <p className="text-gray-600">로그인 처리 중...</p>
       </div>
     </div>
+  );
+}
+
+export default function LoginSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="text-center">
+            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
+            <p className="text-gray-600">로딩 중...</p>
+          </div>
+        </div>
+      }
+    >
+      <LoginSuccessContent />
+    </Suspense>
   );
 }

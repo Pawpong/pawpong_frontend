@@ -25,7 +25,8 @@ const FAQ = () => {
         setIsLoading(true);
         // role에 따라 다른 FAQ 조회
         const data = user?.role === 'breeder' ? await getBreederFaqs() : await getAdopterFaqs();
-        setFaqs(data);
+        // 홈에서는 최대 6개까지만 표시
+        setFaqs(data.slice(0, 6));
         setError(null);
       } catch (err) {
         console.error('FAQ 조회 실패:', err);

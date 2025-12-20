@@ -141,6 +141,7 @@ function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolea
       toast({
         title: '로그아웃 실패',
         description: error instanceof Error ? error.message : '다시 시도해주세요.',
+        position: 'default',
       });
     }
   };

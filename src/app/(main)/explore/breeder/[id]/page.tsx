@@ -149,13 +149,15 @@ export default function Page({ params }: PageProps) {
   const locationStr = profileInfo?.locationInfo
     ? `${profileInfo.locationInfo.cityName} ${profileInfo.locationInfo.districtName}`
     : '';
-  // API 응답에서 직접 priceRange 추출 (백엔드가 priceRange: { min, max } 형식으로 반환)
+  // API 응답에서 직접 priceRange 추출 (백엔드가 priceRange: { min, max, display } 형식으로 반환)
   // 비회원은 가격 정보를 볼 수 없음
   const apiPriceRange = (profileData as any)?.priceRange;
   const priceRangeStr = user
-    ? apiPriceRange?.min || apiPriceRange?.max
-      ? `${apiPriceRange.min?.toLocaleString()} - ${apiPriceRange.max?.toLocaleString()}원`
-      : '상담 후 결정'
+    ? !apiPriceRange || (!apiPriceRange.min && !apiPriceRange.max)
+      ? '가격 미설정'
+      : apiPriceRange.display === 'consultation'
+        ? '상담 후 결정'
+        : `${apiPriceRange.min?.toLocaleString()}원 ~ ${apiPriceRange.max?.toLocaleString()}원`
     : null;
 
   // API 응답에서 직접 값 추출 (profileImage, location, breederLevel 등)

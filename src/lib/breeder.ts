@@ -204,6 +204,7 @@ export interface Breeder {
   breederId: string;
   breederName: string;
   breederLevel: string;
+  petType: string; // dog | cat
   location: string;
   mainBreed: string;
   specializationTypes?: string[]; // 전문 분야 (옵셔널)
