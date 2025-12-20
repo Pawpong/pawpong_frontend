@@ -46,10 +46,18 @@ export async function POST(req: Request) {
   res.cookies.delete('refreshToken');
   res.cookies.delete('userRole');
 
-  // HttpOnly 쿠키에 토큰 저장 (보안)
+  // localhost에서는 Secure 쿠키 사용 불가 (HTTP이므로)
+  // HTTPS 환경에서만 Secure 플래그 설정
+  const isSecure =
+    process.env.NODE_ENV === 'production' &&
+    (process.env.NEXT_PUBLIC_FRONTEND_URL?.startsWith('https://') ?? false);
+
+  // accessToken은 httpOnly: false로 설정 (cross-origin 요청 시 Authorization 헤더로 전송 필요)
+  // localhost에서 dev-api.pawpong.kr로 요청 시 쿠키가 자동 전송되지 않으므로
+  // JavaScript에서 읽어서 Authorization 헤더로 보내야 함
   res.cookies.set('accessToken', accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    httpOnly: false, // cross-origin API 요청을 위해 JavaScript에서 접근 가능하게 설정
+    secure: isSecure,
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 24, // 1일
@@ -57,7 +65,7 @@ export async function POST(req: Request) {
 
   res.cookies.set('refreshToken', refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: isSecure,
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 24 * 30, // 30일
@@ -66,7 +74,7 @@ export async function POST(req: Request) {
   // 사용자 역할(role)을 별도 쿠키로 저장 (프론트엔드에서 접근 가능)
   res.cookies.set('userRole', userRole, {
     httpOnly: false, // 프론트엔드에서 접근 가능하도록 설정
-    secure: process.env.NODE_ENV === 'production',
+    secure: isSecure,
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 24, // 1일

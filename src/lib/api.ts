@@ -33,10 +33,25 @@ function createApi(): AxiosInstance {
   });
 
   // 요청 인터셉터
-  // HTTP-only 쿠키를 사용하므로 Authorization 헤더 설정 불필요
-  // withCredentials: true로 브라우저가 자동으로 쿠키를 전송함
+  // cross-origin 요청 시 쿠키가 자동 전송되지 않으므로 Authorization 헤더로 토큰 전송
   instance.interceptors.request.use((config) => {
-    // 필요한 경우 여기에 다른 요청 전처리 로직 추가
+    // 브라우저 환경에서만 쿠키 읽기
+    if (typeof window !== 'undefined') {
+      // 쿠키에서 accessToken 읽기
+      const cookies = document.cookie.split(';').reduce(
+        (acc, cookie) => {
+          const [key, value] = cookie.trim().split('=');
+          acc[key] = value;
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
+
+      const accessToken = cookies['accessToken'];
+      if (accessToken && !config.headers['Authorization']) {
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+    }
     return config;
   });
 
@@ -82,20 +97,29 @@ function createApi(): AxiosInstance {
         isRefreshing = true;
 
         try {
-          // 쿠키 기반 리프레시 - 백엔드가 쿠키에서 refreshToken을 읽어 처리
-          const refreshResponse = await instance.post<{
+          // 프론트엔드 API 라우트를 통해 리프레시 (cross-origin에서 httpOnly 쿠키 전송 불가)
+          const refreshResponse = await fetch('/api/auth/refresh', {
+            method: 'POST',
+            credentials: 'include',
+          });
+
+          const refreshData = (await refreshResponse.json()) as {
             success: boolean;
             data?: { accessToken: string; refreshToken: string };
-          }>('/api/auth/refresh');
+          };
+
+          if (!refreshResponse.ok || !refreshData.success) {
+            throw new Error('토큰 갱신 실패');
+          }
 
           // 백엔드에서 새로운 토큰을 받으면 프론트엔드 쿠키에 저장
-          if (refreshResponse.data?.data?.accessToken && refreshResponse.data?.data?.refreshToken) {
+          if (refreshData.data?.accessToken && refreshData.data?.refreshToken) {
             await fetch('/api/auth/set-cookie', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                accessToken: refreshResponse.data.data.accessToken,
-                refreshToken: refreshResponse.data.data.refreshToken,
+                accessToken: refreshData.data.accessToken,
+                refreshToken: refreshData.data.refreshToken,
               }),
             });
           }
