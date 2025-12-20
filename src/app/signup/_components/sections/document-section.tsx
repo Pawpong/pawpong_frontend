@@ -104,6 +104,86 @@ export default function DocumentSection() {
     }
   };
 
+  // 서류 없이 회원가입 완료 (나중에 제출)
+  const handleSkipAndRegister = async () => {
+    if (!tempId) {
+      toast({
+        title: '로그인 정보 없음',
+        description: '소셜 로그인 정보가 없습니다. 다시 로그인해주세요.',
+      });
+      router.push('/login');
+      return;
+    }
+
+    // Parse location into city and district
+    const locationParts = breederLocation?.split(' ') || ['', ''];
+    const city = locationParts[0] || '';
+    const district = locationParts.slice(1).join(' ') || '';
+
+    setSubmitting(true);
+
+    try {
+      // 프로필 이미지가 있으면 업로드
+      if (photo) {
+        setUploading(true);
+        await uploadProfileImage(photo, tempId);
+      }
+
+      setUploading(false);
+
+      // 회원가입 완료 (서류 없이)
+      const requestData = {
+        tempId,
+        provider,
+        email,
+        name: socialName,
+        phone: phoneNumber.replace(/-/g, ''),
+        petType: animal || '',
+        plan: plan || '',
+        breederName,
+        city,
+        district,
+        breeds,
+        level,
+        marketingAgreed: agreements.marketing,
+      };
+
+      const result = await completeBreederRegistration(requestData);
+
+      // HttpOnly 쿠키에 저장
+      await fetch('/api/auth/set-cookie', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+        }),
+      });
+
+      // 서류 건너뛰기 표시
+      setDocumentsSkipped(true);
+
+      // 다음 단계 진행 (SignupComplete)
+      nextFlowIndex();
+    } catch (error) {
+      console.error('=== Breeder Registration Error (Skip) ===', error);
+      if (error instanceof Error) {
+        toast({
+          title: '회원가입 실패',
+          description: error.message,
+        });
+      } else {
+        toast({
+          title: '회원가입 실패',
+          description: '회원가입에 실패했습니다.',
+        });
+      }
+    } finally {
+      setSubmitting(false);
+      setUploading(false);
+    }
+  };
+
   // Complete breeder registration
   const handleSubmit = async () => {
     setSubmitAttempted(true);
@@ -343,7 +423,7 @@ export default function DocumentSection() {
 
       <SignupFormItems className="gap-4 ">
         <div className="flex gap-3">
-          <DocumentSkipDialogTrigger asChild>
+          <DocumentSkipDialogTrigger asChild onSkip={handleSkipAndRegister}>
             <Button
               className="bg-tertiary-700 text-grayscale-gray6! py-3 px-4 hover:bg-tertiary-800 hover:text-grayscale-gray6!"
               variant="tertiary"

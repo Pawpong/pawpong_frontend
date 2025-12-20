@@ -3,7 +3,6 @@
 import SignupFormItems from '@/components/signup-form-section/signup-form-items';
 import SignupFormSection from '@/components/signup-form-section/signup-form-section';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import useSignupFormStore from '@/stores/signup-form-store';
 import Image from 'next/image';
 import welcomeImage from '@/assets/images/welcome.png';
@@ -14,6 +13,11 @@ export default function SignupComplete() {
   const isBreeder = userType === 'breeder';
   const isAdopter = userType === 'adopter' || userType === 'guest' || !userType;
   const isBreederSkipped = isBreeder && documentsSkipped;
+
+  // 홈으로 이동 (전체 새로고침으로 인증 상태 반영)
+  const handleGoHome = () => {
+    window.location.href = '/';
+  };
 
   return (
     <SignupFormSection className="gap-8 md:gap-8 lg:gap-8">
@@ -85,16 +89,14 @@ export default function SignupComplete() {
         )}
       </div>
       <SignupFormItems className="flex flex-col gap-3">
-        <Link href="/">
-          <Button variant={'tertiary'} className="py-3 px-4 w-full">
-            홈으로
-          </Button>
-        </Link>
-        <Link href="https://pf.kakao.com/_Wqxekn" target="_blank" rel="noopener noreferrer">
+        <Button variant={'tertiary'} className="py-3 px-4 w-full" onClick={handleGoHome}>
+          홈으로
+        </Button>
+        <a href="https://pf.kakao.com/_Wqxekn" target="_blank" rel="noopener noreferrer">
           <Button className="bg-tertiary-700 !text-grayscale-gray6 py-3 px-4 w-full hover:bg-tertiary-800 hover:!text-grayscale-gray6">
             문의하기
           </Button>
-        </Link>
+        </a>
       </SignupFormItems>
     </SignupFormSection>
   );

@@ -8,10 +8,11 @@ import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { useNavigationGuardContext } from '@/contexts/navigation-guard-context';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { NAV_ITEMS, NAV_ITEMS_BREEDER, NavItem } from './nav-items';
+import { NAV_ITEMS, NavItem } from './nav-items';
 import { logout } from '@/lib/auth';
 import { useToast } from '@/hooks/use-toast';
-import { useAuthStore, type AuthUser } from '@/stores/auth-store';
+import { useAuthStore } from '@/stores/auth-store';
+import { useBreederNavItems } from '@/hooks/use-breeder-nav-items';
 
 interface NavBarProps {
   navVariant?: 'default' | 'breeder';
@@ -21,8 +22,6 @@ interface DropdownMenuWithStateProps {
   item: NavItem;
   active: boolean;
   isAuthenticated: boolean;
-  user: AuthUser | null;
-  hasHydrated: boolean;
   handleLinkClick: (e: MouseEvent<HTMLAnchorElement>, href: string) => void;
   handleLogout: (e: MouseEvent<HTMLAnchorElement>) => Promise<void>;
 }
@@ -31,8 +30,6 @@ function DropdownMenuWithState({
   item,
   active,
   isAuthenticated,
-  user,
-  hasHydrated,
   handleLinkClick,
   handleLogout,
 }: DropdownMenuWithStateProps) {
@@ -79,20 +76,9 @@ function DropdownMenuWithState({
       >
         {item.children
           ?.filter((child) => {
-            // hydration이 완료되지 않았으면 showForVerificationStatus가 있는 항목은 숨김
-            if (!hasHydrated && child.showForVerificationStatus) {
-              return false;
-            }
             // 로그아웃 항목은 인증된 경우에만 표시
             if (child.action === 'logout' && !isAuthenticated) {
               return false;
-            }
-            // showForVerificationStatus가 설정된 경우, 브리더이고 해당 status에 맞는 경우에만 표시
-            if (child.showForVerificationStatus) {
-              if (user?.role !== 'breeder') {
-                return false;
-              }
-              return child.showForVerificationStatus.includes(user.verificationStatus || 'pending');
             }
             return true;
           })
@@ -148,8 +134,9 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
   const router = useRouter();
   const guardContext = useNavigationGuardContext();
   const { toast } = useToast();
-  const { isAuthenticated, clearAuth, user, hasHydrated } = useAuthStore();
-  const navConfig = navVariant === 'breeder' ? NAV_ITEMS_BREEDER : NAV_ITEMS;
+  const { isAuthenticated, clearAuth } = useAuthStore();
+  const { navItems: breederNavItems } = useBreederNavItems();
+  const navConfig = navVariant === 'breeder' ? breederNavItems : NAV_ITEMS;
 
   const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>, href: string, requiresAuth?: boolean) => {
     // 비회원이 인증 필요 메뉴 클릭 시 로그인 페이지로 이동
@@ -249,8 +236,6 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
             item={item}
             active={active}
             isAuthenticated={isAuthenticated}
-            user={user}
-            hasHydrated={hasHydrated}
             handleLinkClick={handleLinkClick}
             handleLogout={handleLogout}
           />

@@ -1,15 +1,17 @@
 'use client';
 
-import { NAV_ITEMS, NAV_ITEMS_BREEDER } from './nav-items';
+import { NAV_ITEMS } from './nav-items';
 import MobileNavHeader from './mobile-nav-header';
 import MobileNavItem from './mobile-nav-item';
+import { useBreederNavItems } from '@/hooks/use-breeder-nav-items';
 
 interface MobileNavMenuProps {
   navVariant?: 'default' | 'breeder';
 }
 
 export default function MobileNavMenu({ navVariant = 'default' }: MobileNavMenuProps) {
-  const navConfig = navVariant === 'breeder' ? NAV_ITEMS_BREEDER : NAV_ITEMS;
+  const { navItems: breederNavItems } = useBreederNavItems();
+  const navConfig = navVariant === 'breeder' ? breederNavItems : NAV_ITEMS;
 
   return (
     <div className="flex flex-col h-full bg-white">
