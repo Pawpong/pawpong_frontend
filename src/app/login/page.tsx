@@ -25,7 +25,7 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [showErrorModal, setShowErrorModal] = useState(false);
-  const [errorType, setErrorType] = useState<'deleted' | 'error'>('error');
+  const [errorType, setErrorType] = useState<'deleted' | 'suspended' | 'error'>('error');
 
   useEffect(() => {
     const error = searchParams.get('error');
@@ -33,7 +33,13 @@ function LoginContent() {
 
     if (error) {
       console.log('[Login Page] 에러 감지:', error, '타입:', type);
-      setErrorType(type === 'deleted_account' ? 'deleted' : 'error');
+      if (type === 'deleted_account') {
+        setErrorType('deleted');
+      } else if (type === 'suspended_account') {
+        setErrorType('suspended');
+      } else {
+        setErrorType('error');
+      }
       setShowErrorModal(true);
 
       // 에러 파라미터 제거 (URL 정리)
@@ -63,17 +69,19 @@ function LoginContent() {
         </div>
       </Container>
 
-      {/* 탈퇴한 계정 에러 모달 */}
+      {/* 로그인 에러 모달 */}
       <SimpleDialog open={showErrorModal} onOpenChange={handleModalClose}>
         <SimpleDialogContent>
           <SimpleDialogHeader>
             <SimpleDialogTitle className="text-primary">
-              {errorType === 'deleted' ? '탈퇴한 계정이에요' : '로그인에 실패했어요'}
+              {errorType === 'deleted' && '탈퇴한 계정이에요'}
+              {errorType === 'suspended' && '정지된 계정이에요'}
+              {errorType === 'error' && '로그인에 실패했어요'}
             </SimpleDialogTitle>
             <SimpleDialogDescription className="text-grayscale-gray5">
-              {errorType === 'deleted'
-                ? '이미 탈퇴 처리된 계정이에요.\n다른 계정으로 로그인해 주세요.'
-                : '로그인 중 문제가 발생했어요.\n잠시 후 다시 시도해 주세요.'}
+              {errorType === 'deleted' && '이미 탈퇴 처리된 계정이에요.\n다른 계정으로 로그인해 주세요.'}
+              {errorType === 'suspended' && '계정이 정지되었습니다.\n자세한 내용은 이메일을 확인해주세요.'}
+              {errorType === 'error' && '로그인 중 문제가 발생했어요.\n잠시 후 다시 시도해 주세요.'}
             </SimpleDialogDescription>
           </SimpleDialogHeader>
           <SimpleDialogFooter className="grid-cols-1">
