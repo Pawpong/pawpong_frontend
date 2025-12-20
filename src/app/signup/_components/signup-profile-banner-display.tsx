@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
+import SignupProgressOverlay from './signup-progress-overlay';
 
 interface ProfileBanner {
   bannerId: string;
@@ -79,7 +80,7 @@ export default function SignupProfileBannerDisplay() {
   const currentBanner = banners[currentIndex];
 
   return (
-    <div className="relative bg-primary-600 h-full overflow-hidden rounded-2xl">
+    <div className="relative bg-primary-600 h-full overflow-hidden rounded-[20px]">
       {/* 배너 이미지 */}
       <div
         className={`relative w-full h-full ${currentBanner.linkUrl ? 'cursor-pointer' : ''}`}
@@ -94,9 +95,12 @@ export default function SignupProfileBannerDisplay() {
         />
       </div>
 
+      {/* 회원가입 진행 단계 오버레이 */}
+      <SignupProgressOverlay />
+
       {/* 인디케이터 (배너가 2개 이상일 때만 표시) */}
       {banners.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
           {banners.map((_, index) => (
             <button
               key={index}
