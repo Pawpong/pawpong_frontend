@@ -90,6 +90,7 @@ export default function UserInfoSection() {
   const [showAgreementError, setShowAgreementError] = useState(false);
   const [showEmailError, setShowEmailError] = useState(false);
   const [showPhoneError, setShowPhoneError] = useState(false);
+  const [phoneErrorMessage, setPhoneErrorMessage] = useState<string>('');
   const [showVerificationError, setShowVerificationError] = useState(false);
 
   // 인증번호 전송 시 타이머 시작
@@ -116,19 +117,19 @@ export default function UserInfoSection() {
     } catch (error) {
       // API 에러 메시지 파싱
       let errorMessage = '인증번호 발송에 실패했습니다.';
+
       if (error instanceof Error) {
         // "이미 등록된 전화번호입니다" 같은 메시지 체크
-        if (error.message.includes('이미') || error.message.includes('등록')) {
-          errorMessage = '이미 등록된 전화번호입니다.';
+        if (error.message.includes('이미') || error.message.includes('등록') || error.message.includes('전화번호')) {
+          errorMessage = '이미 등록된 전화번호예요';
         } else {
           errorMessage = error.message;
         }
       }
 
-      toast({
-        title: '인증번호 발송 실패',
-        description: errorMessage,
-      });
+      // UI에 에러 메시지 표시
+      setShowPhoneError(true);
+      setPhoneErrorMessage(errorMessage);
     } finally {
       setIsSending(false);
     }
@@ -278,6 +279,7 @@ export default function UserInfoSection() {
                 onChange={(e) => {
                   handlePhoneChange(e.target.value);
                   setShowPhoneError(false);
+                  setPhoneErrorMessage('');
                 }}
                 disabled={isVerified}
               />
@@ -290,10 +292,12 @@ export default function UserInfoSection() {
                 {isSending ? '발송 중...' : isCodeSent ? '인증번호 재전송' : '인증번호 받기'}
               </Button>
             </div>
-            {showPhoneError && !phoneNumber && (
-              <div className="flex items-center gap-0.5">
+            {showPhoneError && (
+              <div className="flex items-center gap-[0.19rem]">
                 <ErrorIcon className="size-3 shrink-0" />
-                <p className="text-caption font-medium text-status-error-500">휴대폰 번호를 입력해 주세요.</p>
+                <p className="text-caption font-medium text-status-error-500">
+                  {phoneErrorMessage || '휴대폰 번호를 입력해 주세요.'}
+                </p>
               </div>
             )}
           </div>

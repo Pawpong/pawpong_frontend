@@ -10,7 +10,9 @@ import WithdrawDialog from './_components/withdraw-dialog';
 import { getAdopterProfile, updateAdopterProfile, deleteAccount, WithdrawReason } from '@/lib/adopter';
 import { getMyBreederProfile } from '@/lib/breeder';
 import { deleteBreederAccount } from '@/lib/breeder-management';
+import { logout } from '@/lib/auth';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 import { useAuthGuard } from '@/hooks/use-auth-guard';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -24,6 +26,7 @@ export default function SettingsPage() {
   const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const router = useRouter();
 
   // 프로필 정보 로드
   useEffect(() => {
@@ -153,9 +156,8 @@ export default function SettingsPage() {
         });
       }
 
-      // 탈퇴 성공 시 로컬 상태 정리 (logout API는 호출하지 않음 - 이미 계정이 삭제됨)
-      // 프론트엔드 쿠키만 삭제
-      await fetch('/api/auth/clear-cookie', { method: 'POST' }).catch(() => {});
+      // 탈퇴 성공 시 즉시 로그아웃 처리
+      await logout();
       clearAuth();
 
       // 로그인 페이지로 리다이렉트
