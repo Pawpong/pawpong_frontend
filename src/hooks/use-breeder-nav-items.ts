@@ -45,10 +45,11 @@ export function useBreederNavItems(): { navItems: NavItem[]; isLoading: boolean 
       return {
         ...item,
         children: item.children.map((child) => {
-          // '내 프로필' 메뉴는 승인된 경우에만 활성화
+          // '내 프로필' 메뉴는 승인된 경우에만 활성화하고 브리더 상세페이지로 이동
           if (child.name === '내 프로필') {
             return {
               ...child,
+              href: isApproved ? `/explore/breeder/${breederProfile.breederId}` : child.href,
               variant: isApproved ? 'default' : ('disabled' as const),
             };
           }
