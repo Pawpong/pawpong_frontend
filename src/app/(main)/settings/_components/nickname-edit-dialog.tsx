@@ -31,7 +31,7 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
   const [isModified, setIsModified] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // 다이얼로그가 열릴 때 currentNickname으로 초기화
+  // 다이얼로그 열릴 때 현재 닉네임으로 초기화
   useEffect(() => {
     if (open) {
       setNickname(currentNickname);
@@ -47,16 +47,13 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
   };
 
   const handleCheckNickname = async () => {
-    if (!nickname || nickname === currentNickname) {
-      return;
-    }
+    if (!nickname || nickname === currentNickname) return;
 
     setCheckingNickname(true);
     try {
       const isDuplicate = await checkNicknameDuplicate(nickname);
       setNicknameAvailable(!isDuplicate);
-    } catch (error) {
-      console.error('닉네임 중복 확인 오류:', error);
+    } catch {
       setNicknameAvailable(false);
     } finally {
       setCheckingNickname(false);
@@ -77,38 +74,37 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
       }
 
       setNicknameAvailable(true);
-      onSave(nickname);
-      onOpenChange(false);
-      setIsModified(false);
-      setNicknameAvailable(null);
-    } catch (error) {
-      console.error('닉네임 중복 확인 오류:', error);
-      setNicknameAvailable(false);
+      onSave(nickname); // 👉 부모 state 업데이트
+      onOpenChange(false); // 👉 다이얼로그 닫기
     } finally {
       setIsSaving(false);
     }
   };
 
-  const handleClose = () => {
-    onOpenChange(false);
-    // Reset to original nickname
-    setNickname(currentNickname);
-    setIsModified(false);
-    setNicknameAvailable(null);
+  // ⭐️ 핵심 수정 포인트
+  const handleOpenChange = (nextOpen: boolean) => {
+    onOpenChange(nextOpen);
+
+    // 닫힐 때만 내부 상태 리셋
+    if (!nextOpen) {
+      setNickname(currentNickname);
+      setIsModified(false);
+      setNicknameAvailable(null);
+    }
   };
 
   const isSaveDisabled = !isModified || !nickname || nickname === currentNickname || checkingNickname || isSaving;
 
   return (
-    <LargeDialog open={open} onOpenChange={handleClose}>
-      <LargeDialogContent className="w-full md:w-[600px] h-full md:h-[280px] flex flex-col  md:rounded-2xl">
+    <LargeDialog open={open} onOpenChange={handleOpenChange}>
+      <LargeDialogContent className="w-full md:w-[600px] h-full md:h-[280px] flex flex-col md:rounded-2xl">
         {/* Header */}
-        <LargeDialogHeader className="px-5 md:px-6 pt-4 md:pt-6 pb-2.5 md:pb-2.5 border-b-0">
+        <LargeDialogHeader className="px-5 md:px-6 pt-4 md:pt-6 pb-2.5">
           <LargeDialogTitle>
-            <div className="flex justify-between items-center gap-1 md:gap-1">
-              <span className="text-body-l font-semibold text-grayscale-gray7 flex-1 text-left">닉네임 수정</span>
+            <div className="flex justify-between items-center">
+              <span className="text-body-l font-semibold text-grayscale-gray7">닉네임 수정</span>
               <LargeDialogClose asChild>
-                <Button variant="secondary" className="size-9 shrink-0">
+                <Button variant="secondary" className="size-9">
                   <Close className="size-5 text-grayscale-gray7" />
                 </Button>
               </LargeDialogClose>
@@ -120,51 +116,47 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
 
         {/* Content */}
         <div className="flex-1 bg-[#F6F6EA] px-5 md:px-6 py-5 flex flex-col gap-2">
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-3 md:gap-[12px]">
-              <div className="flex-1 flex flex-col gap-[10px]">
-                <Input
-                  value={nickname}
-                  onChange={(e) => handleNicknameChange(e.target.value)}
-                  placeholder="닉네임을 입력하세요"
-                  className="h-12"
-                  disabled={checkingNickname || isSaving}
-                />
-                {nicknameAvailable === true && (
-                  <div className="flex items-center gap-0.5">
-                    <Check className="size-3 shrink-0 text-status-success-500" />
-                    <p className="text-caption font-medium text-status-success-500">사용할 수 있는 닉네임이에요</p>
-                  </div>
-                )}
-                {nicknameAvailable === false && (
-                  <div className="flex items-center gap-[0.12rem]">
-                    <ErrorIcon className="size-3 shrink-0" />
-                    <p className="text-caption font-medium text-status-error-500">이미 사용 중인 닉네임이에요</p>
-                  </div>
-                )}
-              </div>
-              <Button
-                variant="tertiary"
-                disabled={checkingNickname || isSaving || !nickname || nickname === currentNickname || !isModified}
-                onClick={handleCheckNickname}
-                className="h-12 px-4 shrink-0 text-body-s font-semibold"
-              >
-                {checkingNickname ? '확인 중...' : '중복검사'}
-              </Button>
+          <div className="flex gap-3">
+            <div className="flex-1 flex flex-col gap-2">
+              <Input
+                value={nickname}
+                onChange={(e) => handleNicknameChange(e.target.value)}
+                placeholder="닉네임을 입력하세요"
+                className="h-12"
+                disabled={checkingNickname || isSaving}
+              />
+
+              {nicknameAvailable === true && (
+                <div className="flex items-center gap-1">
+                  <Check className="size-3 text-status-success-500" />
+                  <p className="text-caption text-status-success-500">사용 가능한 닉네임이에요</p>
+                </div>
+              )}
+
+              {nicknameAvailable === false && (
+                <div className="flex items-center gap-1">
+                  <ErrorIcon className="size-3" />
+                  <p className="text-caption text-status-error-500">이미 사용 중인 닉네임이에요</p>
+                </div>
+              )}
             </div>
+
+            <Button
+              variant="tertiary"
+              onClick={handleCheckNickname}
+              disabled={!isModified || checkingNickname || isSaving}
+              className="h-12 px-4"
+            >
+              {checkingNickname ? '확인 중...' : '중복검사'}
+            </Button>
           </div>
         </div>
 
         <Separator className="bg-grayscale-gray2" />
 
         {/* Footer */}
-        <LargeDialogFooter className="px-5 md:px-6 pt-4 md:pt-4 pb-6 md:pb-6 justify-end border-t-0">
-          <Button
-            variant={isSaveDisabled ? 'secondary' : 'default'}
-            disabled={!isModified || nickname === currentNickname || checkingNickname || isSaving || !nickname}
-            onClick={handleSave}
-            className="h-9 bg-primary-500 px-4 min-w-[72px] disabled:bg-[#E1E1E1] disabled:text-[#A0A0A0]"
-          >
+        <LargeDialogFooter className="px-5 md:px-6 pt-4 pb-6 justify-end">
+          <Button onClick={handleSave} disabled={isSaveDisabled} className="h-9 px-4 min-w-[72px]">
             {isSaving ? '수정 중...' : '수정'}
           </Button>
         </LargeDialogFooter>

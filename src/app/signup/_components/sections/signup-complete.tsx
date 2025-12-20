@@ -10,14 +10,25 @@ export default function SignupComplete() {
   const documentsSkipped = useSignupFormStore((e) => e.documentsSkipped);
   const userType = useSignupFormStore((e) => e.userType);
 
-  // 브리더이고 서류를 건너뛴 경우
-  const isBreederSkipped = userType === 'breeder' && documentsSkipped;
+  const isBreeder = userType === 'breeder';
+  const isAdopter = userType === 'adopter' || userType === 'guest' || !userType;
+  const isBreederSkipped = isBreeder && documentsSkipped;
 
   return (
     <SignupFormSection className="gap-8 md:gap-8 lg:gap-8">
       <div className="w-full max-w-100 aspect-[4/3] bg-accent" />
       <div className="space-y-3 text-center">
-        {isBreederSkipped ? (
+        {isAdopter ? (
+          <>
+            <div className="text-balance text-body-m text-primary/80 font-medium">
+              포퐁에 오신 걸 환영해요!
+              <br />
+              좋은 아이와 따뜻한 인연을 맺을 수 있길 바라요.
+              <br />
+              포퐁이 항상 함께할게요!
+            </div>
+          </>
+        ) : isBreederSkipped ? (
           <>
             <div className="text-balance text-body-m text-primary/80 font-medium">
               포퐁에 오신 걸 환영해요!

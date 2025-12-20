@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import Breeder from '@/components/breeder-list/breeder';
 import BreederContent from '@/components/breeder-list/breeder-content';
 import BreederDescription from '@/components/breeder-list/breader-description';
@@ -61,59 +60,54 @@ export default function SavedList() {
           <EmptySavedList />
         ) : (
           <BreederList>
-            {savedBreeders.map((breeder: any, index: number) => (
-              <Link key={breeder.breederId || index} href={`/explore/breeder/${breeder.breederId}`} className="block">
-                <Breeder>
-                  <BreederProfile>
-                    <BreederHeader>
-                      <BreederAvatar src={breeder.profileImage} />
-                      <div className="flex items-center gap-2">
-                        <BreederName>{breeder.breederName}</BreederName>
-                        <LevelBadge level={'new' as 'elite' | 'new'} />
-                      </div>
-                    </BreederHeader>
-                    <BreederContent>
-                      <BreederDescription>
-                        <BreederLocation>{breeder.location}</BreederLocation>
-                        <GrayDot className="block sm:hidden lg:block align-middle" />
-                        <BreederPrice>
-                          평점 {breeder.averageRating} ({breeder.totalReviews})
-                        </BreederPrice>
-                      </BreederDescription>
-                      <BreederTags>
-                        {breeder.specialization && breeder.specialization.length > 0 && (
-                          <>
-                            {breeder.specialization.slice(0, 3).map((breed: string, idx: number) => (
-                              <Button key={idx} variant="secondary">
+            {savedBreeders.map((breeder: any, index: number) => {
+              const breeds = (breeder.specializationTypes || breeder.specialization || []).filter(Boolean);
+              return (
+                <Link key={breeder.breederId || index} href={`/explore/breeder/${breeder.breederId}`} className="block">
+                  <Breeder>
+                    <BreederProfile>
+                      <BreederHeader>
+                        <BreederAvatar src={breeder.profileImageFileName || '/profile-empty.svg'} />
+                        <div className="flex items-center gap-2">
+                          <BreederName>{breeder.breederName}</BreederName>
+                          <LevelBadge level={'new' as 'elite' | 'new'} />
+                        </div>
+                      </BreederHeader>
+                      <BreederContent>
+                        <BreederDescription>
+                          <BreederLocation>{breeder.location}</BreederLocation>
+                          <GrayDot className="block sm:hidden lg:block align-middle" />
+                          <BreederPrice>
+                            평점 {breeder.averageRating} ({breeder.totalReviews})
+                          </BreederPrice>
+                        </BreederDescription>
+                        <BreederTags>
+                          <div className="flex flex-wrap gap-2">
+                            {breeds.map((breed: string) => (
+                              <div
+                                key={breed}
+                                className="bg-tertiary-500 py-1.5 px-2.5 rounded-[--spacing(1)] text-medium text-body-xs text-primary"
+                              >
                                 {breed}
-                              </Button>
+                              </div>
                             ))}
-                            {breeder.specialization.length > 3 && (
-                              <Button variant="secondary">+{breeder.specialization.length - 3}</Button>
-                            )}
-                          </>
-                        )}
-                      </BreederTags>
-                    </BreederContent>
-                  </BreederProfile>
-                  <div className="relative">
-                    <BreederImage src={breeder.representativePhotos?.[0] || breeder.profileImage} />
-                    <div className="absolute top-0 right-0 p-3">
-                      <BreederLikeButton
-                        breederId={breeder.breederId}
-                        initialIsFavorited={true}
-                        hasImage={!!breeder.profileImage}
-                      />
-                    </div>
-                    {breeder.availablePets > 0 && (
-                      <div className="absolute bottom-0 right-0 p-3">
-                        <AdoptionStatusBadge status="available" />
+                          </div>
+                        </BreederTags>
+                      </BreederContent>
+                    </BreederProfile>
+                    <div className="relative">
+                      <BreederImage src={breeder.profileImageFileName || '/profile-empty.svg'} />
+                      <div className="absolute top-0 right-0 p-3">
+                        <BreederLikeButton breederId={breeder.breederId} initialIsFavorited={true} />
                       </div>
-                    )}
-                  </div>
-                </Breeder>
-              </Link>
-            ))}
+                      <div className="absolute bottom-0 right-0 p-3">
+                        <AdoptionStatusBadge status={breeder.availablePets > 0 ? 'available' : 'completed'} />
+                      </div>
+                    </div>
+                  </Breeder>
+                </Link>
+              );
+            })}
           </BreederList>
         )}
       </div>
