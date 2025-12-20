@@ -148,10 +148,17 @@ export interface FavoriteItemDto {
   breederName: string;
   profileImage?: string; // ✅ profileImageFileName → profileImage (Signed URL)
   representativePhotos?: string[]; // ✅ 대표 사진 배열 (Signed URLs)
+  breederLevel?: string; // ✅ 브리더 레벨 (new, elite)
+  petType?: string; // ✅ 반려동물 타입 (dog, cat)
   location: string;
   specialization?: string[]; // ✅ 품종 배열 (예: ["골든리트리버", "푸들"])
   averageRating: number;
   totalReviews: number;
+  priceRange?: {
+    min: number;
+    max: number;
+    display: string; // "range" | "consultation"
+  };
   availablePets?: number;
   addedAt: string;
   isActive?: boolean;
