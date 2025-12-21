@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import apiClient from '@/lib/api';
 
 // 사이트맵 생성 시 사용할 환경 변수
-const baseUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || 'https://pawpong.kr';
+const baseUrl = 'https://pawpong.kr';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 정적 페이지들 (인증 불필요)
