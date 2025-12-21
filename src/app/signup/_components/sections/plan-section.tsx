@@ -22,14 +22,14 @@ const planInfo: Array<{
   {
     name: 'basic',
     label: 'Basic',
-    description: ['브리더 프로필 만들기', '엄마·아빠 / 분양 중인 아이 등록', '입양 상담 신청 간편 관리'],
+    description: ['브리더님만의 공간을 만들어요.', '아이 등록부터 입양 상담까지,', '기본 기능을 무료로 이용해요.'],
     className: 'bg-secondary-500 hover:bg-secondary-600 text-primary-500',
     src: '/images/basic.png',
     isFree: true,
   },
   {
-    name: 'pro',
-    label: 'Pro',
+    name: 'premium',
+    label: 'Premium',
     description: ['comming soon'],
     className: 'bg-status-disabled hover:bg-tertiary-600 text-grayscale-gray4',
     src: '/images/pro.png',
