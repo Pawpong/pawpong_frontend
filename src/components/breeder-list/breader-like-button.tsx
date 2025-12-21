@@ -11,6 +11,7 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
+import { useAnalytics } from '@/hooks/use-analytics';
 
 interface BreederLikeButtonProps {
   className?: string;
@@ -29,6 +30,7 @@ export default function BreederLikeButton({
   const { toggle, isLoading } = useToggleFavorite();
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
+  const { trackAddFavorite, trackRemoveFavorite } = useAnalytics();
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -40,7 +42,15 @@ export default function BreederLikeButton({
     }
 
     // 낙관적 업데이트 (Optimistic UI)
-    setIsLiked(!isLiked);
+    const newLikedState = !isLiked;
+    setIsLiked(newLikedState);
+
+    // GA4 즐겨찾기 트래킹
+    if (newLikedState) {
+      trackAddFavorite(breederId);
+    } else {
+      trackRemoveFavorite(breederId);
+    }
 
     // API 호출
     toggle(breederId, isLiked);

@@ -11,6 +11,7 @@ import FilterSection from './filter-section';
 import FilterTitle from './filter-title';
 import MinimizeButton from './minimize-button';
 import MoreButton from './more-button';
+import { useAnalytics } from '@/hooks/use-analytics';
 
 // 강아지 인기 품종 (하드코딩)
 const TOP_DOG_BREEDS = ['말티즈', '푸들', '웰시코기', '시바견', '골든 리트리버'];
@@ -25,9 +26,16 @@ export default function BreedFilter() {
   const selectPath = useFilterStore((state) => state.selectPath);
   const animal = (useSegment(1) as 'cat' | 'dog') || 'cat';
   const rootFilters = filter[animal];
+  const { trackSearch } = useAnalytics();
 
   // 동물 타입에 따라 상위 품종 선택
   const topBreeds = animal === 'dog' ? TOP_DOG_BREEDS : TOP_CAT_BREEDS;
+
+  const handleBreedToggle = (breed: string) => {
+    toggleActiveFilter(breed);
+    // GA4 품종 검색 트래킹
+    trackSearch(breed, 'breed');
+  };
 
   return (
     <FilterSection>
@@ -41,7 +49,7 @@ export default function BreedFilter() {
             <FilterListItem
               key={`${breed}-${index}`}
               checked={activeFilters.includes(breed)}
-              onCheckedChange={() => toggleActiveFilter(breed)}
+              onCheckedChange={() => handleBreedToggle(breed)}
             >
               {breed}
             </FilterListItem>

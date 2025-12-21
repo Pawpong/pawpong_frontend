@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
+import { useAnalytics } from '@/hooks/use-analytics';
 
 /**
  * 소셜 로그인 성공 후 토큰을 쿠키에 저장하는 페이지
@@ -18,6 +19,7 @@ function LoginSuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { setUser } = useAuthStore();
+  const { trackLogin, setUserId } = useAnalytics();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,14 +44,26 @@ function LoginSuccessContent() {
 
         if (res.ok) {
           // JWT에서 사용자 정보 추출하여 상태 설정
+          let userRole: 'adopter' | 'breeder' = 'adopter';
+          let userId = '';
+          let loginMethod = 'oauth'; // OAuth 소셜 로그인
+
           try {
             const payload = JSON.parse(atob(accessToken.split('.')[1]));
+            userId = payload.sub || '';
+            userRole = payload.role || 'adopter';
+
             setUser({
-              userId: payload.sub || '',
+              userId,
               email: payload.email || '',
               name: payload.name || '',
-              role: payload.role || 'adopter',
+              role: userRole,
             });
+
+            // GA4 로그인 이벤트 트래킹
+            trackLogin(loginMethod, userRole);
+            // GA4 사용자 ID 설정
+            setUserId(userId);
           } catch {
             // JWT 파싱 실패해도 로그인 진행
           }
@@ -69,7 +83,7 @@ function LoginSuccessContent() {
     };
 
     processLogin();
-  }, [searchParams, router, setUser]);
+  }, [searchParams, router, setUser, trackLogin, setUserId]);
 
   if (error) {
     return (
