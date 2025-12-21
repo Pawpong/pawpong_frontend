@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import Script from 'next/script';
 import './global.css';
 import { Toaster } from '@/components/ui/toaster';
 import { QueryProvider } from '@/providers/query-provider';
@@ -57,6 +58,16 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${pretendard.variable}  ${pretendard.className} break-keep`}>
       <body className={`${pretendard.variable}  ${pretendard.className} antialiased`}>
+        {/* Google tag (gtag.js) */}
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-0HJT8CJFGN" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-0HJT8CJFGN');
+          `}
+        </Script>
         <QueryProvider>{children}</QueryProvider>
         <Toaster />
       </body>
