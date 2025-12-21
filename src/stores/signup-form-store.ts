@@ -4,7 +4,7 @@ import { formatPhoneNumber } from '@/utils/phone';
 // usertype 타입 정의
 export type UserType = 'guest' | 'breeder' | 'adopter';
 export type Animal = 'cat' | 'dog';
-export type Plan = 'basic' | 'pro';
+export type Plan = 'basic' | 'premium';
 export type AgreementName = 'term' | 'privacy' | 'marketing';
 
 interface SignupFormStore {
