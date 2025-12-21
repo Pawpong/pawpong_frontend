@@ -20,7 +20,7 @@ export default function SignupComplete() {
   };
 
   return (
-    <SignupFormSection className="gap-8 md:gap-8 lg:gap-8">
+    <SignupFormSection className="gap-8 justify-center md:gap-8 lg:gap-8 ">
       <div className="w-full flex items-center justify-center">
         <Image
           src={welcomeImage}
