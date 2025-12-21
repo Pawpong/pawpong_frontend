@@ -71,15 +71,17 @@ export default function DocumentSection() {
   const breeds = useSignupFormStore((e) => e.breeds);
   const photo = useSignupFormStore((e) => e.photo);
 
-  const [check, setCheck] = useState(false);
+  const [check, setCheck] = useState({ elite: false, new: false });
   const [submitting, setSubmitting] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<{ type: string; file: File }[]>([]);
   const [uploading, setUploading] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const { toast } = useToast();
 
-  // 각 서류 업로드 여부 확인 (필수 서류만)
+  // 각 서류 업로드 여부 확인 (필수 서류만, 브리더 인증 서류 제외)
   const hasIdCard = uploadedFiles.some((f) => f.type === DOCUMENT_TYPES.ID_CARD);
+  const hasAnimalLicense = uploadedFiles.some((f) => f.type === DOCUMENT_TYPES.ANIMAL_LICENSE);
+  const hasContractSample = uploadedFiles.some((f) => f.type === DOCUMENT_TYPES.CONTRACT_SAMPLE);
   const hasBreederCert = uploadedFiles.some((f) => f.type === DOCUMENT_TYPES.BREEDER_CERT);
 
   // 파일 업로드 핸들러 - 파일을 복제하여 저장 (ERR_UPLOAD_FILE_CHANGED 방지)
@@ -191,10 +193,14 @@ export default function DocumentSection() {
   const handleSubmit = async () => {
     setSubmitAttempted(true);
 
-    // 필수 서류 검증 (신분증 사본만 필수, 엘리트는 브리더 인증 서류도 필수)
-    const missingRequired = !hasIdCard || (level === 'elite' && !hasBreederCert);
+    // 필수 서류 검증 (브리더 인증 서류 제외)
+    // 엘리트: 신분증 사본, 동물생산업 등록증, 표준 입양계약서 샘플 (3개 필수)
+    // 뉴: 신분증 사본, 동물생산업 등록증 (2개 필수)
+    const missingRequired = !hasIdCard || !hasAnimalLicense || (level === 'elite' && !hasContractSample);
 
-    if (missingRequired || !check) {
+    const currentCheck = check[level];
+
+    if (missingRequired || !currentCheck) {
       return;
     }
 
@@ -352,9 +358,31 @@ export default function DocumentSection() {
 
           {/* 2덩이: 동물생산업 등록증 + 표준 입양계약서 샘플 */}
           <div className="space-y-3">
-            <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.ANIMAL_LICENSE)}>동물생산업 등록증</FileButton>
+            <div className="space-y-2.5">
+              <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.ANIMAL_LICENSE)}>동물생산업 등록증</FileButton>
+              {submitAttempted && !hasAnimalLicense && (
+                <div className="flex items-center gap-[0.19rem]">
+                  <ErrorIcon className="size-3 shrink-0" />
+                  <p className="text-caption font-medium text-status-error-500">
+                    {DOCUMENT_ERROR_MESSAGES.REQUIRED_DOCUMENTS}
+                  </p>
+                </div>
+              )}
+            </div>
             {level === 'elite' && (
-              <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.CONTRACT_SAMPLE)}>표준 입양계약서 샘플</FileButton>
+              <div className="space-y-2.5">
+                <FileButton onUpload={handleFileUpload(DOCUMENT_TYPES.CONTRACT_SAMPLE)}>
+                  표준 입양계약서 샘플
+                </FileButton>
+                {submitAttempted && !hasContractSample && (
+                  <div className="flex items-center gap-[0.19rem]">
+                    <ErrorIcon className="size-3 shrink-0" />
+                    <p className="text-caption font-medium text-status-error-500">
+                      {DOCUMENT_ERROR_MESSAGES.REQUIRED_DOCUMENTS}
+                    </p>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
@@ -390,40 +418,48 @@ export default function DocumentSection() {
               </div>
             </div>
           )}
-          <OathDialogTrigger
-            className="cursor-pointer"
-            onAgree={() => {
-              setCheck(true);
-            }}
-            asChild
-            level={level}
-          >
-            <div className="flex items-center">
-              <div className="flex-1 flex items-center gap-2 py-2 pr-2.5 font-medium">
-                <div className="size-5 flex items-center justify-center">
-                  <Checkbox
-                    checked={check}
-                    onClick={(e) => {
-                      if (check === true) {
-                        e.stopPropagation();
-                        setCheck(false);
-                      }
-                    }}
-                  />
+          <div className="space-y-2.5">
+            <OathDialogTrigger
+              className="cursor-pointer"
+              onAgree={() => {
+                setCheck((prev) => ({ ...prev, [level]: true }));
+              }}
+              asChild
+              level={level}
+            >
+              <div className="flex items-center">
+                <div className="flex-1 flex items-center gap-2 py-2 pr-2.5 font-medium">
+                  <div className="size-5 flex items-center justify-center">
+                    <Checkbox
+                      checked={check[level]}
+                      onClick={(e) => {
+                        if (check[level] === true) {
+                          e.stopPropagation();
+                          setCheck((prev) => ({ ...prev, [level]: false }));
+                        }
+                      }}
+                    />
+                  </div>
+                  <span className="text-body-xs text-grayscale-gray6 select-none">
+                    (필수) {level === 'elite' ? '엘리트' : '뉴'} 레벨 브리더 입점 서약서
+                  </span>
                 </div>
-                <span className="text-body-xs text-grayscale-gray6 select-none">
-                  (필수) {level === 'elite' ? '엘리트' : '뉴'} 레벨 브리더 입점 서약서
-                </span>
-              </div>
 
-              <Button variant="ghost" className="flex items-center gap-2.5 text-grayscale-gray5 text-body-xs">
-                <div>보기</div>
-                <div className="size-5 flex items-center justify-center">
-                  <ChevronRight className="size-4" />
-                </div>
-              </Button>
-            </div>
-          </OathDialogTrigger>
+                <Button variant="ghost" className="flex items-center gap-2.5 text-grayscale-gray5 text-body-xs">
+                  <div>보기</div>
+                  <div className="size-5 flex items-center justify-center">
+                    <ChevronRight className="size-4" />
+                  </div>
+                </Button>
+              </div>
+            </OathDialogTrigger>
+            {submitAttempted && !check[level] && (
+              <div className="flex items-center gap-[0.19rem]">
+                <ErrorIcon className="size-3 shrink-0" />
+                <p className="text-caption font-medium text-status-error-500">입점 서약서에 동의해 주세요</p>
+              </div>
+            )}
+          </div>
         </div>
       </SignupFormItems>
 

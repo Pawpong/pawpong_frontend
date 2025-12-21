@@ -1,7 +1,7 @@
 // 서류 미제출 경고 메시지
 export const DOCUMENT_ERROR_MESSAGES = {
   BREEDER_CERT: '해당되는 서류를 하나 골라 첨부해 주세요',
-  REQUIRED_DOCUMENTS: '필수 서류를 제출해주세요',
+  REQUIRED_DOCUMENTS: '필수 서류를 첨부해 주세요',
   FILE_SIZE_LIMIT: '파일은 최대 10MB까지 업로드할 수 있어요',
 } as const;
 
