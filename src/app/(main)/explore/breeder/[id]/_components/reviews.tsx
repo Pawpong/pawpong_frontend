@@ -14,7 +14,7 @@ export default function Reviews({ data, breederId }: ReviewsProps) {
   const displayedReviews = data.slice(0, 5);
 
   return (
-    <BreederProfileSection>
+    <BreederProfileSection id="reviews">
       <BreederProfileSectionHeader>
         <BreederProfileSectionTitle>후기</BreederProfileSectionTitle>
         {data.length > 5 && (
