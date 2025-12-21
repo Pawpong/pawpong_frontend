@@ -4,6 +4,7 @@ import Script from 'next/script';
 import './global.css';
 import { Toaster } from '@/components/ui/toaster';
 import { QueryProvider } from '@/providers/query-provider';
+import { AnalyticsProvider } from '@/components/analytics/analytics-provider';
 
 const pretendard = localFont({
   src: '../assets/fonts/PretendardVariable.woff2',
@@ -68,7 +69,10 @@ export default function RootLayout({
             gtag('config', 'G-0HJT8CJFGN');
           `}
         </Script>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <AnalyticsProvider />
+          {children}
+        </QueryProvider>
         <Toaster />
       </body>
     </html>

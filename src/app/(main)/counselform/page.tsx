@@ -28,6 +28,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import type { ApplicationCreateRequest } from '@/lib/application';
 import { formatPhoneNumber } from '@/utils/phone';
 import CounselBannerCarousel from '@/components/counsel-banner/counsel-banner-carousel';
+import { useAnalytics } from '@/hooks/use-analytics';
 
 /**
  * 상담 폼 페이지 내부 컴포넌트
@@ -40,6 +41,7 @@ function CounselFormContent() {
   const searchParams = useSearchParams();
   const breederId = searchParams.get('breederId') || '';
   const petId = searchParams.get('petId') || undefined;
+  const { trackAdoptionApplication, trackAdoptionApplicationComplete } = useAnalytics();
 
   const { setCounselFormData, counselFormData, clearCounselFormData } = useCounselFormStore();
   const createApplicationMutation = useCreateApplication();
@@ -155,7 +157,14 @@ function CounselFormContent() {
     };
 
     try {
+      // GA4 입양 신청 시작 트래킹
+      trackAdoptionApplication(breederId, petId || '');
+
       const result = await createApplicationMutation.mutateAsync(applicationData);
+
+      // GA4 입양 신청 완료 트래킹
+      const applicationId = (result as any)?.data?.applicationId || 'unknown';
+      trackAdoptionApplicationComplete(applicationId);
 
       // 성공 시 저장된 폼 데이터 삭제
       clearCounselFormData();

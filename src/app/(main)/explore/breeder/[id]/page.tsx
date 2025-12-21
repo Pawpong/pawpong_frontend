@@ -23,6 +23,7 @@ import { useCounselFormStore } from '@/stores/counsel-form-store';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useBreederProfile, useBreederPets, useParentPets, useBreederReviews } from './_hooks/use-breeder-detail';
 import { useAuthStore } from '@/stores/auth-store';
+import { useAnalytics } from '@/hooks/use-analytics';
 
 interface PageProps {
   params: Promise<{
@@ -36,6 +37,7 @@ export default function Page({ params }: PageProps) {
   const { clearCounselFormData } = useCounselFormStore();
   const isLg = useBreakpoint('lg');
   const { user, isAuthenticated } = useAuthStore();
+  const { trackViewBreederProfile, trackButtonClick } = useAnalytics();
 
   // 브리더 본인인지 확인
   const isOwnProfile = user?.role === 'breeder' && user?.userId === breederId;
@@ -49,6 +51,14 @@ export default function Page({ params }: PageProps) {
   // 탈퇴한 브리더 모달 상태
   const [showDeletedAlert, setShowDeletedAlert] = useState(false);
   const [isNotFoundError, setIsNotFoundError] = useState(false);
+
+  // 브리더 프로필 조회 GA4 트래킹
+  useEffect(() => {
+    if (profileData && !isProfileLoading && !profileError) {
+      const breederName = profileData.breederName || '알 수 없음';
+      trackViewBreederProfile(breederId, breederName);
+    }
+  }, [profileData, isProfileLoading, profileError, breederId, trackViewBreederProfile]);
 
   // 에러 발생 시 모달 표시
   useEffect(() => {
@@ -68,6 +78,8 @@ export default function Page({ params }: PageProps) {
       router.push('/login');
       return;
     }
+    // GA4 상담 신청 버튼 클릭 트래킹
+    trackButtonClick('상담 신청하기', '브리더 프로필');
     clearCounselFormData();
     router.push(`/counselform?breederId=${breederId}`);
   };
