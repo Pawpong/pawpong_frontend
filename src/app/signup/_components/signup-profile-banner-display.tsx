@@ -5,6 +5,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import SignupProgressOverlay from './signup-progress-overlay';
 import signupBackground from '@/assets/images/signup-background.png';
+import useSignupFormStore from '@/stores/signup-form-store';
 
 interface ProfileBanner {
   bannerId: string;
@@ -21,6 +22,11 @@ export default function SignupProfileBannerDisplay() {
   const [banners, setBanners] = useState<ProfileBanner[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const flowIndex = useSignupFormStore((e) => e.flowIndex);
+  const userType = useSignupFormStore((e) => e.userType);
+
+  // 브리더 회원가입 완료 단계 확인 (flowIndex 6)
+  const isCompleteStep = userType === 'breeder' && flowIndex === 6;
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -70,6 +76,15 @@ export default function SignupProfileBannerDisplay() {
       window.location.href = banner.linkUrl;
     }
   };
+
+  // 회원가입 완료 단계일 때는 login-image.png 표시
+  if (isCompleteStep) {
+    return (
+      <div className="relative h-full overflow-hidden rounded-[20px]">
+        <Image src="/login-image.png" alt="Login Image" fill className="object-cover" priority />
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
