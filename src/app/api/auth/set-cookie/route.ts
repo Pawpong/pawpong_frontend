@@ -49,11 +49,10 @@ export async function POST(req: Request) {
   // localhost에서는 Secure 쿠키 사용 불가 (HTTP이므로)
   // HTTPS 환경에서만 Secure 플래그 설정
   const isSecure =
-    process.env.NODE_ENV === 'production' &&
-    (process.env.NEXT_PUBLIC_FRONTEND_URL?.startsWith('https://') ?? false);
+    process.env.NODE_ENV === 'production' && (process.env.NEXT_PUBLIC_FRONTEND_URL?.startsWith('https://') ?? false);
 
   // accessToken은 httpOnly: false로 설정 (cross-origin 요청 시 Authorization 헤더로 전송 필요)
-  // localhost에서 dev-api.pawpong.kr로 요청 시 쿠키가 자동 전송되지 않으므로
+  // localhost에서 api.pawpong.kr로 요청 시 쿠키가 자동 전송되지 않으므로
   // JavaScript에서 읽어서 Authorization 헤더로 보내야 함
   res.cookies.set('accessToken', accessToken, {
     httpOnly: false, // cross-origin API 요청을 위해 JavaScript에서 접근 가능하게 설정

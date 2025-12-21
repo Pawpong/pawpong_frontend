@@ -1,7 +1,27 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
-// trailing slash 제거하여 이중 슬래시 방지
-const BASE = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, '') || 'https://dev-api.pawpong.kr';
+// 환경별 API URL 자동 설정
+const getBaseURL = () => {
+  // 1순위: 환경 변수 (로컬은 .env.local 우선 사용)
+  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+    return process.env.NEXT_PUBLIC_API_BASE_URL.replace(/\/+$/, '');
+  }
+
+  // 2순위: 브라우저 환경에서 localhost 감지
+  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+    return 'http://localhost:8080';
+  }
+
+  // 3순위: 프로덕션 환경
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://api.pawpong.kr';
+  }
+
+  // 4순위: 개발 환경 기본값
+  return 'https://dev-api.pawpong.kr';
+};
+
+const BASE = getBaseURL();
 
 // 토큰 리프레시 상태 관리 (중복 요청 방지)
 let isRefreshing = false;

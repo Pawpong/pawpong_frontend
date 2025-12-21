@@ -13,14 +13,20 @@ export async function POST() {
     const refreshToken = cookieStore.get('refreshToken')?.value;
 
     if (!refreshToken) {
-      return NextResponse.json(
-        { success: false, message: 'refreshToken이 없습니다.' },
-        { status: 401 },
-      );
+      return NextResponse.json({ success: false, message: 'refreshToken이 없습니다.' }, { status: 401 });
     }
 
-    // 백엔드 API로 리프레시 요청
-    const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://dev-api.pawpong.kr';
+    // 백엔드 API URL 환경별 자동 설정
+    const getBackendUrl = () => {
+      // 1순위: 환경 변수 (로컬은 .env.local 우선 사용)
+      if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+        return process.env.NEXT_PUBLIC_API_BASE_URL.replace(/\/+$/, '');
+      }
+      // 2순위: NODE_ENV 기반 자동 선택
+      return process.env.NODE_ENV === 'production' ? 'https://api.pawpong.kr' : 'https://dev-api.pawpong.kr';
+    };
+
+    const backendUrl = getBackendUrl();
     const response = await fetch(`${backendUrl}/api/auth/refresh`, {
       method: 'POST',
       headers: {
@@ -41,9 +47,6 @@ export async function POST() {
     return NextResponse.json(data);
   } catch (error) {
     console.error('토큰 리프레시 오류:', error);
-    return NextResponse.json(
-      { success: false, message: '토큰 갱신 중 오류가 발생했습니다.' },
-      { status: 500 },
-    );
+    return NextResponse.json({ success: false, message: '토큰 갱신 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }
