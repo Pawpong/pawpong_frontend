@@ -93,7 +93,7 @@ export default function BreederInfoSection() {
 
   const onSubmit = (data: BreederInfoFormData) => {
     // 상호명 중복 검사를 완료하지 않았으면 제출 차단
-    if (!nameChecked || !nameAvailable) {
+    if (!nameChecked || !nameAvailable || errors.breederName) {
       setSubmitAttempted(true);
       return;
     }
@@ -180,7 +180,7 @@ export default function BreederInfoSection() {
                 {isCheckingName ? '확인 중...' : '중복검사'}
               </Button>
             </div>
-            {nameAvailable && (
+            {nameAvailable && !errors.breederName && (
               <div className="flex items-center gap-0.5">
                 <Check className="size-3 shrink-0" />
                 <p className="text-caption font-medium text-status-success-500">사용할 수 있는 브리더명이에요</p>

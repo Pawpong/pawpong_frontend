@@ -91,7 +91,10 @@ const breedingAnimalItemSchema = z
 export const profileFormSchema = z
   .object({
     // 프로필 기본 정보
-    breederName: z.string().min(1, BREEDER_PROFILE_ERROR.NAME_REQUIRED),
+    breederName: z
+      .string()
+      .min(1, BREEDER_PROFILE_ERROR.NAME_REQUIRED)
+      .regex(/^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]+$/, '한글, 영문, 숫자만 이용해 브리더명을 설정해 주세요'),
     description: z.string(),
     location: locationSchema,
     breeds: breedsSchema,
