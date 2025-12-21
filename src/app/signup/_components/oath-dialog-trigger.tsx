@@ -30,10 +30,6 @@ const oathInfo: Record<'elite' | 'new', React.ReactNode> = {
         <p key={2}>
           <span className="text-primary-600">2종 이하 브리딩 원칙</span>을 지키며, 다품종 브리딩을 하지 않습니다.
         </p>,
-        <p key={3}>
-          모든 아이들은 <span className="text-primary-600">중성화 완료 후</span> 분양하거나, 입양 계약서에 반드시
-          중성화 조항을 명시합니다.
-        </p>,
         <p key={4}>
           모든 아이들은 반드시 <span className="text-primary-600">생후 3개월 이후</span>에만 분양합니다.
         </p>,
@@ -72,9 +68,7 @@ const oathInfo: Record<'elite' | 'new', React.ReactNode> = {
           국내에서 진행되는 모든 분양은 반드시 <span className="text-primary-600">대면 분양</span>으로 진행하며,
           비대면·택배 분양은 절대 하지 않습니다.
         </p>,
-        <p key={3}>
-          분양 과정에서 반려동물의 건강과 복지를 우선시하며, 불필요하거나 무분별한 번식을 하지 않습니다.
-        </p>,
+        <p key={3}>분양 과정에서 반려동물의 건강과 복지를 우선시하며, 불필요하거나 무분별한 번식을 하지 않습니다.</p>,
         <p key={4}>
           포퐁 플랫폼과 입양자에게 <span className="text-primary-600">허위 사실 없이 투명하게 정보를 제공</span>
           합니다.
