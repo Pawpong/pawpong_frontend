@@ -132,9 +132,15 @@ export default function DocumentSection() {
         await uploadProfileImage(photo, tempId);
       }
 
+      // 업로드된 서류가 있으면 먼저 서버에 업로드 (회원가입 완료 전)
+      if (uploadedFiles.length > 0) {
+        setUploading(true);
+        await uploadBreederDocuments(tempId, uploadedFiles, level);
+      }
+
       setUploading(false);
 
-      // 회원가입 완료 (서류 없이)
+      // 회원가입 완료
       const requestData = {
         tempId,
         provider,
