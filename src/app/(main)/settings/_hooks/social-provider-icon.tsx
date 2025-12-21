@@ -8,7 +8,7 @@ import type { SocialProvider } from './social-provider';
 const SOCIAL_PROVIDER_ICON_MAP: Record<SocialProvider, (props: { className?: string }) => ReactNode> = {
   kakao: (props) => <Kakao {...props} />,
   google: (props) => <Google {...props} />,
-  naver: (props) => <Naver {...props} />,
+  naver: (props) => <Naver fillColor="#03C75A" {...props} />,
   apple: (props) => <Apple {...props} />,
 };
 
