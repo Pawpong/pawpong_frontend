@@ -5,6 +5,7 @@ import './global.css';
 import { Toaster } from '@/components/ui/toaster';
 import { QueryProvider } from '@/providers/query-provider';
 import { AnalyticsProvider } from '@/components/analytics/analytics-provider';
+import { Suspense } from 'react';
 
 const pretendard = localFont({
   src: '../assets/fonts/PretendardVariable.woff2',
@@ -70,7 +71,9 @@ export default function RootLayout({
           `}
         </Script>
         <QueryProvider>
-          <AnalyticsProvider />
+          <Suspense fallback={null}>
+            <AnalyticsProvider />
+          </Suspense>
           {children}
         </QueryProvider>
         <Toaster />
