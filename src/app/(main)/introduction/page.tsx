@@ -37,16 +37,7 @@ export default function IntroductionPage() {
             {sections.map((section, index) => (
               <div key={section.heading} className="flex flex-col">
                 {section.heading && (
-                  <p
-                    className="text-grayscale-gray6 mb-2"
-                    style={{
-                      fontSize: 'var(--Typo-Size-Body-M, 1.125rem)',
-                      fontWeight: 600,
-                      lineHeight: 'var(--Typo-Line-height-Body-M, 1.75rem)',
-                    }}
-                  >
-                    {section.heading}
-                  </p>
+                  <p className="text-grayscale-gray6 mb-2 text-body-m font-semibold">{section.heading}</p>
                 )}
                 <div className="flex flex-col">
                   {section.contents.map((item: IntroductionContentItem) => {
@@ -69,7 +60,7 @@ export default function IntroductionPage() {
                     return (
                       <p
                         key={`${section.heading}-${item.text.slice(0, 20)}`}
-                        className={`text-body-xs font-normal text-grayscale-gray6 leading-[1.43] whitespace-pre-line ${indentClass}`}
+                        className={`text-grayscale-gray6 whitespace-pre-line text-body-s font-normal ${indentClass}`}
                       >
                         {item.text}
                       </p>
