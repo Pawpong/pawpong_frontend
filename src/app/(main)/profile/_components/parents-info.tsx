@@ -22,7 +22,13 @@ import type { ProfileFormData } from '@/stores/profile-store';
 import ErrorMessage from '@/components/error-message';
 import { BREEDER_PROFILE_ERROR } from '@/constants/errors/breeder-profile-error';
 
-export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormContext<ProfileFormData>> }) {
+export default function ParentsInfo({
+  form,
+  maxParents,
+}: {
+  form: ReturnType<typeof useFormContext<ProfileFormData>>;
+  maxParents?: number;
+}) {
   const { control, watch, formState, getValues, setValue } = form;
   const { errors } = formState;
   const selectedBreeds = watch('breeds');
@@ -46,7 +52,7 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const MAX_PARENTS = 100; // 충분히 큰 값으로 설정하여 제한 없음
+  const MAX_PARENTS = maxParents ?? 100;
 
   const addParent = () => {
     if (fields.length >= MAX_PARENTS) return;
