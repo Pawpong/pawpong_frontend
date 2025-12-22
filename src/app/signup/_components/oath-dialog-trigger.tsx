@@ -14,7 +14,7 @@ import React from 'react';
 
 const oathInfo: Record<'elite' | 'new', React.ReactNode> = {
   elite: (
-    <>
+    <div className="flex flex-col gap-2">
       <p>
         본인은 포퐁 플랫폼 브리더 회원으로 입점함에 있어, 아래의 기준을 충실히 준수할 것을 서약합니다. 만약 이를
         위반하거나 허위 사실이 적발될 경우, 플랫폼에서 즉시 퇴출될 수 있음을 이해하며 이에 동의합니다.
@@ -38,7 +38,8 @@ const oathInfo: Record<'elite' | 'new', React.ReactNode> = {
           비대면·택배 분양은 절대 하지 않습니다.
         </p>,
         <p key={6}>분양 개체의 사회화, 건강, 복지를 최우선으로 하며, 무분별한 번식을 하지 않습니다.</p>,
-        <p key={7}>
+        <p key={7}>분양 과정에서 반려동물의 건강과 복지를 우선시하며, 불필요하거나 무분별한 번식을 하지 않습니다.</p>,
+        <p key={8}>
           포퐁 플랫폼과 입양자에게 <span className="text-primary-600">허위 사실 없이 투명하게 정보를 제공</span>
           합니다.
         </p>,
@@ -48,10 +49,10 @@ const oathInfo: Record<'elite' | 'new', React.ReactNode> = {
           {item}
         </div>
       ))}
-    </>
+    </div>
   ),
   new: (
-    <>
+    <div className="flex flex-col gap-2">
       <p>
         본인은 포퐁 플랫폼 브리더 회원으로 입점함에 있어, 아래의 최소 기준을 성실히 준수할 것을 서약합니다. 만약 이를
         위반하거나 허위 사실이 적발될 경우, 플랫폼에서 즉시 퇴출될 수 있음을 이해하며 이에 동의합니다.
@@ -75,11 +76,11 @@ const oathInfo: Record<'elite' | 'new', React.ReactNode> = {
         </p>,
       ].map((item) => (
         <div className="flex gap-2 items-center" key={item.key}>
-          <div className="size-[3px] bg-grayscale-gray5 rounded-full shrink-0" />
+          <div className="size-[3px] bg-grayscale-gray5 rounded-full shrink-0 " />
           {item}
         </div>
       ))}
-    </>
+    </div>
   ),
 };
 
@@ -110,7 +111,7 @@ export default function OathDialogTrigger({
           </LargeDialogTitle>
         </LargeDialogHeader>
 
-        <div className="md:py-5 md:px-6 space-y-2 text-body-xs text-grayscale-gray5 overflow-auto px-padding py-4 flex-1">
+        <div className="md:py-5 md:px-6 text-body-xs text-grayscale-gray5 overflow-auto px-padding py-4 flex-1">
           {oathInfo[level]}
         </div>
 
