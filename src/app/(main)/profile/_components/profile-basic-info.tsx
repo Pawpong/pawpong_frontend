@@ -98,6 +98,21 @@ export default function ProfileBasicInfo({
             >
               <PictureRemove />
             </button>
+        <div
+          onClick={handleProfileImageClick}
+          className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden"
+        >
+          {profileImagePreview ? (
+            <Image
+              src={profileImagePreview}
+              alt="프로필 이미지"
+              width={80}
+              height={80}
+              className="object-cover w-full h-full"
+              unoptimized
+            />
+          ) : (
+            <Camera className="size-7 group-hover:[&_path]:fill-[#4F3B2E]" />
           )}
         </div>
         <div className="flex flex-col gap-[10px] w-full">

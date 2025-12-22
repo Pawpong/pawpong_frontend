@@ -56,12 +56,12 @@ export const NOTIFICATION_CONFIG: Record<NotificationType, NotificationConfig> =
       defaultTargetUrl: "/application",
     },
 
-    // 후기 등록 (브리더에게) → 내 프로필
+    // 후기 등록 (브리더에게) → 브리더 프로필 후기 섹션
     new_review_registered: {
       icon: () => <HeartBubble className="text-grayscale-gray6" />,
       message:
         "새로운 후기가 등록되었어요!\n브리더 프로필에서 후기를 확인해 보세요.",
-      defaultTargetUrl: "/mypage",
+      defaultTargetUrl: "/explore/breeder/$breederId$#reviews",
     },
 
     // 후기 작성 독려 (입양자에게) → 후기 작성 다이얼로그 (notification-dialog에서 직접 처리)

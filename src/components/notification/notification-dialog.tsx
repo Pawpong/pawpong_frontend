@@ -111,7 +111,8 @@ export default function NotificationDialog({ children }: NotificationDialogProps
       if (targetUrl) {
         // 다이얼로그 닫기
         dialogCloseRef.current?.click();
-        // 페이지 이동
+
+        // 페이지 이동 (해시 스크롤은 각 페이지의 useEffect에서 처리)
         router.push(targetUrl);
       }
     },

@@ -12,6 +12,7 @@ export interface BannerDto {
   title?: string;
   description?: string;
   order: number;
+  targetAudience?: ('guest' | 'adopter' | 'breeder')[]; // 표시 대상
 }
 
 /** FAQ 응답 타입 (백엔드 DTO와 일치) */

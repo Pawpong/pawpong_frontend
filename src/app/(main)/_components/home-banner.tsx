@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getBanners, type BannerDto } from '@/lib/home';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useAuthStore } from '@/stores/auth-store';
 
 const HomeBanner = () => {
   const [banners, setBanners] = useState<BannerDto[]>([]);
@@ -12,6 +13,7 @@ const HomeBanner = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const { user, isAuthenticated } = useAuthStore();
 
   // 화면 크기 감지 (반응형)
   useEffect(() => {
@@ -29,7 +31,37 @@ const HomeBanner = () => {
       try {
         setIsLoading(true);
         const data = await getBanners();
-        setBanners(data);
+
+        // 사용자 role 확인
+        const userType = isAuthenticated ? user?.role : 'guest';
+
+        console.log('=== 배너 필터링 디버깅 ===');
+        console.log('로그인 여부:', isAuthenticated);
+        console.log('사용자 정보:', user);
+        console.log('사용자 타입:', userType);
+        console.log('전체 배너 수:', data.length);
+        console.log('배너 데이터:', data.map(b => ({
+          bannerId: b.bannerId,
+          targetAudience: b.targetAudience
+        })));
+
+        // 배너 필터링: targetAudience가 비어있거나, 현재 사용자 타입을 포함하는 배너만 표시
+        const filteredBanners = data.filter((banner) => {
+          // targetAudience가 없거나 비어있으면 전체에게 표시
+          if (!banner.targetAudience || banner.targetAudience.length === 0) {
+            console.log(`배너 ${banner.bannerId}: targetAudience 없음 -> 전체 표시`);
+            return true;
+          }
+          // 현재 사용자 타입이 targetAudience에 포함되어 있으면 표시
+          const shouldShow = banner.targetAudience.includes(userType as 'guest' | 'adopter' | 'breeder');
+          console.log(`배너 ${banner.bannerId}: targetAudience=${banner.targetAudience}, userType=${userType}, 표시=${shouldShow}`);
+          return shouldShow;
+        });
+
+        console.log('필터링된 배너 수:', filteredBanners.length);
+        console.log('=========================');
+
+        setBanners(filteredBanners);
         setError(null);
       } catch (err) {
         console.error('배너 조회 실패:', err);
@@ -40,7 +72,7 @@ const HomeBanner = () => {
     };
 
     fetchBanners();
-  }, []);
+  }, [isAuthenticated, user?.role]);
 
   // 자동 슬라이드
   useEffect(() => {

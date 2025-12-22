@@ -13,6 +13,9 @@ function Input({ className, placeholder, type, ...props }: React.ComponentProps<
         'focus-visible:ring-0',
         // "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
         'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
+        // 자동완성 배경색 제거
+        '[&:-webkit-autofill]:[-webkit-box-shadow:0_0_0_1000px_white_inset]',
+        '[&:-webkit-autofill]:[-webkit-text-fill-color:#4F3B2E]',
         className,
       )}
       {...props}

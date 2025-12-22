@@ -73,6 +73,47 @@ export default function Page({ params }: PageProps) {
     }
   }, [profileError]);
 
+  // URL 해시로 스크롤
+  useEffect(() => {
+    const hash = window.location.hash.slice(1); // '#' 제거
+    console.log('[Breeder Profile] Hash detected:', hash);
+    console.log('[Breeder Profile] isProfileLoading:', isProfileLoading, 'isReviewsLoading:', isReviewsLoading);
+    console.log('[Breeder Profile] Reviews count:', reviewsData?.items?.length || 0);
+
+    if (hash && !isProfileLoading && !isReviewsLoading) {
+      console.log('[Breeder Profile] Attempting to scroll to:', hash);
+
+      // 페이지 로드 후 스크롤 (데이터 로딩 완료 후)
+      const scrollToHash = () => {
+        const element = document.getElementById(hash);
+        console.log('[Breeder Profile] Element found:', element);
+        if (element) {
+          console.log('[Breeder Profile] Scrolling to element');
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return true;
+        } else {
+          console.log('[Breeder Profile] Element not found with id:', hash);
+          // DOM에 있는 모든 id 확인
+          const allIds = Array.from(document.querySelectorAll('[id]')).map(el => el.id);
+          console.log('[Breeder Profile] All IDs in DOM:', allIds);
+          return false;
+        }
+      };
+
+      // 여러 시점에 스크롤 시도 (더 긴 간격으로)
+      const timeouts = [100, 300, 500, 1000, 1500, 2000];
+      timeouts.forEach((delay, index) => {
+        setTimeout(() => {
+          console.log(`[Breeder Profile] Scroll attempt ${index + 1} (${delay}ms)`);
+          const success = scrollToHash();
+          if (success) {
+            console.log('[Breeder Profile] Scroll successful, clearing remaining timeouts');
+          }
+        }, delay);
+      });
+    }
+  }, [isProfileLoading, isReviewsLoading, reviewsData]);
+
   const handleCounselClick = () => {
     if (!isAuthenticated) {
       router.push('/login');

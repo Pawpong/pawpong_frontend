@@ -1,11 +1,15 @@
 import React from 'react';
 
-export default function Naver(props: React.SVGProps<SVGSVGElement>) {
+interface NaverProps extends React.SVGProps<SVGSVGElement> {
+  fillColor?: string;
+}
+
+export default function Naver({ fillColor = '#FFFFFF', ...props }: NaverProps) {
   return (
     <svg viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
         d="M3 17.6702V3.0282H7.18342L12.4127 10.8721V3.0282H17.119V17.6702H12.4127L7.18342 10.3492V17.6702H3Z"
-        fill="#03C75A"
+        fill={fillColor}
       />
     </svg>
   );
