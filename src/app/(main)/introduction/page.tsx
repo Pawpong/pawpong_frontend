@@ -11,6 +11,7 @@ import {
   IntroductionContentItem,
 } from '@/constants/introduction';
 import { useAuthStore } from '@/stores/auth-store';
+import { Separator } from '@/components/ui/separator';
 
 export default function IntroductionPage() {
   const { user } = useAuthStore();
@@ -27,13 +28,26 @@ export default function IntroductionPage() {
           <div className="text-[#4F3B2E] text-heading-3 font-semibold">{title}</div>
         </div>
 
-        <div className="flex flex-col gap-5 max-w-[660px] w-full md:mx-auto">
+        <div className="flex flex-col gap-7 max-w-[660px] w-full md:mx-auto">
           <p className="text-body-xs font-normal text-grayscale-gray6 leading-[1.43] whitespace-pre-line">{intro}</p>
 
-          <div className="flex flex-col gap-5">
-            {sections.map((section) => (
+          <Separator className="bg-grayscale-gray2" />
+
+          <div className="flex flex-col gap-7">
+            {sections.map((section, index) => (
               <div key={section.heading} className="flex flex-col">
-                <p className="text-body-xs font-normal text-grayscale-gray6 leading-[1.43] mb-2">{section.heading}</p>
+                {section.heading && (
+                  <p
+                    className="text-grayscale-gray6 mb-2"
+                    style={{
+                      fontSize: 'var(--Typo-Size-Body-M, 1.125rem)',
+                      fontWeight: 600,
+                      lineHeight: 'var(--Typo-Line-height-Body-M, 1.75rem)',
+                    }}
+                  >
+                    {section.heading}
+                  </p>
+                )}
                 <div className="flex flex-col">
                   {section.contents.map((item: IntroductionContentItem) => {
                     let indentClass = '';
@@ -55,13 +69,14 @@ export default function IntroductionPage() {
                     return (
                       <p
                         key={`${section.heading}-${item.text.slice(0, 20)}`}
-                        className={`text-body-xs font-normal text-grayscale-gray6 leading-[1.43] ${indentClass}`}
+                        className={`text-body-xs font-normal text-grayscale-gray6 leading-[1.43] whitespace-pre-line ${indentClass}`}
                       >
                         {item.text}
                       </p>
                     );
                   })}
                 </div>
+                {index < sections.length - 1 && <Separator className="bg-grayscale-gray2 mt-7" />}
               </div>
             ))}
           </div>
