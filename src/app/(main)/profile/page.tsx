@@ -31,6 +31,7 @@ export default function ProfilePage() {
   // 프로필 이미지 상태
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [profileImagePreview, setProfileImagePreview] = useState<string>('');
+  const [profileImageRemoved, setProfileImageRemoved] = useState<boolean>(false);
 
   // 원본 API 데이터를 저장 (변경사항 비교용)
   const originalDataRef = useRef<any>(null);
@@ -106,6 +107,12 @@ export default function ProfilePage() {
       // 프로필 이미지 초기화
       if (apiProfileData.profileImageFileName) {
         setProfileImagePreview(apiProfileData.profileImageFileName);
+        setProfileImageRemoved(false);
+        setProfileImageFile(null);
+      } else {
+        setProfileImagePreview('');
+        setProfileImageRemoved(false);
+        setProfileImageFile(null);
       }
 
       const locationParts = apiProfileData.profileInfo?.location;
@@ -191,13 +198,21 @@ export default function ProfilePage() {
     formState: { isDirty },
   } = form;
   // 프로필 이미지 파일 변경도 감지
-  const hasChanges = isDirty || !!profileImageFile;
+  const hasChanges = isDirty || !!profileImageFile || profileImageRemoved;
   const isDisabled = isEmpty || !hasChanges;
 
   // 프로필 이미지 변경 핸들러
   const handleProfileImageChange = (file: File, preview: string) => {
     setProfileImageFile(file);
     setProfileImagePreview(preview);
+    setProfileImageRemoved(false);
+  };
+
+  // 프로필 이미지 삭제 핸들러
+  const handleProfileImageRemove = () => {
+    setProfileImageFile(null);
+    setProfileImagePreview('');
+    setProfileImageRemoved(true);
   };
 
   const handleEdit = async () => {
@@ -233,11 +248,13 @@ export default function ProfilePage() {
     // 모든 validation 통과 시 API 호출
     if (isValid) {
       try {
-        // 0. 프로필 이미지 업로드 (변경된 경우)
-        let profileImageFileName: string | undefined;
+        // 0. 프로필 이미지 업로드/삭제 처리
+        let profileImageToSave: string | null | undefined;
         if (profileImageFile) {
           const uploadResult = await uploadSingleFile(profileImageFile, 'profile-images');
-          profileImageFileName = uploadResult.fileName;
+          profileImageToSave = uploadResult.fileName;
+        } else if (profileImageRemoved) {
+          profileImageToSave = null;
         }
 
         // 0-1. 대표 사진 업로드 (새로 추가된 파일만)
@@ -296,10 +313,18 @@ export default function ProfilePage() {
                 }
               : undefined,
           breeds: formData.breeds?.length > 0 ? formData.breeds : undefined,
-          profileImage: profileImageFileName,
+          profileImage: profileImageToSave,
         };
 
         await updateProfileMutation.mutateAsync(updateData);
+
+        // 프로필 이미지 상태 리셋
+        if (profileImageRemoved) {
+          setProfileImageRemoved(false);
+          setProfileImagePreview('');
+        } else if (profileImageFile) {
+          setProfileImageFile(null);
+        }
 
         // 2. 부모견 변경사항 동기화 (ID 매핑 반환)
         const originalParents = originalDataRef.current?.parentPetInfo || [];
@@ -352,6 +377,7 @@ export default function ProfilePage() {
               form={form}
               profileImagePreview={profileImagePreview}
               onProfileImageChange={handleProfileImageChange}
+              onProfileImageRemove={handleProfileImageRemove}
               animal={
                 apiProfileData?.profileInfo?.specializationAreas?.includes('cat') ||
                 (apiProfileData as any)?.specializationTypes?.includes('cat')
