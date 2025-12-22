@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Container from '@/components/ui/container';
 import SortSelect from './sort-select';
 import ToggleFilterSidebarButton from './toggle-filter-sidebar-button';
@@ -9,7 +10,9 @@ export default function FilterSortBar() {
         <ToggleFilterSidebarButton />
       </div>
 
-      <SortSelect />
+      <Suspense fallback={<div className="w-20 h-9" />}>
+        <SortSelect />
+      </Suspense>
     </Container>
   );
 }
