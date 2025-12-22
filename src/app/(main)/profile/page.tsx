@@ -352,6 +352,12 @@ export default function ProfilePage() {
               form={form}
               profileImagePreview={profileImagePreview}
               onProfileImageChange={handleProfileImageChange}
+              animal={
+                apiProfileData?.profileInfo?.specializationAreas?.includes('cat') ||
+                (apiProfileData as any)?.specializationTypes?.includes('cat')
+                  ? 'cat'
+                  : 'dog'
+              }
             />
             {/* 엄마 아빠 정보 */}
             <ParentsInfo form={form} maxParents={apiProfileData?.verificationInfo?.plan === 'basic' ? 4 : undefined} />
