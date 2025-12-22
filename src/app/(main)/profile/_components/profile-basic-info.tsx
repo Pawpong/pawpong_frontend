@@ -20,10 +20,15 @@ interface ProfileBasicInfoProps {
   form: ReturnType<typeof useFormContext<ProfileFormData>>;
   profileImagePreview?: string;
   onProfileImageChange?: (file: File, preview: string) => void;
+  animal?: 'dog' | 'cat';
 }
 
-export default function ProfileBasicInfo({ form, profileImagePreview, onProfileImageChange }: ProfileBasicInfoProps) {
-  const [animal] = useState<'dog' | 'cat'>('dog');
+export default function ProfileBasicInfo({
+  form,
+  profileImagePreview,
+  onProfileImageChange,
+  animal = 'dog',
+}: ProfileBasicInfoProps) {
   const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
   const { control, watch, setValue, formState, trigger } = form;
   const { errors } = formState;
@@ -60,13 +65,7 @@ export default function ProfileBasicInfo({ form, profileImagePreview, onProfileI
     <div className="flex flex-col gap-8 items-start w-full">
       <div className="flex flex-col gap-3 items-center w-full">
         {/* 프로필 이미지 */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleProfileImageChange}
-        />
+        <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleProfileImageChange} />
         <div
           onClick={handleProfileImageClick}
           className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden"
@@ -88,7 +87,14 @@ export default function ProfileBasicInfo({ form, profileImagePreview, onProfileI
           <Controller
             name="breederName"
             control={control}
-            render={({ field }) => <Input placeholder="브리더명(상호명)" {...field} disabled className="bg-grayscale-gray1 text-grayscale-gray5 cursor-not-allowed" />}
+            render={({ field }) => (
+              <Input
+                placeholder="브리더명(상호명)"
+                {...field}
+                disabled
+                className="bg-grayscale-gray1 text-grayscale-gray5 cursor-not-allowed"
+              />
+            )}
           />
           {errors.breederName && <ErrorMessage message={errors.breederName.message as string} />}
         </div>
