@@ -8,7 +8,7 @@ import { QueryProvider } from '@/providers/query-provider';
 import { AuthProvider } from '@/providers/auth-provider';
 import { useAuthStore } from '@/stores/auth-store';
 
-function LayoutContentInner({ children }: { children: React.ReactNode }) {
+function LayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, hasHydrated } = useAuthStore();
   const isProfilePage = pathname === '/profile';
@@ -19,24 +19,14 @@ function LayoutContentInner({ children }: { children: React.ReactNode }) {
   const navVariant = user?.role === 'breeder' ? 'breeder' : 'default';
 
   return (
-    <NavigationGuardProvider>
-      <div className="flex flex-col min-h-screen">
-        {hasHydrated && <Gnb variant={useTertiaryVariant ? 'tertiary' : 'default'} navVariant={navVariant} />}
-        <main className="flex-1">
-          <Suspense fallback={<div className="flex items-center justify-center min-h-[400px]">로딩 중...</div>}>
-            {children}
-          </Suspense>
-        </main>
-        <Footer />
-      </div>
-    </NavigationGuardProvider>
-  );
-}
-
-function LayoutContent({ children }: { children: React.ReactNode }) {
-  return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">로딩 중...</div>}>
-      <LayoutContentInner>{children}</LayoutContentInner>
+    <Suspense>
+      <NavigationGuardProvider>
+        <div className="flex flex-col min-h-screen">
+          {hasHydrated && <Gnb variant={useTertiaryVariant ? 'tertiary' : 'default'} navVariant={navVariant} />}
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
+      </NavigationGuardProvider>
     </Suspense>
   );
 }
