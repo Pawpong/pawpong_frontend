@@ -1,6 +1,5 @@
 'use client';
 
-import { Suspense } from 'react';
 import Container from '@/components/ui/container';
 import FaqItemComponent from './_components/faq-item';
 import { cn } from '@/lib/utils';
@@ -8,7 +7,7 @@ import DownArrow from '@/assets/icons/long-down-arrow.svg';
 import { Button } from '@/components/ui/button';
 import { useFaqPage } from './_hooks/use-faq-page';
 
-function FaqPageContent() {
+export default function FaqPage() {
   const {
     activeTab,
     openIndex,
@@ -97,13 +96,5 @@ function FaqPageContent() {
         </div>
       </div>
     </Container>
-  );
-}
-
-export default function FaqPage() {
-  return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-[400px]">로딩 중...</div>}>
-      <FaqPageContent />
-    </Suspense>
   );
 }
