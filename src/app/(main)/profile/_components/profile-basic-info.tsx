@@ -11,6 +11,7 @@ import { useState, useRef } from 'react';
 import LocationSelectDialogTrigger from '@/app/signup/_components/location-select-dialog-trigger';
 import ImageEdit from '@/components/image-edit';
 import MinusIcon from '@/assets/icons/minus.svg';
+import PictureRemove from '@/assets/icons/picture-delete.svg';
 import { useFormContext, Controller } from 'react-hook-form';
 import type { ProfileFormData } from '@/stores/profile-store';
 import ErrorMessage from '@/components/error-message';
@@ -20,6 +21,7 @@ interface ProfileBasicInfoProps {
   form: ReturnType<typeof useFormContext<ProfileFormData>>;
   profileImagePreview?: string;
   onProfileImageChange?: (file: File, preview: string) => void;
+  onProfileImageRemove?: () => void;
   animal?: 'dog' | 'cat';
 }
 
@@ -27,6 +29,7 @@ export default function ProfileBasicInfo({
   form,
   profileImagePreview,
   onProfileImageChange,
+  onProfileImageRemove,
   animal = 'dog',
 }: ProfileBasicInfoProps) {
   const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
@@ -66,21 +69,35 @@ export default function ProfileBasicInfo({
       <div className="flex flex-col gap-3 items-center w-full">
         {/* 프로필 이미지 */}
         <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleProfileImageChange} />
-        <div
-          onClick={handleProfileImageClick}
-          className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden"
-        >
-          {profileImagePreview ? (
-            <Image
-              src={profileImagePreview}
-              alt="프로필 이미지"
-              width={80}
-              height={80}
-              className="object-cover w-full h-full"
-              unoptimized
-            />
-          ) : (
-            <Camera className="size-7 group-hover:[&_path]:fill-[#4F3B2E]" />
+        <div className="relative">
+          <div
+            onClick={handleProfileImageClick}
+            className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden"
+          >
+            {profileImagePreview ? (
+              <Image
+                src={profileImagePreview}
+                alt="프로필 이미지"
+                width={80}
+                height={80}
+                className="object-cover w-full h-full rounded-lg"
+                unoptimized
+              />
+            ) : (
+              <Camera className="size-7 group-hover:[&_path]:fill-[#4F3B2E]" />
+            )}
+          </div>
+          {profileImagePreview && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onProfileImageRemove?.();
+              }}
+              className="absolute top-1 right-1 bg-[var(--primary-500-basic,#4f3b2e)] rounded-full size-6 flex items-center justify-center hover:opacity-80 transition-opacity"
+            >
+              <PictureRemove />
+            </button>
           )}
         </div>
         <div className="flex flex-col gap-[10px] w-full">
