@@ -31,7 +31,7 @@ const oathInfo: Record<'elite' | 'new', React.ReactNode> = {
           <span className="text-primary-600">2종 이하 브리딩 원칙</span>을 지키며, 다품종 브리딩을 하지 않습니다.
         </p>,
         <p key={4}>
-          모든 아이들은 반드시 <span className="text-primary-600">생후 3개월 이후</span>에만 분양합니다.
+          모든 아이들은 반드시 <span className="text-primary-600">생후 2개월(8주) 이후</span>에만 분양합니다.
         </p>,
         <p key={5}>
           국내에서 진행되는 모든 분양은 반드시 <span className="text-primary-600">대면 분양</span>으로 진행하며,
@@ -62,7 +62,7 @@ const oathInfo: Record<'elite' | 'new', React.ReactNode> = {
           판매업이 아님을 확인합니다.
         </p>,
         <p key={1}>
-          모든 분양 개체는 반드시 <span className="text-primary-600">생후 3개월 이후</span>에만 분양합니다.
+          모든 분양 개체는 반드시 <span className="text-primary-600">생후 2개월(8주) 이후</span>에만 분양합니다.
         </p>,
         <p key={2}>
           국내에서 진행되는 모든 분양은 반드시 <span className="text-primary-600">대면 분양</span>으로 진행하며,
