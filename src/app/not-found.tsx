@@ -1,6 +1,9 @@
-import Link from 'next/link';
+'use client';
 
-export default function NotFound() {
+import Link from 'next/link';
+import { Suspense } from 'react';
+
+function NotFoundContent() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4">
       <h1 className="text-4xl font-bold text-primary mb-4">404</h1>
@@ -9,5 +12,13 @@ export default function NotFound() {
         홈으로 돌아가기
       </Link>
     </div>
+  );
+}
+
+export default function NotFound() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">로딩 중...</div>}>
+      <NotFoundContent />
+    </Suspense>
   );
 }
