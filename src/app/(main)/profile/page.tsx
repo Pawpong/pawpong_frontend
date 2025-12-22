@@ -354,14 +354,7 @@ export default function ProfilePage() {
               onProfileImageChange={handleProfileImageChange}
             />
             {/* 엄마 아빠 정보 */}
-            <ParentsInfo
-              form={form}
-              maxParents={
-                apiProfileData?.verificationInfo?.level !== 'elite' && (apiProfileData as any)?.breederLevel !== 'elite'
-                  ? 4
-                  : undefined
-              }
-            />
+            <ParentsInfo form={form} maxParents={apiProfileData?.verificationInfo?.plan === 'basic' ? 4 : undefined} />
             {/* 분양 중인 아이 */}
             <BreedingAnimals form={form} />
             {/* 탈퇴하기 링크 */}
