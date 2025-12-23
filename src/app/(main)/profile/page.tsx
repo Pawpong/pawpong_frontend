@@ -259,15 +259,8 @@ export default function ProfilePage() {
   const hasChanges = isDirty || !!profileImageFile || profileImageRemoved;
   const isDisabled = isEmpty || !hasChanges;
 
-  // 폼 가드 훅 사용 (네비게이션 가드, 브라우저 뒤로가기/앞으로가기, 새로고침 등 모든 가드 포함)
-  const {
-    showNavigationDialog,
-    handleNavigationConfirm,
-    handleNavigationCancel,
-    isBackNavigation,
-    handleBackNavigationConfirm,
-    handleBackNavigationCancel,
-  } = useFormGuard({
+  // 폼 가드 훅 사용 (네비게이션 링크와 로고 클릭만 가드)
+  const { showNavigationDialog, handleNavigationConfirm, handleNavigationCancel } = useFormGuard({
     hasChanges,
   });
 
@@ -483,7 +476,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      {/* 네비게이션 링크 클릭 시 다이얼로그 */}
+      {/* 네비게이션 링크 및 로고 클릭 시 다이얼로그 */}
       {showNavigationDialog && (
         <ExitConfirmDialog
           hasData={hasChanges}
@@ -493,20 +486,6 @@ export default function ProfilePage() {
           onOpenChange={(open) => {
             if (!open) {
               handleNavigationCancel();
-            }
-          }}
-        />
-      )}
-      {/* 브라우저 뒤로가기/앞으로가기 시 다이얼로그 */}
-      {isBackNavigation && (
-        <ExitConfirmDialog
-          hasData={hasChanges}
-          onConfirm={handleBackNavigationConfirm}
-          onCancel={handleBackNavigationCancel}
-          open={isBackNavigation}
-          onOpenChange={(open) => {
-            if (!open) {
-              handleBackNavigationCancel();
             }
           }}
         />
