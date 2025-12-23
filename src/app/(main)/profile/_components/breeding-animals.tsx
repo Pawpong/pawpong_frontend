@@ -169,7 +169,12 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                       unoptimized
                     />
                   ) : (
-                    <Camera className="size-7 group-hover:[&_path]:fill-[#4F3B2E]" />
+                    <Camera
+                      className={cn(
+                        'size-7 group-hover:[&_path]:fill-[#4F3B2E]',
+                        errors.animals?.[index] && '[&_path]:fill-[#FF453A]',
+                      )}
+                    />
                   )}
                 </button>
                 {animal.imagePreview && (
