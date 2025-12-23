@@ -273,7 +273,7 @@ export default function Page({ params }: PageProps) {
   const envPhotos = apiData.representativePhotos || profileInfo?.profilePhotos || [];
 
   // 브리더 소개 - API 응답 구조에 맞게 처리
-  const breederDescription = apiData.description || profileInfo?.profileDescription || '';
+  const breederDescription = (apiData.description || profileInfo?.profileDescription || '').trim();
 
   // 날짜 포맷팅 함수 (YYYY년 MM월 DD일 생 형식)
   const formatBirthDate = (dateString: string | Date | undefined) => {

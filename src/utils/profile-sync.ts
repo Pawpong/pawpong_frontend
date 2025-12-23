@@ -36,7 +36,7 @@ type ParentPetOriginal = {
   name?: string;
   breed?: string;
   gender?: 'male' | 'female' | string;
-  birthDate?: string;
+  birthDate?: string | Date;
   photoFileName?: string;
 };
 
@@ -46,7 +46,7 @@ type AvailablePetOriginal = {
   name?: string;
   breed?: string;
   gender?: 'male' | 'female' | string;
-  birthDate?: string;
+  birthDate?: string | Date;
   price?: number;
   status?: string;
   description?: string;
