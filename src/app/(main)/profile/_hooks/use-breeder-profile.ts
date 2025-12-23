@@ -29,13 +29,16 @@ export function useBreederProfile() {
 /**
  * 브리더 프로필 업데이트 훅
  */
-export function useUpdateBreederProfile() {
+export function useUpdateBreederProfile(options?: { invalidateOnSuccess?: boolean }) {
   const queryClient = useQueryClient();
+  const invalidateOnSuccess = options?.invalidateOnSuccess ?? true;
 
   return useMutation({
     mutationFn: (data: ProfileUpdateRequest) => updateBreederProfile(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
+      if (invalidateOnSuccess) {
+        queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
+      }
     },
   });
 }

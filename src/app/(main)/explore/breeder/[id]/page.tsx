@@ -94,7 +94,7 @@ export default function Page({ params }: PageProps) {
         } else {
           console.log('[Breeder Profile] Element not found with id:', hash);
           // DOM에 있는 모든 id 확인
-          const allIds = Array.from(document.querySelectorAll('[id]')).map(el => el.id);
+          const allIds = Array.from(document.querySelectorAll('[id]')).map((el) => el.id);
           console.log('[Breeder Profile] All IDs in DOM:', allIds);
           return false;
         }
@@ -197,6 +197,46 @@ export default function Page({ params }: PageProps) {
     );
   }
 
+  type BreederDetailApi = typeof profileData & {
+    priceRange?: { min?: number; max?: number; display?: string };
+    profileImage?: string;
+    location?: string;
+    breederLevel?: 'new' | 'elite' | string;
+    breeds?: string[];
+    representativePhotos?: string[];
+    description?: string;
+  };
+
+  type BreederPetItem = {
+    petId: string;
+    mainPhoto?: string;
+    name: string;
+    gender: 'male' | 'female';
+    birthDate?: string;
+    price?: number;
+    breed: string;
+    status?: 'available' | 'reserved' | 'adopted' | string;
+    description?: string;
+  };
+
+  type ParentPetItem = {
+    petId: string;
+    photoUrl?: string;
+    name: string;
+    gender: 'male' | 'female';
+    birthDate?: string;
+    breed: string;
+  };
+
+  type ReviewItem = {
+    reviewId: string;
+    adopterName?: string;
+    adopterNickname?: string;
+    content: string;
+    writtenAt?: string;
+    createdAt?: string;
+  };
+
   // 프로필 데이터 매핑
   const profileInfo = profileData.profileInfo;
   const locationStr = profileInfo?.locationInfo
@@ -204,20 +244,20 @@ export default function Page({ params }: PageProps) {
     : '';
   // API 응답에서 직접 priceRange 추출 (백엔드가 priceRange: { min, max, display } 형식으로 반환)
   // 비회원은 가격 정보를 볼 수 없음
-  const apiPriceRange = (profileData as any)?.priceRange;
+  const apiPriceRange = (profileData as BreederDetailApi).priceRange;
   const priceRangeStr = user
     ? !apiPriceRange || (!apiPriceRange.min && !apiPriceRange.max)
       ? '가격 미설정'
       : apiPriceRange.display === 'consultation'
-        ? '상담 후 결정'
-        : `${apiPriceRange.min?.toLocaleString()}원 ~ ${apiPriceRange.max?.toLocaleString()}원`
+      ? '상담 후 결정'
+      : `${apiPriceRange.min?.toLocaleString()}원 ~ ${apiPriceRange.max?.toLocaleString()}원`
     : null;
 
   // API 응답에서 직접 값 추출 (profileImage, location, breederLevel 등)
-  const apiData = profileData as any;
-  const avatarUrl = apiData?.profileImage || profileData.profileImageFileName || '/profile-empty.svg';
-  const locationFromApi = apiData?.location || locationStr;
-  const levelFromApi = apiData?.breederLevel === 'elite' ? 'elite' : 'new';
+  const apiData = profileData as BreederDetailApi;
+  const avatarUrl = apiData.profileImage || profileData.profileImageFileName || '/profile-empty.svg';
+  const locationFromApi = apiData.location || locationStr;
+  const levelFromApi = apiData.breederLevel === 'elite' ? 'elite' : 'new';
 
   const breederProfileData = {
     avatarUrl,
@@ -225,15 +265,15 @@ export default function Page({ params }: PageProps) {
     level: levelFromApi as 'new' | 'elite',
     location: locationFromApi,
     priceRange: priceRangeStr,
-    breeds: (profileData as any)?.breeds || profileInfo?.specializationAreas || [],
+    breeds: apiData.breeds || profileInfo?.specializationAreas || [],
     animal: 'dog' as const,
   };
 
   // 환경 사진 - API 응답 구조에 맞게 처리
-  const envPhotos = (profileData as any)?.representativePhotos || profileInfo?.profilePhotos || [];
+  const envPhotos = apiData.representativePhotos || profileInfo?.profilePhotos || [];
 
   // 브리더 소개 - API 응답 구조에 맞게 처리
-  const breederDescription = (profileData as any)?.description || profileInfo?.profileDescription || '';
+  const breederDescription = apiData.description || profileInfo?.profileDescription || '';
 
   // 날짜 포맷팅 함수 (YYYY년 MM월 DD일 생 형식)
   const formatBirthDate = (dateString: string | Date | undefined) => {
@@ -251,7 +291,7 @@ export default function Page({ params }: PageProps) {
   };
 
   // 분양 가능 개체 매핑 (비회원은 가격 정보를 볼 수 없음)
-  const breedingAnimals = (petsData?.items || []).map((pet: any) => ({
+  const breedingAnimals = ((petsData?.items || []) as BreederPetItem[]).map((pet) => ({
     id: pet.petId,
     avatarUrl: pet.mainPhoto || '/animal-sample.png',
     name: pet.name,
@@ -261,11 +301,12 @@ export default function Page({ params }: PageProps) {
     breed: pet.breed,
     status:
       pet.status === 'adopted' ? 'completed' : ((pet.status || 'available') as 'available' | 'reserved' | 'completed'),
+    description: pet.description,
   }));
 
   // 부모견/부모묘 매핑 - 페이지네이션 응답 형태 처리
-  const parentPetsArray = parentPetsData?.items || [];
-  const parentPets = parentPetsArray.map((pet: any) => ({
+  const parentPetsArray = (parentPetsData?.items || []) as ParentPetItem[];
+  const parentPets = parentPetsArray.map((pet) => ({
     id: pet.petId,
     avatarUrl: pet.photoUrl || '/animal-sample.png',
     name: pet.name,
@@ -276,7 +317,7 @@ export default function Page({ params }: PageProps) {
   }));
 
   // 후기 매핑
-  const reviews = (reviewsData?.items || []).map((review: any) => {
+  const reviews = ((reviewsData?.items || []) as ReviewItem[]).map((review) => {
     // 날짜 필드: 백엔드에서 writtenAt을 반환
     const dateString = review.writtenAt || review.createdAt;
     let formattedDate = '';

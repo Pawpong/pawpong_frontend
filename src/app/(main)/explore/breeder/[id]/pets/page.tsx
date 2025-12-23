@@ -54,6 +54,8 @@ export default function PetsPage({ params }: PageProps) {
     birthDate?: string;
     price?: number;
     breed: string;
+    description?: string;
+    status?: 'available' | 'reserved' | 'adopted' | string;
   };
 
   type MappedPet = {
@@ -65,6 +67,7 @@ export default function PetsPage({ params }: PageProps) {
     price: string | null;
     breed: string;
     status?: 'available' | 'reserved' | 'completed';
+    description?: string;
   };
 
   // 모든 페이지의 데이터를 합쳐서 매핑
@@ -83,11 +86,18 @@ export default function PetsPage({ params }: PageProps) {
           pet.status === 'adopted'
             ? 'completed'
             : ((pet.status || 'available') as 'available' | 'reserved' | 'completed'),
+        description: pet.description,
       })) || [];
 
   // 브리더 소개글 가져오기
+  type BreederDetailProfileApi = typeof profileData & {
+    description?: string;
+    profileInfo?: { profileDescription?: string };
+  };
   const breederDescription =
-    (profileData as any)?.description || (profileData as any)?.profileInfo?.profileDescription || '';
+    (profileData as BreederDetailProfileApi | undefined)?.description ||
+    (profileData as BreederDetailProfileApi | undefined)?.profileInfo?.profileDescription ||
+    '';
 
   const handlePetClick = (pet: MappedPet) => {
     // 부모 정보 찾기
@@ -119,6 +129,7 @@ export default function PetsPage({ params }: PageProps) {
       price: pet.price,
       breed: pet.breed,
       status: pet.status || 'available',
+      description: pet.description,
       parents: parents,
     };
 
