@@ -31,6 +31,7 @@ type BreederProfileApi = {
     plan?: string;
   };
   profileInfo?: {
+    profileDescription?: string;
     description?: string;
     location?: { city: string; district: string };
     representativePhotos?: string[];
@@ -77,6 +78,9 @@ export default function ProfilePage() {
 
   // 원본 API 데이터를 저장 (변경사항 비교용)
   const originalDataRef = useRef<BreederProfileApi | null>(null);
+  // 저장 직후 refetch가 구데이터를 잠깐 내려줄 수 있어, 소개글이 즉시 되돌아가는 현상 방지용
+  const lastSavedDescriptionRef = useRef<string | null>(null);
+  const lastSavedAtRef = useRef<number>(0);
 
   const defaultParentId = useMemo(() => `parent-default-${Date.now()}`, []);
   const defaultAnimalId = useMemo(() => `animal-default-${Date.now()}`, []);
@@ -188,9 +192,18 @@ export default function ProfilePage() {
         parentIdMap.set(p.id, p.id);
       });
 
+      const apiDescriptionRaw =
+        typedProfile.profileInfo?.profileDescription ?? typedProfile.profileInfo?.description ?? '';
+      const apiDescription = apiDescriptionRaw.trim();
+      const lastSavedDescription = lastSavedDescriptionRef.current;
+      const lastSavedAt = lastSavedAtRef.current;
+      const shouldPreferLastSavedDescription =
+        lastSavedDescription !== null && Date.now() - lastSavedAt < 7000 && apiDescription !== lastSavedDescription;
+
       form.reset({
         breederName: typedProfile.breederName || '',
-        description: typedProfile.profileInfo?.description || '',
+        // 백엔드 응답 필드가 profileDescription/profileDescription/profileInfo.description 등으로 섞여 있을 수 있어 우선순위로 처리
+        description: shouldPreferLastSavedDescription ? lastSavedDescription : apiDescription,
         location: locationString,
         breeds: typedProfile.breeds || [],
         representativePhotos: typedProfile.profileInfo?.representativePhotos || [],
@@ -345,7 +358,9 @@ export default function ProfilePage() {
             : undefined;
 
         const updateData = {
-          profileDescription: formData.description || undefined,
+          // 소개글 삭제: 빈 문자열을 명시 전송
+          // 백엔드가 ""(빈 문자열) 저장을 무시하는 경우가 있어, 공백 1자를 저장하고 프론트에서는 항상 trim 처리
+          profileDescription: formData.description?.trim() === '' ? ' ' : formData.description || undefined,
           locationInfo,
           profilePhotos: allPhotoFileNames.length > 0 ? allPhotoFileNames : undefined,
           priceRangeInfo:
@@ -378,6 +393,8 @@ export default function ProfilePage() {
         await syncAvailablePets(originalAnimals, formData.animals, parentIdMapping);
 
         // 4. 모든 저장/동기화 완료 후 한 번만 프로필 쿼리 갱신
+        lastSavedDescriptionRef.current = (formData.description ?? '').trim();
+        lastSavedAtRef.current = Date.now();
         await queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
         await queryClient.refetchQueries({ queryKey: ['breeder-profile'] });
 

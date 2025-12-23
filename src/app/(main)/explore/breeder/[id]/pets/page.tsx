@@ -98,6 +98,7 @@ export default function PetsPage({ params }: PageProps) {
     (profileData as BreederDetailProfileApi | undefined)?.description ||
     (profileData as BreederDetailProfileApi | undefined)?.profileInfo?.profileDescription ||
     '';
+  const trimmedBreederDescription = breederDescription.trim();
 
   const handlePetClick = (pet: MappedPet) => {
     // 부모 정보 찾기
@@ -172,7 +173,7 @@ export default function PetsPage({ params }: PageProps) {
                 pet={selectedPet}
                 type="pet"
                 breederId={breederId}
-                breederDescription={breederDescription}
+                breederDescription={trimmedBreederDescription}
               />
               {/* 더보기 버튼 - 첫 페이지가 8개 이상이고 다음 페이지가 있을 때만 표시 */}
               {firstPageCount >= 8 && hasNextPage && (
