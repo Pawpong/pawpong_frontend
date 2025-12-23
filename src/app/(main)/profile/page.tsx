@@ -21,6 +21,8 @@ import { useBreederProfile, useUpdateBreederProfile } from './_hooks/use-breeder
 import { syncParentPets, syncAvailablePets } from '@/utils/profile-sync';
 import { uploadSingleFile, uploadRepresentativePhotos } from '@/lib/upload';
 import ProfileBannerCarousel from '@/components/profile-banner/profile-banner-carousel';
+import useFormGuard from '@/hooks/use-form-guard';
+import ExitConfirmDialog from '@/components/exit-confirmation-dialog';
 
 type BreederProfileApi = {
   breederName?: string;
@@ -257,6 +259,18 @@ export default function ProfilePage() {
   const hasChanges = isDirty || !!profileImageFile || profileImageRemoved;
   const isDisabled = isEmpty || !hasChanges;
 
+  // 폼 가드 훅 사용 (네비게이션 가드, 브라우저 뒤로가기/앞으로가기, 새로고침 등 모든 가드 포함)
+  const {
+    showNavigationDialog,
+    handleNavigationConfirm,
+    handleNavigationCancel,
+    isBackNavigation,
+    handleBackNavigationConfirm,
+    handleBackNavigationCancel,
+  } = useFormGuard({
+    hasChanges,
+  });
+
   // 프로필 이미지 변경 핸들러
   const handleProfileImageChange = (file: File, preview: string) => {
     setProfileImageFile(file);
@@ -469,6 +483,34 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+      {/* 네비게이션 링크 클릭 시 다이얼로그 */}
+      {showNavigationDialog && (
+        <ExitConfirmDialog
+          hasData={hasChanges}
+          onConfirm={handleNavigationConfirm}
+          onCancel={handleNavigationCancel}
+          open={showNavigationDialog}
+          onOpenChange={(open) => {
+            if (!open) {
+              handleNavigationCancel();
+            }
+          }}
+        />
+      )}
+      {/* 브라우저 뒤로가기/앞으로가기 시 다이얼로그 */}
+      {isBackNavigation && (
+        <ExitConfirmDialog
+          hasData={hasChanges}
+          onConfirm={handleBackNavigationConfirm}
+          onCancel={handleBackNavigationCancel}
+          open={isBackNavigation}
+          onOpenChange={(open) => {
+            if (!open) {
+              handleBackNavigationCancel();
+            }
+          }}
+        />
+      )}
     </FormProvider>
   );
 }
