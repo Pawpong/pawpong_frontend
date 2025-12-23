@@ -169,9 +169,11 @@ export default function PetDetailDialog({
               </div>
             </div>
 
-            {/* 소개 내용 - 브리더 소개글 */}
-            {breederDescription && (
-              <div className="text-body-s text-grayscale-gray6 whitespace-pre-wrap">{breederDescription}</div>
+            {/* 소개 내용 */}
+            {(type === 'pet' ? pet.description || breederDescription : breederDescription || pet.description) && (
+              <div className="text-body-s text-grayscale-gray6 whitespace-pre-wrap">
+                {type === 'pet' ? pet.description || breederDescription : breederDescription || pet.description}
+              </div>
             )}
           </div>
 
