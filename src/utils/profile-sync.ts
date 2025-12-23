@@ -6,10 +6,55 @@ import {
   addAvailablePet,
   updateAvailablePet,
   deleteAvailablePet,
+  updatePetStatus,
   type ParentPetAddRequest,
   type AvailablePetAddRequest,
 } from '@/lib/breeder-management';
 import { uploadParentPetPhoto, uploadAvailablePetPhoto } from '@/lib/upload';
+
+type PetStatus = 'available' | 'reserved' | 'adopted';
+
+function toPetStatus(adoptionStatus: string | undefined): PetStatus | undefined {
+  if (!adoptionStatus) return undefined;
+  switch (adoptionStatus.trim()) {
+    case '입양 가능':
+      return 'available';
+    case '입양 예정':
+      return 'reserved';
+    case '입양 완료':
+      return 'adopted';
+    default:
+      return undefined;
+  }
+}
+
+type MongoIdLike = string | { toString(): string };
+
+type ParentPetOriginal = {
+  petId?: string;
+  _id?: MongoIdLike;
+  name?: string;
+  breed?: string;
+  gender?: 'male' | 'female' | string;
+  birthDate?: string | Date;
+  photoFileName?: string;
+};
+
+type AvailablePetOriginal = {
+  petId?: string;
+  _id?: MongoIdLike;
+  name?: string;
+  breed?: string;
+  gender?: 'male' | 'female' | string;
+  birthDate?: string | Date;
+  price?: number;
+  status?: string;
+  description?: string;
+  parentInfo?: {
+    mother?: string;
+    father?: string;
+  };
+};
 
 /**
  * 날짜 형식 변환: YYYYMMDD → YYYY-MM-DD
@@ -37,12 +82,12 @@ function isTempId(id: string): boolean {
  * @returns 임시 ID → 실제 petId 매핑
  */
 export async function syncParentPets(
-  originalParents: any[] = [],
+  originalParents: ParentPetOriginal[] = [],
   currentParents: ProfileFormData['parents'],
 ): Promise<Map<string, string>> {
   const idMapping = new Map<string, string>(); // 임시 ID → 실제 petId 매핑
   // petId 또는 _id 사용 (백엔드 응답 형식에 따라 다를 수 있음)
-  const getParentId = (p: any) => p.petId || p._id?.toString();
+  const getParentId = (p: ParentPetOriginal) => p.petId || p._id?.toString();
   const originalIds = new Set(originalParents.map(getParentId).filter(Boolean));
   const currentIds = new Set(currentParents.filter((p) => !isTempId(p.id)).map((p) => p.id));
 
@@ -121,12 +166,12 @@ export async function syncParentPets(
  * @param parentIdMapping 부모 임시 ID → 실제 petId 매핑
  */
 export async function syncAvailablePets(
-  originalAnimals: any[] = [],
+  originalAnimals: AvailablePetOriginal[] = [],
   currentAnimals: ProfileFormData['animals'],
   parentIdMapping: Map<string, string> = new Map(),
 ) {
   // petId 또는 _id 사용 (백엔드 응답 형식에 따라 다를 수 있음)
-  const getAnimalId = (a: any) => a.petId || a._id?.toString();
+  const getAnimalId = (a: AvailablePetOriginal) => a.petId || a._id?.toString();
   const originalIds = new Set(originalAnimals.map(getAnimalId).filter(Boolean));
   const currentIds = new Set(currentAnimals.filter((a) => !isTempId(a.id)).map((a) => a.id));
 
@@ -146,7 +191,7 @@ export async function syncAvailablePets(
       !animal.birthDate ||
       animal.breed.length === 0 ||
       !animal.gender ||
-      !animal.price ||
+      (!animal.isCounselMode && !animal.price) ||
       !animal.adoptionStatus
     ) {
       continue;
@@ -160,12 +205,14 @@ export async function syncAvailablePets(
     const hasValidMother = resolvedMotherId && !isTempId(resolvedMotherId);
     const hasValidFather = resolvedFatherId && !isTempId(resolvedFatherId);
 
+    const computedPrice = animal.isCounselMode ? 0 : parseInt(animal.price || '0');
+
     const petData: AvailablePetAddRequest = {
       name: animal.name,
       breed: animal.breed[0],
       gender: animal.gender as 'male' | 'female',
       birthDate: formatBirthDate(animal.birthDate),
-      price: animal.isCounselMode ? 0 : parseInt(animal.price),
+      price: computedPrice,
       description: animal.description || '',
       parentInfo:
         hasValidMother || hasValidFather
@@ -181,6 +228,12 @@ export async function syncAvailablePets(
       const result = await addAvailablePet(petData);
       const newPetId = result.petId;
 
+      // 상태는 별도 API로 반영
+      const desiredStatus = toPetStatus(animal.adoptionStatus);
+      if (desiredStatus) {
+        await updatePetStatus(newPetId, desiredStatus);
+      }
+
       // 이미지가 있으면 업로드
       if (animal.imageFile) {
         await uploadAvailablePetPhoto(newPetId, animal.imageFile);
@@ -189,6 +242,12 @@ export async function syncAvailablePets(
       // 기존 분양 개체 수정
       const original = originalAnimals.find((a) => getAnimalId(a) === animal.id);
 
+      // 상태 변경은 별도 API로 반영
+      const desiredStatus = toPetStatus(animal.adoptionStatus);
+      if (original && desiredStatus && original.status !== desiredStatus) {
+        await updatePetStatus(animal.id, desiredStatus);
+      }
+
       // 변경사항이 있는 경우만 업데이트
       if (
         original &&
@@ -196,7 +255,7 @@ export async function syncAvailablePets(
           original.breed !== animal.breed[0] ||
           original.gender !== animal.gender ||
           original.birthDate !== formatBirthDate(animal.birthDate) ||
-          original.price !== parseInt(animal.price) ||
+          (original.price ?? 0) !== computedPrice ||
           original.description !== animal.description ||
           original.parentInfo?.mother !== resolvedMotherId ||
           original.parentInfo?.father !== resolvedFatherId)
@@ -206,7 +265,7 @@ export async function syncAvailablePets(
           breed: animal.breed[0],
           gender: animal.gender as 'male' | 'female',
           birthDate: formatBirthDate(animal.birthDate),
-          price: animal.isCounselMode ? 0 : parseInt(animal.price),
+          price: computedPrice,
           description: animal.description,
           parentInfo:
             hasValidMother || hasValidFather

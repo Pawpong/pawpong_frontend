@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useMemo, useEffect, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import ProfileBasicInfo from './_components/profile-basic-info';
 import ParentsInfo from './_components/parents-info';
 import BreedingAnimals from './_components/breeding-animals';
@@ -21,12 +22,54 @@ import { syncParentPets, syncAvailablePets } from '@/utils/profile-sync';
 import { uploadSingleFile, uploadRepresentativePhotos } from '@/lib/upload';
 import ProfileBannerCarousel from '@/components/profile-banner/profile-banner-carousel';
 
+type BreederProfileApi = {
+  breederName?: string;
+  breeds?: string[];
+  profileImageFileName?: string | null;
+  specializationTypes?: string[];
+  verificationInfo?: {
+    plan?: string;
+  };
+  profileInfo?: {
+    profileDescription?: string;
+    description?: string;
+    location?: { city: string; district: string };
+    representativePhotos?: string[];
+    priceRange?: { min?: number; max?: number };
+    specializationAreas?: string[];
+  };
+  parentPetInfo?: Array<{
+    petId?: string;
+    _id?: string;
+    name?: string;
+    birthDate?: string | Date;
+    breed?: string;
+    gender?: 'male' | 'female';
+    photoFileName?: string;
+  }>;
+  availablePetInfo?: Array<{
+    petId?: string;
+    _id?: string;
+    name?: string;
+    birthDate?: string | Date;
+    breed?: string;
+    gender?: 'male' | 'female';
+    description?: string;
+    status?: string;
+    parentInfo?: { mother?: string; father?: string };
+    price?: number;
+    photos?: string[];
+  }>;
+};
+
 export default function ProfilePage() {
   const isLgUp = useBreakpoint('lg');
   const { toast } = useToast();
   const { setProfileData } = useProfileStore();
+  const queryClient = useQueryClient();
   const { data: apiProfileData, isLoading } = useBreederProfile();
-  const updateProfileMutation = useUpdateBreederProfile();
+  // 부모/분양 sync 이전에 프로필 쿼리가 refetch 되면서 구데이터로 form.reset 되는 레이스 방지
+  const updateProfileMutation = useUpdateBreederProfile({ invalidateOnSuccess: false });
 
   // 프로필 이미지 상태
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
@@ -34,7 +77,10 @@ export default function ProfilePage() {
   const [profileImageRemoved, setProfileImageRemoved] = useState<boolean>(false);
 
   // 원본 API 데이터를 저장 (변경사항 비교용)
-  const originalDataRef = useRef<any>(null);
+  const originalDataRef = useRef<BreederProfileApi | null>(null);
+  // 저장 직후 refetch가 구데이터를 잠깐 내려줄 수 있어, 소개글이 즉시 되돌아가는 현상 방지용
+  const lastSavedDescriptionRef = useRef<string | null>(null);
+  const lastSavedAtRef = useRef<number>(0);
 
   const defaultParentId = useMemo(() => `parent-default-${Date.now()}`, []);
   const defaultAnimalId = useMemo(() => `animal-default-${Date.now()}`, []);
@@ -101,12 +147,13 @@ export default function ProfilePage() {
   // API 데이터로 폼 초기화 (항상 API 데이터 우선)
   useEffect(() => {
     if (apiProfileData) {
+      const typedProfile = apiProfileData as BreederProfileApi;
       // 원본 데이터 저장
-      originalDataRef.current = apiProfileData;
+      originalDataRef.current = typedProfile;
 
       // 프로필 이미지 초기화
-      if (apiProfileData.profileImageFileName) {
-        setProfileImagePreview(apiProfileData.profileImageFileName);
+      if (typedProfile.profileImageFileName) {
+        setProfileImagePreview(typedProfile.profileImageFileName);
         setProfileImageRemoved(false);
         setProfileImageFile(null);
       } else {
@@ -115,18 +162,18 @@ export default function ProfilePage() {
         setProfileImageFile(null);
       }
 
-      const locationParts = apiProfileData.profileInfo?.location;
+      const locationParts = typedProfile.profileInfo?.location;
       const locationString = locationParts ? `${locationParts.city} ${locationParts.district}` : null;
 
       // 부모 pet ID를 petId에서 추출 (백엔드에서 petId로 변환됨)
-      const parentsData =
-        apiProfileData.parentPetInfo?.length > 0
-          ? apiProfileData.parentPetInfo.map((pet: any) => ({
-              id: pet.petId || pet._id?.toString(),
-              name: pet.name,
+      const parentsData: ProfileFormData['parents'] =
+        typedProfile.parentPetInfo?.length && typedProfile.parentPetInfo.length > 0
+          ? typedProfile.parentPetInfo.map((pet) => ({
+              id: pet.petId || pet._id?.toString() || defaultParentId,
+              name: pet.name || '',
               birthDate: formatDateToYYYYMMDD(pet.birthDate),
-              breed: [pet.breed],
-              gender: pet.gender,
+              breed: pet.breed ? [pet.breed] : [],
+              gender: pet.gender || null,
               imagePreview: pet.photoFileName || undefined,
             }))
           : [
@@ -141,28 +188,37 @@ export default function ProfilePage() {
 
       // 부모 ID 매핑 생성 (animal에서 부모 찾을 때 사용)
       const parentIdMap = new Map<string, string>();
-      parentsData.forEach((p: any) => {
+      parentsData.forEach((p) => {
         parentIdMap.set(p.id, p.id);
       });
 
+      const apiDescriptionRaw =
+        typedProfile.profileInfo?.profileDescription ?? typedProfile.profileInfo?.description ?? '';
+      const apiDescription = apiDescriptionRaw.trim();
+      const lastSavedDescription = lastSavedDescriptionRef.current;
+      const lastSavedAt = lastSavedAtRef.current;
+      const shouldPreferLastSavedDescription =
+        lastSavedDescription !== null && Date.now() - lastSavedAt < 7000 && apiDescription !== lastSavedDescription;
+
       form.reset({
-        breederName: apiProfileData.breederName || '',
-        description: apiProfileData.profileInfo?.description || '',
+        breederName: typedProfile.breederName || '',
+        // 백엔드 응답 필드가 profileDescription/profileDescription/profileInfo.description 등으로 섞여 있을 수 있어 우선순위로 처리
+        description: shouldPreferLastSavedDescription ? lastSavedDescription : apiDescription,
         location: locationString,
-        breeds: apiProfileData.breeds || [],
-        representativePhotos: apiProfileData.profileInfo?.representativePhotos || [],
-        minPrice: apiProfileData.profileInfo?.priceRange?.min?.toString() || '',
-        maxPrice: apiProfileData.profileInfo?.priceRange?.max?.toString() || '',
+        breeds: typedProfile.breeds || [],
+        representativePhotos: typedProfile.profileInfo?.representativePhotos || [],
+        minPrice: typedProfile.profileInfo?.priceRange?.min?.toString() || '',
+        maxPrice: typedProfile.profileInfo?.priceRange?.max?.toString() || '',
         isCounselMode: false,
         parents: parentsData,
         animals:
-          apiProfileData.availablePetInfo?.length > 0
-            ? apiProfileData.availablePetInfo.map((pet: any) => ({
-                id: pet.petId || pet._id?.toString(),
-                name: pet.name,
+          typedProfile.availablePetInfo?.length && typedProfile.availablePetInfo.length > 0
+            ? typedProfile.availablePetInfo.map((pet) => ({
+                id: pet.petId || pet._id?.toString() || defaultAnimalId,
+                name: pet.name || '',
                 birthDate: formatDateToYYYYMMDD(pet.birthDate),
-                breed: [pet.breed],
-                gender: pet.gender,
+                breed: pet.breed ? [pet.breed] : [],
+                gender: pet.gender || null,
                 description: pet.description || '',
                 adoptionStatus: convertStatusToKorean(pet.status || ''),
                 motherId: pet.parentInfo?.mother?.toString() || '',
@@ -302,7 +358,9 @@ export default function ProfilePage() {
             : undefined;
 
         const updateData = {
-          profileDescription: formData.description || undefined,
+          // 소개글 삭제: 빈 문자열을 명시 전송
+          // 백엔드가 ""(빈 문자열) 저장을 무시하는 경우가 있어, 공백 1자를 저장하고 프론트에서는 항상 trim 처리
+          profileDescription: formData.description?.trim() === '' ? ' ' : formData.description || undefined,
           locationInfo,
           profilePhotos: allPhotoFileNames.length > 0 ? allPhotoFileNames : undefined,
           priceRangeInfo:
@@ -333,6 +391,12 @@ export default function ProfilePage() {
         // 3. 분양 개체 변경사항 동기화 (부모 ID 매핑 전달)
         const originalAnimals = originalDataRef.current?.availablePetInfo || [];
         await syncAvailablePets(originalAnimals, formData.animals, parentIdMapping);
+
+        // 4. 모든 저장/동기화 완료 후 한 번만 프로필 쿼리 갱신
+        lastSavedDescriptionRef.current = (formData.description ?? '').trim();
+        lastSavedAtRef.current = Date.now();
+        await queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
+        await queryClient.refetchQueries({ queryKey: ['breeder-profile'] });
 
         setProfileData(formData);
         toast({
@@ -379,8 +443,8 @@ export default function ProfilePage() {
               onProfileImageChange={handleProfileImageChange}
               onProfileImageRemove={handleProfileImageRemove}
               animal={
-                apiProfileData?.profileInfo?.specializationAreas?.includes('cat') ||
-                (apiProfileData as any)?.specializationTypes?.includes('cat')
+                (apiProfileData as BreederProfileApi | undefined)?.profileInfo?.specializationAreas?.includes('cat') ||
+                (apiProfileData as BreederProfileApi | undefined)?.specializationTypes?.includes('cat')
                   ? 'cat'
                   : 'dog'
               }

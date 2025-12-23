@@ -80,8 +80,15 @@ export default function ParentsPage({ params }: PageProps) {
   const firstPageCount = parentPetsData?.pages[0]?.items?.length || 0;
 
   // 브리더 소개글 가져오기
+  type BreederDetailProfileApi = typeof profileData & {
+    description?: string;
+    profileInfo?: { profileDescription?: string };
+  };
   const breederDescription =
-    (profileData as any)?.description || (profileData as any)?.profileInfo?.profileDescription || '';
+    (profileData as BreederDetailProfileApi | undefined)?.description ||
+    (profileData as BreederDetailProfileApi | undefined)?.profileInfo?.profileDescription ||
+    '';
+  const trimmedBreederDescription = breederDescription.trim();
 
   const handlePetClick = (pet: MappedParentPet) => {
     const petDetail: PetDetailData = {
@@ -129,7 +136,7 @@ export default function ParentsPage({ params }: PageProps) {
                 pet={selectedPet}
                 type="parent"
                 breederId={breederId}
-                breederDescription={breederDescription}
+                breederDescription={trimmedBreederDescription}
               />
               {/* 더보기 버튼 - 첫 페이지가 8개 이상이고 다음 페이지가 있을 때만 표시 */}
               {firstPageCount >= 8 && hasNextPage && (
