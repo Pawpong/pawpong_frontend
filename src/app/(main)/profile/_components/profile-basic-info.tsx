@@ -143,7 +143,7 @@ export default function ProfileBasicInfo({
             render={({ field }) => (
               <LocationSelectDialogTrigger
                 onSubmitLocation={(value: string | null) => {
-                  field.onChange(value);
+                  field.onChange(value ?? '');
                   trigger('location');
                 }}
                 initialValue={field.value}
