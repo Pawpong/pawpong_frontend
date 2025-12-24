@@ -28,6 +28,7 @@ type BreederProfileApi = {
   breederName?: string;
   breeds?: string[];
   profileImageFileName?: string | null;
+  petType?: 'dog' | 'cat';
   specializationTypes?: string[];
   verificationInfo?: {
     plan?: string;
@@ -448,12 +449,7 @@ export default function ProfilePage() {
               profileImagePreview={profileImagePreview}
               onProfileImageChange={handleProfileImageChange}
               onProfileImageRemove={handleProfileImageRemove}
-              animal={
-                (apiProfileData as BreederProfileApi | undefined)?.profileInfo?.specializationAreas?.includes('cat') ||
-                (apiProfileData as BreederProfileApi | undefined)?.specializationTypes?.includes('cat')
-                  ? 'cat'
-                  : 'dog'
-              }
+              animal={(apiProfileData as BreederProfileApi | undefined)?.petType || 'dog'}
             />
             {/* 엄마 아빠 정보 */}
             <ParentsInfo form={form} maxParents={apiProfileData?.verificationInfo?.plan === 'basic' ? 4 : undefined} />
