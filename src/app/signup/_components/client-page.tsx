@@ -46,11 +46,13 @@ export default function ClientPage() {
 
     if (tempId) {
       // 이미 로그인되어 있는지 확인 (쿠키에 accessToken이 있는지)
+      // 쿠키가 있으면 탐색 페이지로 이동 (use-auth-guard에서 토큰 유효성 검증)
       const cookies = document.cookie.split(';');
       const hasAccessToken = cookies.some((cookie) => cookie.trim().startsWith('accessToken='));
 
       if (hasAccessToken) {
-        alert('이미 로그인되어 있습니다. 탐색 페이지로 이동합니다.');
+        // alert 없이 바로 탐색 페이지로 이동
+        // 토큰이 유효하지 않으면 use-auth-guard에서 쿠키 삭제 후 로그인 페이지로 리다이렉트
         router.push('/explore');
         return;
       }

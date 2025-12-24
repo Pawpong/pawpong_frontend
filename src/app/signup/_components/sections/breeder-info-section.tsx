@@ -21,6 +21,7 @@ import BreedsSelectDialogTrigger from '../breeds-select-dialog-trigger';
 import LocationSelectDialogTrigger from '../location-select-dialog-trigger';
 import { breederInfoSchema, type BreederInfoFormData } from './breeder-info-schema';
 import { checkBreederNameDuplicate } from '@/lib/auth';
+import { useToast } from '@/hooks/use-toast';
 
 export default function BreederInfoSection() {
   const setPhoto = useSignupFormStore((state) => state.setPhoto);
@@ -40,6 +41,7 @@ export default function BreederInfoSection() {
   const [isCheckingName, setIsCheckingName] = useState(false);
   const [nameChecked, setNameChecked] = useState(false);
   const [nameAvailable, setNameAvailable] = useState(false);
+  const { toast } = useToast();
 
   // react-hook-form 설정
   const {
@@ -62,7 +64,10 @@ export default function BreederInfoSection() {
   // 상호명 중복 검사 버튼 클릭 핸들러
   const handleCheckBreederName = async () => {
     if (!currentBreederName || currentBreederName.trim().length === 0) {
-      alert('상호명을 입력해주세요.');
+      toast({
+        title: '상호명을 입력해주세요.',
+        position: 'default',
+      });
       return;
     }
 
@@ -72,7 +77,10 @@ export default function BreederInfoSection() {
       setNameChecked(true);
       setNameAvailable(!isDuplicate);
     } catch (error) {
-      alert('상호명 중복 확인에 실패했습니다.');
+      toast({
+        title: '상호명 중복 확인에 실패했습니다.',
+        position: 'default',
+      });
       setNameChecked(false);
       setNameAvailable(false);
     } finally {
