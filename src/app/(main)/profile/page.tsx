@@ -8,7 +8,9 @@ import ParentsInfo from './_components/parents-info';
 import BreedingAnimals from './_components/breeding-animals';
 import { useToast } from '@/hooks/use-toast';
 import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useProfileStore, type ProfileFormData } from '@/stores/profile-store';
+import { profileFormSchema } from './profile-schema';
 import { useWatch } from 'react-hook-form';
 import {
   isFormEmpty,
@@ -28,6 +30,7 @@ type BreederProfileApi = {
   breederName?: string;
   breeds?: string[];
   profileImageFileName?: string | null;
+  petType?: 'dog' | 'cat';
   specializationTypes?: string[];
   verificationInfo?: {
     plan?: string;
@@ -88,10 +91,11 @@ export default function ProfilePage() {
   const defaultAnimalId = useMemo(() => `animal-default-${Date.now()}`, []);
 
   const form = useForm<ProfileFormData>({
+    resolver: zodResolver(profileFormSchema),
     defaultValues: {
       breederName: '',
       description: '',
-      location: null,
+      location: '',
       breeds: [],
       representativePhotos: [],
       minPrice: '',
@@ -165,7 +169,7 @@ export default function ProfilePage() {
       }
 
       const locationParts = typedProfile.profileInfo?.location;
-      const locationString = locationParts ? `${locationParts.city} ${locationParts.district}` : null;
+      const locationString = locationParts ? `${locationParts.city} ${locationParts.district}` : '';
 
       // 부모 pet ID를 petId에서 추출 (백엔드에서 petId로 변환됨)
       const parentsData: ProfileFormData['parents'] =
@@ -177,6 +181,7 @@ export default function ProfilePage() {
               breed: pet.breed ? [pet.breed] : [],
               gender: pet.gender || null,
               imagePreview: pet.photoFileName || undefined,
+              description: (pet as any).description || '',
             }))
           : [
               {
@@ -185,6 +190,7 @@ export default function ProfilePage() {
                 birthDate: '',
                 breed: [],
                 gender: null,
+                description: '',
               },
             ];
 
@@ -282,6 +288,10 @@ export default function ProfilePage() {
     const isValid = await form.trigger();
     const formData = form.getValues();
 
+    console.log('Form validation result:', isValid);
+    console.log('Form errors:', form.formState.errors);
+    console.log('Location value:', formData.location);
+
     // 검증 수행
     const parentErrors = validateParents(formData.parents);
     const animalErrors = validateAnimals(formData.animals);
@@ -303,119 +313,118 @@ export default function ProfilePage() {
     );
 
     // 에러가 있으면 스크롤하고 리턴
-    if (hasParentErrors || hasAnimalErrors) {
+    if (!isValid || hasParentErrors || hasAnimalErrors) {
+      console.log('Validation failed - returning early');
       scrollToFirstError(parentErrors, animalErrors);
       return;
     }
 
     // 모든 validation 통과 시 API 호출
-    if (isValid) {
-      try {
-        // 0. 프로필 이미지 업로드/삭제 처리
-        let profileImageToSave: string | null | undefined;
-        if (profileImageFile) {
-          const uploadResult = await uploadSingleFile(profileImageFile, 'profile-images');
-          profileImageToSave = uploadResult.fileName;
-        } else if (profileImageRemoved) {
-          profileImageToSave = null;
-        }
+    try {
+      // 0. 프로필 이미지 업로드/삭제 처리
+      let profileImageToSave: string | null | undefined;
+      if (profileImageFile) {
+        const uploadResult = await uploadSingleFile(profileImageFile, 'profile-images');
+        profileImageToSave = uploadResult.fileName;
+      } else if (profileImageRemoved) {
+        profileImageToSave = null;
+      }
 
-        // 0-1. 대표 사진 업로드 (새로 추가된 파일만)
-        let uploadedPhotoFileNames: string[] = [];
-        const existingPhotoFileNames: string[] = [];
-        if (Array.isArray(formData.representativePhotos)) {
-          const newFiles: File[] = [];
-          for (const photo of formData.representativePhotos) {
-            if (photo instanceof File) {
-              newFiles.push(photo);
-            } else if (typeof photo === 'string') {
-              // 기존 URL에서 파일 경로 추출 (signed URL에서 파일명 추출)
-              // signed URL 형식: https://cdn.pawpong.kr/representative/uuid.jpeg?Expires=...
-              // 필요한 결과: representative/uuid.jpeg
-              try {
-                const url = new URL(photo);
-                // pathname은 /representative/uuid.jpeg 형식
-                // 맨 앞의 / 제거하여 representative/uuid.jpeg 형태로 만듦
-                const filePath = url.pathname.startsWith('/') ? url.pathname.slice(1) : url.pathname;
-                if (filePath) {
-                  existingPhotoFileNames.push(filePath);
-                }
-              } catch {
-                // URL 파싱 실패 시 원본 문자열 사용 (이미 파일명인 경우)
-                existingPhotoFileNames.push(photo);
+      // 0-1. 대표 사진 업로드 (새로 추가된 파일만)
+      let uploadedPhotoFileNames: string[] = [];
+      const existingPhotoFileNames: string[] = [];
+      if (Array.isArray(formData.representativePhotos)) {
+        const newFiles: File[] = [];
+        for (const photo of formData.representativePhotos) {
+          if (photo instanceof File) {
+            newFiles.push(photo);
+          } else if (typeof photo === 'string') {
+            // 기존 URL에서 파일 경로 추출 (signed URL에서 파일명 추출)
+            // signed URL 형식: https://cdn.pawpong.kr/representative/uuid.jpeg?Expires=...
+            // 필요한 결과: representative/uuid.jpeg
+            try {
+              const url = new URL(photo);
+              // pathname은 /representative/uuid.jpeg 형식
+              // 맨 앞의 / 제거하여 representative/uuid.jpeg 형태로 만듦
+              const filePath = url.pathname.startsWith('/') ? url.pathname.slice(1) : url.pathname;
+              if (filePath) {
+                existingPhotoFileNames.push(filePath);
               }
+            } catch {
+              // URL 파싱 실패 시 원본 문자열 사용 (이미 파일명인 경우)
+              existingPhotoFileNames.push(photo);
             }
           }
-          // 새 파일 업로드
-          if (newFiles.length > 0) {
-            const uploadResults = await uploadRepresentativePhotos(newFiles);
-            uploadedPhotoFileNames = uploadResults.map((r) => r.fileName);
-          }
         }
-        const allPhotoFileNames = [...existingPhotoFileNames, ...uploadedPhotoFileNames];
-
-        // 1. 기본 프로필 정보 업데이트
-        const locationParts = formData.location?.split(' ') || [];
-        const locationInfo =
-          locationParts.length >= 2
-            ? {
-                cityName: locationParts[0],
-                districtName: locationParts.slice(1).join(' '),
-              }
-            : undefined;
-
-        const updateData = {
-          // 소개글은 빈 문자열도 허용 (undefined가 아니면 전송)
-          profileDescription: formData.description !== undefined ? formData.description : undefined,
-          locationInfo,
-          profilePhotos: allPhotoFileNames.length > 0 ? allPhotoFileNames : undefined,
-          priceRangeInfo:
-            formData.minPrice && formData.maxPrice
-              ? {
-                  minimumPrice: parseInt(formData.minPrice),
-                  maximumPrice: parseInt(formData.maxPrice),
-                }
-              : undefined,
-          breeds: formData.breeds?.length > 0 ? formData.breeds : undefined,
-          profileImage: profileImageToSave,
-        };
-
-        await updateProfileMutation.mutateAsync(updateData);
-
-        // 프로필 이미지 상태 리셋
-        if (profileImageRemoved) {
-          setProfileImageRemoved(false);
-          setProfileImagePreview('');
-        } else if (profileImageFile) {
-          setProfileImageFile(null);
+        // 새 파일 업로드
+        if (newFiles.length > 0) {
+          const uploadResults = await uploadRepresentativePhotos(newFiles);
+          uploadedPhotoFileNames = uploadResults.map((r) => r.fileName);
         }
-
-        // 2. 부모견 변경사항 동기화 (ID 매핑 반환)
-        const originalParents = originalDataRef.current?.parentPetInfo || [];
-        const parentIdMapping = await syncParentPets(originalParents, formData.parents);
-
-        // 3. 분양 개체 변경사항 동기화 (부모 ID 매핑 전달)
-        const originalAnimals = originalDataRef.current?.availablePetInfo || [];
-        await syncAvailablePets(originalAnimals, formData.animals, parentIdMapping);
-
-        // 4. 모든 저장/동기화 완료 후 한 번만 프로필 쿼리 갱신
-        lastSavedDescriptionRef.current = (formData.description ?? '').trim();
-        lastSavedAtRef.current = Date.now();
-        await queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
-        await queryClient.refetchQueries({ queryKey: ['breeder-profile'] });
-
-        setProfileData(formData);
-        toast({
-          title: '프로필이 수정되었습니다.',
-          position: 'split',
-        });
-      } catch (error) {
-        toast({
-          title: '프로필 수정에 실패했습니다.',
-          description: error instanceof Error ? error.message : '다시 시도해주세요.',
-          position: 'split',
-        });
       }
+      const allPhotoFileNames = [...existingPhotoFileNames, ...uploadedPhotoFileNames];
+
+      // 1. 기본 프로필 정보 업데이트
+      const locationParts = formData.location?.split(' ') || [];
+      const locationInfo =
+        locationParts.length >= 2
+          ? {
+              cityName: locationParts[0],
+              districtName: locationParts.slice(1).join(' '),
+            }
+          : undefined;
+
+      const updateData = {
+        // 소개글은 빈 문자열도 허용 (undefined가 아니면 전송)
+        profileDescription: formData.description !== undefined ? formData.description : undefined,
+        locationInfo,
+        profilePhotos: allPhotoFileNames.length > 0 ? allPhotoFileNames : undefined,
+        priceRangeInfo:
+          formData.minPrice && formData.maxPrice
+            ? {
+                minimumPrice: parseInt(formData.minPrice),
+                maximumPrice: parseInt(formData.maxPrice),
+              }
+            : undefined,
+        breeds: formData.breeds?.length > 0 ? formData.breeds : undefined,
+        profileImage: profileImageToSave,
+      };
+
+      await updateProfileMutation.mutateAsync(updateData);
+
+      // 프로필 이미지 상태 리셋
+      if (profileImageRemoved) {
+        setProfileImageRemoved(false);
+        setProfileImagePreview('');
+      } else if (profileImageFile) {
+        setProfileImageFile(null);
+      }
+
+      // 2. 부모견 변경사항 동기화 (ID 매핑 반환)
+      const originalParents = originalDataRef.current?.parentPetInfo || [];
+      const parentIdMapping = await syncParentPets(originalParents, formData.parents);
+
+      // 3. 분양 개체 변경사항 동기화 (부모 ID 매핑 전달)
+      const originalAnimals = originalDataRef.current?.availablePetInfo || [];
+      await syncAvailablePets(originalAnimals, formData.animals, parentIdMapping);
+
+      // 4. 모든 저장/동기화 완료 후 한 번만 프로필 쿼리 갱신
+      lastSavedDescriptionRef.current = (formData.description ?? '').trim();
+      lastSavedAtRef.current = Date.now();
+      await queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
+      await queryClient.refetchQueries({ queryKey: ['breeder-profile'] });
+
+      setProfileData(formData);
+      toast({
+        title: '프로필이 수정되었습니다.',
+        position: 'split',
+      });
+    } catch (error) {
+      toast({
+        title: '프로필 수정에 실패했습니다.',
+        description: error instanceof Error ? error.message : '다시 시도해주세요.',
+        position: 'split',
+      });
     }
   };
 
@@ -448,12 +457,7 @@ export default function ProfilePage() {
               profileImagePreview={profileImagePreview}
               onProfileImageChange={handleProfileImageChange}
               onProfileImageRemove={handleProfileImageRemove}
-              animal={
-                (apiProfileData as BreederProfileApi | undefined)?.profileInfo?.specializationAreas?.includes('cat') ||
-                (apiProfileData as BreederProfileApi | undefined)?.specializationTypes?.includes('cat')
-                  ? 'cat'
-                  : 'dog'
-              }
+              animal={(apiProfileData as BreederProfileApi | undefined)?.petType || 'dog'}
             />
             {/* 엄마 아빠 정보 */}
             <ParentsInfo form={form} maxParents={apiProfileData?.verificationInfo?.plan === 'basic' ? 4 : undefined} />

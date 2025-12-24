@@ -226,6 +226,7 @@ export default function Page({ params }: PageProps) {
     gender: 'male' | 'female';
     birthDate?: string;
     breed: string;
+    description?: string;
   };
 
   type ReviewItem = {
@@ -314,6 +315,7 @@ export default function Page({ params }: PageProps) {
     birth: formatBirthDate(pet.birthDate),
     price: '', // 부모견은 가격이 없음
     breed: pet.breed,
+    description: pet.description,
   }));
 
   // 후기 매핑

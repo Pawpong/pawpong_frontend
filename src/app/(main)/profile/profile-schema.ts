@@ -26,8 +26,9 @@ const birthDateSchema = z
   );
 
 const locationSchema = z
-  .union([z.string().min(1, BREEDER_PROFILE_ERROR.LOCATION_REQUIRED), z.null()])
-  .refine((val) => val !== null && val.trim() !== '', {
+  .string({ required_error: BREEDER_PROFILE_ERROR.LOCATION_REQUIRED })
+  .min(1, BREEDER_PROFILE_ERROR.LOCATION_REQUIRED)
+  .refine((val) => val.trim() !== '', {
     message: BREEDER_PROFILE_ERROR.LOCATION_REQUIRED,
   });
 
@@ -51,6 +52,7 @@ const parentItemSchema = z.object({
     }),
   imagePreview: z.string().optional(),
   imageFile: z.union([z.instanceof(File), z.undefined()]).optional(),
+  description: z.string().optional(),
 });
 
 const breedingAnimalItemSchema = z

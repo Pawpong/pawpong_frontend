@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogClose, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import Female from '@/assets/icons/female';
 import Male from '@/assets/icons/male';
@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { useCounselFormStore } from '@/stores/counsel-form-store';
 import { useAuthStore } from '@/stores/auth-store';
 import { cn } from '@/lib/utils';
+import { VisuallyHidden } from '@/components/ui/visually-hidden';
 
 import RightArrow from '@/assets/icons/right-arrow.svg';
 import Close from '@/assets/icons/close';
@@ -115,6 +116,9 @@ export default function PetDetailDialog({
         className="max-w-[37.5rem] w-full max-h-[37.5rem] overflow-hidden flex flex-col p-0 gap-0 rounded-2xl"
         showCloseButton={false}
       >
+        <VisuallyHidden>
+          <DialogTitle>{pet.name} 정보</DialogTitle>
+        </VisuallyHidden>
         {/* 헤더 */}
         <div className="flex flex-col gap-[10px] items-start pt-6 px-6 pb-[10px]">
           <div className="flex gap-1 items-center justify-end w-full">
@@ -170,9 +174,9 @@ export default function PetDetailDialog({
             </div>
 
             {/* 소개 내용 */}
-            {(type === 'pet' ? pet.description || breederDescription : breederDescription || pet.description) && (
+            {pet.description && (
               <div className="text-body-s text-grayscale-gray6 whitespace-pre-wrap">
-                {type === 'pet' ? pet.description || breederDescription : breederDescription || pet.description}
+                {pet.description}
               </div>
             )}
           </div>
