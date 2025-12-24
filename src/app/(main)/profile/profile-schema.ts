@@ -51,6 +51,7 @@ const parentItemSchema = z.object({
     }),
   imagePreview: z.string().optional(),
   imageFile: z.union([z.instanceof(File), z.undefined()]).optional(),
+  description: z.string().optional(),
 });
 
 const breedingAnimalItemSchema = z

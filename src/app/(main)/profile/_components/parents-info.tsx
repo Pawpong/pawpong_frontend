@@ -1,6 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import Camera from '@/assets/icons/camera.svg';
 import Arrow from '@/assets/icons/arrow';
 import Trash from '@/assets/icons/trash.svg';
@@ -9,7 +10,7 @@ import Plus from '@/assets/icons/plus.svg';
 import Female from '@/assets/icons/female.svg';
 import PictureRemove from '@/assets/icons/picture-delete.svg';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
@@ -47,6 +48,7 @@ export default function ParentsInfo({
         birthDate: '',
         breed: [],
         gender: null,
+        description: '',
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,6 +64,7 @@ export default function ParentsInfo({
       birthDate: '',
       breed: [],
       gender: null,
+      description: '',
     });
   };
 
@@ -303,6 +306,23 @@ export default function ParentsInfo({
                     message={(errors.parents[index]?.breed?.message as string) || BREEDER_PROFILE_ERROR.BREEDS_REQUIRED}
                   />
                 )}
+              </div>
+
+              {/* 소개 */}
+              <div className="flex flex-col gap-[10px] w-full">
+                <Controller
+                  name={`parents.${index}.description`}
+                  control={control}
+                  render={({ field }) => (
+                    <Textarea
+                      {...field}
+                      placeholder="소개"
+                      maxLength={1500}
+                      showLength={field.value && field.value.length > 0}
+                      currentLength={field.value?.length || 0}
+                    />
+                  )}
+                />
               </div>
 
               {/* 구분선 (마지막 항목이 아닐 때만) */}

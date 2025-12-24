@@ -38,6 +38,7 @@ type ParentPetOriginal = {
   gender?: 'male' | 'female' | string;
   birthDate?: string | Date;
   photoFileName?: string;
+  description?: string;
 };
 
 type AvailablePetOriginal = {
@@ -112,7 +113,7 @@ export async function syncParentPets(
       gender: parent.gender as 'male' | 'female',
       birthDate: formatBirthDate(parent.birthDate),
       photoFileName: '', // 기본값, 이미지 업로드 후 업데이트됨
-      description: '',
+      description: parent.description || '',
     };
 
     if (isTempId(parent.id)) {
@@ -140,7 +141,8 @@ export async function syncParentPets(
         (original.name !== parent.name ||
           original.breed !== parent.breed[0] ||
           original.gender !== parent.gender ||
-          original.birthDate !== formatBirthDate(parent.birthDate))
+          original.birthDate !== formatBirthDate(parent.birthDate) ||
+          original.description !== (parent.description || ''))
       ) {
         await updateParentPet(parent.id, {
           name: parent.name,
@@ -148,6 +150,7 @@ export async function syncParentPets(
           gender: parent.gender as 'male' | 'female',
           birthDate: formatBirthDate(parent.birthDate),
           photoFileName: original.photoFileName || '',
+          description: parent.description || '',
         });
       }
 

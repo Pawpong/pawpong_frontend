@@ -178,6 +178,7 @@ export default function ProfilePage() {
               breed: pet.breed ? [pet.breed] : [],
               gender: pet.gender || null,
               imagePreview: pet.photoFileName || undefined,
+              description: (pet as any).description || '',
             }))
           : [
               {
@@ -186,6 +187,7 @@ export default function ProfilePage() {
                 birthDate: '',
                 breed: [],
                 gender: null,
+                description: '',
               },
             ];
 
