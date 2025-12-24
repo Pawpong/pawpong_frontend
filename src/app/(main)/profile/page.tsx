@@ -365,9 +365,8 @@ export default function ProfilePage() {
             : undefined;
 
         const updateData = {
-          // 소개글 삭제: 빈 문자열을 명시 전송
-          // 백엔드가 ""(빈 문자열) 저장을 무시하는 경우가 있어, 공백 1자를 저장하고 프론트에서는 항상 trim 처리
-          profileDescription: formData.description?.trim() === '' ? ' ' : formData.description || undefined,
+          // 소개글은 빈 문자열도 허용 (undefined가 아니면 전송)
+          profileDescription: formData.description !== undefined ? formData.description : undefined,
           locationInfo,
           profilePhotos: allPhotoFileNames.length > 0 ? allPhotoFileNames : undefined,
           priceRangeInfo:
