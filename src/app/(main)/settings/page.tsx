@@ -10,9 +10,7 @@ import WithdrawDialog from './_components/withdraw-dialog';
 import { getAdopterProfile, updateAdopterProfile, deleteAccount, WithdrawReason } from '@/lib/adopter';
 import { getMyBreederProfile } from '@/lib/breeder';
 import { deleteBreederAccount, updateBreederProfile } from '@/lib/breeder-management';
-import { logout } from '@/lib/auth';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
 import { useAuthGuard } from '@/hooks/use-auth-guard';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -26,7 +24,6 @@ export default function SettingsPage() {
   const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
-  const router = useRouter();
 
   // 프로필 정보 로드
   useEffect(() => {
@@ -163,14 +160,18 @@ export default function SettingsPage() {
       }
 
       // 탈퇴 성공 시 쿠키 및 인증 상태 초기화 (logout API 호출 불필요 - 이미 탈퇴됨)
-      // 쿠키 삭제
-      await fetch('/api/auth/clear-cookie', { method: 'POST' }).catch(() => {});
-
-      // 로컬 스토리지 초기화
+      // 로컬 스토리지 먼저 초기화 (동기)
       clearAuth();
 
-      // 홈으로 리다이렉트
-      window.location.href = '/';
+      // 쿠키 삭제 (비동기, 실패해도 진행)
+      try {
+        await fetch('/api/auth/clear-cookie', { method: 'POST' });
+      } catch {
+        // 쿠키 삭제 실패해도 계속 진행
+      }
+
+      // 홈으로 리다이렉트 (window.location 사용하여 완전한 페이지 새로고침)
+      window.location.replace('/');
     } catch (error) {
       toast({
         title: '탈퇴 처리 실패',

@@ -11,6 +11,7 @@ export interface ParentValidationErrors {
   breed?: string;
   birthDate?: string;
   gender?: string;
+  image?: string;
 }
 
 export interface AnimalValidationErrors {
@@ -20,6 +21,7 @@ export interface AnimalValidationErrors {
   price?: string;
   birthDate?: string;
   gender?: string;
+  image?: string;
 }
 
 /**
@@ -132,6 +134,9 @@ export function validateParents(parents: ProfileFormData['parents']): Array<Pare
     if (!parent.gender) {
       errors.gender = BREEDER_PROFILE_ERROR.GENDER_REQUIRED;
     }
+    if (!parent.imageFile && !parent.imagePreview) {
+      errors.image = '사진을 등록해 주세요';
+    }
 
     return Object.keys(errors).length > 0 ? errors : undefined;
   });
@@ -184,6 +189,9 @@ export function validateAnimals(animals: ProfileFormData['animals']): Array<Anim
     }
     if (!animal.gender) {
       errors.gender = BREEDER_PROFILE_ERROR.GENDER_REQUIRED;
+    }
+    if (!animal.imageFile && !animal.imagePreview) {
+      errors.image = '사진을 등록해 주세요';
     }
 
     return Object.keys(errors).length > 0 ? errors : undefined;

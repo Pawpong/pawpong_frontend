@@ -18,10 +18,10 @@ export async function POST() {
   try {
     const res = NextResponse.json({ ok: true, message: '쿠키가 삭제되었습니다.' });
 
-    // 모든 인증 관련 쿠키 삭제
-    res.cookies.delete('accessToken');
-    res.cookies.delete('refreshToken');
-    res.cookies.delete('userRole');
+    // 모든 인증 관련 쿠키 삭제 (설정 시 사용한 동일한 path로 삭제해야 함)
+    res.cookies.set('accessToken', '', { path: '/', maxAge: 0 });
+    res.cookies.set('refreshToken', '', { path: '/', maxAge: 0 });
+    res.cookies.set('userRole', '', { path: '/', maxAge: 0 });
 
     return res;
   } catch (error) {
@@ -33,9 +33,9 @@ export async function POST() {
       { status: 500 },
     );
 
-    res.cookies.delete('accessToken');
-    res.cookies.delete('refreshToken');
-    res.cookies.delete('userRole');
+    res.cookies.set('accessToken', '', { path: '/', maxAge: 0 });
+    res.cookies.set('refreshToken', '', { path: '/', maxAge: 0 });
+    res.cookies.set('userRole', '', { path: '/', maxAge: 0 });
 
     return res;
   }

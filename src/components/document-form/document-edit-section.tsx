@@ -15,6 +15,7 @@ import {
   type UploadedDocumentDto,
 } from '@/lib/breeder-management';
 import type { Animal, Level } from '@/components/document-form/document-constants';
+import { useToast } from '@/hooks/use-toast';
 
 /** 문서 상태 타입 */
 interface DocumentState {
@@ -26,6 +27,7 @@ interface DocumentState {
 
 export default function DocumentEditSection() {
   const router = useRouter();
+  const { toast } = useToast();
 
   // 상태 관리
   const [level, setLevel] = useState<Level>('new');
@@ -179,7 +181,10 @@ export default function DocumentEditSection() {
   // 제출 핸들러
   const handleSubmit = async () => {
     if (!oathChecked) {
-      alert('브리더 입점 서약서에 동의해주세요.');
+      toast({
+        title: '브리더 입점 서약서에 동의해주세요.',
+        position: 'default',
+      });
       return;
     }
 
@@ -223,11 +228,11 @@ export default function DocumentEditSection() {
       setShowSuccessDialog(true);
     } catch (error) {
       console.error('서류 제출 실패:', error);
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        alert('서류 제출에 실패했습니다.');
-      }
+      toast({
+        title: '서류 제출에 실패했습니다.',
+        description: error instanceof Error ? error.message : '다시 시도해주세요.',
+        position: 'default',
+      });
     } finally {
       setIsSubmitting(false);
     }

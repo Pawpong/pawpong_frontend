@@ -53,9 +53,18 @@ export function useAuthGuard(options: UseAuthGuardOptions = {}) {
           });
         }
         setIsChecked(true);
-      } catch {
-        // 인증 실패 시 로그인 페이지로 리다이렉트
+      } catch (error) {
+        // 인증 실패 시 인증 상태 초기화
         clearAuth();
+
+        // 쿠키도 함께 삭제 (탈퇴된 계정이거나 토큰 만료 등)
+        try {
+          await fetch('/api/auth/clear-cookie', { method: 'POST' });
+        } catch {
+          // 쿠키 삭제 실패해도 계속 진행
+        }
+
+        // 로그인 페이지로 리다이렉트
         router.replace(redirectTo);
       } finally {
         setIsLoading(false);

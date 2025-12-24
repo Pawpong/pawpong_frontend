@@ -144,7 +144,12 @@ export default function ParentsInfo({
                       unoptimized
                     />
                   ) : (
-                    <Camera className="size-7 group-hover:[&_path]:fill-[#4F3B2E]" />
+                    <Camera
+                      className={cn(
+                        'size-7 group-hover:[&_path]:fill-[#4F3B2E]',
+                        errors.parents?.[index] && '[&_path]:fill-[#FF453A]',
+                      )}
+                    />
                   )}
                 </button>
                 {parent.imagePreview && (

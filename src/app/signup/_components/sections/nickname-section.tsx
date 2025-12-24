@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Check from '@/assets/icons/check-blue.svg';
 import ErrorIcon from '@/assets/icons/error';
+import { useToast } from '@/hooks/use-toast';
 
 export default function NicknameSection() {
   const router = useRouter();
@@ -34,24 +35,34 @@ export default function NicknameSection() {
   const [checkingNickname, setCheckingNickname] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const { toast } = useToast();
 
   const isSocialLogin = !!tempId;
 
   // Check nickname duplication
   const handleCheckNickname = async () => {
     if (!nickname) {
-      alert('닉네임을 입력해주세요.');
+      toast({
+        title: '닉네임을 입력해주세요.',
+        position: 'default',
+      });
       return;
     }
 
     if (nickname.length < 2 || nickname.length > 10) {
-      alert('닉네임은 2~10자로 입력해주세요.');
+      toast({
+        title: '닉네임은 2~10자로 입력해주세요.',
+        position: 'default',
+      });
       return;
     }
 
     const nicknameRegex = /^[a-zA-Z0-9가-힣]+$/;
     if (!nicknameRegex.test(nickname)) {
-      alert('닉네임은 한글, 영문, 숫자만 사용할 수 있습니다.');
+      toast({
+        title: '닉네임은 한글, 영문, 숫자만 사용할 수 있습니다.',
+        position: 'default',
+      });
       return;
     }
 
@@ -62,7 +73,10 @@ export default function NicknameSection() {
       setNicknameChecked(true);
       setNicknameAvailable(!isDuplicate);
     } catch (error) {
-      alert('닉네임 중복 확인에 실패했습니다.');
+      toast({
+        title: '닉네임 중복 확인에 실패했습니다.',
+        position: 'default',
+      });
       setNicknameChecked(false);
       setNicknameAvailable(false);
     } finally {
@@ -87,13 +101,20 @@ export default function NicknameSection() {
     }
 
     if (!tempId) {
-      alert('소셜 로그인 정보가 없습니다. 다시 로그인해주세요.');
+      toast({
+        title: '소셜 로그인 정보가 없습니다.',
+        description: '다시 로그인해주세요.',
+        position: 'default',
+      });
       router.push('/login');
       return;
     }
 
     if (!nickname) {
-      alert('닉네임을 입력해주세요.');
+      toast({
+        title: '닉네임을 입력해주세요.',
+        position: 'default',
+      });
       return;
     }
 
@@ -128,11 +149,11 @@ export default function NicknameSection() {
       nextFlowIndex();
     } catch (error) {
       console.error('=== Registration Error ===', error);
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        alert('회원가입에 실패했습니다.');
-      }
+      toast({
+        title: '회원가입에 실패했습니다.',
+        description: error instanceof Error ? error.message : '다시 시도해주세요.',
+        position: 'default',
+      });
     } finally {
       setSubmitting(false);
     }
