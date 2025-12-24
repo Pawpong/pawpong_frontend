@@ -7,6 +7,7 @@ import Letter from "@/assets/icons/heart-letter.svg";
 export type NotificationType =
   | "breeder_approved"
   | "breeder_unapproved"
+  | "breeder_rejected"
   | "breeder_onboarding_incomplete"
   | "new_consult_request"
   | "new_review_registered"
@@ -35,6 +36,14 @@ export const NOTIFICATION_CONFIG: Record<NotificationType, NotificationConfig> =
 
     // 브리더 입점 심사 반려 → 홈
     breeder_unapproved: {
+      icon: () => <PaperRed />,
+      message:
+        "브리더 입점 심사 결과, 보완이 필요합니다.\n자세한 사유는 이메일을 확인해주세요",
+      defaultTargetUrl: "/",
+    },
+
+    // 브리더 입점 심사 반려 (breeder_unapproved와 동일, 호환성) → 홈
+    breeder_rejected: {
       icon: () => <PaperRed />,
       message:
         "브리더 입점 심사 결과, 보완이 필요합니다.\n자세한 사유는 이메일을 확인해주세요",
