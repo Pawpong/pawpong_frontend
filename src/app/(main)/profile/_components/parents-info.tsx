@@ -10,7 +10,7 @@ import Plus from '@/assets/icons/plus.svg';
 import Female from '@/assets/icons/female.svg';
 import PictureRemove from '@/assets/icons/picture-delete.svg';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
@@ -323,7 +323,7 @@ export default function ParentsInfo({
                       {...field}
                       placeholder="소개"
                       maxLength={1500}
-                      showLength={field.value && field.value.length > 0}
+                      showLength={(field.value?.length ?? 0) > 0}
                       currentLength={field.value?.length || 0}
                     />
                   )}

@@ -31,6 +31,7 @@ type BreederProfileApi = {
   breeds?: string[];
   profileImageFileName?: string | null;
   petType?: 'dog' | 'cat';
+  specialization?: string[];
   specializationTypes?: string[];
   verificationInfo?: {
     plan?: string;
@@ -41,6 +42,7 @@ type BreederProfileApi = {
     location?: { city: string; district: string };
     representativePhotos?: string[];
     priceRange?: { min?: number; max?: number };
+    specialization?: string[];
     specializationAreas?: string[];
   };
   parentPetInfo?: Array<{
@@ -51,6 +53,7 @@ type BreederProfileApi = {
     breed?: string;
     gender?: 'male' | 'female';
     photoFileName?: string;
+    description?: string;
   }>;
   availablePetInfo?: Array<{
     petId?: string;
@@ -170,6 +173,10 @@ export default function ProfilePage() {
 
       const locationParts = typedProfile.profileInfo?.location;
       const locationString = locationParts ? `${locationParts.city} ${locationParts.district}` : '';
+      const apiMinPrice = typedProfile.profileInfo?.priceRange?.min;
+      const apiMaxPrice = typedProfile.profileInfo?.priceRange?.max;
+      // 백엔드 기본값(0-0)은 "미입력"으로 보고 placeholder(회색 0)로 노출
+      const isZeroPriceRange = apiMinPrice === 0 && apiMaxPrice === 0;
 
       // 부모 pet ID를 petId에서 추출 (백엔드에서 petId로 변환됨)
       const parentsData: ProfileFormData['parents'] =
@@ -181,7 +188,7 @@ export default function ProfilePage() {
               breed: pet.breed ? [pet.breed] : [],
               gender: pet.gender || null,
               imagePreview: pet.photoFileName || undefined,
-              description: (pet as any).description || '',
+              description: pet.description || '',
             }))
           : [
               {
@@ -215,8 +222,10 @@ export default function ProfilePage() {
         location: locationString,
         breeds: typedProfile.breeds || [],
         representativePhotos: typedProfile.profileInfo?.representativePhotos || [],
-        minPrice: typedProfile.profileInfo?.priceRange?.min?.toString() || '',
-        maxPrice: typedProfile.profileInfo?.priceRange?.max?.toString() || '',
+        // 0-0인 경우에만 입력값을 비워 placeholder(회색 0)로 보이도록 처리
+        minPrice: isZeroPriceRange || apiMinPrice === undefined || apiMinPrice === null ? '' : apiMinPrice.toString(),
+        maxPrice: isZeroPriceRange || apiMaxPrice === undefined || apiMaxPrice === null ? '' : apiMaxPrice.toString(),
+        // 상담 후 공개는 사용자가 버튼으로 직접 선택하는 UI 상태로만 관리
         isCounselMode: false,
         parents: parentsData,
         animals:
@@ -253,6 +262,14 @@ export default function ProfilePage() {
       });
     }
   }, [apiProfileData, form, defaultParentId, defaultAnimalId]);
+
+  // 고양이/강아지 타입 판별
+  const animalType = useMemo(() => {
+    const typedData = apiProfileData as BreederProfileApi | undefined;
+    const specialization =
+      typedData?.profileInfo?.specialization || typedData?.specialization || typedData?.specializationTypes || [];
+    return specialization.includes('cat') ? 'cat' : 'dog';
+  }, [apiProfileData]);
 
   // 폼 값들을 watch하여 실시간으로 disabled 상태 체크
   const formValues = useWatch({ control: form.control });
@@ -374,13 +391,14 @@ export default function ProfilePage() {
         profileDescription: formData.description !== undefined ? formData.description : undefined,
         locationInfo,
         profilePhotos: allPhotoFileNames.length > 0 ? allPhotoFileNames : undefined,
-        priceRangeInfo:
-          formData.minPrice && formData.maxPrice
-            ? {
-                minimumPrice: parseInt(formData.minPrice),
-                maximumPrice: parseInt(formData.maxPrice),
-              }
-            : undefined,
+        priceRangeInfo: formData.isCounselMode
+          ? { minimumPrice: 0, maximumPrice: 0 }
+          : formData.minPrice && formData.maxPrice
+          ? {
+              minimumPrice: parseInt(formData.minPrice),
+              maximumPrice: parseInt(formData.maxPrice),
+            }
+          : undefined,
         breeds: formData.breeds?.length > 0 ? formData.breeds : undefined,
         profileImage: profileImageToSave,
       };
@@ -452,7 +470,7 @@ export default function ProfilePage() {
               profileImagePreview={profileImagePreview}
               onProfileImageChange={handleProfileImageChange}
               onProfileImageRemove={handleProfileImageRemove}
-              animal={(apiProfileData as BreederProfileApi | undefined)?.petType || 'dog'}
+              animal={animalType}
             />
             {/* 엄마 아빠 정보 */}
             <ParentsInfo form={form} maxParents={apiProfileData?.verificationInfo?.plan === 'basic' ? 4 : undefined} />

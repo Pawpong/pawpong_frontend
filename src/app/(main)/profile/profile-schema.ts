@@ -26,7 +26,7 @@ const birthDateSchema = z
   );
 
 const locationSchema = z
-  .string({ required_error: BREEDER_PROFILE_ERROR.LOCATION_REQUIRED })
+  .string()
   .min(1, BREEDER_PROFILE_ERROR.LOCATION_REQUIRED)
   .refine((val) => val.trim() !== '', {
     message: BREEDER_PROFILE_ERROR.LOCATION_REQUIRED,
