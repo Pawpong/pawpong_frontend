@@ -13,7 +13,8 @@ export type NotificationType =
   | "new_review_registered"
   | "consult_completed"
   | "new_pet_registered"
-  | "document_reminder";
+  | "document_reminder"
+  | "profile_completion_reminder";
 
 interface NotificationConfig {
   message: string;
@@ -98,6 +99,14 @@ export const NOTIFICATION_CONFIG: Record<NotificationType, NotificationConfig> =
       message:
         "브리더 입점 절차가 아직 완료되지 않았어요!\n필요한 서류들을 제출하시면 입양자에게 프로필이 공개됩니다.",
       defaultTargetUrl: "/breeder/onboarding/documents",
+    },
+
+    // 프로필 완성 독려 → 브리더 프로필
+    profile_completion_reminder: {
+      icon: () => <PaperRed />,
+      message:
+        "브리더 프로필이 아직 완성되지 않았어요!\n프로필 작성을 마무리하면 입양자에게 노출되고 상담을 받을 수 있어요.",
+      defaultTargetUrl: "/profile",
     },
   };
 
