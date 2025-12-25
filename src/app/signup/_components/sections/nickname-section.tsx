@@ -57,7 +57,7 @@ export default function NicknameSection() {
       return;
     }
 
-    const nicknameRegex = /^[a-zA-Z0-9가-힣]+$/;
+    const nicknameRegex = /^[a-zA-Z0-9가-힣\s]+$/;
     if (!nicknameRegex.test(nickname)) {
       toast({
         title: '닉네임은 한글, 영문, 숫자만 사용할 수 있습니다.',

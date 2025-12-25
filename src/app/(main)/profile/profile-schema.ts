@@ -26,7 +26,7 @@ const birthDateSchema = z
   );
 
 const locationSchema = z
-  .string()
+  .string({ required_error: BREEDER_PROFILE_ERROR.LOCATION_REQUIRED })
   .min(1, BREEDER_PROFILE_ERROR.LOCATION_REQUIRED)
   .refine((val) => val.trim() !== '', {
     message: BREEDER_PROFILE_ERROR.LOCATION_REQUIRED,
@@ -41,30 +41,54 @@ const priceSchema = z.string().regex(/^\d*$/, '숫자만 입력해 주세요.');
 
 const parentItemSchema = z.object({
   id: z.string(),
-  name: z.string().optional(),
-  birthDate: z.string().optional(),
-  breed: z.array(z.string()).optional(),
-  gender: z.enum(['male', 'female']).nullable().optional(),
+  name: z.string().min(1, BREEDER_PROFILE_ERROR.NAME_REQUIRED),
+  birthDate: birthDateSchema,
+  breed: breedsSchema,
+  gender: z
+    .enum(['male', 'female'])
+    .nullable()
+    .refine((val) => val !== null, {
+      message: BREEDER_PROFILE_ERROR.GENDER_REQUIRED,
+    }),
   imagePreview: z.string().optional(),
   imageFile: z.union([z.instanceof(File), z.undefined()]).optional(),
   description: z.string().optional(),
 });
 
-const breedingAnimalItemSchema = z.object({
-  id: z.string(),
-  name: z.string().optional(),
-  birthDate: z.string().optional(),
-  breed: z.array(z.string()).optional(),
-  gender: z.enum(['male', 'female']).nullable().optional(),
-  imagePreview: z.string().optional(),
-  imageFile: z.union([z.instanceof(File), z.undefined()]).optional(),
-  description: z.string().optional(),
-  adoptionStatus: z.string().optional(),
-  motherId: z.string().optional(),
-  fatherId: z.string().optional(),
-  price: z.string().optional(),
-  isCounselMode: z.boolean().optional(),
-});
+const breedingAnimalItemSchema = z
+  .object({
+    id: z.string(),
+    name: z.string().min(1, BREEDER_PROFILE_ERROR.NAME_REQUIRED),
+    birthDate: birthDateSchema,
+    breed: breedsSchema,
+    gender: z
+      .enum(['male', 'female'])
+      .nullable()
+      .refine((val) => val !== null, {
+        message: BREEDER_PROFILE_ERROR.GENDER_REQUIRED,
+      }),
+    imagePreview: z.string().optional(),
+    imageFile: z.union([z.instanceof(File), z.undefined()]).optional(),
+    description: z.string(),
+    adoptionStatus: z.string().min(1, BREEDER_PROFILE_ERROR.STATUS_REQUIRED),
+    motherId: z.string().optional(),
+    fatherId: z.string().optional(),
+    price: z.string(),
+    isCounselMode: z.boolean(),
+  })
+  .refine(
+    (data) => {
+      // isCounselMode가 false일 때만 price 필수
+      if (!data.isCounselMode && (!data.price || data.price.trim() === '')) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: BREEDER_PROFILE_ERROR.PRICE_REQUIRED,
+      path: ['price'],
+    },
+  );
 
 export const profileFormSchema = z
   .object({
@@ -72,7 +96,7 @@ export const profileFormSchema = z
     breederName: z
       .string()
       .min(1, BREEDER_PROFILE_ERROR.NAME_REQUIRED)
-      .regex(/^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]+$/, '한글, 영문, 숫자만 이용해 브리더명을 설정해 주세요'),
+      .regex(/^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]+$/, '한글, 영문, 숫자만 이용해 브리더명을 설정해 주세요'),
     description: z.string(),
     location: locationSchema,
     breeds: breedsSchema,
@@ -91,14 +115,14 @@ export const profileFormSchema = z
     if (!data.isCounselMode) {
       if (!data.minPrice || data.minPrice.trim() === '') {
         ctx.addIssue({
-          code: 'custom',
+          code: z.ZodIssueCode.custom,
           message: BREEDER_PROFILE_ERROR.PRICE_REQUIRED,
           path: ['minPrice'],
         });
       }
       if (!data.maxPrice || data.maxPrice.trim() === '') {
         ctx.addIssue({
-          code: 'custom',
+          code: z.ZodIssueCode.custom,
           message: BREEDER_PROFILE_ERROR.PRICE_REQUIRED,
           path: ['maxPrice'],
         });
@@ -110,7 +134,7 @@ export const profileFormSchema = z
 
         if (!Number.isNaN(min) && !Number.isNaN(max) && min > max) {
           ctx.addIssue({
-            code: 'custom',
+            code: z.ZodIssueCode.custom,
             message: '최대 금액은 최소 금액보다 크거나 같아야 해요',
             path: ['maxPrice'],
           });
