@@ -35,48 +35,50 @@ export default function NicknameSection() {
   const [checkingNickname, setCheckingNickname] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [showNicknameError, setShowNicknameError] = useState(false);
+  const [nicknameErrorMessage, setNicknameErrorMessage] = useState<string>('');
   const { toast } = useToast();
 
   const isSocialLogin = !!tempId;
 
   // Check nickname duplication
   const handleCheckNickname = async () => {
-    if (!nickname) {
-      toast({
-        title: '닉네임을 입력해주세요.',
-        position: 'default',
-      });
+    // 중복 검사 시작 시 submitAttempted 리셋 (이전 제출 시도 에러 메시지 제거)
+    setSubmitAttempted(false);
+
+    // 앞뒤 공백 제거
+    const trimmedNickname = nickname.trim();
+
+    if (!trimmedNickname) {
+      setShowNicknameError(true);
+      setNicknameErrorMessage('닉네임을 입력해 주세요.');
       return;
     }
 
-    if (nickname.length < 2 || nickname.length > 10) {
-      toast({
-        title: '닉네임은 2~10자로 입력해주세요.',
-        position: 'default',
-      });
+    if (trimmedNickname.length < 2 || trimmedNickname.length > 10) {
+      setShowNicknameError(true);
+      setNicknameErrorMessage('닉네임은 2~10자로 입력해 주세요.');
       return;
     }
 
-    const nicknameRegex = /^[a-zA-Z0-9가-힣\s]+$/;
-    if (!nicknameRegex.test(nickname)) {
-      toast({
-        title: '닉네임은 한글, 영문, 숫자만 사용할 수 있습니다.',
-        position: 'default',
-      });
+    const nicknameRegex = /^[a-zA-Z0-9가-힣]+$/;
+    if (!nicknameRegex.test(trimmedNickname)) {
+      setShowNicknameError(true);
+      setNicknameErrorMessage('한글, 영문, 숫자만 사용해 닉네임을 설정해 주세요.');
       return;
     }
 
+    setShowNicknameError(false);
+    setNicknameErrorMessage('');
     setCheckingNickname(true);
 
     try {
-      const isDuplicate = await checkNicknameDuplicate(nickname);
+      const isDuplicate = await checkNicknameDuplicate(trimmedNickname);
       setNicknameChecked(true);
       setNicknameAvailable(!isDuplicate);
     } catch (error) {
-      toast({
-        title: '닉네임 중복 확인에 실패했습니다.',
-        position: 'default',
-      });
+      setShowNicknameError(true);
+      setNicknameErrorMessage('닉네임 중복 확인에 실패했어요.');
       setNicknameChecked(false);
       setNicknameAvailable(false);
     } finally {
@@ -86,16 +88,31 @@ export default function NicknameSection() {
 
   // Reset check when nickname changes
   const handleNicknameChange = (value: string) => {
-    setNickname(value);
+    // 띄어쓰기 제거
+    const trimmedValue = value.replace(/\s/g, '');
+    setNickname(trimmedValue);
     setNicknameChecked(false);
     setNicknameAvailable(false);
     setSubmitAttempted(false);
+    setShowNicknameError(false);
+    setNicknameErrorMessage('');
   };
 
   // Complete registration
   const handleSubmit = async () => {
     setSubmitAttempted(true);
 
+    // 앞뒤 공백 제거
+    const trimmedNickname = nickname.trim();
+
+    // 닉네임 미입력 체크를 가장 먼저 수행
+    if (!trimmedNickname) {
+      setShowNicknameError(true);
+      setNicknameErrorMessage('닉네임을 입력해 주세요.');
+      return;
+    }
+
+    // 닉네임이 있지만 중복 검사를 하지 않은 경우
     if (!nicknameChecked || !nicknameAvailable) {
       return;
     }
@@ -110,14 +127,6 @@ export default function NicknameSection() {
       return;
     }
 
-    if (!nickname) {
-      toast({
-        title: '닉네임을 입력해주세요.',
-        position: 'default',
-      });
-      return;
-    }
-
     setSubmitting(true);
 
     const requestData = {
@@ -125,7 +134,7 @@ export default function NicknameSection() {
       email,
       name: socialName,
       role: 'adopter' as const,
-      nickname,
+      nickname: trimmedNickname,
       phone: phoneNumber,
       marketingAgreed: agreements.marketing,
     };
@@ -213,11 +222,21 @@ export default function NicknameSection() {
               <p className="text-caption font-medium text-status-error-500">이미 사용 중인 닉네임이에요</p>
             </div>
           )}
-          {submitAttempted && !nicknameChecked && (
+          {/* showNicknameError가 있으면 우선 표시, 없을 때만 submitAttempted 메시지 표시 */}
+          {showNicknameError && nicknameErrorMessage ? (
             <div className="flex items-center gap-[0.19rem]">
               <ErrorIcon className="size-3 shrink-0" />
-              <p className="text-caption font-medium text-status-error-500">닉네임 중복 검사를 진행해 주세요</p>
+              <p className="text-caption font-medium text-status-error-500">{nicknameErrorMessage}</p>
             </div>
+          ) : (
+            submitAttempted &&
+            !nicknameChecked &&
+            nickname.trim() && (
+              <div className="flex items-center gap-[0.19rem]">
+                <ErrorIcon className="size-3 shrink-0" />
+                <p className="text-caption font-medium text-status-error-500">닉네임 중복 검사를 진행해 주세요</p>
+              </div>
+            )
           )}
         </div>
         <div className="flex flex-col gap-4">
