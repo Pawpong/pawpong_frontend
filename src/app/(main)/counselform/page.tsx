@@ -198,7 +198,7 @@ function CounselFormContent() {
     <FormProvider {...form}>
       <div className="sticky top-0 z-10 w-full py-6 bg-tertiary-500-basic">
         <ExitConfirmDialog hasData={hasFormData}>
-          <button className="bg-primary-500-basic size-9 flex gap-2.5 items-center justify-center rounded-lg hover:bg-tertiary-600">
+          <button className="bg-white size-9 flex gap-2.5 items-center justify-center rounded-lg hover:bg-tertiary-600">
             <LeftArrow />
           </button>
         </ExitConfirmDialog>
@@ -206,8 +206,8 @@ function CounselFormContent() {
       <div className="min-h-screen flex w-full flex-col md:flex-row">
         {/* 왼쪽 배너 영역: md 이상에서만 표시 */}
         {isMdUp && (
-          <div className="md:w-1/2 md:p-8 bg-tertiary-500">
-            <div className="md:h-[calc(100vh-4rem)]">
+          <div className="md:w-[648px] md:pr-8 bg-tertiary-500">
+            <div className="md:h-[744px]">
               <CounselBannerCarousel />
             </div>
           </div>
@@ -607,7 +607,7 @@ function CounselFormContent() {
             <Button
               variant={undefined}
               disabled={isDisabled}
-              className="button-edit-default text-primary-500 hover:bg-secondary-600 flex h-12 items-center justify-center min-w-20 px-4 py-3 rounded-lg w-full md:w-[424px] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="button-edit-default text-primary-500 hover:bg-secondary-600 flex h-12 items-center justify-center min-w-20 px-4 py-3 rounded-lg w-full md:w-[424px] disabled:cursor-not-allowed disabled:text-grayscale-gray4"
               onClick={handleSubmit}
             >
               {createApplicationMutation.isPending ? '제출 중...' : '상담 신청하기'}

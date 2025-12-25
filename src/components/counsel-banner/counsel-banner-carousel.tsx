@@ -79,7 +79,7 @@ export default function CounselBannerCarousel() {
     <div className="relative w-full h-full group">
       {/* Banner Image */}
       <div
-        className={`w-full h-full overflow-hidden rounded-lg ${currentBanner.linkUrl ? 'cursor-pointer' : ''}`}
+        className={`w-full h-full overflow-hidden rounded-[20px] ${currentBanner.linkUrl ? 'cursor-pointer' : ''}`}
         onClick={() => currentBanner.linkUrl && handleBannerClick(currentBanner)}
       >
         <img
