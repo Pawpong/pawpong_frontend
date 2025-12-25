@@ -262,6 +262,13 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                       {...field}
                       placeholder="생년월일 (YYYYMMDD)"
                       className="px-[var(--space-16)] py-[var(--space-12)]"
+                      inputMode="numeric"
+                      maxLength={8}
+                      onChange={(e) => {
+                        // 숫자만 허용 (zod 검증과 일치)
+                        const value = e.target.value.replace(/\D/g, '');
+                        field.onChange(value);
+                      }}
                     />
                   )}
                 />
