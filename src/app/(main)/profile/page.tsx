@@ -264,12 +264,10 @@ export default function ProfilePage() {
   }, [apiProfileData, form, defaultParentId, defaultAnimalId]);
 
   // 고양이/강아지 타입 판별
-  const animalType = useMemo(() => {
-    const typedData = apiProfileData as BreederProfileApi | undefined;
-    const specialization =
-      typedData?.profileInfo?.specialization || typedData?.specialization || typedData?.specializationTypes || [];
-    return specialization.includes('cat') ? 'cat' : 'dog';
-  }, [apiProfileData]);
+  const typedData = apiProfileData as BreederProfileApi | undefined;
+  const specialization =
+    typedData?.profileInfo?.specialization || typedData?.specialization || typedData?.specializationTypes || [];
+  const animalType = specialization.includes('cat') ? 'cat' : 'dog';
 
   // 폼 값들을 watch하여 실시간으로 disabled 상태 체크
   const formValues = useWatch({ control: form.control });
