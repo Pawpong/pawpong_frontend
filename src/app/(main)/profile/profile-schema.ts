@@ -113,14 +113,22 @@ export const profileFormSchema = z
   })
   .superRefine((data, ctx) => {
     if (!data.isCounselMode) {
-      if (!data.minPrice || data.minPrice.trim() === '') {
+      const minPriceEmpty = !data.minPrice || data.minPrice.trim() === '';
+      const maxPriceEmpty = !data.maxPrice || data.maxPrice.trim() === '';
+
+      // 두 입력이 모두 비어있으면 상담 후 공개 모드로 처리 (에러 없음)
+      if (minPriceEmpty && maxPriceEmpty) {
+        return; // 에러 없이 통과 (컴포넌트에서 자동으로 isCounselMode로 전환됨)
+      }
+
+      if (minPriceEmpty) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: BREEDER_PROFILE_ERROR.PRICE_REQUIRED,
           path: ['minPrice'],
         });
       }
-      if (!data.maxPrice || data.maxPrice.trim() === '') {
+      if (maxPriceEmpty) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: BREEDER_PROFILE_ERROR.PRICE_REQUIRED,
@@ -133,11 +141,8 @@ export const profileFormSchema = z
         const max = Number(data.maxPrice);
 
         if (!Number.isNaN(min) && !Number.isNaN(max) && min > max) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: '최대 금액은 최소 금액보다 크거나 같아야 해요',
-            path: ['maxPrice'],
-          });
+          // 자동 swap은 컴포넌트에서 처리되므로 여기서는 에러 발생하지 않음
+          // (컴포넌트에서 이미 swap 처리됨)
         }
       }
     }

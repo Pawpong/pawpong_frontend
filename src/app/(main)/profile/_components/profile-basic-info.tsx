@@ -224,20 +224,33 @@ export default function ProfileBasicInfo({
             <Controller
               name="minPrice"
               control={control}
-              render={({ field }) => (
-                <PriceInput
-                  placeholder={isCounselMode ? '상담 후 공개' : '0'}
-                  className="grow"
-                  inputMode="numeric"
-                  disabled={isCounselMode}
-                  value={isCounselMode ? '' : formatPrice(field.value || '')}
-                  onChange={(e) => {
-                    const digits = normalizeNumber(e.target.value);
-                    field.onChange(digits);
-                  }}
-                  onBlur={field.onBlur}
-                />
-              )}
+              render={({ field }) => {
+                const maxPriceValue = watch('maxPrice') || '';
+                return (
+                  <PriceInput
+                    placeholder={isCounselMode ? '상담 후 공개' : '0'}
+                    className="grow"
+                    inputMode="numeric"
+                    disabled={isCounselMode}
+                    value={isCounselMode ? '' : formatPrice(field.value || '')}
+                    onChange={(e) => {
+                      const digits = normalizeNumber(e.target.value);
+                      const minNum = digits ? Number(digits) : 0;
+                      const maxNum = maxPriceValue ? Number(maxPriceValue) : 0;
+
+                      // 최소 금액이 최대 금액보다 크면 자동 swap
+                      if (digits && maxPriceValue && minNum > maxNum) {
+                        setValue('minPrice', maxPriceValue, { shouldDirty: true, shouldValidate: false });
+                        setValue('maxPrice', digits, { shouldDirty: true, shouldValidate: false });
+                        clearErrors(['minPrice', 'maxPrice']);
+                      } else {
+                        field.onChange(digits);
+                      }
+                    }}
+                    onBlur={field.onBlur}
+                  />
+                );
+              }}
             />
             <div className="overflow-hidden relative shrink-0 size-4">
               <MinusIcon className="size-4" />
@@ -245,20 +258,33 @@ export default function ProfileBasicInfo({
             <Controller
               name="maxPrice"
               control={control}
-              render={({ field }) => (
-                <PriceInput
-                  placeholder={isCounselMode ? '상담 후 공개' : '0'}
-                  className="grow"
-                  inputMode="numeric"
-                  disabled={isCounselMode}
-                  value={isCounselMode ? '' : formatPrice(field.value || '')}
-                  onChange={(e) => {
-                    const digits = normalizeNumber(e.target.value);
-                    field.onChange(digits);
-                  }}
-                  onBlur={field.onBlur}
-                />
-              )}
+              render={({ field }) => {
+                const minPriceValue = watch('minPrice') || '';
+                return (
+                  <PriceInput
+                    placeholder={isCounselMode ? '상담 후 공개' : '0'}
+                    className="grow"
+                    inputMode="numeric"
+                    disabled={isCounselMode}
+                    value={isCounselMode ? '' : formatPrice(field.value || '')}
+                    onChange={(e) => {
+                      const digits = normalizeNumber(e.target.value);
+                      const minNum = minPriceValue ? Number(minPriceValue) : 0;
+                      const maxNum = digits ? Number(digits) : 0;
+
+                      // 최대 금액이 최소 금액보다 작으면 자동 swap
+                      if (digits && minPriceValue && maxNum < minNum) {
+                        setValue('minPrice', digits, { shouldDirty: true, shouldValidate: false });
+                        setValue('maxPrice', minPriceValue, { shouldDirty: true, shouldValidate: false });
+                        clearErrors(['minPrice', 'maxPrice']);
+                      } else {
+                        field.onChange(digits);
+                      }
+                    }}
+                    onBlur={field.onBlur}
+                  />
+                );
+              }}
             />
             <button
               type="button"
