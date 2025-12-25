@@ -33,7 +33,7 @@ export default function ProfileBasicInfo({
   animal = 'dog',
 }: ProfileBasicInfoProps) {
   const [isDescriptionFocused, setIsDescriptionFocused] = useState(false);
-  const { control, watch, setValue, formState, trigger } = form;
+  const { control, watch, setValue, clearErrors, formState, trigger } = form;
   const { errors } = formState;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -261,15 +261,21 @@ export default function ProfileBasicInfo({
               )}
             />
             <button
+              type="button"
               onClick={() => {
-                if (!isCounselMode) {
-                  // 상담 후 공개 모드로 전환 시 값 초기화
-                  setValue('minPrice', '', { shouldValidate: true });
-                  setValue('maxPrice', '', { shouldValidate: true });
+                const nextIsCounselMode = !isCounselMode;
+
+                // 분양중인 아이들 섹션과 동일하게:
+                // - 토글만으로도 "수정하기" 버튼이 활성화되도록 shouldDirty
+                // - 토글 순간 즉시 에러가 뜨지 않도록 shouldValidate는 끔
+                setValue('isCounselMode', nextIsCounselMode, { shouldDirty: true, shouldValidate: false });
+
+                if (nextIsCounselMode) {
+                  // 상담 후 공개 모드로 전환 시 값 초기화 + 기존 에러 제거
+                  setValue('minPrice', '', { shouldDirty: true, shouldValidate: false });
+                  setValue('maxPrice', '', { shouldDirty: true, shouldValidate: false });
+                  clearErrors(['minPrice', 'maxPrice']);
                 }
-                setValue('isCounselMode', !isCounselMode, {
-                  shouldValidate: true,
-                });
               }}
               className="button-after-counsel shrink-0 whitespace-nowrap"
             >

@@ -12,6 +12,7 @@ import UserInfoSection from './sections/user-info-section';
 import UserTypeSection from './sections/user-type-section';
 const flowInfo: Record<UserType, React.ComponentType[]> = {
   guest: [UserTypeSection, UserInfoSection, NicknameSection, SignupComplete],
+  adopter: [UserTypeSection, UserInfoSection, NicknameSection, SignupComplete],
   breeder: [
     UserTypeSection,
     AnimalSection,

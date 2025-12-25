@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect } from 'react';
 import { useAuthStore } from '@/stores/auth-store';
+import type { VerificationStatus } from '@/stores/auth-store';
 import { getAdopterProfile } from '@/lib/adopter';
 import { getMyBreederProfile } from '@/lib/breeder';
 import { getUserRoleFromCookie } from '@/lib/cookie-utils';
@@ -46,10 +47,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (cookieRole === 'breeder') {
           const profile = await getMyBreederProfile();
-          const verificationStatus =
-            (profile.verificationInfo as any)?.status ||
-            profile.verificationInfo?.verificationStatus ||
-            'pending';
+          const rawStatus = profile.verificationInfo?.status;
+          // auth-store는 reviewing 상태를 따로 관리하지 않아 pending으로 매핑
+          const verificationStatus: VerificationStatus =
+            rawStatus === 'approved' || rawStatus === 'rejected' ? rawStatus : 'pending';
           setUser({
             userId: profile.breederId,
             email: profile.breederEmail,
