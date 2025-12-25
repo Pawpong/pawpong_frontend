@@ -288,10 +288,6 @@ export default function ProfilePage() {
     const isValid = await form.trigger();
     const formData = form.getValues();
 
-    console.log('Form validation result:', isValid);
-    console.log('Form errors:', form.formState.errors);
-    console.log('Location value:', formData.location);
-
     // 검증 수행
     const parentErrors = validateParents(formData.parents);
     const animalErrors = validateAnimals(formData.animals);
@@ -314,7 +310,6 @@ export default function ProfilePage() {
 
     // 에러가 있으면 스크롤하고 리턴
     if (!isValid || hasParentErrors || hasAnimalErrors) {
-      console.log('Validation failed - returning early');
       scrollToFirstError(parentErrors, animalErrors);
       return;
     }
