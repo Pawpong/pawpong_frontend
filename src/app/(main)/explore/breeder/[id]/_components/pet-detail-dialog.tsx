@@ -175,9 +175,7 @@ export default function PetDetailDialog({
 
             {/* 소개 내용 */}
             {pet.description && (
-              <div className="text-body-s text-grayscale-gray6 whitespace-pre-wrap">
-                {pet.description}
-              </div>
+              <div className="text-body-s text-grayscale-gray6 whitespace-pre-wrap">{pet.description}</div>
             )}
           </div>
 

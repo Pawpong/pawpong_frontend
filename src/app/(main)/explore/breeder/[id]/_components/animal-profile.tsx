@@ -40,7 +40,7 @@ export default function AnimalProfile({
 
   return (
     <div className="space-y-4 cursor-pointer" onClick={onClick}>
-      <div className="relative aspect-square overflow-hidden rounded-lg">
+      <div className="relative w-full max-w-[22.0625rem] aspect-square md:max-w-[13.66669rem] lg:max-w-none overflow-hidden rounded-lg">
         <Image
           src={getValidImageUrl(avatarUrl)}
           alt={`${name}의 사진`}
