@@ -7,7 +7,7 @@ import ProfileBasicInfo from './_components/profile-basic-info';
 import ParentsInfo from './_components/parents-info';
 import BreedingAnimals from './_components/breeding-animals';
 import { useToast } from '@/hooks/use-toast';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useProfileStore, type ProfileFormData } from '@/stores/profile-store';
 import { profileFormSchema } from './profile-schema';
@@ -18,6 +18,8 @@ import {
   validateAnimals,
   setFormErrors,
   scrollToFirstError,
+  isParentEmpty,
+  isAnimalEmpty,
 } from '@/utils/profile-validation';
 import { useBreederProfile, useUpdateBreederProfile } from './_hooks/use-breeder-profile';
 import { syncParentPets, syncAvailablePets } from '@/utils/profile-sync';
@@ -93,8 +95,10 @@ export default function ProfilePage() {
   const defaultParentId = useMemo(() => `parent-default-${Date.now()}`, []);
   const defaultAnimalId = useMemo(() => `animal-default-${Date.now()}`, []);
 
+  const resolver = zodResolver(profileFormSchema) as Resolver<ProfileFormData>;
+
   const form = useForm<ProfileFormData>({
-    resolver: zodResolver(profileFormSchema),
+    resolver,
     defaultValues: {
       breederName: '',
       description: '',
@@ -227,13 +231,19 @@ export default function ProfilePage() {
         breeds: typedProfile.breeds || [],
         representativePhotos: typedProfile.profileInfo?.representativePhotos || [],
         // 가격 처리:
-        // - 미설정(-1) 또는 undefined/null인 경우 -> 빈 문자열 (placeholder 표시)
-        // - 상담 후 공개(0-0)인 경우 -> 빈 문자열, isCounselMode = true
+        // - 미설정(-1) 또는 undefined/null인 경우 -> 빈 문자열 (placeholder "0" 표시)
+        // - 상담 후 공개(0-0)인 경우 -> 빈 문자열 (처음에는 일반 모드로 표시, 버튼으로 상담 후 공개 모드 전환 가능)
         // - 실제 가격인 경우 -> 숫자 표시
-        minPrice: isUnsetPrice || isCounselPrice || apiMinPrice === undefined || apiMinPrice === null ? '' : apiMinPrice.toString(),
-        maxPrice: isUnsetPrice || isCounselPrice || apiMaxPrice === undefined || apiMaxPrice === null ? '' : apiMaxPrice.toString(),
-        // 상담 후 공개 모드 (0-0인 경우에만 true)
-        isCounselMode: isCounselPrice,
+        minPrice:
+          isUnsetPrice || isCounselPrice || apiMinPrice === undefined || apiMinPrice === null
+            ? ''
+            : apiMinPrice.toString(),
+        maxPrice:
+          isUnsetPrice || isCounselPrice || apiMaxPrice === undefined || apiMaxPrice === null
+            ? ''
+            : apiMaxPrice.toString(),
+        // 상담 후 공개 모드: 처음에는 false로 시작 (버튼으로 전환 가능)
+        isCounselMode: false,
         parents: parentsData,
         animals:
           typedProfile.availablePetInfo?.length && typedProfile.availablePetInfo.length > 0
@@ -307,6 +317,18 @@ export default function ProfilePage() {
   };
 
   const handleEdit = async () => {
+    // 비어있는 부모/아이 항목 제거 후 검증 실행
+    const current = form.getValues();
+    const filteredParents = current.parents?.filter((parent) => !isParentEmpty(parent)) ?? [];
+    const filteredAnimals = current.animals?.filter((animal) => !isAnimalEmpty(animal)) ?? [];
+
+    if (filteredParents.length !== current.parents.length) {
+      form.setValue('parents', filteredParents, { shouldDirty: true });
+    }
+    if (filteredAnimals.length !== current.animals.length) {
+      form.setValue('animals', filteredAnimals, { shouldDirty: true });
+    }
+
     const isValid = await form.trigger();
     const formData = form.getValues();
 
@@ -398,16 +420,38 @@ export default function ProfilePage() {
         profilePhotos: allPhotoFileNames.length > 0 ? allPhotoFileNames : undefined,
         // 가격 처리:
         // - 상담 후 공개 모드 -> 0, 0
-        // - 가격 입력 있음 -> 실제 가격
-        // - 가격 입력 없음 -> -1, -1 (미설정)
-        priceRangeInfo: formData.isCounselMode
-          ? { minimumPrice: 0, maximumPrice: 0 }
-          : formData.minPrice && formData.maxPrice
-          ? {
-              minimumPrice: parseInt(formData.minPrice),
-              maximumPrice: parseInt(formData.maxPrice),
+        // - 가격 입력 있음 -> 실제 가격 (min/max 정렬하여 전송)
+        // - 가격 입력 없음(빈 문자열) -> 0, 0 (상담 후 공개)
+        priceRangeInfo: (() => {
+          if (formData.isCounselMode) {
+            return { minimumPrice: 0, maximumPrice: 0 };
+          }
+
+          const minPriceStr = formData.minPrice?.trim() || '';
+          const maxPriceStr = formData.maxPrice?.trim() || '';
+
+          // 둘 다 비어있으면 상담 후 공개
+          if (!minPriceStr && !maxPriceStr) {
+            return { minimumPrice: 0, maximumPrice: 0 };
+          }
+
+          // 둘 다 값이 있으면 실제 가격
+          if (minPriceStr && maxPriceStr) {
+            const min = parseInt(minPriceStr, 10);
+            const max = parseInt(maxPriceStr, 10);
+
+            // 유효한 숫자인지 확인
+            if (!isNaN(min) && !isNaN(max)) {
+              return {
+                minimumPrice: Math.min(min, max),
+                maximumPrice: Math.max(min, max),
+              };
             }
-          : { minimumPrice: -1, maximumPrice: -1 },
+          }
+
+          // 그 외의 경우 (하나만 입력된 경우 등) 상담 후 공개
+          return { minimumPrice: 0, maximumPrice: 0 };
+        })(),
         breeds: formData.breeds?.length > 0 ? formData.breeds : undefined,
         profileImage: profileImageToSave,
       };
