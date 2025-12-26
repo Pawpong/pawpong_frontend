@@ -357,7 +357,7 @@ export default function Page({ params }: PageProps) {
         <div>
           <BreederProfile data={breederProfileData} breederId={breederId} isOwnProfile={isOwnProfile} />
         </div>
-        <div className="space-y-12  mt-10 md:mt-0">
+        <div className="space-y-12 w-full mt-10 md:mt-0">
           {envPhotos.length > 0 && (
             <>
               <EnvPhotos photos={envPhotos} />
