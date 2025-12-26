@@ -89,7 +89,7 @@ export default function SiteBreederList() {
               <Breeder>
                 <BreederProfile>
                   <BreederHeader>
-                    <BreederAvatar src={breeder.profileImage} />
+                    <BreederAvatar src={breeder.profileImage} animal={(breeder.petType as 'cat' | 'dog') || petType} />
                     <div className="flex items-center gap-2">
                       <BreederName>{breeder.breederName}</BreederName>
                       <LevelBadge level={breeder.breederLevel as 'elite' | 'new'} />

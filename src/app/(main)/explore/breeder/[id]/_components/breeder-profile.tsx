@@ -51,7 +51,7 @@ export default function BreederProfile({
     <div className="flex flex-col gap-4 lg:w-51">
       <div className="flex gap-4 lg:flex-col lg:gap-8">
         <div className="w-[8.25rem] h-[8.25rem] md:w-[10rem] md:h-[10rem] lg:w-[12.75rem] lg:h-[12.75rem] rounded-lg overflow-hidden shrink-0 bg-grayscale-gray1 flex items-center justify-center">
-          {avatarUrl ? (
+          {avatarUrl && avatarUrl !== '/profile-empty.svg' ? (
             <Image
               src={avatarUrl}
               alt={nickname}
@@ -61,7 +61,7 @@ export default function BreederProfile({
               unoptimized={avatarUrl.startsWith('http')}
             />
           ) : (
-            <IconComponent className="w-[9.5625rem] h-[9.5625rem] text-grayscale-gray5" />
+            <IconComponent className="w-[6.1875rem] h-[6.1875rem] md:w-[7.5rem] md:h-[7.5rem] lg:w-[9.5625rem] lg:h-[9.5625rem] text-grayscale-gray5" />
           )}
         </div>
         <div className="flex-1 space-y-4 flex flex-col md:justify-between">
