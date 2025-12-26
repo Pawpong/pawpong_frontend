@@ -8,6 +8,7 @@ import BreederProfileSectionMore from '@/components/breeder-profile/breeder-prof
 import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
 import AnimalProfile from './animal-profile';
 import PetDetailDialog, { type PetDetailData } from './pet-detail-dialog';
+import EmptyPetState from './empty-pet-state';
 
 export default function Parents({
   data,
@@ -60,24 +61,28 @@ export default function Parents({
           </div>
         ) : null}
       </BreederProfileSectionHeader>
-      <div className="space-y-7 md:grid md:grid-cols-3 md:gap-gutter">
-        {data
-          .slice(0, 3)
-          .map(
-            (e: {
-              id: string;
-              avatarUrl: string;
-              name: string;
-              sex: 'male' | 'female';
-              birth: string;
-              price: string;
-              breed: string;
-              description?: string;
-            }) => (
-              <AnimalProfile key={e.id} data={e} onClick={() => handlePetClick(e)} />
-            ),
-          )}
-      </div>
+      {data.length === 0 ? (
+        <EmptyPetState />
+      ) : (
+        <div className="space-y-7 md:grid md:grid-cols-3 md:gap-gutter">
+          {data
+            .slice(0, 3)
+            .map(
+              (e: {
+                id: string;
+                avatarUrl: string;
+                name: string;
+                sex: 'male' | 'female';
+                birth: string;
+                price: string;
+                breed: string;
+                description?: string;
+              }) => (
+                <AnimalProfile key={e.id} data={e} onClick={() => handlePetClick(e)} />
+              ),
+            )}
+        </div>
+      )}
       <PetDetailDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}

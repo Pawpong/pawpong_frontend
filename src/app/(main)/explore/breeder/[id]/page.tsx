@@ -372,18 +372,15 @@ export default function Page({ params }: PageProps) {
             </>
           )}
 
-          {!isPetsLoading && breedingAnimals.length > 0 && (
+          {!isPetsLoading && (
             <>
               <BreedingAnimals data={breedingAnimals} breederId={breederId} breederDescription={breederDescription} />
               <Separator className="my-12" />
             </>
           )}
 
-          {!isParentPetsLoading && parentPets.length > 0 && (
-            <>
-              <Parents data={parentPets} breederId={breederId} breederDescription={breederDescription} />
-              <Separator className="my-12" />
-            </>
+          {!isParentPetsLoading && (
+            <Parents data={parentPets} breederId={breederId} breederDescription={breederDescription} />
           )}
 
           {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} breederId={breederId} />}
