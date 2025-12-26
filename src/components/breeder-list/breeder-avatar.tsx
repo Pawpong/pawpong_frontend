@@ -13,9 +13,9 @@ export default function BreederAvatar({ src, animal = 'dog' }: BreederAvatarProp
       {src && <AvatarImage src={src} />}
       <AvatarFallback>
         {animal === 'cat' ? (
-          <Cat className="size-9 text-grayscale-gray5" />
+          <Cat className="w-[6.1875rem] h-[6.1875rem] md:w-[7.5rem] md:h-[7.5rem] lg:size-9 text-grayscale-gray5" />
         ) : (
-          <Dog className="size-9 text-grayscale-gray5" />
+          <Dog className="w-[6.1875rem] h-[6.1875rem] md:w-[7.5rem] md:h-[7.5rem] lg:size-9 text-grayscale-gray5" />
         )}
       </AvatarFallback>
     </Avatar>

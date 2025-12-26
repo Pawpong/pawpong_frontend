@@ -205,6 +205,9 @@ export default function Page({ params }: PageProps) {
     breeds?: string[];
     representativePhotos?: string[];
     description?: string;
+    petType?: 'dog' | 'cat';
+    specialization?: string[];
+    specializationTypes?: string[];
   };
 
   type BreederPetItem = {
@@ -267,6 +270,11 @@ export default function Page({ params }: PageProps) {
   const locationFromApi = apiData.location || locationStr;
   const levelFromApi = apiData.breederLevel === 'elite' ? 'elite' : 'new';
 
+  // 고양이/강아지 타입 판별
+  const specialization =
+    apiData.specialization || apiData.specializationTypes || profileInfo?.specializationAreas || [];
+  const animalType = apiData.petType || (specialization.includes('cat') ? 'cat' : 'dog');
+
   const breederProfileData = {
     avatarUrl,
     nickname: profileData.breederName,
@@ -274,7 +282,7 @@ export default function Page({ params }: PageProps) {
     location: locationFromApi,
     priceRange: priceRangeStr,
     breeds: apiData.breeds || profileInfo?.specializationAreas || [],
-    animal: 'dog' as const,
+    animal: animalType as 'cat' | 'dog',
   };
 
   // 환경 사진 - API 응답 구조에 맞게 처리
