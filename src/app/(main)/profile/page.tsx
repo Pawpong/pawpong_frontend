@@ -27,6 +27,7 @@ import { uploadSingleFile, uploadRepresentativePhotos } from '@/lib/upload';
 import ProfileBannerCarousel from '@/components/profile-banner/profile-banner-carousel';
 import useFormGuard from '@/hooks/use-form-guard';
 import ExitConfirmDialog from '@/components/exit-confirmation-dialog';
+import useBrowserNavigationGuard from '@/hooks/use-browser-navigation-guard';
 
 type BreederProfileApi = {
   breederName?: string;
@@ -302,6 +303,11 @@ export default function ProfilePage() {
     hasChanges,
   });
 
+  // 브라우저 이전/다음/새로고침 가드 훅
+  const { showBrowserGuard, handleBrowserConfirm, handleBrowserCancel } = useBrowserNavigationGuard({
+    hasChanges,
+  });
+
   // 프로필 이미지 변경 핸들러
   const handleProfileImageChange = (file: File, preview: string) => {
     setProfileImageFile(file);
@@ -555,6 +561,20 @@ export default function ProfilePage() {
           onOpenChange={(open) => {
             if (!open) {
               handleNavigationCancel();
+            }
+          }}
+        />
+      )}
+
+      {showBrowserGuard && (
+        <ExitConfirmDialog
+          hasData={hasChanges}
+          onConfirm={handleBrowserConfirm}
+          onCancel={handleBrowserCancel}
+          open={showBrowserGuard}
+          onOpenChange={(open) => {
+            if (!open) {
+              handleBrowserCancel();
             }
           }}
         />
