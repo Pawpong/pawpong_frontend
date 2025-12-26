@@ -12,7 +12,7 @@ interface UseBrowserNavigationGuardOptions {
  * - 커스텀 모달은 popstate에서만 가능
  * - 새로고침/탭 닫기는 브라우저 기본 confirm만 가능 (beforeunload)
  */
-export default function useBrowserNavigationGuard({ hasChanges, enabled = true }: UseBrowserNavigationGuardOptions) {
+export default function useBrowserNavigationGuard({ hasChanges, enabled = false }: UseBrowserNavigationGuardOptions) {
   const [showBrowserGuard, setShowBrowserGuard] = useState(false);
   const allowNavigationRef = useRef(false);
 
