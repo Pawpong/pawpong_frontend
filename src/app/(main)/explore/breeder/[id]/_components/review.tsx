@@ -6,9 +6,14 @@ import { Button } from '@/components/ui/button';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import ReportDialog from '@/components/report-dialog/report-dialog';
 
-export default function Review({ data }: { data: { id: string; nickname: string; date: string; content: string } }) {
+export default function Review({
+  data,
+}: {
+  data: { id: string; nickname: string; date: string; content: string; reviewType?: string };
+}) {
   const isMobile = !useBreakpoint('md');
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
+  const typeLabel = data.reviewType || '후기';
 
   return (
     <>
@@ -16,7 +21,11 @@ export default function Review({ data }: { data: { id: string; nickname: string;
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="text-body-s font-semibold text-grayscale-gray5">{data.nickname}</div>
-            {!isMobile && <div className="text-body-s text-grayscale-gray5">입양 후기・{data.date}</div>}
+            {!isMobile && (
+              <div className="text-body-s text-grayscale-gray5">
+                {typeLabel}・{data.date}
+              </div>
+            )}
           </div>
           <Button
             variant="ghost"
@@ -27,7 +36,11 @@ export default function Review({ data }: { data: { id: string; nickname: string;
             <div>신고하기</div>
           </Button>
         </div>
-        {isMobile && <div className="text-body-s text-grayscale-gray5">입양 후기・{data.date}</div>}
+        {isMobile && (
+          <div className="text-body-s text-grayscale-gray5">
+            {typeLabel}・{data.date}
+          </div>
+        )}
         <div className="font-medium text-body-m text-primary-500 break-all">{data.content}</div>
       </div>
       <ReportDialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen} type="review" reviewId={data.id} />

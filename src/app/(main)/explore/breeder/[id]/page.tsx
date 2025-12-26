@@ -236,6 +236,7 @@ export default function Page({ params }: PageProps) {
     content: string;
     writtenAt?: string;
     createdAt?: string;
+    reviewType?: string;
   };
 
   // 프로필 데이터 매핑
@@ -326,6 +327,12 @@ export default function Page({ params }: PageProps) {
 
   // 후기 매핑
   const reviews = ((reviewsData?.items || []) as ReviewItem[]).map((review) => {
+    const typeMap: Record<string, string> = {
+      consultation: '상담 후기',
+      adoption: '입양 후기',
+      adoption_completed: '입양 후기',
+    };
+
     // 날짜 필드: 백엔드에서 writtenAt을 반환
     const dateString = review.writtenAt || review.createdAt;
     let formattedDate = '';
@@ -347,6 +354,7 @@ export default function Page({ params }: PageProps) {
       nickname: review.adopterName || review.adopterNickname || '익명',
       date: formattedDate || '날짜 없음',
       content: review.content,
+      reviewType: typeMap[review.reviewType || ''] || '상담 후기',
     };
   });
 
