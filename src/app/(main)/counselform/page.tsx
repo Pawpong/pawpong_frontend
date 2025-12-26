@@ -29,6 +29,7 @@ import type { ApplicationCreateRequest } from '@/lib/application';
 import { formatPhoneNumber } from '@/utils/phone';
 import CounselBannerCarousel from '@/components/counsel-banner/counsel-banner-carousel';
 import { useAnalytics } from '@/hooks/use-analytics';
+import useBrowserNavigationGuard from '@/hooks/use-browser-navigation-guard';
 
 /**
  * 상담 폼 페이지 내부 컴포넌트
@@ -43,7 +44,7 @@ function CounselFormContent() {
   const petId = searchParams.get('petId') || undefined;
   const { trackAdoptionApplication, trackAdoptionApplicationComplete } = useAnalytics();
 
-  const { setCounselFormData, counselFormData, clearCounselFormData } = useCounselFormStore();
+  const { counselFormData, clearCounselFormData } = useCounselFormStore();
   const createApplicationMutation = useCreateApplication();
   const { data: breederPetsData } = useBreederPets(breederId);
   const availablePets = breederPetsData?.items?.filter((pet) => pet.status === 'available') || [];
@@ -98,6 +99,11 @@ function CounselFormContent() {
     cancelNavigation: handleNavigationCancel,
   } = useNavigationGuard({
     hasData: hasFormData,
+  });
+
+  // 브라우저 이전/다음/새로고침 가드 훅
+  const { showBrowserGuard, handleBrowserConfirm, handleBrowserCancel } = useBrowserNavigationGuard({
+    hasChanges: hasFormData,
   });
 
   // Context에 guardNavigation 등록
@@ -163,7 +169,7 @@ function CounselFormContent() {
       const result = await createApplicationMutation.mutateAsync(applicationData);
 
       // GA4 입양 신청 완료 트래킹
-      const applicationId = (result as any)?.data?.applicationId || 'unknown';
+      const applicationId = result?.applicationId || 'unknown';
       trackAdoptionApplicationComplete(applicationId);
 
       // 성공 시 저장된 폼 데이터 삭제
@@ -626,6 +632,20 @@ function CounselFormContent() {
           onOpenChange={(open) => {
             if (!open) {
               handleNavigationCancel();
+            }
+          }}
+        />
+      )}
+
+      {showBrowserGuard && (
+        <ExitConfirmDialog
+          hasData={hasFormData}
+          onConfirm={handleBrowserConfirm}
+          onCancel={handleBrowserCancel}
+          open={showBrowserGuard}
+          onOpenChange={(open) => {
+            if (!open) {
+              handleBrowserCancel();
             }
           }}
         />
