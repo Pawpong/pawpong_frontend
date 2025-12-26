@@ -109,7 +109,7 @@ export default function ReviewWriteDialog({
       <DialogContent
         className={cn(
           'max-w-[37.5rem] w-full overflow-hidden flex flex-col p-0 gap-0',
-          existingReview ? '' : 'min-h-[37.5rem] max-h-[41.3125rem] md:min-h-[37.5rem] md:max-h-[41.3125rem]',
+          existingReview ? 'max-h-[90vh]' : 'min-h-[37.5rem] max-h-[90vh] md:min-h-[37.5rem]',
         )}
         showCloseButton={false}
       >
@@ -117,7 +117,7 @@ export default function ReviewWriteDialog({
           <DialogTitle>후기 작성</DialogTitle>
         </VisuallyHidden>
         {/* 헤더 */}
-        <div className="flex flex-col gap-[10px] items-start pt-6 px-5 pb-[10px] md:pt-6 md:px-6 md:pb-[10px]">
+        <div className="flex flex-col gap-[10px] items-start pt-6 px-5 pb-[10px] md:pt-6 md:px-6 md:pb-[10px] shrink-0">
           <div className="flex gap-1 items-center justify-end w-full">
             <DialogClose asChild>
               <Button variant="secondary" size="icon">
@@ -128,13 +128,13 @@ export default function ReviewWriteDialog({
         </div>
 
         {/* 구분선 */}
-        <div className="h-px bg-grayscale-gray2 w-full" />
+        <div className="h-px bg-grayscale-gray2 w-full shrink-0" />
 
         {/* 스크롤 가능한 콘텐츠 영역 */}
         <div
           className={cn(
-            'bg-[var(--color-tertiary-500)] flex flex-col gap-5 min-h-0 px-5 pt-6 md:px-6',
-            existingReview ? 'pb-6' : 'pb-[9.25rem] md:pb-[4.5rem]',
+            'bg-[var(--color-tertiary-500)] flex flex-col gap-5 flex-1 min-h-0 overflow-y-auto px-5 pt-6 md:px-6',
+            existingReview ? 'pb-6' : 'pb-6',
           )}
         >
           {/* 브리더 정보 - 전체 클릭 시 브리더 페이지로 이동 */}
@@ -204,8 +204,8 @@ export default function ReviewWriteDialog({
             </div>
 
             {/* 후기 Textarea - 기존 후기가 있으면 읽기 전용 */}
-            <div className="bg-white flex flex-col items-start overflow-clip rounded-lg w-full">
-              <div className="box-border flex flex-col gap-[var(--space-16)] items-start overflow-clip pb-0 pt-[var(--space-12)] px-[var(--space-16)] relative shrink-0 w-full">
+            <div className="bg-white flex flex-col items-start rounded-lg w-full">
+              <div className="box-border flex flex-col gap-[var(--space-16)] items-start pb-0 pt-[var(--space-12)] px-[var(--space-16)] relative w-full">
                 {existingReview ? (
                   // 기존 후기 표시 (읽기 전용)
                   <div className="min-h-[140px] text-body-s text-grayscale-gray6 whitespace-pre-wrap">{reviewText}</div>
@@ -213,7 +213,12 @@ export default function ReviewWriteDialog({
                   // 후기 작성 (편집 가능)
                   <Textarea
                     value={reviewText}
-                    onChange={(e) => setReviewText(e.target.value)}
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      if (newValue.length <= 800) {
+                        setReviewText(newValue);
+                      }
+                    }}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                     placeholder={
@@ -222,7 +227,7 @@ export default function ReviewWriteDialog({
                     maxLength={800}
                     showLength={false}
                     currentLength={reviewText.length}
-                    className="min-h-[140px] border-0 focus-visible:ring-0 focus-visible:ring-offset-0 p-0 text-body-s placeholder:text-grayscale-gray5"
+                    className="min-h-[140px] border-0 focus-visible:ring-0 focus-visible:ring-offset-0 p-0 text-body-xs placeholder:text-grayscale-gray5"
                   />
                 )}
               </div>
@@ -247,7 +252,7 @@ export default function ReviewWriteDialog({
           <>
             {/* 구분선 */}
             <div className="h-px bg-grayscale-gray2 w-full shrink-0" />
-            <div className="bg-white flex gap-2.5 items-start justify-end overflow-clip pb-4 pt-4 px-5 md:pb-6 md:pt-4 md:px-6 shrink-0">
+            <div className="bg-white flex gap-2.5 items-start justify-end pb-4 pt-4 px-5 md:pb-6 md:pt-4 md:px-6 shrink-0">
               <button className="button-brown" onClick={handleSubmit}>
                 후기 작성하기
               </button>
