@@ -245,12 +245,18 @@ export default function Page({ params }: PageProps) {
     : '';
   // API 응답에서 직접 priceRange 추출 (백엔드가 priceRange: { min, max, display } 형식으로 반환)
   // 비회원은 가격 정보를 볼 수 없음
+  // 가격 상태:
+  // - min: -1, max: -1 -> 가격 미설정 (기본값)
+  // - min: 0, max: 0 -> 상담 후 공개
+  // - 그 외 -> 실제 가격 범위
   const apiPriceRange = (profileData as BreederDetailApi).priceRange;
   const priceRangeStr = user
-    ? !apiPriceRange || (!apiPriceRange.min && !apiPriceRange.max)
+    ? !apiPriceRange || (apiPriceRange.min === -1 && apiPriceRange.max === -1)
       ? '가격 미설정'
+      : apiPriceRange.min === 0 && apiPriceRange.max === 0
+      ? '상담 후 공개'
       : apiPriceRange.display === 'consultation'
-      ? '상담 후 결정'
+      ? '상담 후 공개'
       : `${apiPriceRange.min?.toLocaleString()}원 ~ ${apiPriceRange.max?.toLocaleString()}원`
     : null;
 

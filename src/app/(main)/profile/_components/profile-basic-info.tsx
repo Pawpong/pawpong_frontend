@@ -301,6 +301,9 @@ export default function ProfileBasicInfo({
                   setValue('minPrice', '', { shouldDirty: true, shouldValidate: false });
                   setValue('maxPrice', '', { shouldDirty: true, shouldValidate: false });
                   clearErrors(['minPrice', 'maxPrice']);
+                } else {
+                  // 상담 후 공개 해제 시에도 에러 제거 (사용자가 가격을 입력할 때까지 기다림)
+                  clearErrors(['minPrice', 'maxPrice']);
                 }
               }}
               className="button-after-counsel shrink-0 whitespace-nowrap"
