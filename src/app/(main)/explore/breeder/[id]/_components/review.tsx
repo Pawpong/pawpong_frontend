@@ -28,7 +28,7 @@ export default function Review({ data }: { data: { id: string; nickname: string;
           </Button>
         </div>
         {isMobile && <div className="text-body-s text-grayscale-gray5">입양 후기・{data.date}</div>}
-        <div className="font-medium text-body-m text-primary-500">{data.content}</div>
+        <div className="font-medium text-body-m text-primary-500 break-all">{data.content}</div>
       </div>
       <ReportDialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen} type="review" reviewId={data.id} />
     </>
