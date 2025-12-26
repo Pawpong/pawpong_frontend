@@ -39,56 +39,74 @@ const breedsSchema = z
 
 const priceSchema = z.string().regex(/^\d*$/, '숫자만 입력해 주세요.');
 
+const stringWithEmptyDefault = () => z.string().default('');
+
+const arrayWithEmptyDefault = () => z.array(z.string()).default([]);
+
+const genderWithNullDefault = () => z.enum(['male', 'female']).nullable().default(null);
+
+const booleanWithFalseDefault = () => z.boolean().default(false);
+
+const isParentItemEmpty = (parent: {
+  name?: string;
+  birthDate?: string;
+  breed?: string[];
+  gender?: 'male' | 'female' | null | undefined;
+  imageFile?: File;
+  imagePreview?: string;
+}) =>
+  (!parent.name || parent.name.trim() === '') &&
+  (!parent.breed || parent.breed.length === 0) &&
+  (!parent.birthDate || parent.birthDate.trim() === '') &&
+  !parent.gender &&
+  !parent.imageFile &&
+  !parent.imagePreview;
+
 const parentItemSchema = z.object({
   id: z.string(),
-  name: z.string().min(1, BREEDER_PROFILE_ERROR.NAME_REQUIRED),
-  birthDate: birthDateSchema,
-  breed: breedsSchema,
-  gender: z
-    .enum(['male', 'female'])
-    .nullable()
-    .refine((val) => val !== null, {
-      message: BREEDER_PROFILE_ERROR.GENDER_REQUIRED,
-    }),
+  name: stringWithEmptyDefault(),
+  birthDate: stringWithEmptyDefault(),
+  breed: arrayWithEmptyDefault(),
+  gender: genderWithNullDefault(),
   imagePreview: z.string().optional(),
   imageFile: z.union([z.instanceof(File), z.undefined()]).optional(),
-  description: z.string().optional(),
+  description: stringWithEmptyDefault(),
 });
 
-const breedingAnimalItemSchema = z
-  .object({
-    id: z.string(),
-    name: z.string().min(1, BREEDER_PROFILE_ERROR.NAME_REQUIRED),
-    birthDate: birthDateSchema,
-    breed: breedsSchema,
-    gender: z
-      .enum(['male', 'female'])
-      .nullable()
-      .refine((val) => val !== null, {
-        message: BREEDER_PROFILE_ERROR.GENDER_REQUIRED,
-      }),
-    imagePreview: z.string().optional(),
-    imageFile: z.union([z.instanceof(File), z.undefined()]).optional(),
-    description: z.string(),
-    adoptionStatus: z.string().min(1, BREEDER_PROFILE_ERROR.STATUS_REQUIRED),
-    motherId: z.string().optional(),
-    fatherId: z.string().optional(),
-    price: z.string(),
-    isCounselMode: z.boolean(),
-  })
-  .refine(
-    (data) => {
-      // isCounselMode가 false일 때만 price 필수
-      if (!data.isCounselMode && (!data.price || data.price.trim() === '')) {
-        return false;
-      }
-      return true;
-    },
-    {
-      message: BREEDER_PROFILE_ERROR.PRICE_REQUIRED,
-      path: ['price'],
-    },
-  );
+const isAnimalItemEmpty = (animal: {
+  name?: string;
+  birthDate?: string;
+  breed?: string[];
+  gender?: 'male' | 'female' | null | undefined;
+  adoptionStatus?: string;
+  price?: string;
+  imageFile?: File;
+  imagePreview?: string;
+}) =>
+  (!animal.name || animal.name.trim() === '') &&
+  (!animal.breed || animal.breed.length === 0) &&
+  (!animal.birthDate || animal.birthDate.trim() === '') &&
+  !animal.gender &&
+  (!animal.adoptionStatus || animal.adoptionStatus.trim() === '') &&
+  (!animal.price || animal.price.trim() === '') &&
+  !animal.imageFile &&
+  !animal.imagePreview;
+
+const breedingAnimalItemSchema = z.object({
+  id: z.string(),
+  name: stringWithEmptyDefault(),
+  birthDate: stringWithEmptyDefault(),
+  breed: arrayWithEmptyDefault(),
+  gender: genderWithNullDefault(),
+  imagePreview: z.string().optional(),
+  imageFile: z.union([z.instanceof(File), z.undefined()]).optional(),
+  description: stringWithEmptyDefault(),
+  adoptionStatus: stringWithEmptyDefault(),
+  motherId: stringWithEmptyDefault(),
+  fatherId: stringWithEmptyDefault(),
+  price: stringWithEmptyDefault(),
+  isCounselMode: booleanWithFalseDefault(),
+});
 
 export const profileFormSchema = z
   .object({
@@ -106,10 +124,116 @@ export const profileFormSchema = z
     isCounselMode: z.boolean(),
 
     // 부모 정보
-    parents: z.array(parentItemSchema),
+    parents: z.array(parentItemSchema).superRefine((parents, ctx) => {
+      parents.forEach((parent, index) => {
+        if (isParentItemEmpty(parent)) return; // 비어있으면 스킵
+
+        if (!parent.name || parent.name.trim() === '') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: BREEDER_PROFILE_ERROR.NAME_REQUIRED,
+            path: [index, 'name'],
+          });
+        }
+        if (!parent.breed || parent.breed.length === 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: BREEDER_PROFILE_ERROR.BREEDS_REQUIRED,
+            path: [index, 'breed'],
+          });
+        }
+        if (!parent.birthDate || parent.birthDate.trim() === '') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: BREEDER_PROFILE_ERROR.BIRTH_DATE_REQUIRED,
+            path: [index, 'birthDate'],
+          });
+        } else if (!birthDateSchema.safeParse(parent.birthDate).success) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: BREEDER_PROFILE_ERROR.BIRTH_DATE_INVALID,
+            path: [index, 'birthDate'],
+          });
+        }
+        if (!parent.gender) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: BREEDER_PROFILE_ERROR.GENDER_REQUIRED,
+            path: [index, 'gender'],
+          });
+        }
+        if (!parent.imageFile && !parent.imagePreview) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: '사진을 등록해 주세요',
+            path: [index, 'image'],
+          });
+        }
+      });
+    }),
 
     // 분양 중인 아이
-    animals: z.array(breedingAnimalItemSchema),
+    animals: z.array(breedingAnimalItemSchema).superRefine((animals, ctx) => {
+      animals.forEach((animal, index) => {
+        if (isAnimalItemEmpty(animal)) return; // 비어있으면 스킵
+
+        if (!animal.name || animal.name.trim() === '') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: BREEDER_PROFILE_ERROR.NAME_REQUIRED,
+            path: [index, 'name'],
+          });
+        }
+        if (!animal.breed || animal.breed.length === 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: BREEDER_PROFILE_ERROR.BREEDS_REQUIRED,
+            path: [index, 'breed'],
+          });
+        }
+        if (!animal.adoptionStatus || animal.adoptionStatus.trim() === '') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: BREEDER_PROFILE_ERROR.STATUS_REQUIRED,
+            path: [index, 'adoptionStatus'],
+          });
+        }
+        if (!animal.birthDate || animal.birthDate.trim() === '') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: BREEDER_PROFILE_ERROR.BIRTH_DATE_REQUIRED,
+            path: [index, 'birthDate'],
+          });
+        } else if (!birthDateSchema.safeParse(animal.birthDate).success) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: BREEDER_PROFILE_ERROR.BIRTH_DATE_INVALID,
+            path: [index, 'birthDate'],
+          });
+        }
+        if (!animal.gender) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: BREEDER_PROFILE_ERROR.GENDER_REQUIRED,
+            path: [index, 'gender'],
+          });
+        }
+        if (!animal.isCounselMode && (!animal.price || animal.price.trim() === '')) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: BREEDER_PROFILE_ERROR.PRICE_REQUIRED,
+            path: [index, 'price'],
+          });
+        }
+        if (!animal.imageFile && !animal.imagePreview) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: '사진을 등록해 주세요',
+            path: [index, 'image'],
+          });
+        }
+      });
+    }),
   })
   .superRefine((data, ctx) => {
     if (!data.isCounselMode) {

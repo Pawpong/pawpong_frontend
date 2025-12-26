@@ -225,27 +225,19 @@ export default function ProfileBasicInfo({
               name="minPrice"
               control={control}
               render={({ field }) => {
-                const maxPriceValue = watch('maxPrice') || '';
+                // 분양중인 아이들 섹션과 동일한 로직
+                const displayValue = isCounselMode ? '' : formatPrice(field.value || '');
                 return (
                   <PriceInput
                     placeholder={isCounselMode ? '상담 후 공개' : '0'}
                     className="grow"
                     inputMode="numeric"
                     disabled={isCounselMode}
-                    value={isCounselMode ? '' : formatPrice(field.value || '')}
+                    value={displayValue}
                     onChange={(e) => {
                       const digits = normalizeNumber(e.target.value);
-                      const minNum = digits ? Number(digits) : 0;
-                      const maxNum = maxPriceValue ? Number(maxPriceValue) : 0;
-
-                      // 최소 금액이 최대 금액보다 크면 자동 swap
-                      if (digits && maxPriceValue && minNum > maxNum) {
-                        setValue('minPrice', maxPriceValue, { shouldDirty: true, shouldValidate: false });
-                        setValue('maxPrice', digits, { shouldDirty: true, shouldValidate: false });
-                        clearErrors(['minPrice', 'maxPrice']);
-                      } else {
-                        field.onChange(digits);
-                      }
+                      // 자동 swap 제거 - 입력한 값 그대로 저장
+                      field.onChange(digits);
                     }}
                     onBlur={field.onBlur}
                   />
@@ -259,27 +251,19 @@ export default function ProfileBasicInfo({
               name="maxPrice"
               control={control}
               render={({ field }) => {
-                const minPriceValue = watch('minPrice') || '';
+                // 분양중인 아이들 섹션과 동일한 로직
+                const displayValue = isCounselMode ? '' : formatPrice(field.value || '');
                 return (
                   <PriceInput
                     placeholder={isCounselMode ? '상담 후 공개' : '0'}
                     className="grow"
                     inputMode="numeric"
                     disabled={isCounselMode}
-                    value={isCounselMode ? '' : formatPrice(field.value || '')}
+                    value={displayValue}
                     onChange={(e) => {
                       const digits = normalizeNumber(e.target.value);
-                      const minNum = minPriceValue ? Number(minPriceValue) : 0;
-                      const maxNum = digits ? Number(digits) : 0;
-
-                      // 최대 금액이 최소 금액보다 작으면 자동 swap
-                      if (digits && minPriceValue && maxNum < minNum) {
-                        setValue('minPrice', digits, { shouldDirty: true, shouldValidate: false });
-                        setValue('maxPrice', minPriceValue, { shouldDirty: true, shouldValidate: false });
-                        clearErrors(['minPrice', 'maxPrice']);
-                      } else {
-                        field.onChange(digits);
-                      }
+                      // 자동 swap 제거 - 입력한 값 그대로 저장
+                      field.onChange(digits);
                     }}
                     onBlur={field.onBlur}
                   />
@@ -297,7 +281,7 @@ export default function ProfileBasicInfo({
                 setValue('isCounselMode', nextIsCounselMode, { shouldDirty: true, shouldValidate: false });
 
                 if (nextIsCounselMode) {
-                  // 상담 후 공개 모드로 전환 시 값 초기화 + 기존 에러 제거
+                  // 상담 후 공개 모드로 전환 시 빈 문자열로 설정 (placeholder "상담 후 공개" 표시) + 기존 에러 제거
                   setValue('minPrice', '', { shouldDirty: true, shouldValidate: false });
                   setValue('maxPrice', '', { shouldDirty: true, shouldValidate: false });
                   clearErrors(['minPrice', 'maxPrice']);

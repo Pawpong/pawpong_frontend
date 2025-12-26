@@ -97,7 +97,7 @@ export function isFormEmpty(data: ProfileFormData): boolean {
 /**
  * 부모 항목이 비어있는지 확인 (id 제외)
  */
-function isParentEmpty(parent: ProfileFormData['parents'][number]): boolean {
+export function isParentEmpty(parent: ProfileFormData['parents'][number]): boolean {
   return (
     (!parent.name || parent.name.trim() === '') &&
     (!parent.breed || parent.breed.length === 0) &&
@@ -145,7 +145,7 @@ export function validateParents(parents: ProfileFormData['parents']): Array<Pare
 /**
  * 분양 개체 항목이 비어있는지 확인 (id 제외)
  */
-function isAnimalEmpty(animal: ProfileFormData['animals'][number]): boolean {
+export function isAnimalEmpty(animal: ProfileFormData['animals'][number]): boolean {
   return (
     (!animal.name || animal.name.trim() === '') &&
     (!animal.breed || animal.breed.length === 0) &&
