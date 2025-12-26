@@ -6,7 +6,7 @@ import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-pro
 import Review from './review';
 
 interface ReviewsProps {
-  data: { id: string; nickname: string; date: string; content: string }[];
+  data: { id: string; nickname: string; date: string; content: string; reviewType?: string }[];
   breederId: string;
 }
 
