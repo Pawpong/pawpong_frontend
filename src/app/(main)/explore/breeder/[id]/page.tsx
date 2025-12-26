@@ -355,7 +355,8 @@ export default function Page({ params }: PageProps) {
     id: 'mock-review-1',
     nickname: '김입양',
     date: '2024-12-20',
-    content: '입양후기테스트입양후기테스트',
+    content:
+      '입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트',
   };
   const reviewsWithMock = [...reviews, mockReview];
 
@@ -366,7 +367,7 @@ export default function Page({ params }: PageProps) {
         <div>
           <BreederProfile data={breederProfileData} breederId={breederId} isOwnProfile={isOwnProfile} />
         </div>
-        <div className="space-y-12 w-full mt-10 md:mt-0">
+        <div className="space-y-12  mt-10 md:mt-0">
           {envPhotos.length > 0 && (
             <>
               <EnvPhotos photos={envPhotos} />
