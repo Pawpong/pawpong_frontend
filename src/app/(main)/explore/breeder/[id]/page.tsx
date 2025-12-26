@@ -350,16 +350,6 @@ export default function Page({ params }: PageProps) {
     };
   });
 
-  // 목 데이터 추가 (테스트용)
-  const mockReview = {
-    id: 'mock-review-1',
-    nickname: '김입양',
-    date: '2024-12-20',
-    content:
-      '입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트입양후기테스트',
-  };
-  const reviewsWithMock = [...reviews, mockReview];
-
   return (
     <>
       <Header breederNickname={profileData.breederName} breederId={breederId} />
@@ -396,7 +386,7 @@ export default function Page({ params }: PageProps) {
             </>
           )}
 
-          {!isReviewsLoading && reviewsWithMock.length > 0 && <Reviews data={reviewsWithMock} breederId={breederId} />}
+          {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} breederId={breederId} />}
         </div>
       </div>
       {!isLg && (
