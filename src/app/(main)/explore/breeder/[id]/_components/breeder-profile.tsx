@@ -9,7 +9,6 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import Cat from '@/assets/icons/cat';
 import Dog from '@/assets/icons/dog';
-import LevelUpgradeDialog from '@/components/document-form/level-upgrade-dialog';
 import { Lock } from 'lucide-react';
 import type { Animal } from '@/stores/signup-form-store';
 
@@ -94,7 +93,6 @@ export default function BreederProfile({
                 </div>
               ))}
             </div>
-
           </div>
         </div>
         {/* 데스크탑(lg)에서만 버튼 표시 */}
