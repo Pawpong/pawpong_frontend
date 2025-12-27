@@ -81,7 +81,9 @@ export default function PetDetailDialog({
       return;
     }
     clearCounselFormData();
-    router.push(`/counselform?breederId=${breederId}`);
+    // type이 'pet'이고 pet이 있을 때만 petId 전달
+    const petIdParam = type === 'pet' && pet ? `&petId=${pet.id}` : '';
+    router.push(`/counselform?breederId=${breederId}${petIdParam}`);
     onOpenChange(false);
   };
 
