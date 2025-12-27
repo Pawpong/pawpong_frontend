@@ -30,6 +30,8 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
   const [nicknameAvailable, setNicknameAvailable] = useState<boolean | null>(null);
   const [isModified, setIsModified] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showNicknameError, setShowNicknameError] = useState(false);
+  const [nicknameErrorMessage, setNicknameErrorMessage] = useState<string>('');
 
   // 다이얼로그 열릴 때 현재 닉네임으로 초기화
   useEffect(() => {
@@ -37,6 +39,8 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
       setNickname(currentNickname);
       setIsModified(false);
       setNicknameAvailable(null);
+      setShowNicknameError(false);
+      setNicknameErrorMessage('');
     }
   }, [open, currentNickname]);
 
@@ -44,16 +48,28 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
     setNickname(value);
     setIsModified(value !== currentNickname);
     setNicknameAvailable(null);
+    setShowNicknameError(false);
+    setNicknameErrorMessage('');
   };
 
   const handleCheckNickname = async () => {
     if (!nickname || nickname === currentNickname) return;
 
     setCheckingNickname(true);
+    setShowNicknameError(false);
+    setNicknameErrorMessage('');
+
     try {
       const isDuplicate = await checkNicknameDuplicate(nickname);
       setNicknameAvailable(!isDuplicate);
-    } catch {
+    } catch (error) {
+      setShowNicknameError(true);
+      // 백엔드 에러 메시지 사용 (형식 검증 에러 등)
+      if (error instanceof Error) {
+        setNicknameErrorMessage(error.message);
+      } else {
+        setNicknameErrorMessage('닉네임 중복 확인에 실패했어요.');
+      }
       setNicknameAvailable(false);
     } finally {
       setCheckingNickname(false);
@@ -66,6 +82,9 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
     }
 
     setIsSaving(true);
+    setShowNicknameError(false);
+    setNicknameErrorMessage('');
+
     try {
       const isDuplicate = await checkNicknameDuplicate(nickname);
       if (isDuplicate) {
@@ -76,6 +95,15 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
       setNicknameAvailable(true);
       onSave(nickname); // 👉 부모 state 업데이트
       onOpenChange(false); // 👉 다이얼로그 닫기
+    } catch (error) {
+      setShowNicknameError(true);
+      // 백엔드 에러 메시지 사용
+      if (error instanceof Error) {
+        setNicknameErrorMessage(error.message);
+      } else {
+        setNicknameErrorMessage('닉네임 저장에 실패했어요.');
+      }
+      setNicknameAvailable(false);
     } finally {
       setIsSaving(false);
     }
@@ -90,6 +118,8 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
       setNickname(currentNickname);
       setIsModified(false);
       setNicknameAvailable(null);
+      setShowNicknameError(false);
+      setNicknameErrorMessage('');
     }
   };
 
@@ -126,19 +156,23 @@ export default function NicknameEditDialog({ open, onOpenChange, currentNickname
                 disabled={checkingNickname || isSaving}
               />
 
-              {nicknameAvailable === true && (
+              {/* 에러 메시지 우선 표시 */}
+              {showNicknameError && nicknameErrorMessage ? (
+                <div className="flex items-center gap-1">
+                  <ErrorIcon className="size-3" />
+                  <p className="text-caption text-status-error-500">{nicknameErrorMessage}</p>
+                </div>
+              ) : nicknameAvailable === true ? (
                 <div className="flex items-center gap-1">
                   <Check className="size-3 text-status-success-500" />
                   <p className="text-caption text-status-success-500">사용 가능한 닉네임이에요</p>
                 </div>
-              )}
-
-              {nicknameAvailable === false && (
+              ) : nicknameAvailable === false ? (
                 <div className="flex items-center gap-1">
                   <ErrorIcon className="size-3" />
                   <p className="text-caption text-status-error-500">이미 사용 중인 닉네임이에요</p>
                 </div>
-              )}
+              ) : null}
             </div>
 
             <Button
