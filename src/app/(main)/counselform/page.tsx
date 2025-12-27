@@ -13,7 +13,7 @@ import Arrow from '@/assets/icons/arrow';
 import SmallDot from '@/assets/icons/small-dot.svg';
 import { useForm, FormProvider, Controller, useWatch } from 'react-hook-form';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import { cn } from '@/lib/utils';
 import LeftArrow from '@/assets/icons/left-arrow.svg';
 import useNavigationGuard from '@/hooks/use-navigation-guard';
@@ -47,7 +47,10 @@ function CounselFormContent() {
   const { counselFormData, clearCounselFormData } = useCounselFormStore();
   const createApplicationMutation = useCreateApplication();
   const { data: breederPetsData } = useBreederPets(breederId);
-  const availablePets = breederPetsData?.items?.filter((pet) => pet.status === 'available') || [];
+  const availablePets = useMemo(
+    () => breederPetsData?.items?.filter((pet) => pet.status === 'available') || [],
+    [breederPetsData?.items],
+  );
   const [isIntroductionFocused, setIsIntroductionFocused] = useState(false);
   const [isLivingSpaceFocused, setIsLivingSpaceFocused] = useState(false);
   const [isPreviousPetsFocused, setIsPreviousPetsFocused] = useState(false);
@@ -83,6 +86,16 @@ function CounselFormContent() {
     defaultValues: defaultCounselValues,
     mode: 'onBlur',
   });
+
+  // petId가 있고 availablePets가 로드되면 해당 개체 선택
+  useEffect(() => {
+    if (petId && availablePets.length > 0 && !form.getValues('interestedAnimal')) {
+      const selectedPet = availablePets.find((pet) => pet.petId === petId);
+      if (selectedPet) {
+        form.setValue('interestedAnimal', selectedPet.name);
+      }
+    }
+  }, [petId, availablePets, form]);
 
   const formValues = useWatch({ control: form.control });
   const data = formValues || form.getValues();
