@@ -163,14 +163,15 @@ export default function SettingsPage() {
       // 로컬 스토리지 먼저 초기화 (동기)
       clearAuth();
 
-      // 쿠키 삭제 (비동기, 실패해도 진행)
+      // 쿠키 삭제를 먼저 완료하고 나서 리다이렉트
       try {
         await fetch('/api/auth/clear-cookie', { method: 'POST' });
-      } catch {
+      } catch (error) {
+        console.error('Cookie clear failed:', error);
         // 쿠키 삭제 실패해도 계속 진행
       }
 
-      // 홈으로 리다이렉트 (window.location 사용하여 완전한 페이지 새로고침)
+      // 쿠키 삭제가 완료된 후 홈으로 리다이렉트 (window.location 사용하여 완전한 페이지 새로고침)
       window.location.replace('/');
     } catch (error) {
       toast({
