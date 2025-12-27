@@ -341,6 +341,10 @@ export default function Page({ params }: PageProps) {
       adoption_completed: '입양 후기',
     };
 
+    // reviewType 값 확인 및 정규화 (type 또는 reviewType 필드 확인)
+    const rawReviewType = review.type || review.reviewType || '';
+    const normalizedReviewType = rawReviewType.toLowerCase().trim();
+
     // 날짜 필드: 백엔드에서 writtenAt을 반환
     const dateString = review.writtenAt || review.createdAt;
     let formattedDate = '';
@@ -356,6 +360,9 @@ export default function Page({ params }: PageProps) {
         console.error('Invalid date format:', dateString, error);
       }
     }
+
+    // reviewType 매핑: 정규화된 값 또는 원본 값으로 매핑 시도
+    const mappedType = typeMap[normalizedReviewType] || typeMap[rawReviewType] || '상담 후기';
 
     return {
       id: review.reviewId,
