@@ -78,7 +78,12 @@ export default function NicknameSection() {
       setNicknameAvailable(!isDuplicate);
     } catch (error) {
       setShowNicknameError(true);
-      setNicknameErrorMessage('닉네임 중복 확인에 실패했어요.');
+      // 백엔드 에러 메시지 사용 (형식 검증 에러 등)
+      if (error instanceof Error) {
+        setNicknameErrorMessage(error.message);
+      } else {
+        setNicknameErrorMessage('닉네임 중복 확인에 실패했어요.');
+      }
       setNicknameChecked(false);
       setNicknameAvailable(false);
     } finally {
@@ -210,23 +215,21 @@ export default function NicknameSection() {
               {checkingNickname ? '확인 중...' : '중복 검사'}
             </Button>
           </div>
-          {nicknameChecked && nicknameAvailable && (
-            <div className="flex items-center gap-0.5">
-              <Check className="size-3 shrink-0" />
-              <p className="text-caption font-medium text-status-success-500">사용할 수 있는 닉네임이에요</p>
-            </div>
-          )}
-          {nicknameChecked && !nicknameAvailable && (
-            <div className="flex items-center gap-[0.19rem]">
-              <ErrorIcon className="size-3 shrink-0" />
-              <p className="text-caption font-medium text-status-error-500">이미 사용 중인 닉네임이에요</p>
-            </div>
-          )}
-          {/* showNicknameError가 있으면 우선 표시, 없을 때만 submitAttempted 메시지 표시 */}
+          {/* 에러 메시지 우선 표시 */}
           {showNicknameError && nicknameErrorMessage ? (
             <div className="flex items-center gap-[0.19rem]">
               <ErrorIcon className="size-3 shrink-0" />
               <p className="text-caption font-medium text-status-error-500">{nicknameErrorMessage}</p>
+            </div>
+          ) : nicknameChecked && nicknameAvailable ? (
+            <div className="flex items-center gap-0.5">
+              <Check className="size-3 shrink-0" />
+              <p className="text-caption font-medium text-status-success-500">사용할 수 있는 닉네임이에요</p>
+            </div>
+          ) : nicknameChecked && !nicknameAvailable ? (
+            <div className="flex items-center gap-[0.19rem]">
+              <ErrorIcon className="size-3 shrink-0" />
+              <p className="text-caption font-medium text-status-error-500">이미 사용 중인 닉네임이에요</p>
             </div>
           ) : (
             submitAttempted &&

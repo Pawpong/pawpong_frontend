@@ -239,8 +239,7 @@ export default function Page({ params }: PageProps) {
     content: string;
     writtenAt?: string;
     createdAt?: string;
-    reviewType?: string;
-    type?: string; // API 응답에서 type 필드로도 올 수 있음
+    type?: string; // 백엔드 API가 type으로 반환
   };
 
   // 프로필 데이터 매핑
@@ -370,7 +369,7 @@ export default function Page({ params }: PageProps) {
       nickname: review.adopterName || review.adopterNickname || '익명',
       date: formattedDate || '날짜 없음',
       content: review.content,
-      reviewType: mappedType,
+      reviewType: typeMap[review.type || ''] || '상담 후기',
     };
   });
 

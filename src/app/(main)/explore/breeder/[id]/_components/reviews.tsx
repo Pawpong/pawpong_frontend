@@ -24,7 +24,7 @@ export default function Reviews({ data, breederId }: ReviewsProps) {
         )}
       </BreederProfileSectionHeader>
       <div className="flex flex-col gap-8 ">
-        {displayedReviews.map((e: { id: string; nickname: string; date: string; content: string }) => (
+        {displayedReviews.map((e: { id: string; nickname: string; date: string; content: string; reviewType?: string }) => (
           <Review key={e.id} data={e} />
         ))}
       </div>

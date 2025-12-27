@@ -28,12 +28,44 @@ export default function ReviewsPage({ params }: PageProps) {
   const allReviews =
     reviewsData?.pages
       .flatMap((page) => page.items || [])
-      .map((review: { reviewId: string; adopterNickname: string; createdAt: string; content: string }) => ({
-        id: review.reviewId,
-        nickname: review.adopterNickname,
-        date: new Date(review.createdAt).toLocaleDateString('ko-KR'),
-        content: review.content,
-      })) || [];
+      .map(
+        (review: {
+          reviewId: string;
+          adopterNickname: string;
+          adopterName?: string;
+          createdAt: string;
+          writtenAt?: string;
+          content: string;
+          type?: string; // 백엔드 API가 type으로 반환
+        }) => {
+          const typeMap: Record<string, string> = {
+            consultation: '상담 후기',
+            adoption: '입양 후기',
+            adoption_completed: '입양 후기',
+          };
+
+          // 날짜 필드: 백엔드에서 writtenAt을 반환
+          const dateString = review.writtenAt || review.createdAt;
+          let formattedDate = '';
+
+          if (dateString) {
+            try {
+              const date = new Date(dateString);
+              formattedDate = date.toLocaleDateString('ko-KR');
+            } catch {
+              formattedDate = '날짜 없음';
+            }
+          }
+
+          return {
+            id: review.reviewId,
+            nickname: review.adopterName || review.adopterNickname || '익명',
+            date: formattedDate || '날짜 없음',
+            content: review.content,
+            reviewType: typeMap[review.type || ''] || '상담 후기',
+          };
+        },
+      ) || [];
 
   // 첫 페이지의 총 개수 확인 (더보기 버튼 표시 여부 결정용)
   const firstPageCount = reviewsData?.pages[0]?.items?.length || 0;
