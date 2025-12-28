@@ -6,8 +6,16 @@ import { Button } from '../ui/button';
 import NotificationDialog from '../notification/notification-dialog';
 import { useNotifications } from '@/hooks/use-notifications';
 import { NOTIFICATION_CONFIG } from '@/constants/notification-messages';
+import { useAuthStore } from '@/stores/auth-store';
 
 export default function NoticeButton() {
+  const { user } = useAuthStore();
+
+  // 비회원인 경우 버튼을 렌더링하지 않음
+  if (!user) {
+    return null;
+  }
+
   // 실제 알림 목록에서 읽지 않은 개수를 계산
   const { data } = useNotifications(1, 50);
 
