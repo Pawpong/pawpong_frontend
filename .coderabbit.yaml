@@ -1,26 +1,14 @@
 language: 'ko-KR'
-
 early_access: false
-
-
 reviews:
-  auto_review:
-    enabled: true
-    branches:
-      - dev
-      - main
   profile: 'chill'
   request_changes_workflow: false
   high_level_summary: true
   poem: false
-  review_status: false # 상태 메시지 비활성화
+  review_status: true
   collapse_walkthrough: false
   auto_review:
     enabled: true
     drafts: false
-    base_branches: # 기본 브랜치 외에도 리뷰할 브랜치 지정 (선택사항)
-      - main
-      - dev
-
 chat:
   auto_reply: true
