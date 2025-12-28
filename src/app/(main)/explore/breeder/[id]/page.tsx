@@ -397,13 +397,13 @@ export default function Page({ params }: PageProps) {
 
           {!isPetsLoading && (
             <>
-              <BreedingAnimals data={breedingAnimals} breederId={breederId} breederDescription={breederDescription} />
+              <BreedingAnimals data={breedingAnimals} breederId={breederId} breederDescription={breederDescription} isOwnProfile={isOwnProfile} />
               <Separator className="my-12" />
             </>
           )}
 
           {!isParentPetsLoading && (
-            <Parents data={parentPets} breederId={breederId} breederDescription={breederDescription} />
+            <Parents data={parentPets} breederId={breederId} breederDescription={breederDescription} isOwnProfile={isOwnProfile} />
           )}
 
           {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} breederId={breederId} />}
