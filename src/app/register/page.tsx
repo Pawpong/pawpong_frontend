@@ -37,7 +37,7 @@ export default function RegisterPage() {
       <div className="flex-1 flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
-            <h1 className="text-heading-3 font-semibold text-primary mb-2">
+            <h1 className="text-heading-3 font-semibold text-primary-500 mb-2">
               회원 유형을 선택해 주세요
             </h1>
           </div>
@@ -50,7 +50,7 @@ export default function RegisterPage() {
             >
               <div className="flex items-center gap-4 p-6 rounded-2xl bg-[#B4D4FF] hover:bg-[#9BCAFF] transition-colors cursor-pointer">
                 <div className="flex-1 text-left">
-                  <h2 className="text-body-l font-semibold text-primary mb-1">입양자</h2>
+                  <h2 className="text-body-l font-semibold text-primary-500 mb-1">입양자</h2>
                   <p className="text-body-xs text-grayscale-gray6">
                     새로운 반려동물을 기르고싶<br />
                     맞이하실 분을 모시겠습니다.
@@ -70,7 +70,7 @@ export default function RegisterPage() {
             >
               <div className="flex items-center gap-4 p-6 rounded-2xl bg-[#FFF4E0] hover:bg-[#FFE8C5] transition-colors cursor-pointer">
                 <div className="flex-1 text-left">
-                  <h2 className="text-body-l font-semibold text-primary mb-1">브리더</h2>
+                  <h2 className="text-body-l font-semibold text-primary-500 mb-1">브리더</h2>
                   <p className="text-body-xs text-grayscale-gray6">
                     반려동물을 책임감 있게<br />
                     분양드릴 전문가입니다.

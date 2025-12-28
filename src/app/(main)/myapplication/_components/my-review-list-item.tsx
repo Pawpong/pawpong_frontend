@@ -58,7 +58,7 @@ export default function MyReviewListItem({
 
       {/* 후기 내용 */}
       <div className="flex flex-col gap-2 items-start w-full">
-        <p className="text-body-m font-medium text-primary w-full break-all">{reviewContent}</p>
+        <p className="text-body-m font-medium text-primary-500 w-full break-all">{reviewContent}</p>
         <div className="flex gap-2 items-center">
           <p className="text-body-s font-normal text-grayscale-gray5">
             {reviewType}・{reviewDate}

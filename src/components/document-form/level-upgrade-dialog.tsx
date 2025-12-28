@@ -2,12 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import {
-  LargeDialog,
-  LargeDialogContent,
-  LargeDialogTrigger,
-  LargeDialogClose,
-} from '@/components/ui/large-dialog';
+import { LargeDialog, LargeDialogContent, LargeDialogTrigger, LargeDialogClose } from '@/components/ui/large-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Close from '@/assets/icons/close';
 import { cn } from '@/lib/utils';
@@ -208,7 +203,7 @@ export default function LevelUpgradeDialog({
       <LargeDialogContent className="h-full md:h-auto md:max-h-[90vh]">
         {/* 헤더 */}
         <div className="flex justify-between items-center p-4 md:pt-6 md:px-6 md:pb-2.5 border-b md:border-0">
-          <h2 className="text-body-l font-semibold text-primary">브리더 레벨 변경</h2>
+          <h2 className="text-body-l font-semibold text-primary-500">브리더 레벨 변경</h2>
           <LargeDialogClose asChild>
             <Button variant="secondary" className="size-9">
               <Close className="size-5 text-grayscale-gray-7" />
@@ -274,12 +269,7 @@ export default function LevelUpgradeDialog({
 
         {/* 푸터 */}
         <div className="p-4 md:pt-4 md:px-6 md:pb-6 border-t">
-          <Button
-            variant="tertiary"
-            className="py-3 px-4 w-full"
-            onClick={handleSubmit}
-            disabled={isSubmitDisabled}
-          >
+          <Button variant="tertiary" className="py-3 px-4 w-full" onClick={handleSubmit} disabled={isSubmitDisabled}>
             {isSubmitting ? '제출 중...' : '제출'}
           </Button>
         </div>

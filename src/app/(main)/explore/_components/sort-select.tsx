@@ -49,7 +49,7 @@ export default function SortSelect() {
               key={item.value}
               onSelect={() => handleSortChange(item.value)}
               className={cn({
-                'font-bold text-primary': item.value === currentSort,
+                'font-bold text-primary-500': item.value === currentSort,
               })}
             >
               {item.label}

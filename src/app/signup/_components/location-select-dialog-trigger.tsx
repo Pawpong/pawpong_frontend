@@ -112,7 +112,7 @@ export default function LocationSelectDialogTrigger({
                     variant={'ghost'}
                     key={city}
                     className={cn('flex-col gap-2 p-0 text-grayscale-gray5 font-semibold text-body-m', {
-                      'text-primary': selectedGroup === city,
+                      'text-primary-500': selectedGroup === city,
                     })}
                     onClick={() => setSelectedGroup(city)}
                   >

@@ -177,7 +177,7 @@ export default function NotificationDialog({ children }: NotificationDialogProps
 
         {/* 헤더 */}
         <div className="hidden lg:flex justify-between items-center px-6 pt-6 pb-[10px]">
-          <h2 className="text-body-l font-semibold text-primary">알림</h2>
+          <h2 className="text-body-l font-semibold text-primary-500">알림</h2>
           {/* Figma 요구사항: 신규 알림이 1개 이상일 때만 표시 */}
           {newNotifications.length > 0 && (
             <Button

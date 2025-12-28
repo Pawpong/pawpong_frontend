@@ -83,7 +83,7 @@ export default function AdoptionCompleteDialog({ open, onOpenChange, onConfirm }
         >
           {/* Title Section */}
           <div className="flex flex-col gap-1.5">
-            <h2 className="text-body-l font-semibold text-primary">{adoptionCompleteTitle}</h2>
+            <h2 className="text-body-l font-semibold text-primary-500">{adoptionCompleteTitle}</h2>
             <p className="text-caption font-medium text-grayscale-gray5">{adoptionCompleteDescription}</p>
           </div>
 

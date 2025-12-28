@@ -12,7 +12,7 @@ export default function WithdrawSection({ onWithdraw }: WithdrawSectionProps) {
       <Button
         variant="ghost"
         onClick={onWithdraw}
-        className="p-0 h-auto text-body-s font-normal text-grayscale-gray5 underline hover:text-primary"
+        className="p-0 h-auto text-body-s font-normal text-grayscale-gray5 underline hover:text-primary-500"
       >
         탈퇴하기
       </Button>

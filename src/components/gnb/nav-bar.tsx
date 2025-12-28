@@ -47,7 +47,6 @@ function DropdownMenuWithState({
 
   // 드롭다운이 열려있거나 실제로 active 상태면 활성화
   const isActiveState = active || isOpen;
-  const ActiveIcon = isActiveState ? item.iconFill : item.icon;
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={handleOpenChange}>
@@ -55,14 +54,21 @@ function DropdownMenuWithState({
         <Button
           variant="ghost"
           className={cn(
-            'h-auto gap-1.5 has-[>svg]:px-5 text-body-s text-grayscale-gray6 focus-visible:ring-0 focus-visible:ring-offset-0',
-            isActiveState && 'text-primary',
+            'group cursor-pointer h-auto gap-1.5 has-[>svg]:px-5 text-body-s text-grayscale-gray6 hover:text-grayscale-gray6 focus-visible:ring-0 focus-visible:ring-offset-0',
+            isActiveState && 'text-primary-500',
           )}
         >
-          <ActiveIcon className="size-5" />
+          {isActiveState ? (
+            <item.iconFill className="size-5 text-primary-500" />
+          ) : (
+            <>
+              <item.icon className="size-5 group-hover:hidden text-grayscale-gray6" />
+              <item.iconFill className="size-5 hidden group-hover:block text-grayscale-gray6" />
+            </>
+          )}
           <span
-            className={cn({
-              'text-primary font-semibold': isActiveState,
+            className={cn('font-medium group-hover:font-semibold', {
+              'text-primary-500 font-semibold': isActiveState,
             })}
           >
             {item.name}
@@ -209,20 +215,27 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
           ? currNav === item.href.slice(1) || isChildActive
           : currNav === item.href.slice(1);
 
-        const Icon = active ? item.iconFill : item.icon;
-
         if (!hasChildren) {
           return (
             <Link href={item.href} key={item.name} onClick={(e) => handleLinkClick(e, item.href, item.requiresAuth)}>
               <Button
                 key={item.name}
                 variant="ghost"
-                className={cn('h-auto gap-1.5 has-[>svg]:px-5 text-body-s text-grayscale-gray6 hover:text-primary!')}
+                className={cn(
+                  'group cursor-pointer h-auto gap-1.5 has-[>svg]:px-5 text-body-s text-grayscale-gray6 hover:text-grayscale-gray6',
+                )}
               >
-                <Icon className="size-5" />
+                {active ? (
+                  <item.iconFill className="size-5 text-primary-500" />
+                ) : (
+                  <>
+                    <item.icon className="size-5 group-hover:hidden text-grayscale-gray6" />
+                    <item.iconFill className="size-5 hidden group-hover:block text-grayscale-gray6" />
+                  </>
+                )}
                 <span
-                  className={cn({
-                    'text-primary font-semibold': active,
+                  className={cn('font-medium group-hover:font-semibold', {
+                    'text-primary-500 font-semibold': active,
                   })}
                 >
                   {item.name}

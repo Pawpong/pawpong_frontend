@@ -138,7 +138,7 @@ function InputGroupTextarea({ className, ...props }: React.ComponentProps<'texta
     <Textarea
       data-slot="input-group-control"
       className={cn(
-        'flex-1 resize-none rounded-none border-0 bg-transparent py-3 px-4 shadow-none focus-visible:ring-0 dark:bg-transparent text-body-s! text-primary placeholder:text-grayscale-gray4 font-medium',
+        'flex-1 resize-none rounded-none border-0 bg-transparent py-3 px-4 shadow-none focus-visible:ring-0 dark:bg-transparent text-body-s! text-primary-500 placeholder:text-grayscale-gray4 font-medium',
         className,
       )}
       {...props}

@@ -66,7 +66,7 @@ export default function BreederProfile({
         </div>
         <div className="flex-1 space-y-4 flex flex-col md:justify-between">
           <div className="flex items-center flex-wrap gap-2">
-            <span className="text-heading-3 text-primary font-semibold">{nickname}</span>
+            <span className="text-heading-3 text-primary-500 font-semibold">{nickname}</span>
             <LevelBadge level={level} />
           </div>
           <div className="space-y-3">
@@ -87,7 +87,7 @@ export default function BreederProfile({
               {breeds.map((breed) => (
                 <div
                   key={breed}
-                  className="bg-tertiary-500 py-1.5 px-2.5 rounded-[--spacing(1)] text-medium text-body-xs text-primary"
+                  className="bg-tertiary-500 py-1.5 px-2.5 rounded-[--spacing(1)] text-medium text-body-xs text-primary-500"
                 >
                   {breed}
                 </div>

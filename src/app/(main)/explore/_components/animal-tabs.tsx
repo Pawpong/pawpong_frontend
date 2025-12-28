@@ -27,9 +27,9 @@ export default function AnimalTabs() {
             <Button
               variant={'ghost'}
               className={cn(
-                'h-auto text-heading-3! text-grayscale-gray5 font-semibold -mx-2.5 -my-1.5 hover:bg-transparent flex-col gap-2 hover:text-primary',
+                'h-auto text-heading-3! text-grayscale-gray5 font-semibold -mx-2.5 -my-1.5 hover:bg-transparent flex-col gap-2 hover:text-primary-500',
                 {
-                  'text-primary': active,
+                  'text-primary-500': active,
                 },
               )}
             >
