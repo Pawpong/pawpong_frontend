@@ -25,6 +25,28 @@ interface DocumentState {
   isUploaded: boolean;
 }
 
+// Signed URL에서 스토리지 객체 경로(= submit에 필요한 fileName)를 최대한 안전하게 추출
+// 예) https://storage.googleapis.com/<bucket>/verification/breeder123/idCard_uuid.pdf?...  -> verification/breeder123/idCard_uuid.pdf
+const extractStorageFileNameFromUrl = (url: string): string | null => {
+  try {
+    const u = new URL(url);
+    const pathname = u.pathname.replace(/^\/+/, ''); // "<bucket>/verification/..."
+    const parts = pathname.split('/');
+    // 케이스 1) pathname 자체가 이미 "verification/..." 인 경우
+    if (parts[0] === 'verification') {
+      return pathname || null;
+    }
+    // 케이스 2) GCS 기본 URL처럼 "<bucket>/verification/..." 인 경우
+    if (parts.length >= 2 && parts[1] === 'verification') {
+      return parts.slice(1).join('/') || null;
+    }
+    // 그 외: 일단 pathname 전체를 사용
+    return pathname || null;
+  } catch {
+    return null;
+  }
+};
+
 export default function DocumentEditSection() {
   const router = useRouter();
   const { toast } = useToast();
@@ -61,11 +83,18 @@ export default function DocumentEditSection() {
         if (status.documents && status.documents.length > 0) {
           // API 타입 -> 프론트엔드 키 매핑
           const apiTypeToKey: Record<string, string> = {
+            // snake_case (기존)
             id_card: 'idCard',
             animal_production_license: 'businessLicense',
             adoption_contract_sample: 'contractSample',
             recent_pedigree_document: 'pedigree',
             breeder_certification: 'breederCatCertificate',
+            // camelCase (신규/스웨거)
+            idCard: 'idCard',
+            animalProductionLicense: 'businessLicense',
+            adoptionContractSample: 'contractSample',
+            breederDogCertificate: 'breederDogCertificate',
+            breederCatCertificate: 'breederCatCertificate',
           };
 
           // URL에서 파일명 추출 함수
@@ -188,6 +217,34 @@ export default function DocumentEditSection() {
       return;
     }
 
+    // 기존 뉴(New) 브리더가 엘리트로 "수정"하는 케이스: 업로드만 하고 submit은 호출하지 않는다.
+    const isUpgradeNewToElite = submittedLevel === 'new' && level === 'elite';
+
+    // 레벨별 필수 서류 검증 (제출 전에 프론트에서 먼저 막아 서버 400을 줄임)
+    const requiredKeys: string[] =
+      level === 'elite'
+        ? [
+            'idCard',
+            'businessLicense',
+            'contractSample',
+            animal === 'dog' ? 'breederDogCertificate' : 'breederCatCertificate',
+          ]
+        : ['idCard', 'businessLicense'];
+
+    const missing = requiredKeys.filter((key) => {
+      const state = documents[key];
+      return !(state && (state.file || state.isUploaded));
+    });
+
+    if (missing.length > 0) {
+      toast({
+        title: '필수 서류를 모두 첨부해주세요.',
+        description: level === 'elite' ? '엘리트 레벨은 4개 서류가 필요해요.' : '뉴 레벨은 2개 서류가 필요해요.',
+        position: 'default',
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -199,8 +256,17 @@ export default function DocumentEditSection() {
         if (state.file && !state.isUploaded) {
           newFiles.push(state.file);
           newTypes.push(type);
-        } else if (state.isUploaded && state.fileName) {
-          existingDocs.push({ type, fileName: state.fileName });
+        } else if (state.isUploaded) {
+          // 기존 업로드 문서는 서버가 요구하는 "fileName(저장 경로)"로 제출해야 함.
+          // 상태에 display용 이름만 들어있는 경우가 있어 URL에서 저장 경로를 추출해 보완한다.
+          const storageFileName =
+            (state.fileName && state.fileName.includes('/') ? state.fileName : null) ||
+            (state.url ? extractStorageFileNameFromUrl(state.url) : null) ||
+            state.fileName;
+
+          if (storageFileName) {
+            existingDocs.push({ type, fileName: storageFileName });
+          }
         }
       });
 
@@ -209,6 +275,39 @@ export default function DocumentEditSection() {
       if (newFiles.length > 0) {
         const uploadResult = await uploadVerificationDocuments(newFiles, newTypes, level);
         uploadedDocs = uploadResult.documents;
+      }
+
+      // New -> Elite 수정인 경우: upload까지만 수행하고 종료 (submit 호출 X)
+      if (isUpgradeNewToElite) {
+        if (uploadedDocs.length > 0) {
+          setDocuments((prev) => {
+            const next = { ...prev };
+            uploadedDocs.forEach((doc) => {
+              // 서버가 반환하는 type은 정규화된 값일 수 있어 화면 키로 다시 매핑
+              const key =
+                doc.type === 'animalProductionLicense'
+                  ? 'businessLicense'
+                  : doc.type === 'adoptionContractSample'
+                  ? 'contractSample'
+                  : doc.type;
+              next[key] = {
+                file: null,
+                fileName: doc.originalFileName ?? next[key]?.fileName ?? null,
+                url: doc.url,
+                isUploaded: true,
+              };
+            });
+            return next;
+          });
+        }
+
+        setHasUnsavedChanges(false);
+        toast({
+          title: '서류 업로드가 완료되었습니다.',
+          description: '엘리트 전환을 위한 추가 서류가 업로드되었어요.',
+          position: 'default',
+        });
+        return;
       }
 
       const allDocs = [
@@ -272,16 +371,30 @@ export default function DocumentEditSection() {
           onLevelChange={(newLevel) => {
             setLevel(newLevel);
             setHasUnsavedChanges(true);
-            // 레벨 변경 시 기존 제출 문서 처리
+            // 레벨 변경 시 문서 처리
             if (newLevel === submittedLevel) {
               // 기존 제출 레벨로 돌아오면 기존 문서 복원
               setDocuments(submittedDocuments);
               setOathChecked(true);
-            } else {
-              // 다른 레벨로 변경하면 문서 초기화
-              setDocuments({});
-              setOathChecked(false);
+              return;
             }
+
+            // New -> Elite 업그레이드는 기존(New) 서류는 유지하고 추가 서류만 받는 UX가 자연스러움
+            if (submittedLevel === 'new' && newLevel === 'elite') {
+              setDocuments((prev) => ({
+                // 기존 상태(사용자가 이미 일부 추가했다면 유지)
+                ...prev,
+                // 제출된 뉴 레벨 필수 2개는 복원
+                idCard: submittedDocuments.idCard,
+                businessLicense: submittedDocuments.businessLicense,
+              }));
+              setOathChecked(true);
+              return;
+            }
+
+            // 그 외 변경은 안전하게 초기화
+            setDocuments({});
+            setOathChecked(false);
           }}
           onFileUpload={handleFileUpload}
           onFileDelete={handleFileDelete}
