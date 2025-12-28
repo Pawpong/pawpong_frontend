@@ -106,7 +106,7 @@ const HomeBanner = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full h-[20rem] md:h-[380px] lg:h-[380px] flex items-center justify-center bg-gray-100 animate-pulse">
+      <div className="w-full aspect-square md:h-[380px] lg:aspect-[1919.21/380] flex items-center justify-center bg-gray-100 animate-pulse">
         <p className="text-body-m text-gray-400">배너 로딩 중...</p>
       </div>
     );
@@ -114,7 +114,7 @@ const HomeBanner = () => {
 
   if (error || banners.length === 0) {
     return (
-      <div className="w-full h-[20rem] md:h-[380px] lg:h-[380px] flex items-center justify-center bg-gray-50">
+      <div className="w-full aspect-square md:h-[380px] lg:aspect-[1919.21/380] flex items-center justify-center bg-gray-50">
         <p className="text-body-m text-gray-400">{error || '표시할 배너가 없습니다.'}</p>
       </div>
     );
@@ -128,7 +128,7 @@ const HomeBanner = () => {
   // 이미지 URL이 없으면 에러 UI 표시
   if (!currentImageUrl) {
     return (
-      <div className="w-full h-[20rem] md:h-[380px] lg:h-[380px] flex items-center justify-center bg-gray-50">
+      <div className="w-full aspect-square md:h-[380px] lg:aspect-[1919.21/380] flex items-center justify-center bg-gray-50">
         <p className="text-body-m text-gray-400">배너 이미지를 불러올 수 없습니다.</p>
       </div>
     );
@@ -158,7 +158,7 @@ const HomeBanner = () => {
   );
 
   return (
-    <div className="relative w-full h-[20rem] md:h-[380px] lg:h-[380px] overflow-hidden">
+    <div className="relative w-full aspect-square md:h-[380px] lg:aspect-[1919.21/380] overflow-hidden">
       {currentBanner.linkType === 'internal' ? (
         <Link href={currentBanner.linkUrl} className="block w-full h-full">
           {renderBannerContent()}
