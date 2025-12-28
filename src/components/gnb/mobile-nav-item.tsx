@@ -146,6 +146,12 @@ function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolea
     }
   };
 
+  // 비회원이고 인증 필요 메뉴면 children 없음, 아니면 로그아웃만 제외
+  const filteredChildren =
+    item.requiresAuth && !isAuthenticated
+      ? []
+      : item.children?.filter((child) => child.action !== 'logout' || isAuthenticated);
+
   return (
     <Collapsible open={open} onOpenChange={handleOpenChange}>
       <div className="flex flex-col">
@@ -162,64 +168,58 @@ function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolea
                 {item.name}
               </p>
             </div>
-            <div className="flex items-center justify-center size-8 rounded-lg bg-tertiary-500 shrink-0">
-              {open ? (
-                <Minus className="size-4 text-grayscale-gray6" />
-              ) : (
-                <Plus className="size-4 text-grayscale-gray6" />
-              )}
-            </div>
+            {!(item.requiresAuth && !isAuthenticated) && (
+              <div className="flex items-center justify-center size-8 rounded-lg bg-tertiary-500 shrink-0">
+                {open ? (
+                  <Minus className="size-4 text-grayscale-gray6" />
+                ) : (
+                  <Plus className="size-4 text-grayscale-gray6" />
+                )}
+              </div>
+            )}
           </button>
         </CollapsibleTrigger>
         <CollapsibleContent asChild>
           <div className="flex flex-col mt-3 overflow-hidden transition-all duration-300 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:opacity-0 data-[state=closed]:mt-0 data-[state=closed]:max-h-0 max-h-[1000px]">
-            {item.children
-              ?.filter((child) => {
-                // 로그아웃 항목은 인증된 경우에만 표시
-                if (child.action === 'logout' && !isAuthenticated) {
-                  return false;
-                }
-                return true;
-              })
-              .map((child) => {
-                const ChildIcon = child.icon;
-                const isMuted = child.variant === 'muted';
-                const isDisabled = child.variant === 'disabled';
-                const isLogout = child.action === 'logout';
+            {filteredChildren?.map((child) => {
+              const ChildIcon = child.icon;
+              const isMuted = child.variant === 'muted';
+              const isDisabled = child.variant === 'disabled';
+              const isLogout = child.action === 'logout';
 
-                return (
-                  <SheetClose asChild key={child.name}>
-                    <Link
-                      href={child.href}
-                      onClick={(e) => {
-                        if (isDisabled) {
-                          e.preventDefault();
-                          return;
-                        }
-                        if (isLogout) {
-                          handleLogout(e);
-                          return;
-                        }
-                        handleLinkClick(e, child.href);
-                      }}
+              return (
+                <SheetClose asChild key={child.name}>
+                  <Link
+                    href={child.href}
+                    onClick={(e) => {
+                      if (isDisabled) {
+                        e.preventDefault();
+                        return;
+                      }
+                      if (isLogout) {
+                        handleLogout(e);
+                        return;
+                      }
+                      handleLinkClick(e, child.href);
+                    }}
+                    className={cn(
+                      'flex items-center gap-2 rounded bg-white pl-0 pr-4 py-2',
+                      isDisabled && 'pointer-events-none',
+                    )}
+                  >
+                    {ChildIcon && <ChildIcon className="size-5 shrink-0" />}
+                    <p
                       className={cn(
-                        'flex items-center gap-2 rounded bg-white pl-0 pr-4 py-2',
-                        isDisabled && 'pointer-events-none',
+                        'text-body-s font-medium',
+                        isMuted ? 'text-grayscale-gray5' : isDisabled ? 'text-[#e1e1e1]' : 'text-grayscale-gray6',
                       )}
                     >
-                      {ChildIcon && <ChildIcon className="size-5 shrink-0" />}
-                      <p
-                        className={cn(
-                          'text-body-s font-medium',
-                          isMuted ? 'text-grayscale-gray5' : isDisabled ? 'text-[#e1e1e1]' : 'text-grayscale-gray6',
-                        )}
-                      >
-                        {child.name}
-                      </p>
-                    </Link>
-                  </SheetClose>
-                );
-              })}
+                      {child.name}
+                    </p>
+                  </Link>
+                </SheetClose>
+              );
+            })}
           </div>
         </CollapsibleContent>
         {!isLast && <Separator className="mt-6" />}
