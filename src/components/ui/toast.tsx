@@ -26,7 +26,7 @@ const ToastViewport = React.forwardRef<
       ref={ref}
       className={cn(
         'z-[100] flex max-h-screen flex-col-reverse items-center p-0',
-        position === 'split' ? 'relative w-full max-w-[424px]' : 'fixed',
+        position === 'split' ? 'relative w-full' : 'fixed',
         positionClasses[position],
         className,
       )}
@@ -44,7 +44,7 @@ const Toast = React.forwardRef<
     <ToastPrimitives.Root
       ref={ref}
       className={cn(
-        'group pointer-events-auto relative flex w-full items-center justify-between gap-1 overflow-hidden rounded-full bg-[#4f3b2e] px-4 py-[10px] pr-2 shadow-[0px_0px_13px_0px_rgba(12,17,29,0.08)] transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
+        'group pointer-events-auto relative flex w-full items-center justify-between gap-1 rounded-full bg-[#4f3b2e] px-4 py-[10px] pr-2 shadow-[0px_0px_13px_0px_rgba(12,17,29,0.08)] transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
         className,
       )}
       {...props}
@@ -92,7 +92,7 @@ const ToastTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Title
     ref={ref}
-    className={cn('text-body-xs font-medium leading-body-xs text-[#f6f6ea] truncate whitespace-nowrap', className)}
+    className={cn('text-body-xs font-medium leading-body-xs text-[#f6f6ea]', className)}
     {...props}
   />
 ));
@@ -102,11 +102,7 @@ const ToastDescription = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Description>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitives.Description
-    ref={ref}
-    className={cn('text-body-xs text-[#f6f6ea] truncate whitespace-nowrap', className)}
-    {...props}
-  />
+  <ToastPrimitives.Description ref={ref} className={cn('text-body-xs text-[#f6f6ea]', className)} {...props} />
 ));
 ToastDescription.displayName = ToastPrimitives.Description.displayName;
 
