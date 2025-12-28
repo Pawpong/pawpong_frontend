@@ -377,6 +377,7 @@ export interface UploadedDocumentDto {
   url: string;
   fileName: string;
   size: number;
+  originalFileName?: string;
 }
 
 /** 서류 업로드 응답 DTO */
@@ -385,6 +386,31 @@ export interface UploadDocumentsResponseDto {
   level: string;
   documents: UploadedDocumentDto[];
 }
+
+/**
+ * 인증 서류 타입 정규화
+ * - 화면/레거시 키를 백엔드가 기대하는 타입으로 변환합니다.
+ * - 알 수 없는 타입은 그대로 통과시켜 하위 호환을 유지합니다.
+ */
+const normalizeVerificationDocumentType = (type: string): string => {
+  const map: Record<string, string> = {
+    // 레거시(문서 수정/업그레이드) -> 백엔드 camelCase (swagger 기준)
+    businessLicense: 'animalProductionLicense',
+    contractSample: 'adoptionContractSample',
+
+    // 현재 사용 중 키들(명시적으로 통과)
+    idCard: 'idCard',
+    animalProductionLicense: 'animalProductionLicense',
+    adoptionContractSample: 'adoptionContractSample',
+    breederDogCertificate: 'breederDogCertificate',
+    breederCatCertificate: 'breederCatCertificate',
+
+    // 혹시 서버/기획 문서에서 쓰는 이름이 들어오면 그대로 통과
+    breederCertificate: 'breederCertificate',
+  };
+
+  return map[type] ?? type;
+};
 
 /**
  * 브리더 인증 서류 업로드
@@ -402,15 +428,29 @@ export const uploadVerificationDocuments = async (
       formData.append('files', file);
     });
 
-    formData.append('types', JSON.stringify(types));
+    // 백엔드가 기대하는 타입으로 정규화해서 전송
+    const normalizedTypes = types.map(normalizeVerificationDocumentType);
+    formData.append('types', JSON.stringify(normalizedTypes));
     formData.append('level', level);
 
     const response = await apiClient.post<ApiResponse<UploadDocumentsResponseDto>>(
       '/api/breeder-management/verification/upload',
       formData,
       {
-        headers: {
-          'Content-Type': 'multipart/form-data',
+        // apiClient 기본값이 application/json 이라 multipart 업로드가 깨질 수 있어,
+        // 이 요청에서는 Content-Type을 제거하고 브라우저가 boundary를 포함해 자동 설정하도록 합니다.
+        transformRequest: (data, headers) => {
+          const h: any = headers as any;
+          if (h) {
+            // AxiosHeaders (v1) 대응
+            if (typeof h.delete === 'function') {
+              h.delete('Content-Type');
+            } else {
+              delete h['Content-Type'];
+              delete h['content-type'];
+            }
+          }
+          return data;
         },
       },
     );
@@ -445,9 +485,18 @@ export interface SubmitDocumentsRequest {
  */
 export const submitVerificationDocuments = async (data: SubmitDocumentsRequest): Promise<{ message: string }> => {
   try {
+    // 문서 타입 키가 화면/레거시 형태로 들어오는 경우를 대비해 정규화
+    const normalized: SubmitDocumentsRequest = {
+      ...data,
+      documents: data.documents.map((doc) => ({
+        ...doc,
+        type: normalizeVerificationDocumentType(doc.type),
+      })),
+    };
+
     const response = await apiClient.post<ApiResponse<{ message: string }>>(
       '/api/breeder-management/verification/submit',
-      data,
+      normalized,
     );
 
     if (!response.data.success || !response.data.data) {
