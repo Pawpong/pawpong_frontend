@@ -28,7 +28,7 @@ export default function SubmitSuccessDialog({ open, onOpenChange, onGoHome }: Su
           </div>
 
           {/* 타이틀 */}
-          <h2 className="text-heading-3 font-semibold text-primary text-center">
+          <h2 className="text-heading-3 font-semibold text-primary-500 text-center">
             입점 서류 제출을 완료했어요!
           </h2>
 

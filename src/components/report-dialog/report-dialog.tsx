@@ -136,7 +136,7 @@ export default function ReportDialog({
           <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-9 h-[452px] items-start overflow-x-clip overflow-y-auto pb-[7.44rem] sm:pb-10 pt-6 px-6 relative shrink-0 w-full">
             {/* 제목 */}
             <div className="flex flex-col gap-1.5 items-start not-italic relative shrink-0">
-              <DialogTitle className="font-semibold leading-[32px] relative shrink-0 text-primary text-[20px]">
+              <DialogTitle className="font-semibold leading-[32px] relative shrink-0 text-primary-500 text-[20px]">
                 {title}
               </DialogTitle>
               <p className="font-medium leading-[12px] relative shrink-0 text-grayscale-gray5 text-[12px]">

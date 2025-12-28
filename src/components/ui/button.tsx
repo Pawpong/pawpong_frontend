@@ -13,15 +13,15 @@ const buttonVariants = cva(
         destructive:
           'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
         outline:
-          'border bg-background hover:bg-branding-bg border-[#EEEBDE] hover:text-primary dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
-        secondary: 'bg-[var(--color-tertiary-500)] text-primary hover:bg-[#EEEBDE]',
+          'border bg-background hover:bg-branding-bg border-[#EEEBDE] hover:text-primary-500 dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
+        secondary: 'bg-[var(--color-tertiary-500)] text-primary-500 hover:bg-[#EEEBDE]',
         tertiary:
           'bg-secondary-500 text-primary-500 hover:bg-secondary-600 disabled:bg-status-disabled disabled:text-grayscale-gray4',
         //더보기 >
         ghost: 'hover:text-primary-500',
-        link: 'text-primary underline-offset-4 hover:underline',
-        filter: 'bg-[#A0C8F4] text-primary-500 hover:bg-secondary-600',
-        text: 'text-body-xs text-grayscale-gray5! hover:text-primary!',
+        link: 'text-primary-500 underline-offset-4 hover:underline',
+        filter: 'bg-[#A0C8F4] text-primary-500 md:text-grayscale-gray6 hover:bg-secondary-600',
+        text: 'text-body-xs text-grayscale-gray5! hover:text-primary-500!',
         category:
           'text-body-xs text-grayscale-gray6! bg-transparent hover:bg-[#F6F6EA]! rounded-sm w-full md:w-40 shrink-0 flex justify-start whitespace-wrap',
         maleGender: 'hover:bg-[var(--color-gender-male-100)]',

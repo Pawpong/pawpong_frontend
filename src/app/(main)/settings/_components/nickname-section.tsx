@@ -28,10 +28,10 @@ export default function NicknameSection({ nickname, onEdit, editable = true }: N
             <Button
               variant="ghost"
               onClick={() => setDialogOpen(true)}
-              className="group gap-1 h-auto p-0 text-body-xs font-medium text-grayscale-gray5 hover:text-primary"
+              className="group gap-1 h-auto p-0 text-body-xs font-medium text-grayscale-gray5 hover:text-primary-500"
             >
               <span>수정하기</span>
-              <Pencil className="text-grayscale-gray5 group-hover:text-primary" />
+              <Pencil className="text-grayscale-gray5 group-hover:text-primary-500" />
             </Button>
           )}
         </div>

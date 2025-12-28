@@ -167,7 +167,7 @@ export default function Page({ params }: PageProps) {
         <SimpleDialog open={showDeletedAlert} onOpenChange={handleAlertClose}>
           <SimpleDialogContent>
             <SimpleDialogHeader>
-              <SimpleDialogTitle className="text-primary">
+              <SimpleDialogTitle className="text-primary-500">
                 {isNotFoundError ? '브리더를 찾을 수 없어요' : '탈퇴한 브리더예요'}
               </SimpleDialogTitle>
               <SimpleDialogDescription className="text-grayscale-gray5">

@@ -70,14 +70,14 @@ function NavLink({ item, isActive, isLast }: { item: NavItem; isActive: boolean;
         <Link
           href={item.href}
           onClick={(e) => handleClick(e, item.href)}
-          className="flex items-center gap-3 rounded bg-white pl-0 pr-4"
+          className="group cursor-pointer flex items-center gap-3 rounded bg-white pl-0 pr-4"
         >
-          <Icon className="size-5 shrink-0" />
+          <Icon className={cn('size-5 shrink-0', isActive ? 'text-primary-500' : 'group-hover:text-grayscale-gray6')} />
           <div className="flex-1">
             <p
               className={cn(
                 'text-heading-3 leading-heading-3 font-medium',
-                isActive ? 'text-primary' : 'text-grayscale-gray6',
+                isActive ? 'text-primary-500 font-semibold' : 'text-grayscale-gray6 group-hover:text-grayscale-gray6',
               )}
             >
               {item.name}
@@ -156,13 +156,21 @@ function CollapsibleNavSection({ item, isLast }: { item: NavItem; isLast: boolea
     <Collapsible open={open} onOpenChange={handleOpenChange}>
       <div className="flex flex-col">
         <CollapsibleTrigger asChild>
-          <button type="button" className="flex items-center gap-3 rounded bg-white pl-0 pr-4 w-full">
-            <Icon className="size-5 shrink-0" />
+          <button
+            type="button"
+            className="group cursor-pointer flex items-center gap-3 rounded bg-white pl-0 pr-4 w-full"
+          >
+            <Icon
+              className={cn(
+                'size-5 shrink-0',
+                open || isActive ? 'text-primary-500' : 'group-hover:text-grayscale-gray6',
+              )}
+            />
             <div className="flex-1 text-left">
               <p
                 className={cn(
                   'text-heading-3 leading-heading-3 font-medium',
-                  open ? 'text-primary' : 'text-grayscale-gray6',
+                  open ? 'text-primary-500 font-semibold' : 'text-grayscale-gray6 group-hover:text-grayscale-gray6',
                 )}
               >
                 {item.name}

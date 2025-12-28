@@ -73,7 +73,7 @@ function LoginContent() {
       <SimpleDialog open={showErrorModal} onOpenChange={handleModalClose}>
         <SimpleDialogContent>
           <SimpleDialogHeader>
-            <SimpleDialogTitle className="text-primary">
+            <SimpleDialogTitle className="text-primary-500">
               {errorType === 'deleted' && '탈퇴한 계정이에요'}
               {errorType === 'suspended' && '정지된 계정이에요'}
               {errorType === 'error' && '로그인에 실패했어요'}

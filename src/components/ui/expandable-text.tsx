@@ -33,7 +33,7 @@ export function ExpandableText({
         {/* 텍스트 영역 */}
         <div
           ref={textRef}
-          className={cn('overflow-hidden text-body-s text-primary transition-all')}
+          className={cn('overflow-hidden text-body-s text-primary-500 transition-all')}
           style={expanded ? {} : { maxHeight: '200px' }}
         >
           {data}
@@ -58,7 +58,7 @@ export function ExpandableText({
       {overflow && (
         !expanded ? (
           <Button
-            className="p-0 pt-4 w-full flex items-center justify-center text-grayscale-gray5! hover:text-primary!"
+            className="p-0 pt-4 w-full flex items-center justify-center text-grayscale-gray5! hover:text-primary-500!"
             variant="ghost"
             onClick={() => setExpanded(true)}
           >
@@ -69,7 +69,7 @@ export function ExpandableText({
           </Button>
         ) : (
           <Button
-            className="p-0 w-full pt-4 flex items-center justify-center text-grayscale-gray5! hover:text-primary!"
+            className="p-0 w-full pt-4 flex items-center justify-center text-grayscale-gray5! hover:text-primary-500!"
             variant="ghost"
             onClick={() => setExpanded(false)}
           >

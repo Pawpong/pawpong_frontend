@@ -110,8 +110,8 @@ export default function FilterDialogTrigger({ ...props }: React.ComponentProps<t
                 <Button
                   variant="text"
                   key={filterGroup.label}
-                  className={cn('text-body-m font-semibold flex flex-col gap-1.5 py-0 px-0', {
-                    'text-primary!': isTabSelected,
+                  className={cn('text-body-m font-semibold flex flex-col gap-1.5 py-0 px-0 text-primary-500', {
+                    'text-primary-500!': isTabSelected,
                   })}
                   // --- 수정: 모바일 탭 클릭 이벤트 복구 ---
                   onClick={() => selectPath(filterGroup, 0)}

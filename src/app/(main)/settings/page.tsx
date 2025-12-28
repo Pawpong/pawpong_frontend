@@ -195,7 +195,7 @@ export default function SettingsPage() {
       <div className="flex flex-col gap-6 w-full max-w-[660px]">
         {/* 제목 */}
         <div className="flex flex-col gap-6 w-full">
-          <h1 className="text-heading-3 font-semibold text-primary">설정</h1>
+          <h1 className="text-heading-3 font-semibold text-primary-500">설정</h1>
         </div>
 
         {/* 설정 섹션들 */}

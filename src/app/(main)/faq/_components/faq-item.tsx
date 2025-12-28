@@ -19,8 +19,8 @@ export default function FaqItemComponent({ item, isOpen, onToggle }: FaqItemProp
           className="w-full flex items-center justify-between gap-4 py-7 text-left bg-white"
         >
           <div className="flex items-center gap-3 flex-1">
-            <span className="text-body-m font-medium text-primary shrink-0">Q</span>
-            <span className="text-body-m font-medium text-primary break-words">{item.question}</span>
+            <span className="text-body-m font-medium text-primary-500 shrink-0">Q</span>
+            <span className="text-body-m font-medium text-primary-500 break-words">{item.question}</span>
           </div>
           <ChevronDown
             className={cn(

@@ -110,7 +110,7 @@ export default function WithdrawDialog({ open, onOpenChange, onConfirm, userType
           >
             {/* Title Section */}
             <div className="flex flex-col gap-1.5">
-              <h2 className="text-body-l font-semibold text-primary">{withdrawTitle}</h2>
+              <h2 className="text-body-l font-semibold text-primary-500">{withdrawTitle}</h2>
               <p className="text-caption font-medium text-grayscale-gray5">{withdrawDescription}</p>
             </div>
 

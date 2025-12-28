@@ -77,7 +77,7 @@ export default function ReviewsPage({ params }: PageProps) {
         <div className="flex flex-col items-center gap-10">
           {/* 헤더 */}
           <div className="w-full flex">
-            <h1 className="text-heading-3 font-semibold text-primary text-center">후기</h1>
+            <h1 className="text-heading-3 font-semibold text-primary-500 text-center">후기</h1>
           </div>
 
           {/* 콘텐츠 */}

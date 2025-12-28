@@ -179,7 +179,7 @@ export default function ReviewWriteDialog({
                 <p
                   className={cn(
                     'text-body-m font-semibold',
-                    activeTab === '상담 후기' ? 'text-primary' : 'text-grayscale-gray5',
+                    activeTab === '상담 후기' ? 'text-primary-500' : 'text-grayscale-gray5',
                   )}
                 >
                   상담 후기
@@ -196,7 +196,7 @@ export default function ReviewWriteDialog({
                 <p
                   className={cn(
                     'text-body-m font-semibold',
-                    activeTab === '입양 후기' ? 'text-primary' : 'text-grayscale-gray5',
+                    activeTab === '입양 후기' ? 'text-primary-500' : 'text-grayscale-gray5',
                   )}
                 >
                   입양 후기

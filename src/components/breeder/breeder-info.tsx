@@ -20,7 +20,7 @@ export default function BreederInfo({
   return (
     <div className={`flex flex-col items-start ${className}`}>
       <div className="flex gap-2 items-center">
-        <p className={`text-body-l font-semibold text-primary `}>{breederName}</p>
+        <p className={`text-body-l font-semibold text-primary-500 `}>{breederName}</p>
         <LevelBadge level={breederLevel} />
       </div>
       {applicationDate && !hideDate && (

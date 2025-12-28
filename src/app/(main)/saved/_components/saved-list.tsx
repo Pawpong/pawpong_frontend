@@ -91,7 +91,7 @@ export default function SavedList() {
                             {breeds.map((breed: string) => (
                               <div
                                 key={breed}
-                                className="bg-tertiary-500 py-1.5 px-2.5 rounded-[--spacing(1)] text-medium text-body-xs text-primary"
+                                className="bg-tertiary-500 py-1.5 px-2.5 rounded-[--spacing(1)] text-medium text-body-xs text-primary-500"
                               >
                                 {breed}
                               </div>

@@ -16,7 +16,7 @@ export default function Header() {
         </Button>
       </ExitConfirmDialog>
       <ExitConfirmDialog hasData={true} onConfirm={() => router.push('/')}>
-        <Button size="icon" variant={'ghost'} className="text-primary size-6 cursor-pointer">
+        <Button size="icon" variant={'ghost'} className="text-primary-500 size-6 cursor-pointer">
           <Close />
         </Button>
       </ExitConfirmDialog>
