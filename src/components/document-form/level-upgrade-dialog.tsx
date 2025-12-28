@@ -2,11 +2,16 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { LargeDialog, LargeDialogContent, LargeDialogTrigger, LargeDialogClose } from '@/components/ui/large-dialog';
+import {
+  LargeDialog,
+  LargeDialogContent,
+  LargeDialogTrigger,
+  LargeDialogClose,
+} from '@/components/ui/large-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Close from '@/assets/icons/close';
 import { cn } from '@/lib/utils';
-import { LEVEL_INFO, type Animal, type Level } from './document-constants';
+import { LEVEL_INFO, DOCUMENT_KEYS, type Animal, type Level } from './document-constants';
 import DocumentUploadFields from './document-upload-fields';
 import OathCheckbox from './oath-checkbox';
 import {
@@ -23,24 +28,6 @@ interface DocumentState {
   url: string | null;
   isUploaded: boolean;
 }
-
-// Signed URL에서 스토리지 객체 경로(= submit에 필요한 fileName)를 최대한 안전하게 추출
-const extractStorageFileNameFromUrl = (url: string): string | null => {
-  try {
-    const u = new URL(url);
-    const pathname = u.pathname.replace(/^\/+/, '');
-    const parts = pathname.split('/');
-    if (parts[0] === 'verification') {
-      return pathname || null;
-    }
-    if (parts.length >= 2 && parts[1] === 'verification') {
-      return parts.slice(1).join('/') || null;
-    }
-    return pathname || null;
-  } catch {
-    return null;
-  }
-};
 
 interface LevelUpgradeDialogProps {
   children: React.ReactNode;
@@ -82,28 +69,11 @@ export default function LevelUpgradeDialog({
 
       // 기존 문서 상태 설정
       if (status.documents && status.documents.length > 0) {
-        // API 타입 -> 프론트엔드 키 매핑 (문서 수정 화면과 동일하게 맞춤)
-        const apiTypeToKey: Record<string, string> = {
-          // snake_case
-          id_card: 'idCard',
-          animal_production_license: 'businessLicense',
-          adoption_contract_sample: 'contractSample',
-          breeder_certification: 'breederCatCertificate',
-          // camelCase
-          idCard: 'idCard',
-          animalProductionLicense: 'businessLicense',
-          adoptionContractSample: 'contractSample',
-          breederDogCertificate: 'breederDogCertificate',
-          breederCatCertificate: 'breederCatCertificate',
-        };
-
         const docState: Record<string, DocumentState> = {};
         status.documents.forEach((doc) => {
-          const frontendKey = apiTypeToKey[doc.type] || doc.type;
-          docState[frontendKey] = {
+          docState[doc.type] = {
             file: null,
-            // 화면 표시는 원본 파일명 우선
-            fileName: doc.originalFileName ?? null,
+            fileName: doc.type,
             url: doc.url,
             isUploaded: true,
           };
@@ -180,30 +150,6 @@ export default function LevelUpgradeDialog({
       return;
     }
 
-    // 뉴(New) -> 엘리트(Elite) "수정" 케이스에서는 업로드만 하고 submit은 호출하지 않는다.
-    const isUpgradeNewToElite = currentLevel === 'new' && level === 'elite';
-
-    // 레벨별 필수 서류 검증
-    const breederDocKey = animal === 'dog' ? 'breederDogCertificate' : 'breederCatCertificate';
-    const requiredKeys: string[] =
-      level === 'elite'
-        ? ['idCard', 'businessLicense', 'contractSample', breederDocKey]
-        : ['idCard', 'businessLicense'];
-
-    const missing = requiredKeys.filter((key) => {
-      const state = documents[key];
-      return !(state && (state.file || state.isUploaded));
-    });
-
-    if (missing.length > 0) {
-      toast({
-        title: '필수 서류를 모두 첨부해주세요.',
-        description: level === 'elite' ? '엘리트 레벨은 4개 서류가 필요해요.' : '뉴 레벨은 2개 서류가 필요해요.',
-        position: 'default',
-      });
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
@@ -215,15 +161,8 @@ export default function LevelUpgradeDialog({
         if (state.file && !state.isUploaded) {
           newFiles.push(state.file);
           newTypes.push(type);
-        } else if (state.isUploaded) {
-          const storageFileName =
-            (state.fileName && state.fileName.includes('/') ? state.fileName : null) ||
-            (state.url ? extractStorageFileNameFromUrl(state.url) : null) ||
-            state.fileName;
-
-          if (storageFileName) {
-            existingDocs.push({ type, fileName: storageFileName });
-          }
+        } else if (state.isUploaded && state.fileName) {
+          existingDocs.push({ type, fileName: state.fileName });
         }
       });
 
@@ -232,39 +171,6 @@ export default function LevelUpgradeDialog({
       if (newFiles.length > 0) {
         const uploadResult = await uploadVerificationDocuments(newFiles, newTypes, level);
         uploadedDocs = uploadResult.documents;
-      }
-
-      // New -> Elite 수정인 경우: upload까지만 수행하고 종료 (submit 호출 X)
-      if (isUpgradeNewToElite) {
-        if (uploadedDocs.length > 0) {
-          setDocuments((prev) => {
-            const next = { ...prev };
-            uploadedDocs.forEach((doc) => {
-              const key =
-                doc.type === 'animalProductionLicense'
-                  ? 'businessLicense'
-                  : doc.type === 'adoptionContractSample'
-                  ? 'contractSample'
-                  : doc.type;
-              next[key] = {
-                file: null,
-                fileName: doc.originalFileName ?? next[key]?.fileName ?? null,
-                url: doc.url,
-                isUploaded: true,
-              };
-            });
-            return next;
-          });
-        }
-
-        toast({
-          title: '서류 업로드가 완료되었습니다.',
-          description: '엘리트 전환을 위한 추가 서류가 업로드되었어요.',
-          position: 'default',
-        });
-        setOpen(false);
-        onSuccess?.();
-        return;
       }
 
       const allDocs = [
@@ -368,7 +274,12 @@ export default function LevelUpgradeDialog({
 
         {/* 푸터 */}
         <div className="p-4 md:pt-4 md:px-6 md:pb-6 border-t">
-          <Button variant="tertiary" className="py-3 px-4 w-full" onClick={handleSubmit} disabled={isSubmitDisabled}>
+          <Button
+            variant="tertiary"
+            className="py-3 px-4 w-full"
+            onClick={handleSubmit}
+            disabled={isSubmitDisabled}
+          >
             {isSubmitting ? '제출 중...' : '제출'}
           </Button>
         </div>
