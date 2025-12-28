@@ -138,7 +138,7 @@ function CounselFormContent() {
 
     if (!isValid) {
       toast({
-        title: '입력 정보를 확인해주세요.',
+        description: '입력 정보를 확인해주세요.',
         position: 'split',
       });
       return;
@@ -146,7 +146,6 @@ function CounselFormContent() {
 
     if (!breederId) {
       toast({
-        title: '브리더 정보가 없습니다.',
         description: '브리더 페이지에서 다시 시도해주세요.',
         position: 'split',
       });
@@ -155,7 +154,7 @@ function CounselFormContent() {
 
     // 프론트엔드 폼 데이터를 백엔드 API 요청 형식으로 변환
     // 선택된 아이들을 슬래시(/)로 구분한 문자열로 변환
-    const selectedPets = formData.interestedAnimal.filter(pet => pet !== '특징 직접 입력');
+    const selectedPets = formData.interestedAnimal.filter((pet) => pet !== '특징 직접 입력');
     const preferredPetDescription = formData.interestedAnimal.includes('특징 직접 입력')
       ? formData.interestedAnimalDetails || undefined
       : selectedPets.length > 0
@@ -197,7 +196,6 @@ function CounselFormContent() {
       clearCounselFormData();
 
       toast({
-        title: '상담 신청이 완료되었습니다.',
         description: result.message,
         position: 'split',
       });
@@ -207,7 +205,6 @@ function CounselFormContent() {
     } catch (error) {
       console.error('Application submission error:', error);
       toast({
-        title: '상담 신청에 실패했습니다.',
         description: error instanceof Error ? error.message : '다시 시도해주세요.',
         position: 'split',
       });
@@ -519,9 +516,10 @@ function CounselFormContent() {
                   control={form.control}
                   render={({ field }) => {
                     const selectedPets = field.value || [];
-                    const displayText = selectedPets.length > 0
-                      ? selectedPets.filter(p => p !== '특징 직접 입력').join('/') || '특징 직접 입력'
-                      : '분양 중인 아이';
+                    const displayText =
+                      selectedPets.length > 0
+                        ? selectedPets.filter((p) => p !== '특징 직접 입력').join('/') || '특징 직접 입력'
+                        : '분양 중인 아이';
 
                     return (
                       <DropdownMenu>
@@ -552,12 +550,12 @@ function CounselFormContent() {
                                 key={pet.petId}
                                 className={cn(
                                   'px-4 py-2 text-body-s font-medium cursor-pointer rounded focus:bg-transparent',
-                                  isSelected ? 'text-primary-500 bg-tertiary-500' : 'text-grayscale-gray6'
+                                  isSelected ? 'text-primary-500 bg-tertiary-500' : 'text-grayscale-gray6',
                                 )}
                                 onSelect={() => {
                                   const newValue = isSelected
-                                    ? selectedPets.filter(p => p !== petName)
-                                    : [...selectedPets.filter(p => p !== '특징 직접 입력'), petName];
+                                    ? selectedPets.filter((p) => p !== petName)
+                                    : [...selectedPets.filter((p) => p !== '특징 직접 입력'), petName];
                                   field.onChange(newValue);
                                 }}
                               >
@@ -568,12 +566,14 @@ function CounselFormContent() {
                           <DropdownMenuItem
                             className={cn(
                               'px-4 py-2 text-body-s font-medium cursor-pointer rounded border-t border-grayscale-gray2 mt-2 pt-2 focus:bg-transparent',
-                              selectedPets.includes('특징 직접 입력') ? 'text-primary-500 bg-tertiary-500' : 'text-grayscale-gray6'
+                              selectedPets.includes('특징 직접 입력')
+                                ? 'text-primary-500 bg-tertiary-500'
+                                : 'text-grayscale-gray6',
                             )}
                             onSelect={() => {
                               const isSelected = selectedPets.includes('특징 직접 입력');
                               if (isSelected) {
-                                field.onChange(selectedPets.filter(p => p !== '특징 직접 입력'));
+                                field.onChange(selectedPets.filter((p) => p !== '특징 직접 입력'));
                               } else {
                                 field.onChange(['특징 직접 입력']);
                               }

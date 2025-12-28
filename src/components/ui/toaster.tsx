@@ -24,22 +24,31 @@ export function Toaster() {
     <>
       {positions.map((position) => {
         const positionToasts = toastsByPosition[position] || [];
+        const wrapperClassName =
+          position === 'split'
+            ? 'pointer-events-none fixed bottom-10 left-0 right-0 flex justify-center px-8 md:bottom-24 md:left-[648px] md:w-[calc(100vw-648px)] md:right-auto md:px-4 lg:px-0.5'
+            : undefined;
+
+        const viewportClassName = position === 'split' ? 'pointer-events-auto w-full md:max-w-[424px]' : undefined;
+
         return (
           <ToastProvider key={position}>
-            {positionToasts.map(function ({ id, title, description, action, ...props }) {
-              return (
-                <Toast key={id} {...props}>
-                  <div className="flex items-center gap-1 grow box-shadow: 0 0 13px 0 rgba(12, 17, 29, 0.08)">
-                    <Check className="size-5 text-[#f6f6ea] shrink-0" />
-                    {title && <ToastTitle>{title}</ToastTitle>}
-                    {description && <ToastDescription>{description}</ToastDescription>}
-                  </div>
-                  {action}
-                  <ToastClose />
-                </Toast>
-              );
-            })}
-            <ToastViewport position={position} />
+            <div className={wrapperClassName}>
+              {positionToasts.map(function ({ id, title, description, action, ...props }) {
+                return (
+                  <Toast key={id} {...props}>
+                    <div className="flex items-center gap-2 grow min-w-0 box-shadow: 0 0 13px 0 rgba(12, 17, 29, 0.08)">
+                      <Check className="size-5 text-[#f6f6ea] shrink-0" />
+                      {title && <ToastTitle>{title}</ToastTitle>}
+                      {description && <ToastDescription>{description}</ToastDescription>}
+                    </div>
+                    {action}
+                    <ToastClose />
+                  </Toast>
+                );
+              })}
+              <ToastViewport position={position} className={viewportClassName} />
+            </div>
           </ToastProvider>
         );
       })}
