@@ -14,6 +14,7 @@ export default function Parents({
   data,
   breederId,
   breederDescription,
+  isOwnProfile = false,
 }: {
   data: {
     id: string;
@@ -27,6 +28,7 @@ export default function Parents({
   }[];
   breederId: string;
   breederDescription?: string;
+  isOwnProfile?: boolean;
 }) {
   const router = useRouter();
   const [selectedPet, setSelectedPet] = useState<PetDetailData | null>(null);
@@ -90,6 +92,7 @@ export default function Parents({
         type="parent"
         breederId={breederId}
         breederDescription={breederDescription}
+        isOwnProfile={isOwnProfile}
       />
     </BreederProfileSection>
   );

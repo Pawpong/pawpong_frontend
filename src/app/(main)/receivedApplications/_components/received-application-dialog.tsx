@@ -19,7 +19,7 @@ import RequestStatusBadge from './request-status-badge';
 import SmallDot from '@/assets/icons/small-dot.svg';
 import ErrorIcon from '@/assets/icons/error-gray.svg';
 import type { CounselFormData } from '@/stores/counsel-form-store';
-import { useUpdateApplicationStatus } from '../_hooks/use-received-applications';
+import { useUpdateApplicationStatus, useApplicationDetail } from '../_hooks/use-received-applications';
 import { formatPhoneNumber } from '@/utils/phone';
 
 interface ReceivedApplicationDialogProps {
@@ -43,6 +43,7 @@ export default function ReceivedApplicationDialog({
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<'before' | 'done'>(initialStatus);
   const updateStatusMutation = useUpdateApplicationStatus();
+  const { data: detailData } = useApplicationDetail(open ? id : null);
 
   useEffect(() => {
     setStatus(initialStatus);
@@ -71,6 +72,40 @@ export default function ReceivedApplicationDialog({
       },
     );
   };
+
+  // API 응답 확인을 위한 로그
+  useEffect(() => {
+    if (detailData) {
+      console.log('[받은 신청 상세] API 응답:', detailData);
+      console.log('[받은 신청 상세] preferredPetDescription:', detailData.standardResponses?.preferredPetDescription);
+    }
+  }, [detailData]);
+
+  // detailData의 standardResponses를 formData로 변환
+  const actualFormData: CounselFormData | null = detailData
+    ? {
+        privacyAgreement: detailData.standardResponses.privacyConsent,
+        name: detailData.adopterName,
+        phone: detailData.adopterPhone || '',
+        email: detailData.adopterEmail,
+        introduction: detailData.standardResponses.selfIntroduction,
+        familyMembers: detailData.standardResponses.familyMembers,
+        familyAgreement: detailData.standardResponses.allFamilyConsent,
+        allergyCheck: detailData.standardResponses.allergyTestInfo,
+        awayTime: detailData.standardResponses.timeAwayFromHome,
+        livingSpace: detailData.standardResponses.livingSpaceDescription,
+        previousPets: detailData.standardResponses.previousPetExperience,
+        basicCare: detailData.standardResponses.canProvideBasicCare,
+        medicalExpense: detailData.standardResponses.canAffordMedicalExpenses,
+        // preferredPetDescription을 interestedAnimal로 매핑
+        interestedAnimal: detailData.standardResponses.preferredPetDescription
+          ? detailData.standardResponses.preferredPetDescription.split('/')
+          : [],
+        interestedAnimalDetails: '',
+        adoptionTiming: detailData.standardResponses.desiredAdoptionTiming || '',
+        additionalMessage: detailData.standardResponses.additionalNotes || '',
+      }
+    : formData || null;
 
   return (
     <LargeDialog open={open} onOpenChange={setOpen}>
@@ -112,7 +147,7 @@ export default function ReceivedApplicationDialog({
               </h2>
               <div className="flex flex-col gap-2.5 w-full">
                 <label className="bg-white flex gap-2 h-12 items-center px-4 py-2 rounded-lg cursor-pointer">
-                  <Checkbox checked={formData?.privacyAgreement || false} disabled />
+                  <Checkbox checked={actualFormData?.privacyAgreement || false} disabled />
                   <span className="text-body-s font-medium text-grayscale-gray6">동의합니다</span>
                 </label>
                 <div className="flex flex-col gap-2 pl-1.5">
@@ -290,8 +325,19 @@ export default function ReceivedApplicationDialog({
           <div className="flex flex-col gap-8 items-start w-full">
             <div className="flex flex-col gap-3 w-full">
               <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">마음에 두신 아이가 있으신가요?</h2>
-              {formData?.interestedAnimal && <Input value={formData.interestedAnimal} readOnly className="h-12" />}
-              {formData?.interestedAnimal === '특징 직접 입력' && (
+              {formData?.interestedAnimal && (
+                <Input
+                  value={
+                    Array.isArray(formData.interestedAnimal)
+                      ? formData.interestedAnimal.join('/')
+                      : formData.interestedAnimal
+                  }
+                  readOnly
+                  className="h-12"
+                />
+              )}
+              {((Array.isArray(formData?.interestedAnimal) && formData.interestedAnimal.includes('특징 직접 입력')) ||
+                (!Array.isArray(formData?.interestedAnimal) && formData?.interestedAnimal === '특징 직접 입력')) && (
                 <Textarea
                   value={formData?.interestedAnimalDetails || ''}
                   readOnly

@@ -49,6 +49,7 @@ interface PetDetailDialogProps {
   type: 'pet' | 'parent';
   breederId: string;
   breederDescription?: string;
+  isOwnProfile?: boolean;
 }
 
 export default function PetDetailDialog({
@@ -58,10 +59,12 @@ export default function PetDetailDialog({
   type,
   breederId,
   breederDescription,
+  isOwnProfile = false,
 }: PetDetailDialogProps) {
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
+  const isBreeder = user?.role === 'breeder';
   const [selectedParent, setSelectedParent] = useState<PetDetailData | null>(null);
   const [isParentDialogOpen, setIsParentDialogOpen] = useState(false);
 
@@ -235,6 +238,7 @@ export default function PetDetailDialog({
               variant="tertiary"
               className="h-9 px-4 text-body-medium text-primary-500 rounded-sm"
               onClick={handleCounselClick}
+              disabled={isOwnProfile || isBreeder}
             >
               상담 신청하기
             </Button>

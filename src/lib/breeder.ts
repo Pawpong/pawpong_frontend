@@ -309,6 +309,7 @@ export interface ReceivedApplicationItemDto {
   applicationId: string;
   adopterId: string;
   adopterName: string;
+  adopterNickname: string;
   adopterEmail: string;
   adopterPhone: string;
   petId?: string;

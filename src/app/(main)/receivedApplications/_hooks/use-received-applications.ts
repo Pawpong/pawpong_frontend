@@ -1,8 +1,10 @@
-import { useInfiniteQuery, useMutation, useQueryClient, InfiniteData } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient, InfiniteData, useQuery } from '@tanstack/react-query';
 import {
   getReceivedApplications,
   updateApplicationStatus as updateApplicationStatusApi,
+  getApplicationDetail,
   type ReceivedApplicationItemDto,
+  type ReceivedApplicationDetailDto,
 } from '@/lib/breeder-management';
 
 export interface ReceivedApplicationItem {
@@ -34,8 +36,8 @@ const mapDtoToReceivedApplication = (dto: ReceivedApplicationItemDto): ReceivedA
 
   return {
     id: dto.applicationId,
-    applicantNickname: dto.adopterName,
-    animalInfo: dto.petName || '반려동물 정보 없음',
+    applicantNickname: dto.adopterNickname || dto.adopterName, // 닉네임 우선, 없으면 이름
+    animalInfo: dto.petName || dto.preferredPetInfo || dto.standardResponses?.preferredPetDescription || '분양 중인 아이 정보',
     status: statusMap[dto.status] || 'before',
     applicationDate: new Date(dto.appliedAt).toISOString().split('T')[0],
   };
@@ -44,6 +46,9 @@ const mapDtoToReceivedApplication = (dto: ReceivedApplicationItemDto): ReceivedA
 const fetchReceivedApplications = async (page: number): Promise<ReceivedApplicationsResponse> => {
   try {
     const result = await getReceivedApplications(page, PAGE_SIZE);
+
+    // API 응답 확인을 위한 로그
+    console.log('[받은 신청] API 응답:', result.applications);
 
     return {
       data: result.applications.map(mapDtoToReceivedApplication),
@@ -98,5 +103,16 @@ export function useUpdateApplicationStatus() {
         },
       );
     },
+  });
+}
+
+export function useApplicationDetail(applicationId: string | null) {
+  return useQuery<ReceivedApplicationDetailDto | null>({
+    queryKey: ['application-detail', applicationId],
+    queryFn: async () => {
+      if (!applicationId) return null;
+      return await getApplicationDetail(applicationId);
+    },
+    enabled: !!applicationId,
   });
 }

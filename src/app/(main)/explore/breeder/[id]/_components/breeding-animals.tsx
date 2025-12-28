@@ -15,6 +15,7 @@ export default function BreedingAnimals({
   data,
   breederId,
   breederDescription,
+  isOwnProfile = false,
 }: {
   data: {
     id: string;
@@ -29,6 +30,7 @@ export default function BreedingAnimals({
   }[];
   breederId: string;
   breederDescription?: string;
+  isOwnProfile?: boolean;
 }) {
   const router = useRouter();
   const [selectedPet, setSelectedPet] = useState<PetDetailData | null>(null);
@@ -132,6 +134,7 @@ export default function BreedingAnimals({
         type="pet"
         breederId={breederId}
         breederDescription={breederDescription}
+        isOwnProfile={isOwnProfile}
       />
     </BreederProfileSection>
   );
