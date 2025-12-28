@@ -469,10 +469,15 @@ export interface ReceivedApplicationItemDto {
   applicationId: string;
   adopterId: string;
   adopterName: string;
+  adopterNickname: string;
   adopterEmail: string;
   adopterPhone?: string;
   petId?: string;
   petName?: string;
+  preferredPetInfo?: string | null;
+  standardResponses?: {
+    preferredPetDescription?: string;
+  };
   status: 'consultation_pending' | 'consultation_completed' | 'adoption_approved' | 'adoption_rejected';
   appliedAt: string;
   processedAt?: string;

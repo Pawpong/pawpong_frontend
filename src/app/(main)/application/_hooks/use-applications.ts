@@ -54,7 +54,7 @@ const mapAdopterDtoToApplicationItem = (dto: ApplicationListItemDto): Applicatio
 const mapBreederDtoToApplicationItem = (dto: ReceivedApplicationItemDto): ApplicationItem => ({
   applicationId: dto.applicationId,
   adopterId: dto.adopterId,
-  adopterName: dto.adopterName,
+  adopterName: dto.adopterNickname || dto.adopterName, // 닉네임 우선, 없으면 이름
   adopterEmail: dto.adopterEmail,
   adopterPhone: dto.adopterPhone,
   applicationDate: new Date(dto.appliedAt).toLocaleDateString('ko-KR'),
