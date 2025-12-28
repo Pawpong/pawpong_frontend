@@ -290,8 +290,19 @@ export default function ReceivedApplicationDialog({
           <div className="flex flex-col gap-8 items-start w-full">
             <div className="flex flex-col gap-3 w-full">
               <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">마음에 두신 아이가 있으신가요?</h2>
-              {formData?.interestedAnimal && <Input value={formData.interestedAnimal} readOnly className="h-12" />}
-              {formData?.interestedAnimal === '특징 직접 입력' && (
+              {formData?.interestedAnimal && (
+                <Input
+                  value={
+                    Array.isArray(formData.interestedAnimal)
+                      ? formData.interestedAnimal.join('/')
+                      : formData.interestedAnimal
+                  }
+                  readOnly
+                  className="h-12"
+                />
+              )}
+              {((Array.isArray(formData?.interestedAnimal) && formData.interestedAnimal.includes('특징 직접 입력')) ||
+                (!Array.isArray(formData?.interestedAnimal) && formData?.interestedAnimal === '특징 직접 입력')) && (
                 <Textarea
                   value={formData?.interestedAnimalDetails || ''}
                   readOnly

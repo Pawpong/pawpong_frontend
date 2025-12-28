@@ -76,7 +76,7 @@ function CounselFormContent() {
         previousPets: '',
         basicCare: false,
         medicalExpense: false,
-        interestedAnimal: '',
+        interestedAnimal: [],
         interestedAnimalDetails: '',
         adoptionTiming: '',
         additionalMessage: '',
@@ -89,10 +89,10 @@ function CounselFormContent() {
 
   // petId가 있고 availablePets가 로드되면 해당 개체 선택
   useEffect(() => {
-    if (petId && availablePets.length > 0 && !form.getValues('interestedAnimal')) {
+    if (petId && availablePets.length > 0 && form.getValues('interestedAnimal').length === 0) {
       const selectedPet = availablePets.find((pet) => pet.petId === petId);
       if (selectedPet) {
-        form.setValue('interestedAnimal', selectedPet.name);
+        form.setValue('interestedAnimal', [selectedPet.name]);
       }
     }
   }, [petId, availablePets, form]);
@@ -154,6 +154,14 @@ function CounselFormContent() {
     }
 
     // 프론트엔드 폼 데이터를 백엔드 API 요청 형식으로 변환
+    // 선택된 아이들을 슬래시(/)로 구분한 문자열로 변환
+    const selectedPets = formData.interestedAnimal.filter(pet => pet !== '특징 직접 입력');
+    const preferredPetDescription = formData.interestedAnimal.includes('특징 직접 입력')
+      ? formData.interestedAnimalDetails || undefined
+      : selectedPets.length > 0
+      ? selectedPets.join('/')
+      : undefined;
+
     const applicationData: ApplicationCreateRequest = {
       name: formData.name,
       phone: formData.phone,
@@ -170,7 +178,7 @@ function CounselFormContent() {
       previousPetExperience: formData.previousPets,
       canProvideBasicCare: formData.basicCare,
       canAffordMedicalExpenses: formData.medicalExpense,
-      preferredPetDescription: formData.interestedAnimalDetails || undefined,
+      preferredPetDescription,
       desiredAdoptionTiming: formData.adoptionTiming || undefined,
       additionalNotes: formData.additionalMessage || undefined,
     };
@@ -509,54 +517,76 @@ function CounselFormContent() {
                 <Controller
                   name="interestedAnimal"
                   control={form.control}
-                  render={({ field }) => (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="input"
-                          size={undefined}
-                          className="!px-[var(--space-16)] !py-[var(--space-12)] w-full group"
-                          onClick={(e) => {
-                            if (field.value === '') {
-                              e.preventDefault();
-                              e.stopPropagation();
-                            }
-                          }}
-                        >
-                          <span
-                            className={cn(
-                              'text-body-s font-medium',
-                              field.value ? 'text-[#4F3B2E]' : 'text-grayscale-gray5',
-                            )}
+                  render={({ field }) => {
+                    const selectedPets = field.value || [];
+                    const displayText = selectedPets.length > 0
+                      ? selectedPets.filter(p => p !== '특징 직접 입력').join('/') || '특징 직접 입력'
+                      : '분양 중인 아이';
+
+                    return (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="input"
+                            size={undefined}
+                            className="!px-[var(--space-16)] !py-[var(--space-12)] w-full group"
                           >
-                            {field.value || '분양 중인 아이'}
-                          </span>
-                          <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-[353px] max-h-[300px] overflow-y-auto">
-                        {availablePets.map((pet) => (
+                            <span
+                              className={cn(
+                                'text-body-s font-medium',
+                                selectedPets.length > 0 ? 'text-[#4F3B2E]' : 'text-grayscale-gray5',
+                              )}
+                            >
+                              {displayText}
+                            </span>
+                            <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-[353px] max-h-[300px] overflow-y-auto">
+                          {availablePets.map((pet) => {
+                            const petName = `${pet.name} (${pet.breed}, ${pet.gender === 'male' ? '수컷' : '암컷'})`;
+                            const isSelected = selectedPets.includes(petName);
+
+                            return (
+                              <DropdownMenuItem
+                                key={pet.petId}
+                                className={cn(
+                                  'px-4 py-2 text-body-s font-medium cursor-pointer rounded focus:bg-transparent',
+                                  isSelected ? 'text-primary-500 bg-tertiary-500' : 'text-grayscale-gray6'
+                                )}
+                                onSelect={() => {
+                                  const newValue = isSelected
+                                    ? selectedPets.filter(p => p !== petName)
+                                    : [...selectedPets.filter(p => p !== '특징 직접 입력'), petName];
+                                  field.onChange(newValue);
+                                }}
+                              >
+                                {pet.name} ({pet.breed}, {pet.gender === 'male' ? '수컷' : '암컷'})
+                              </DropdownMenuItem>
+                            );
+                          })}
                           <DropdownMenuItem
-                            key={pet.petId}
-                            className="px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
-                            onSelect={() =>
-                              field.onChange(`${pet.name} (${pet.breed}, ${pet.gender === 'male' ? '수컷' : '암컷'})`)
-                            }
+                            className={cn(
+                              'px-4 py-2 text-body-s font-medium cursor-pointer rounded border-t border-grayscale-gray2 mt-2 pt-2 focus:bg-transparent',
+                              selectedPets.includes('특징 직접 입력') ? 'text-primary-500 bg-tertiary-500' : 'text-grayscale-gray6'
+                            )}
+                            onSelect={() => {
+                              const isSelected = selectedPets.includes('특징 직접 입력');
+                              if (isSelected) {
+                                field.onChange(selectedPets.filter(p => p !== '특징 직접 입력'));
+                              } else {
+                                field.onChange(['특징 직접 입력']);
+                              }
+                            }}
                           >
-                            {pet.name} ({pet.breed}, {pet.gender === 'male' ? '수컷' : '암컷'})
+                            특징 직접 입력
                           </DropdownMenuItem>
-                        ))}
-                        <DropdownMenuItem
-                          className="px-4 py-2 text-body-s font-medium cursor-pointer rounded text-grayscale-gray6 focus:bg-transparent focus:text-grayscale-gray6"
-                          onSelect={() => field.onChange('특징 직접 입력')}
-                        >
-                          특징 직접 입력
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    );
+                  }}
                 />
-                {interestedAnimal === '특징 직접 입력' && (
+                {interestedAnimal.includes('특징 직접 입력') && (
                   <Controller
                     name="interestedAnimalDetails"
                     control={form.control}

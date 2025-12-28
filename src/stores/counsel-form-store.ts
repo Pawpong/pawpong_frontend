@@ -28,7 +28,7 @@ export interface CounselFormData {
   medicalExpense: boolean;
 
   // 선택 사항
-  interestedAnimal: string;
+  interestedAnimal: string[]; // 복수 선택 가능하도록 배열로 변경
   interestedAnimalDetails: string;
   adoptionTiming: string;
   additionalMessage: string;

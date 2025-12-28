@@ -66,7 +66,10 @@ export function isFormComplete(data: CounselFormData): boolean {
   const hasRequiredValues = requiredFields.every((key) => hasValue(data[key]));
   const phoneValid = PHONE_NUMBER_REGEX.test(data.phone || '');
   const emailValid = typeof data.email === 'string' && data.email.includes('@');
-  const detailsValid = data.interestedAnimal !== '특징 직접 입력' || hasValue(data.interestedAnimalDetails);
+  // interestedAnimal이 배열이므로 '특징 직접 입력'이 포함되어 있는지 확인
+  const detailsValid = !Array.isArray(data.interestedAnimal) ||
+    !data.interestedAnimal.includes('특징 직접 입력') ||
+    hasValue(data.interestedAnimalDetails);
 
   return hasRequiredValues && phoneValid && emailValid && detailsValid;
 }
