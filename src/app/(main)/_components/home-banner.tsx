@@ -40,10 +40,13 @@ const HomeBanner = () => {
         console.log('사용자 정보:', user);
         console.log('사용자 타입:', userType);
         console.log('전체 배너 수:', data.length);
-        console.log('배너 데이터:', data.map(b => ({
-          bannerId: b.bannerId,
-          targetAudience: b.targetAudience
-        })));
+        console.log(
+          '배너 데이터:',
+          data.map((b) => ({
+            bannerId: b.bannerId,
+            targetAudience: b.targetAudience,
+          })),
+        );
 
         // 배너 필터링: targetAudience가 비어있거나, 현재 사용자 타입을 포함하는 배너만 표시
         const filteredBanners = data.filter((banner) => {
@@ -54,7 +57,9 @@ const HomeBanner = () => {
           }
           // 현재 사용자 타입이 targetAudience에 포함되어 있으면 표시
           const shouldShow = banner.targetAudience.includes(userType as 'guest' | 'adopter' | 'breeder');
-          console.log(`배너 ${banner.bannerId}: targetAudience=${banner.targetAudience}, userType=${userType}, 표시=${shouldShow}`);
+          console.log(
+            `배너 ${banner.bannerId}: targetAudience=${banner.targetAudience}, userType=${userType}, 표시=${shouldShow}`,
+          );
           return shouldShow;
         });
 
@@ -101,7 +106,7 @@ const HomeBanner = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full h-[20rem] md:h-[20rem] lg:h-[30rem] flex items-center justify-center bg-gray-100 animate-pulse">
+      <div className="w-full h-[20rem] md:h-[380px] lg:h-[380px] flex items-center justify-center bg-gray-100 animate-pulse">
         <p className="text-body-m text-gray-400">배너 로딩 중...</p>
       </div>
     );
@@ -109,7 +114,7 @@ const HomeBanner = () => {
 
   if (error || banners.length === 0) {
     return (
-      <div className="w-full h-[20rem] md:h-[20rem] lg:h-[30rem] flex items-center justify-center bg-gray-50">
+      <div className="w-full h-[20rem] md:h-[380px] lg:h-[380px] flex items-center justify-center bg-gray-50">
         <p className="text-body-m text-gray-400">{error || '표시할 배너가 없습니다.'}</p>
       </div>
     );
@@ -123,7 +128,7 @@ const HomeBanner = () => {
   // 이미지 URL이 없으면 에러 UI 표시
   if (!currentImageUrl) {
     return (
-      <div className="w-full h-[20rem] md:h-[20rem] lg:h-[30rem] flex items-center justify-center bg-gray-50">
+      <div className="w-full h-[20rem] md:h-[380px] lg:h-[380px] flex items-center justify-center bg-gray-50">
         <p className="text-body-m text-gray-400">배너 이미지를 불러올 수 없습니다.</p>
       </div>
     );
@@ -153,7 +158,7 @@ const HomeBanner = () => {
   );
 
   return (
-    <div className="relative w-full h-[20rem] md:h-[20rem] lg:h-[30rem] overflow-hidden">
+    <div className="relative w-full h-[20rem] md:h-[380px] lg:h-[380px] overflow-hidden">
       {currentBanner.linkType === 'internal' ? (
         <Link href={currentBanner.linkUrl} className="block w-full h-full">
           {renderBannerContent()}
