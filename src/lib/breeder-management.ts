@@ -20,8 +20,10 @@ export interface ProfileUpdateRequest {
   priceRangeInfo?: {
     minimumPrice: number;
     maximumPrice: number;
+    display?: string;
   };
   specializationTypes?: string[];
+  breeds?: string[];
   experienceYears?: number;
   marketingAgreed?: boolean;
   profileImage?: string | null;

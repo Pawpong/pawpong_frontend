@@ -44,7 +44,7 @@ type BreederProfileApi = {
     description?: string;
     location?: { city: string; district: string };
     representativePhotos?: string[];
-    priceRange?: { min?: number; max?: number };
+    priceRange?: { min?: number; max?: number; display?: string };
     specialization?: string[];
     specializationAreas?: string[];
   };
@@ -178,14 +178,17 @@ export default function ProfilePage() {
 
       const locationParts = typedProfile.profileInfo?.location;
       const locationString = locationParts ? `${locationParts.city} ${locationParts.district}` : '';
-      const apiMinPrice = typedProfile.profileInfo?.priceRange?.min;
-      const apiMaxPrice = typedProfile.profileInfo?.priceRange?.max;
-      // 가격 상태 구분:
-      // - min: -1, max: -1 -> 가격 미설정 (기본값)
-      // - min: 0, max: 0 -> 상담 후 공개
-      // - 그 외 -> 실제 가격 범위
-      const isUnsetPrice = apiMinPrice === -1 && apiMaxPrice === -1;
-      const isCounselPrice = apiMinPrice === 0 && apiMaxPrice === 0;
+      const priceRange = typedProfile.profileInfo?.priceRange;
+      const apiMinPrice = priceRange?.min;
+      const apiMaxPrice = priceRange?.max;
+      const apiDisplay = priceRange?.display;
+
+      // 가격 상태 구분 (display 필드 우선):
+      // - display: 'consultation' -> 상담 후 공개 모드
+      // - display: 'not_set' -> 가격 미설정
+      // - display: 'range' -> 실제 가격 범위
+      // - display 없고 min/max가 0,0 -> 가격 미설정 (legacy)
+      const isCounselPrice = apiDisplay === 'consultation';
 
       // 부모 pet ID를 petId에서 추출 (백엔드에서 petId로 변환됨)
       const parentsData: ProfileFormData['parents'] =
@@ -231,20 +234,20 @@ export default function ProfilePage() {
         location: locationString,
         breeds: typedProfile.breeds || [],
         representativePhotos: typedProfile.profileInfo?.representativePhotos || [],
-        // 가격 처리:
-        // - 미설정(-1) 또는 undefined/null인 경우 -> 빈 문자열 (placeholder "0" 표시)
-        // - 상담 후 공개(0-0)인 경우 -> 빈 문자열 (처음에는 일반 모드로 표시, 버튼으로 상담 후 공개 모드 전환 가능)
-        // - 실제 가격인 경우 -> 숫자 표시
+        // 가격 처리 (display 필드 기반):
+        // - display: 'consultation' -> 빈 문자열 + isCounselMode: true
+        // - display: 'not_set' -> 빈 문자열 + isCounselMode: false
+        // - display: 'range' -> 실제 가격 + isCounselMode: false
         minPrice:
-          isUnsetPrice || isCounselPrice || apiMinPrice === undefined || apiMinPrice === null
-            ? ''
-            : apiMinPrice.toString(),
+          apiDisplay === 'range' && apiMinPrice !== undefined && apiMinPrice !== null
+            ? apiMinPrice.toString()
+            : '',
         maxPrice:
-          isUnsetPrice || isCounselPrice || apiMaxPrice === undefined || apiMaxPrice === null
-            ? ''
-            : apiMaxPrice.toString(),
-        // 상담 후 공개 모드: 처음에는 false로 시작 (버튼으로 전환 가능)
-        isCounselMode: false,
+          apiDisplay === 'range' && apiMaxPrice !== undefined && apiMaxPrice !== null
+            ? apiMaxPrice.toString()
+            : '',
+        // 상담 후 공개 모드 여부를 display 필드로 판단
+        isCounselMode: isCounselPrice,
         parents: parentsData,
         animals:
           typedProfile.availablePetInfo?.length && typedProfile.availablePetInfo.length > 0
@@ -424,24 +427,24 @@ export default function ProfilePage() {
         profileDescription: formData.description !== undefined ? formData.description : undefined,
         locationInfo,
         profilePhotos: allPhotoFileNames.length > 0 ? allPhotoFileNames : undefined,
-        // 가격 처리:
-        // - 상담 후 공개 모드 -> 0, 0
-        // - 가격 입력 있음 -> 실제 가격 (min/max 정렬하여 전송)
-        // - 가격 입력 없음(빈 문자열) -> 0, 0 (상담 후 공개)
+        // 가격 처리 (display 필드 포함):
+        // - 상담 후 공개 모드 -> 0, 0, display: 'consultation'
+        // - 가격 입력 있음 -> 실제 가격 + display: 'range'
+        // - 가격 입력 없음(빈 문자열) -> 0, 0, display: 'not_set'
         priceRangeInfo: (() => {
           if (formData.isCounselMode) {
-            return { minimumPrice: 0, maximumPrice: 0 };
+            return { minimumPrice: 0, maximumPrice: 0, display: 'consultation' };
           }
 
           const minPriceStr = formData.minPrice?.trim() || '';
           const maxPriceStr = formData.maxPrice?.trim() || '';
 
-          // 둘 다 비어있으면 상담 후 공개
+          // 둘 다 비어있으면 미설정 (not_set)
           if (!minPriceStr && !maxPriceStr) {
-            return { minimumPrice: 0, maximumPrice: 0 };
+            return { minimumPrice: 0, maximumPrice: 0, display: 'not_set' };
           }
 
-          // 둘 다 값이 있으면 실제 가격
+          // 둘 다 값이 있으면 실제 가격 범위
           if (minPriceStr && maxPriceStr) {
             const min = parseInt(minPriceStr, 10);
             const max = parseInt(maxPriceStr, 10);
@@ -451,12 +454,13 @@ export default function ProfilePage() {
               return {
                 minimumPrice: Math.min(min, max),
                 maximumPrice: Math.max(min, max),
+                display: 'range',
               };
             }
           }
 
-          // 그 외의 경우 (하나만 입력된 경우 등) 상담 후 공개
-          return { minimumPrice: 0, maximumPrice: 0 };
+          // 그 외의 경우 (하나만 입력된 경우 등) 미설정
+          return { minimumPrice: 0, maximumPrice: 0, display: 'not_set' };
         })(),
         breeds: formData.breeds?.length > 0 ? formData.breeds : undefined,
         profileImage: profileImageToSave,
