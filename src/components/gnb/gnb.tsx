@@ -24,7 +24,7 @@ export default function Gnb({ variant = 'default', navVariant = 'breeder' }: Gnb
         <LogoButton />
         {isLg && <NavBar navVariant={navVariant} />}
         <div className="flex gap-4 items-center">
-          {user ? <NoticeButton /> : <LoginButton />}
+          {isLg && (user ? <NoticeButton /> : <LoginButton />)}
           {!isLg && <NavButton navVariant={navVariant} />}
         </div>
       </Container>
