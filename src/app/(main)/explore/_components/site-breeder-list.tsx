@@ -101,12 +101,16 @@ export default function SiteBreederList() {
                       <GrayDot className="block sm:hidden lg:block align-middle" />
                       <BreederPrice>
                         {isLoggedIn ? (
-                          !breeder.priceRange || (!breeder.priceRange.min && !breeder.priceRange.max) ? (
+                          !breeder.priceRange ? (
+                            '가격 미설정'
+                          ) : breeder.priceRange.display === 'not_set' ? (
                             '가격 미설정'
                           ) : breeder.priceRange.display === 'consultation' ? (
-                            '상담 후 결정'
-                          ) : (
+                            '상담 후 공개'
+                          ) : breeder.priceRange.display === 'range' ? (
                             `${breeder.priceRange.min?.toLocaleString()}원 ~ ${breeder.priceRange.max?.toLocaleString()}원`
+                          ) : (
+                            '가격 미설정'
                           )
                         ) : (
                           <span className="inline-flex items-center gap-1">
