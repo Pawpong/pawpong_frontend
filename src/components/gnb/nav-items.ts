@@ -75,6 +75,10 @@ export const NAV_ITEMS_BREEDER: NavItem[] = [
     href: '/explore',
     icon: Search,
     iconFill: SearchFill,
+    children: [
+      { name: '강아지', href: '/explore/dog', icon: Dog },
+      { name: '고양이', href: '/explore/cat', icon: Cat },
+    ],
   },
   {
     name: '신청',
