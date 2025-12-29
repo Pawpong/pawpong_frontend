@@ -112,6 +112,15 @@ export default function BreederInfoSection() {
     // 다음 단계로 이동
     nextFlowIndex();
   };
+
+  // Form validation 실패 시에도 중복검사 체크
+  const onError = () => {
+    const currentName = watch('breederName');
+    // 브리더명이 입력되어 있지만 중복검사를 하지 않은 경우
+    if (currentName && currentName.trim().length > 0 && !nameChecked) {
+      setSubmitAttempted(true);
+    }
+  };
   return (
     <SignupFormSection className="gap-15 md:gap-20 lg:gap-20">
       <SignupFormHeader>
@@ -190,25 +199,25 @@ export default function BreederInfoSection() {
               </Button>
             </div>
             {nameAvailable && !errors.breederName && (
-              <div className="flex items-center gap-0.5">
+              <div className="flex items-center gap-0.75">
                 <Check className="size-3 shrink-0" />
                 <p className="text-caption font-medium text-status-success-500">사용할 수 있는 브리더명이에요</p>
               </div>
             )}
             {nameChecked && !nameAvailable && (
-              <div className="flex items-center gap-0.5">
+              <div className="flex items-center gap-0.75">
                 <ErrorIcon className="size-3 shrink-0" />
                 <p className="text-caption font-medium text-status-error-500">이미 등록된 브리더명이에요</p>
               </div>
             )}
             {submitAttempted && !nameChecked && (
-              <div className="flex items-center gap-0.5">
+              <div className="flex items-center gap-0.75">
                 <ErrorIcon className="size-3 shrink-0" />
                 <p className="text-caption font-medium text-status-error-500">브리더명 중복 검사를 진행해 주세요</p>
               </div>
             )}
             {errors.breederName && (
-              <div className="flex items-center gap-0.5">
+              <div className="flex items-center gap-0.75">
                 <ErrorIcon className="size-3 shrink-0" />
                 <p className="text-caption font-medium text-status-error-500">{errors.breederName.message}</p>
               </div>
@@ -268,7 +277,7 @@ export default function BreederInfoSection() {
               )}
             />
             {errors.breederLocation && (
-              <div className="flex items-center gap-0.5">
+              <div className="flex items-center gap-0.75">
                 <ErrorIcon className="size-3 shrink-0" />
                 <p className="text-caption font-medium text-status-error-500">{errors.breederLocation.message}</p>
               </div>
@@ -305,7 +314,7 @@ export default function BreederInfoSection() {
               )}
             />
             {errors.breeds ? (
-              <div className="flex items-center gap-0.5">
+              <div className="flex items-center gap-0.75">
                 <ErrorIcon className="size-3 shrink-0" />
                 <p className="text-caption font-medium text-status-error-500">{errors.breeds.message}</p>
               </div>
@@ -316,7 +325,7 @@ export default function BreederInfoSection() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <NextButton onClick={handleSubmit(onSubmit)} />
+          <NextButton onClick={handleSubmit(onSubmit, onError)} />
           <UndoButton />
         </div>
       </SignupFormItems>
