@@ -184,6 +184,7 @@ export default function BreederInfoSection() {
                 variant="tertiary"
                 disabled={isCheckingName || !currentBreederName || nameAvailable}
                 onClick={handleCheckBreederName}
+                className="h-12 px-4 py-3 rounded-lg  text-body-s font-semibold leading-6 text-center w-[5.5rem]"
               >
                 {isCheckingName ? '확인 중...' : '중복검사'}
               </Button>
