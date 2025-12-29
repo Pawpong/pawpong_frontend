@@ -119,7 +119,7 @@ export default function BreederInfoSection() {
       </SignupFormHeader>
       <SignupFormItems className="gap-8">
         <div className="flex flex-col gap-3 items-center">
-          <div className="relative">
+          <div className="relative size-20">
             <Button
               size="icon"
               variant="input"
