@@ -1,10 +1,13 @@
 'use client';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { useAuthStore } from '@/stores/auth-store';
 import Container from '../ui/container';
 import LogoButton from './logo-button';
 import NavBar from './nav-bar';
 import NavButton from './nav-button';
 import NoticeButton from './notice-button';
+import LoginButton from './login-button';
+
 interface GnbProps {
   variant?: 'default' | 'tertiary';
   navVariant?: 'default' | 'breeder';
@@ -12,6 +15,7 @@ interface GnbProps {
 
 export default function Gnb({ variant = 'default', navVariant = 'breeder' }: GnbProps) {
   const isLg = useBreakpoint('lg');
+  const { user } = useAuthStore();
   const bgClass = variant === 'tertiary' ? 'bg-tertiary-500' : 'bg-background';
 
   return (
@@ -20,7 +24,7 @@ export default function Gnb({ variant = 'default', navVariant = 'breeder' }: Gnb
         <LogoButton />
         {isLg && <NavBar navVariant={navVariant} />}
         <div className="flex gap-4 items-center">
-          <NoticeButton />
+          {user ? <NoticeButton /> : <LoginButton />}
           {!isLg && <NavButton navVariant={navVariant} />}
         </div>
       </Container>
