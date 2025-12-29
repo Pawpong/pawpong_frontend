@@ -77,14 +77,14 @@ export default function ReviewDialog({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
-          className="max-w-[37.5rem] w-full max-h-[37.5rem] overflow-hidden flex flex-col p-0 gap-0 !animate-none data-[state=open]:!animate-none data-[state=closed]:!animate-none data-[state=open]:!fade-in-0 data-[state=closed]:!fade-out-0 data-[state=open]:!zoom-in-95 data-[state=closed]:!zoom-out-95 !duration-0"
+          className="w-full h-full lg:w-[37.5rem] lg:h-[37.5rem] lg:translate-x-[-50%] lg:translate-y-[-50%] lg:top-[50%] lg:left-[50%] top-0 left-0 translate-x-0 translate-y-0 rounded-none lg:rounded-2xl border-none overflow-hidden flex flex-col p-0 gap-0"
           showCloseButton={false}
         >
           <VisuallyHidden>
             <DialogTitle>신청 내역 상세</DialogTitle>
           </VisuallyHidden>
           {/* 헤더 */}
-          <div className="flex flex-col gap-[10px] items-start pt-6 px-6 pb-[10px]">
+          <div className="flex flex-col gap-[10px] items-start pt-6 px-6 pb-[10px] shrink-0">
             <div className="flex gap-1 items-center justify-end w-full">
               <DialogClose asChild>
                 <Button variant="secondary" size="icon">
@@ -95,10 +95,10 @@ export default function ReviewDialog({
           </div>
 
           {/* 스크롤 가능한 콘텐츠 영역 */}
-          <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-9 min-h-0 overflow-y-auto pl-6 pr-6 pt-6 pb-10 ">
+          <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-9 flex-1 min-h-0 overflow-y-auto pl-6 pr-6 pt-6 pb-10">
             {/* 브리더 정보 - 전체 클릭 시 브리더 페이지로 이동 */}
             <div
-              className="flex items-center justify-between w-full cursor-pointer hover:opacity-80 transition-opacity"
+              className="flex items-center justify-between w-full cursor-pointer hover:opacity-80 transition-opacity shrink-0"
               onClick={() => {
                 setOpen(false);
                 router.push(`/explore/breeder/${breederId}`);
@@ -127,13 +127,13 @@ export default function ReviewDialog({
             </div>
 
             {/* 구분선 */}
-            <div className="w-full flex flex-col">
+            <div className="w-full flex flex-col shrink-0">
               <div className="h-px bg-grayscale-gray2 w-full" />
             </div>
 
             {/* 로딩 상태 */}
             {isLoading && (
-              <div className="flex justify-center py-10">
+              <div className="flex justify-center py-10 flex-1">
                 <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
               </div>
             )}
@@ -358,23 +358,23 @@ export default function ReviewDialog({
 
             {/* 데이터 없음 */}
             {!isLoading && !formData && (
-              <div className="flex justify-center py-10">
+              <div className="flex justify-center py-10 flex-1">
                 <p className="text-body-s text-grayscale-gray5">신청 내역을 불러올 수 없습니다.</p>
               </div>
             )}
           </div>
 
-          {/* 구분선 - 후기 작성 가능할 때만 표시 */}
-          {canWriteReview && <div className="h-px bg-grayscale-gray2 w-full shrink-0" />}
+          {/* 구분선 - 항상 표시 (레이아웃 일관성 유지) */}
+          <div className="h-px bg-grayscale-gray2 w-full shrink-0" />
 
-          {/* 하단 버튼 - 후기 작성 가능할 때만 표시 */}
-          {canWriteReview && (
-            <div className="bg-white flex gap-2.5 items-start justify-end overflow-clip pb-6 pt-4 px-6 shrink-0">
+          {/* 하단 버튼 - 후기 작성 가능할 때만 내용 표시, 그렇지 않으면 빈 공간 */}
+          <div className="bg-white flex gap-2.5 items-start justify-end overflow-clip pb-6 pt-4 px-6 shrink-0">
+            {canWriteReview && (
               <button className="button-brown" onClick={handleReviewWriteClick}>
                 후기 작성하기
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </DialogContent>
       </Dialog>
 

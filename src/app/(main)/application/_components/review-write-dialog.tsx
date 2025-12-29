@@ -107,10 +107,7 @@ export default function ReviewWriteDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className={cn(
-          'max-w-[37.5rem] w-full overflow-hidden flex flex-col p-0 gap-0',
-          existingReview ? 'max-h-[90vh]' : 'min-h-[37.5rem] max-h-[90vh] md:min-h-[37.5rem]',
-        )}
+        className="max-w-[37.5rem] w-full min-h-[37.5rem] max-h-[90vh] md:min-h-[37.5rem] overflow-hidden flex flex-col p-0 gap-0"
         showCloseButton={false}
       >
         <VisuallyHidden>

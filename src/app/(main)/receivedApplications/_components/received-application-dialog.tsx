@@ -110,7 +110,7 @@ export default function ReceivedApplicationDialog({
   return (
     <LargeDialog open={open} onOpenChange={setOpen}>
       <LargeDialogTrigger asChild>{children}</LargeDialogTrigger>
-      <LargeDialogContent className="flex flex-col w-full max-h-full md:w-[37.5rem] md:max-h-[37.5rem]">
+      <LargeDialogContent className="flex flex-col w-full h-full max-h-full md:w-[37.5rem] md:h-[37.5rem] md:max-h-[37.5rem]">
         <LargeDialogHeader className="pt-6 px-6 pb-[10px]">
           <LargeDialogTitle>
             <div className="flex justify-end items-start w-full">

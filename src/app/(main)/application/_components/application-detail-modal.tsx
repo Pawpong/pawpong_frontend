@@ -71,16 +71,28 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
     },
   });
 
+  const dialogContentClass =
+    'w-full h-full lg:w-[37.5rem] lg:h-[37.5rem] lg:translate-x-[-50%] lg:translate-y-[-50%] lg:top-[50%] lg:left-[50%] top-0 left-0 translate-x-0 translate-y-0 rounded-none lg:rounded-2xl border-none';
+
   if (isLoading) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="w-full h-full lg:w-[37.5rem] lg:h-[37.5rem] lg:translate-x-[-50%] lg:translate-y-[-50%] lg:top-[50%] lg:left-[50%] top-0 left-0 translate-x-0 translate-y-0 rounded-none lg:rounded-2xl border-none p-0">
+        <DialogContent className={`${dialogContentClass} p-0 gap-0 bg-white flex flex-col`}>
           <VisuallyHidden>
             <DialogTitle>로딩 중</DialogTitle>
           </VisuallyHidden>
-          <div className="flex justify-center items-center py-20">
+          {/* 헤더 */}
+          <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none lg:rounded-t-2xl"></div>
+          {/* 상단 구분선 */}
+          <div className="h-px bg-[#E1E1E1]" />
+          {/* 로딩 영역 */}
+          <div className="overflow-y-auto bg-[#F6F6EA] px-6 py-5 flex-1 flex items-center justify-center">
             <p className="text-body-m text-grayscale-gray5">로딩 중...</p>
           </div>
+          {/* 하단 구분선 */}
+          <div className="h-px bg-[#E1E1E1]" />
+          {/* 하단 버튼 영역 (빈 공간) */}
+          <div className="bg-white px-6 py-4 rounded-b-none lg:rounded-b-2xl h-[57px]"></div>
         </DialogContent>
       </Dialog>
     );
@@ -89,16 +101,25 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
   if (!application) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="w-full h-full lg:w-[37.5rem] lg:h-[37.5rem] lg:translate-x-[-50%] lg:translate-y-[-50%] lg:top-[50%] lg:left-[50%] top-0 left-0 translate-x-0 translate-y-0 rounded-none lg:rounded-2xl border-none p-6">
+        <DialogContent className={`${dialogContentClass} p-0 gap-0 bg-white flex flex-col`}>
           <VisuallyHidden>
             <DialogTitle>오류</DialogTitle>
           </VisuallyHidden>
-          <div className="flex flex-col items-center justify-center py-20">
+          {/* 헤더 */}
+          <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none lg:rounded-t-2xl"></div>
+          {/* 상단 구분선 */}
+          <div className="h-px bg-[#E1E1E1]" />
+          {/* 오류 영역 */}
+          <div className="overflow-y-auto bg-[#F6F6EA] px-6 py-5 flex-1 flex flex-col items-center justify-center">
             <p className="text-body-m text-grayscale-gray5">신청 정보를 찾을 수 없습니다.</p>
             <Button onClick={() => onOpenChange(false)} className="mt-4">
               닫기
             </Button>
           </div>
+          {/* 하단 구분선 */}
+          <div className="h-px bg-[#E1E1E1]" />
+          {/* 하단 버튼 영역 (빈 공간) */}
+          <div className="bg-white px-6 py-4 rounded-b-none lg:rounded-b-2xl h-[57px]"></div>
         </DialogContent>
       </Dialog>
     );
@@ -114,7 +135,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full h-full lg:w-[37.5rem] lg:h-[37.5rem] lg:translate-x-[-50%] lg:translate-y-[-50%] lg:top-[50%] lg:left-[50%] top-0 left-0 translate-x-0 translate-y-0 rounded-none lg:rounded-2xl border-none p-0 gap-0 bg-white flex flex-col">
+      <DialogContent className={`${dialogContentClass} p-0 gap-0 bg-white flex flex-col`}>
         <VisuallyHidden>
           <DialogTitle>입양 신청 상세</DialogTitle>
         </VisuallyHidden>

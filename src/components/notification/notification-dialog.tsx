@@ -161,9 +161,7 @@ export default function NotificationDialog({ children }: NotificationDialogProps
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
-        className={`fixed inset-x-0 top-[64px] bottom-0 w-full max-w-full p-0 flex flex-col overflow-hidden translate-x-0 translate-y-0 rounded-none border-0 lg:w-[480px] lg:max-w-[480px] lg:top-[64px] lg:right-[48px] lg:left-auto lg:bottom-auto lg:rounded-2xl lg:shadow-[0px_0px_13px_0px_rgba(12,17,29,0.08)] data-[state=open]:slide-in-from-right-full data-[state=closed]:slide-out-to-right-full ${
-          notifications.length > 0 ? 'lg:h-[816px] lg:max-h-[816px]' : 'lg:h-auto lg:max-h-none'
-        }`}
+        className="fixed inset-x-0 top-[64px] bottom-0 w-full max-w-full p-0 flex flex-col overflow-hidden translate-x-0 translate-y-0 rounded-none border-0 lg:w-[480px] lg:max-w-[480px] lg:top-[64px] lg:right-[48px] lg:left-auto lg:bottom-auto lg:rounded-2xl lg:shadow-[0px_0px_13px_0px_rgba(12,17,29,0.08)] data-[state=open]:slide-in-from-right-full data-[state=closed]:slide-out-to-right-full lg:h-[816px] lg:max-h-[816px]"
         overlayClassName="inset-0 bg-transparent"
         showCloseButton={false}
       >
