@@ -56,7 +56,10 @@ export default function FileButton({
         {displayFileName && (
           <button
             type="button"
-            onClick={handleDelete}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(e);
+            }}
             className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
           >
             <CloseTertiary className="size-6" />
