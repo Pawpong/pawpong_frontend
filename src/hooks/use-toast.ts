@@ -149,7 +149,7 @@ function toast({ position = 'default', ...props }: Toast) {
       id,
       position,
       open: true,
-      duration: props.duration ?? 2000, // 기본 2초 후 자동으로 사라짐
+      duration: props.duration ?? 5000, // 기본 5초 후 자동으로 사라짐
       onOpenChange: (open) => {
         if (!open) dismiss();
       },

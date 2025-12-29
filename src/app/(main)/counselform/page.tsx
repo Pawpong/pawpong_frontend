@@ -36,7 +36,7 @@ import useBrowserNavigationGuard from '@/hooks/use-browser-navigation-guard';
  * useSearchParams를 사용하므로 Suspense 경계 내에 있어야 함
  */
 function CounselFormContent() {
-  const isMdUp = useBreakpoint('md');
+  const isLgUp = useBreakpoint('lg');
   const { toast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -227,17 +227,17 @@ function CounselFormContent() {
           </button>
         </ExitConfirmDialog>
       </div>
-      <div className="min-h-screen flex w-full flex-col md:flex-row">
-        {/* 왼쪽 배너 영역: md 이상에서만 표시 */}
-        {isMdUp && (
-          <div className="md:w-[648px] md:pr-8 bg-tertiary-500">
-            <div className="md:h-[744px]">
+      <div className="min-h-screen flex w-full flex-col lg:flex-row">
+        {/* 왼쪽 배너 영역: lg 이상에서만 표시 */}
+        {isLgUp && (
+          <div className="lg:w-[648px] lg:pr-8 bg-tertiary-500">
+            <div className="lg:h-[744px]">
               <CounselBannerCarousel />
             </div>
           </div>
         )}
 
-        <div className="w-full md:w-1/2 flex flex-col">
+        <div className="w-full lg:w-1/2 flex flex-col">
           <div className="flex w-full flex-col items-center pb-20 md:pb-24  md:px-4 lg:px-0.5">
             <div className="flex flex-col gap-12 md:gap-8 w-full">
               {/* 개인정보 동의 섹션 */}
