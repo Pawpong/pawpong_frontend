@@ -249,19 +249,21 @@ export default function Page({ params }: PageProps) {
     : '';
   // API 응답에서 직접 priceRange 추출 (백엔드가 priceRange: { min, max, display } 형식으로 반환)
   // 비회원은 가격 정보를 볼 수 없음
-  // 가격 상태:
-  // - min: -1, max: -1 -> 가격 미설정 (기본값)
-  // - min: 0, max: 0 -> 상담 후 공개
-  // - 그 외 -> 실제 가격 범위
+  // 가격 상태 (display 필드 우선):
+  // - display: 'not_set' -> 가격 미설정
+  // - display: 'consultation' -> 상담 후 공개
+  // - display: 'range' -> 실제 가격 범위
   const apiPriceRange = (profileData as BreederDetailApi).priceRange;
   const priceRangeStr = user
-    ? !apiPriceRange || (apiPriceRange.min === -1 && apiPriceRange.max === -1)
+    ? !apiPriceRange
       ? '가격 미설정'
-      : apiPriceRange.min === 0 && apiPriceRange.max === 0
-      ? '상담 후 공개'
+      : apiPriceRange.display === 'not_set'
+      ? '가격 미설정'
       : apiPriceRange.display === 'consultation'
       ? '상담 후 공개'
-      : `${apiPriceRange.min?.toLocaleString()}원 ~ ${apiPriceRange.max?.toLocaleString()}원`
+      : apiPriceRange.display === 'range'
+      ? `${apiPriceRange.min?.toLocaleString()}원 ~ ${apiPriceRange.max?.toLocaleString()}원`
+      : '가격 미설정'
     : null;
 
   // API 응답에서 직접 값 추출 (profileImage, location, breederLevel 등)

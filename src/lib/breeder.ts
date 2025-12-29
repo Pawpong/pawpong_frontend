@@ -33,6 +33,7 @@ export interface BreederLocationDto {
 export interface BreederPriceRangeDto {
   minPrice: number;
   maxPrice: number;
+  display?: string;
 }
 
 /** 브리더 프로필 상세 정보 DTO */
