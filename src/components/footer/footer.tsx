@@ -33,7 +33,7 @@ export default function Footer() {
               className="cursor-pointer w-6 h-6 flex items-center justify-center hover:text-primary-500 active:text-primary-500 transition-colors group"
               aria-label="카카오톡 채널"
             >
-              <Kakao className="w-6 h-6 pointer-events-none group-hover:[&_path]:fill-[var(--color-primary-500)] group-active:[&_path]:fill-[var(--color-primary-500)]" />
+              <Kakao className="w-6 h-6 pointer-events-none [&_path]:fill-[var(--color-grayscale-gray5)] group-hover:[&_path]:fill-[var(--color-primary-500)] group-active:[&_path]:fill-[var(--color-primary-500)]" />
             </Link>
             <Link
               href="https://www.instagram.com/pawpong_official/"
