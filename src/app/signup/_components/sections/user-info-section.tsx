@@ -3,6 +3,7 @@
 import Check from '@/assets/icons/check-blue.svg';
 import ErrorIcon from '@/assets/icons/error';
 import CheckboxForm from '@/components/signup-form-section/checkbox-form';
+import CheckboxFormLabel from '@/components/signup-form-section/checkbox-form-label';
 import CheckboxFormList from '@/components/signup-form-section/checkbox-form-list';
 import NextButton from '@/components/signup-form-section/next-button';
 import SignupFormDescription from '@/components/signup-form-section/signup-form-description';
@@ -12,8 +13,10 @@ import SignupFormSection from '@/components/signup-form-section/signup-form-sect
 import SignupFormTitle from '@/components/signup-form-section/signup-form-title';
 import UndoButton from '@/components/signup-form-section/undo-button';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
+import { Label } from '@/components/ui/label';
 import { checkEmailDuplicate, sendVerificationCode, verifyCode } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import useSignupFormStore, { AgreementName } from '@/stores/signup-form-store';
@@ -66,6 +69,8 @@ export default function UserInfoSection() {
   const { toast } = useToast();
   const agreements = useSignupFormStore((e) => e.agreements);
   const setAgreements = useSignupFormStore((e) => e.setAgreements);
+  const age14Checked = useSignupFormStore((e) => e.age14Checked);
+  const setAge14Checked = useSignupFormStore((e) => e.setAge14Checked);
   const phoneNumber = useSignupFormStore((e) => e.phoneNumber);
   const setPhoneNumber = useSignupFormStore((e) => e.setPhoneNumber);
   const email = useSignupFormStore((e) => e.email);
@@ -88,6 +93,7 @@ export default function UserInfoSection() {
   const [timeLeft, setTimeLeft] = useState(180); // 3분 = 180초
   const [timerActive, setTimerActive] = useState(false);
   const [showAgreementError, setShowAgreementError] = useState(false);
+  const [showAge14Error, setShowAge14Error] = useState(false);
   const [showEmailError, setShowEmailError] = useState(false);
   const [showPhoneError, setShowPhoneError] = useState(false);
   const [phoneErrorMessage, setPhoneErrorMessage] = useState<string>('');
@@ -386,6 +392,20 @@ export default function UserInfoSection() {
             </div>
           )}
         </div>
+        <div className="flex flex-col gap-2.5">
+          <div className="py-2 flex items-center">
+            <Label className="flex-1">
+              <Checkbox checked={age14Checked} onCheckedChange={setAge14Checked} />
+              <CheckboxFormLabel>본인은 만 14세 이상입니다.</CheckboxFormLabel>
+            </Label>
+          </div>
+          {showAge14Error && !age14Checked && (
+            <div className="flex items-center gap-0.5">
+              <ErrorIcon className="size-3 shrink-0" />
+              <p className="text-caption font-medium text-status-error-500">필수 약관에 동의해 주세요.</p>
+            </div>
+          )}
+        </div>
         <div className="flex flex-col gap-4">
           <NextButton
             onClick={() => {
@@ -421,6 +441,14 @@ export default function UserInfoSection() {
                 hasError = true;
               } else {
                 setShowAgreementError(false);
+              }
+
+              // 14세 이상 동의 검증
+              if (!age14Checked) {
+                setShowAge14Error(true);
+                hasError = true;
+              } else {
+                setShowAge14Error(false);
               }
 
               // 모든 검증 통과 시 다음 단계로
