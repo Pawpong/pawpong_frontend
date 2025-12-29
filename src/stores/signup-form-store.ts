@@ -65,6 +65,9 @@ interface SignupFormStore {
   oathChecked: boolean;
   setOathChecked: (checked: boolean) => void;
 
+  age14Checked: boolean;
+  setAge14Checked: (checked: boolean) => void;
+
   nickname: string;
   setNickname: (nickname: string) => void;
 
@@ -139,6 +142,9 @@ const useSignupFormStore = create<SignupFormStore>((set) => ({
 
   oathChecked: false,
   setOathChecked: (checked: boolean) => set({ oathChecked: checked }),
+
+  age14Checked: false,
+  setAge14Checked: (checked: boolean) => set({ age14Checked: checked }),
 
   nickname: '',
   setNickname: (nickname: string) => set({ nickname }),
