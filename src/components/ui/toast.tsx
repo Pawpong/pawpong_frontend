@@ -44,7 +44,7 @@ const Toast = React.forwardRef<
     <ToastPrimitives.Root
       ref={ref}
       className={cn(
-        'group pointer-events-auto relative flex w-full items-center justify-between gap-1 rounded-full bg-[#4f3b2e] px-4 py-[10px] pr-2 shadow-[0px_0px_13px_0px_rgba(12,17,29,0.08)] transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
+        'group pointer-events-auto relative flex w-full items-center justify-between gap-1 rounded-full bg-[#4f3b2e] px-4 py-[10px] pr-2 shadow-[0px_0px_13px_0px_rgba(12,17,29,0.08)] transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full',
         className,
       )}
       {...props}

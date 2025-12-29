@@ -26,6 +26,7 @@ import { useEffect, useState } from 'react';
 import PrivacyDialogTrigger from '../privacy-dialog-trigger';
 import TermDialogTrigger from '../term-dialog-trigger';
 import { useToast } from '@/hooks/use-toast';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
 
 const messages: Array<{ type: 'success' | 'error'; text: string }> = [
   { type: 'success', text: '휴대폰 번호 인증을 성공했어요' },
@@ -67,6 +68,7 @@ const checkboxInfo: {
 export default function UserInfoSection() {
   const router = useRouter();
   const { toast } = useToast();
+  const isLg = useBreakpoint('lg'); // 왼쪽 배너 영역이 있는지 확인 (lg 이상에서만 표시)
   const agreements = useSignupFormStore((e) => e.agreements);
   const setAgreements = useSignupFormStore((e) => e.setAgreements);
   const age14Checked = useSignupFormStore((e) => e.age14Checked);
@@ -118,9 +120,8 @@ export default function UserInfoSection() {
       setTimerActive(true); // 타이머 시작
       setTimeLeft(180); // 3분 초기화
       toast({
-        title: '인증번호 발송 완료',
-        description: '휴대폰으로 인증번호를 발송했습니다.',
-        position: 'split',
+        description: '인증 번호가 발송되었습니다',
+        position: isLg ? 'split' : 'default', // 왼쪽 영역 있을 때: split, 없을 때: default
       });
     } catch (error) {
       // API 에러 메시지 파싱
