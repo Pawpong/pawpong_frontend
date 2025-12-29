@@ -115,11 +115,11 @@ export default function ReportDialog({
     <>
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent
-          className="max-w-[24.5625rem] sm:max-w-[37.5rem] w-full p-0 gap-0 overflow-hidden rounded-2xl"
+          className="w-full md:max-w-[37.5rem] h-full md:h-auto md:max-h-[37.5rem] p-0 gap-0 overflow-hidden rounded-2xl flex flex-col"
           showCloseButton={false}
         >
           {/* 상단 헤더 */}
-          <div className="bg-white flex flex-col gap-[10px] items-start overflow-clip pb-[10px] pt-6 px-6 shrink-0 w-full">
+          <div className="bg-white flex flex-col gap-[10px] items-start overflow-clip pb-[16px] pt-4 px-5 shrink-0 w-full">
             <div className="flex gap-1 items-center justify-end relative shrink-0 w-full">
               <DialogClose asChild>
                 <Button variant="secondary" size="icon">
@@ -133,7 +133,7 @@ export default function ReportDialog({
           <div className="h-px bg-grayscale-gray2 w-full shrink-0" />
 
           {/* 콘텐츠 영역 */}
-          <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-9 h-[452px] items-start overflow-x-clip overflow-y-auto pb-[7.44rem] sm:pb-10 pt-6 px-6 relative shrink-0 w-full">
+          <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-9 flex-1 min-h-0 items-start overflow-x-clip overflow-y-auto pb-[7.44rem] sm:pb-10 md:h-[452px] md:flex-none pt-6 px-6 relative w-full">
             {/* 제목 */}
             <div className="flex flex-col gap-1.5 items-start not-italic relative shrink-0">
               <DialogTitle className="font-semibold leading-[32px] relative shrink-0 text-primary-500 text-[20px]">
@@ -207,7 +207,7 @@ export default function ReportDialog({
           <div className="bg-white flex gap-[10px] items-start justify-end overflow-clip py-4 px-5 sm:pb-6 sm:pt-4 sm:px-6 relative rounded-bl-2xl rounded-br-2xl shrink-0 w-full">
             <button
               type="button"
-              className={`button-brown ${
+              className={`button-brown text-sm font-medium leading-[140%] tracking-[-0.0175rem] rounded ${
                 !canSubmit
                   ? 'bg-[var(--color-status-disabled)] text-[var(--color-grayscale-gray4)] cursor-not-allowed'
                   : ''

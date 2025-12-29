@@ -118,7 +118,7 @@ export default function PetDetailDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-[37.5rem] w-full max-h-[37.5rem] overflow-hidden flex flex-col p-0 gap-0 rounded-2xl"
+        className="w-full md:max-w-[37.5rem] h-full md:h-auto md:max-h-[37.5rem] overflow-hidden flex flex-col p-0 gap-0 rounded-2xl"
         showCloseButton={false}
       >
         <VisuallyHidden>
