@@ -41,7 +41,7 @@ const messages: Array<{ type: 'success' | 'error'; text: string }> = [
 const messageTypes: Record<'success' | 'error', { className: string; icon: React.FC<React.SVGProps<SVGSVGElement>> }> =
   {
     success: { className: 'text-status-success-500', icon: Check },
-    error: { className: 'text-status-error', icon: ErrorIcon },
+    error: { className: 'text-status-error-500', icon: ErrorIcon },
   };
 
 const checkboxInfo: {
