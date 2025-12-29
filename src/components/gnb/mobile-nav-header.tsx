@@ -4,15 +4,18 @@ import Logo from '@/assets/logo/logo';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import NoticeButton from './notice-button';
+import LoginButton from './login-button';
 import Close from '@/assets/icons/close';
 import { SheetClose } from '../ui/sheet';
 import { usePathname } from 'next/navigation';
 import { useNavigationGuardContext } from '@/contexts/navigation-guard-context';
+import { useAuthStore } from '@/stores/auth-store';
 import { MouseEvent } from 'react';
 
 export default function MobileNavHeader() {
   const pathname = usePathname();
   const guardContext = useNavigationGuardContext();
+  const { user } = useAuthStore();
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
     // Context가 없거나 홈 페이지면 기본 동작 허용
@@ -35,7 +38,7 @@ export default function MobileNavHeader() {
         </Link>
       </SheetClose>
       <div className="flex gap-4 items-center">
-        <NoticeButton />
+        {user ? <NoticeButton /> : <LoginButton />}
         <SheetClose asChild>
           <button className="flex items-center justify-center size-6">
             <Close className="size-5" />
