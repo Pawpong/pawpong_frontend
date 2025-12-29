@@ -392,7 +392,7 @@ export default function UserInfoSection() {
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-2">
           <div className="py-2 flex items-center">
             <Label className="flex-1">
               <Checkbox checked={age14Checked} onCheckedChange={setAge14Checked} />
