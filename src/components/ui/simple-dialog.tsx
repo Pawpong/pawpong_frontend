@@ -48,7 +48,7 @@ function SimpleDialogContent({
     <DialogContent
       showCloseButton={false}
       {...props}
-      className={cn('p-4 gap-8 max-w-90 rounded-[--spacing(4)]', className)}
+      className={cn('pt-8 px-4 pb-4 gap-8 max-w-90 rounded-[--spacing(4)]', className)}
     >
       {children}
     </DialogContent>
