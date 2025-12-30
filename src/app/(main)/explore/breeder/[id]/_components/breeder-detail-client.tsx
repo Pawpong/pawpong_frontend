@@ -397,13 +397,23 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
 
           {!isPetsLoading && (
             <>
-              <BreedingAnimals data={breedingAnimals} breederId={breederId} breederDescription={breederDescription} isOwnProfile={isOwnProfile} />
+              <BreedingAnimals
+                data={breedingAnimals}
+                breederId={breederId}
+                breederDescription={breederDescription}
+                isOwnProfile={isOwnProfile}
+              />
               <Separator className="my-12" />
             </>
           )}
 
           {!isParentPetsLoading && (
-            <Parents data={parentPets} breederId={breederId} breederDescription={breederDescription} isOwnProfile={isOwnProfile} />
+            <Parents
+              data={parentPets}
+              breederId={breederId}
+              breederDescription={breederDescription}
+              isOwnProfile={isOwnProfile}
+            />
           )}
 
           {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} breederId={breederId} />}
@@ -412,7 +422,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
       {!isLg && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2  w-full max-w-[22.0625rem]">
           <Button
-            variant="counsel"
+            variant="tertiary"
             className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"
             type="button"
             onClick={handleCounselClick}
