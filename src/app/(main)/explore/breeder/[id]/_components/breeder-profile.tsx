@@ -98,8 +98,8 @@ export default function BreederProfile({
         {/* 데스크탑(lg)에서만 버튼 표시 */}
         {isLg && (
           <Button
-            variant="counsel"
-            className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"
+            variant="tertiary"
+            className="w-full h-12 text-body-s font-semibold text-primary-500"
             type="button"
             onClick={handleCounselClick}
             disabled={isOwnProfile || isBreeder}
