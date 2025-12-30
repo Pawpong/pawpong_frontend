@@ -43,12 +43,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   // 브리더 정보 추출
   const breederName = breederData.breederName || '브리더';
   const profileInfo = breederData.profileInfo;
-  const location = breederData.location ||
-    (profileInfo?.locationInfo
-      ? `${profileInfo.locationInfo.cityName} ${profileInfo.locationInfo.districtName}`
-      : '');
+  const location =
+    breederData.location ||
+    (profileInfo?.locationInfo ? `${profileInfo.locationInfo.cityName} ${profileInfo.locationInfo.districtName}` : '');
   const description = breederData.description || profileInfo?.profileDescription || '';
-  const specialization = breederData.specialization || breederData.specializationTypes || profileInfo?.specializationAreas || [];
+  const specialization =
+    breederData.specialization || breederData.specializationTypes || profileInfo?.specializationAreas || [];
   const breeds = breederData.breeds || specialization;
   const profileImage = breederData.profileImage || breederData.profileImageFileName;
   const representativePhotos = breederData.representativePhotos || profileInfo?.profilePhotos || [];
@@ -57,7 +57,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const breedsText = breeds.length > 0 ? breeds.slice(0, 3).join(', ') : '';
   const seoDescription = description
     ? `${breederName} 브리더 - ${description.slice(0, 100)}${description.length > 100 ? '...' : ''}`
-    : `${breederName} 브리더${location ? ` | ${location}` : ''}${breedsText ? ` | ${breedsText} 전문` : ''} - 포퐁에서 검증된 브리더의 분양 정보를 확인하세요.`;
+    : `${breederName} 브리더${location ? ` | ${location}` : ''}${
+        breedsText ? ` | ${breedsText} 전문` : ''
+      } - 포퐁에서 검증된 브리더의 분양 정보를 확인하세요.`;
 
   // OG 이미지 선택 (대표 사진 > 프로필 이미지 > 기본 이미지)
   const ogImage = representativePhotos[0] || profileImage || 'https://pawpong.kr/og-image.png';
