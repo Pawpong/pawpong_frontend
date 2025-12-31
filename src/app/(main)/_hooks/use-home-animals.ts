@@ -27,7 +27,7 @@ const fetchHomeAnimals = async (): Promise<HomeAnimalsResponse> => {
       name: pet.name,
       sex: 'male', // 백엔드 API에 성별 정보가 없어 기본값 사용
       birth: `${pet.ageInMonths}개월`, // 개월수를 birth로 표시
-      price: pet.price.toLocaleString('ko-KR') + '원', // 숫자를 한국 통화 형식 문자열로 변환
+      price: pet.price !== null ? pet.price.toLocaleString('ko-KR') + '원' : null, // 비로그인 시 null
       breed: pet.breed,
       status: 'available' as const, // 분양 가능 상태
     }));
