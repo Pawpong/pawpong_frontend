@@ -32,7 +32,7 @@ export interface AvailablePetDto {
   breed: string;
   breederId: string;
   breederName: string;
-  price: number;
+  price: number | null; // 비로그인 시 null
   mainPhoto: string;
   ageInMonths: number;
   location: {

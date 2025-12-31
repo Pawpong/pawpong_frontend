@@ -13,6 +13,7 @@ import { useCounselFormStore } from '@/stores/counsel-form-store';
 import { useAuthStore } from '@/stores/auth-store';
 import { cn } from '@/lib/utils';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
+import { Lock } from 'lucide-react';
 
 import RightArrow from '@/assets/icons/right-arrow.svg';
 import Close from '@/assets/icons/close';
@@ -164,8 +165,17 @@ export default function PetDetailDialog({
                   <Icon className={cn('w-5 h-5', sexInfo[pet.sex].className)} />
                 </div>
                 <div className="text-body-s text-grayscale-gray5">{pet.birth}</div>
-                {type === 'pet' && pet.price !== null && (
-                  <div className="text-body-s text-grayscale-gray5">{pet.price}</div>
+                {type === 'pet' && (
+                  <div className="text-body-s text-grayscale-gray5">
+                    {pet.price !== null && pet.price !== undefined ? (
+                      pet.price
+                    ) : (
+                      <span className="inline-flex items-center gap-1">
+                        <Lock className="w-3 h-3" />
+                        로그인 후 비용 확인 가능
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
 

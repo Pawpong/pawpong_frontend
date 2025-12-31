@@ -141,7 +141,7 @@
   --color-tertiary-800: oklch(76.2% 0.032 91.1);
 
   /* Status Colors */
-  --color-status-disabled: oklch(87.5% 0 0);
+  --color-status-disabled: #e1e1e1;
   --color-status-error-500: oklch(63.5% 0.223 26.8);
   --color-status-error-100: oklch(94.6% 0.032 22.4);
   --color-status-warning-500: oklch(74.6% 0.183 65.7);
@@ -154,7 +154,7 @@
   --color-grayscale-gray7: oklch(30.5% 0 0);
   --color-grayscale-gray6: #545454;
   --color-grayscale-gray5: #888;
-  --color-grayscale-gray4: oklch(63.5% 0 0);
+  --color-grayscale-gray4: #a0a0a0;
   --color-grayscale-gray3: #cccccc;
   --color-grayscale-gray2: #e1e1e1;
   --color-grayscale-gray1: #f5f5f5;

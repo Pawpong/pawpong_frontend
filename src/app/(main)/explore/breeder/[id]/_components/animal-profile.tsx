@@ -70,7 +70,7 @@ export default function AnimalProfile({
             ) : (
               <span className="inline-flex items-center gap-1">
                 <Lock className="w-3 h-3" />
-                로그인 후 확인
+                로그인 후 비용 확인 가능
               </span>
             )}
           </div>
