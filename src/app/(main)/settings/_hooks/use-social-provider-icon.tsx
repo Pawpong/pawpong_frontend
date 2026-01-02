@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { normalizeSocialProvider } from './social-provider';
-import { renderSocialProviderIcon } from './social-provider-icon';
+import { renderSocialProviderIcon } from '../_components/social-provider-icon';
 
 /* =========================
    Hook: 소셜 프로바이더 아이콘
