@@ -3,7 +3,7 @@ import Google from '@/assets/logo/google';
 import Naver from '@/assets/logo/naver';
 import Apple from '@/assets/logo/apple';
 import { ReactNode } from 'react';
-import type { SocialProvider } from './social-provider';
+import type { SocialProvider } from '../_hooks/social-provider';
 
 const SOCIAL_PROVIDER_ICON_MAP: Record<SocialProvider, (props: { className?: string }) => ReactNode> = {
   kakao: (props) => <Kakao {...props} />,

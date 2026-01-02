@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useMemo, useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import ProfileBasicInfo from './_components/profile-basic-info';
 import ParentsInfo from './_components/parents-info';
 import BreedingAnimals from './_components/breeding-animals';
@@ -30,6 +31,7 @@ import ExitConfirmDialog from '@/components/exit-confirmation-dialog';
 import useBrowserNavigationGuard from '@/hooks/use-browser-navigation-guard';
 
 type BreederProfileApi = {
+  breederId?: string;
   breederName?: string;
   breeds?: string[];
   profileImageFileName?: string | null;
@@ -75,6 +77,7 @@ type BreederProfileApi = {
 
 export default function ProfilePage() {
   const isLgUp = useBreakpoint('lg');
+  const router = useRouter();
   const { toast } = useToast();
   const { setProfileData } = useProfileStore();
   const queryClient = useQueryClient();
@@ -239,13 +242,9 @@ export default function ProfilePage() {
         // - display: 'not_set' -> 빈 문자열 + isCounselMode: false
         // - display: 'range' -> 실제 가격 + isCounselMode: false
         minPrice:
-          apiDisplay === 'range' && apiMinPrice !== undefined && apiMinPrice !== null
-            ? apiMinPrice.toString()
-            : '',
+          apiDisplay === 'range' && apiMinPrice !== undefined && apiMinPrice !== null ? apiMinPrice.toString() : '',
         maxPrice:
-          apiDisplay === 'range' && apiMaxPrice !== undefined && apiMaxPrice !== null
-            ? apiMaxPrice.toString()
-            : '',
+          apiDisplay === 'range' && apiMaxPrice !== undefined && apiMaxPrice !== null ? apiMaxPrice.toString() : '',
         // 상담 후 공개 모드 여부를 display 필드로 판단
         isCounselMode: isCounselPrice,
         parents: parentsData,
@@ -495,6 +494,12 @@ export default function ProfilePage() {
         title: '프로필이 수정되었습니다.',
         position: 'split',
       });
+
+      // 내 프로필 페이지로 이동
+      const breederId = (apiProfileData as BreederProfileApi)?.breederId;
+      if (breederId) {
+        router.push(`/explore/breeder/${breederId}`);
+      }
     } catch (error) {
       toast({
         title: '프로필 수정에 실패했습니다.',
@@ -545,9 +550,9 @@ export default function ProfilePage() {
           {/* 수정하기 버튼 */}
           <div className="fixed bottom-6 left-1/2 -translate-x-1/2 px-8 w-full max-w-[424px] md:bottom-10 md:left-1/2 md:-translate-x-1/2 md:w-[424px] md:px-0 lg:left-[calc(50%+25%)]">
             <Button
-              variant={undefined}
+              variant="tertiary"
               disabled={isDisabled}
-              className="button-edit-default hover:bg-secondary-600 flex h-12 items-center justify-center min-w-20 px-4 py-3 rounded-lg w-full md:w-[424px]"
+              className=" flex h-12 items-center justify-center min-w-20 px-4 py-3 rounded-lg w-full md:w-[424px]"
               onClick={handleEdit}
             >
               수정하기
