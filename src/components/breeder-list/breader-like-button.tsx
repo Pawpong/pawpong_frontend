@@ -1,8 +1,10 @@
 'use client';
 
 import Heart from '@/assets/icons/heart.svg';
-import HeartBlack from '@/assets/icons/heart-black.svg';
-import HeartBlackFill from '@/assets/icons/heart-black-fill.svg';
+// import HeartBlack from '@/assets/icons/heart-black.svg';
+// import HeartBlackFill from '@/assets/icons/heart-black-fill.svg';
+import HeartGray from '@/assets/icons/heart-gray-no-fill.svg';
+import HeartGrayFill from '@/assets/icons/heart-gray-fill.svg';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import HeartFill from '@/assets/icons/heart-fill.svg';
@@ -57,7 +59,7 @@ export default function BreederLikeButton({
   };
 
   // 찜하기 상태에 따라 아이콘 선택
-  const HeartIcon = isLiked ? (hasImage ? HeartFill : HeartBlackFill) : hasImage ? Heart : HeartBlack;
+  const HeartIcon = isLiked ? (hasImage ? HeartFill : HeartGrayFill) : hasImage ? Heart : HeartGray;
 
   return (
     <Button
