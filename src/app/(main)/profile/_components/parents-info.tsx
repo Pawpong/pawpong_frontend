@@ -328,7 +328,7 @@ export default function ParentsInfo({
                   render={({ field }) => (
                     <Textarea
                       {...field}
-                      placeholder="소개"
+                      placeholder="아이에 성격과 특징에 대해 자유롭게 소개해주세요!"
                       maxLength={1500}
                       showLength={(field.value?.length ?? 0) > 0}
                       currentLength={field.value?.length || 0}
