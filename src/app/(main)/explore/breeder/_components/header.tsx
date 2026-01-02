@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import ArrowRight from '@/assets/icons/arrow-right';
 import Paw from '@/assets/icons/paw';
-import HeartGray from '@/assets/icons/heart-gray-fill.svg';
+import HeartBlackFill from '@/assets/icons/heart-black-fill.svg';
 import Siren from '@/assets/icons/siren';
 import Pencil from '@/assets/icons/pixel-pencil.svg';
 import { Button } from '@/components/ui/button';
@@ -75,11 +75,7 @@ export default function Header({ breederNickname, breederId, hideActions = false
                   onClick={handleLikeClick}
                   disabled={isLoading}
                 >
-                  {isLiked ? (
-                    <HeartGray className="size-7" style={{ shapeRendering: 'crispEdges' }} />
-                  ) : (
-                    <Paw className="size-7" />
-                  )}
+                  {isLiked ? <HeartBlackFill className="size-7" /> : <Paw className="size-7" />}
                 </Button>
               </>
             )}
