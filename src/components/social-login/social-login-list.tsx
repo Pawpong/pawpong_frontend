@@ -5,13 +5,15 @@ import Kakao from '@/assets/logo/kakao';
 import Naver from '@/assets/logo/naver';
 import SocialLoginButton from './social-login-button';
 import SocialLoginIcon from './social-login-icon';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 // trailing slash 제거하여 이중 슬래시 방지
 const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080').replace(/\/+$/, '');
 
 export default function SocialLoginList() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnUrl = searchParams.get('returnUrl') || '';
 
   // 이미 로그인되어 있는지 확인
   // 쿠키가 있으면 탐색 페이지로 이동 (use-auth-guard에서 토큰 유효성 검증)
@@ -37,7 +39,10 @@ export default function SocialLoginList() {
       className: 'bg-[#FEE500] text-grayscale-black! hover:bg-[#FEE500]/80',
       onClick: () => {
         if (checkAlreadyLoggedIn()) return;
-        window.location.href = `${API_BASE_URL}/api/auth/kakao`;
+        const url = returnUrl
+          ? `${API_BASE_URL}/api/auth/kakao?returnUrl=${encodeURIComponent(returnUrl)}`
+          : `${API_BASE_URL}/api/auth/kakao`;
+        window.location.href = url;
       },
     },
     {
@@ -46,7 +51,10 @@ export default function SocialLoginList() {
       className: 'bg-[#03C75A] text-grayscale-white! hover:bg-[#03C75A]/80',
       onClick: () => {
         if (checkAlreadyLoggedIn()) return;
-        window.location.href = `${API_BASE_URL}/api/auth/naver`;
+        const url = returnUrl
+          ? `${API_BASE_URL}/api/auth/naver?returnUrl=${encodeURIComponent(returnUrl)}`
+          : `${API_BASE_URL}/api/auth/naver`;
+        window.location.href = url;
       },
     },
     {
@@ -55,7 +63,10 @@ export default function SocialLoginList() {
       className: 'bg-tertiary-500 text-grayscale-black! hover:bg-tertiary-500/80',
       onClick: () => {
         if (checkAlreadyLoggedIn()) return;
-        window.location.href = `${API_BASE_URL}/api/auth/google`;
+        const url = returnUrl
+          ? `${API_BASE_URL}/api/auth/google?returnUrl=${encodeURIComponent(returnUrl)}`
+          : `${API_BASE_URL}/api/auth/google`;
+        window.location.href = url;
       },
     },
   ];
