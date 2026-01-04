@@ -46,7 +46,7 @@ function LoginSuccessContent() {
           // JWT에서 사용자 정보 추출하여 상태 설정
           let userRole: 'adopter' | 'breeder' = 'adopter';
           let userId = '';
-          let loginMethod = 'oauth'; // OAuth 소셜 로그인
+          const loginMethod = 'oauth'; // OAuth 소셜 로그인
 
           try {
             const payload = JSON.parse(atob(accessToken.split('.')[1]));
@@ -68,8 +68,9 @@ function LoginSuccessContent() {
             // JWT 파싱 실패해도 로그인 진행
           }
 
-          // 로그인 성공 - 탐색 페이지로 이동
-          router.replace('/explore');
+          // 로그인 성공 - returnUrl이 있으면 그곳으로, 없으면 홈으로 이동
+          const returnUrl = searchParams.get('returnUrl') || '/';
+          router.replace(returnUrl);
         } else {
           console.error('쿠키 설정 실패');
           setError('로그인 처리 중 오류가 발생했습니다.');

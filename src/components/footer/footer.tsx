@@ -22,6 +22,14 @@ export default function Footer() {
             <Link href="/terms-of-privacy" className="text-[11px] md:text-xs font-semibold text-grayscale-gray5 ">
               개인정보처리방침
             </Link>
+            <Link
+              href="https://brassy-client-c0a.notion.site/2cc2f1c4b966807f8449ccff62111c02"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] md:text-xs font-semibold text-grayscale-gray5 "
+            >
+              광고・제휴
+            </Link>
           </div>
 
           {/* SNS 아이콘 */}
