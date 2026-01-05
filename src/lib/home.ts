@@ -29,12 +29,12 @@ export interface FaqDto {
 export interface AvailablePetDto {
   petId: string;
   name: string;
-  birthDate?: string | null; // 백엔드에서 반환하지만 null일 수 있음
   breed: string;
   breederId: string;
   breederName: string;
   price: number | null; // 비로그인 시 null
   mainPhoto: string;
+  birthDate: string | null; // 생년월일
   ageInMonths: number;
   location: {
     city: string;
