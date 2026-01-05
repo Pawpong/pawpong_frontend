@@ -34,6 +34,7 @@ export interface AvailablePetDto {
   breederName: string;
   price: number | null; // 비로그인 시 null
   mainPhoto: string;
+  birthDate: string | null; // 생년월일
   ageInMonths: number;
   location: {
     city: string;
