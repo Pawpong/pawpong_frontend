@@ -19,17 +19,21 @@ import BreederTags from '@/components/breeder-list/breeder-tags';
 import LevelBadge from '@/components/level-badge';
 import { Button } from '@/components/ui/button';
 import GrayDot from '@/assets/icons/gray-dot.svg';
+import ExploreBreederAd from './explore-breeder-ad';
 import DownArrow from '@/assets/icons/long-down-arrow.svg';
 import { useBreeders } from '../_hooks/use-breeders';
 import { useFilterStore } from '@/stores/filter-store';
 import { mapFiltersToParams } from '@/lib/filter-mapper';
 import { useSegment } from '@/hooks/use-segment';
-import type { SearchBreederParams } from '@/lib/breeder';
+import type { Breeder as BreederType, SearchBreederParams } from '@/lib/breeder';
 import { useAuthStore } from '@/stores/auth-store';
 import { Lock } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 export default function SiteBreederList() {
+  const AD_INSERT_INDEX = 20;
+  const AD_PLACEHOLDER = { __type: 'ad' as const };
+
   // 로그인 상태 확인
   const { user } = useAuthStore();
   const isLoggedIn = !!user;
@@ -69,7 +73,11 @@ export default function SiteBreederList() {
     );
   }
 
-  const breeders = data?.pages.flatMap((page) => page.items) || [];
+  const breeders = (data?.pages.flatMap((page) => page.items) || []) as BreederType[];
+  const shouldInsertAd = false; // breeders.length >= AD_INSERT_INDEX;
+  const breedersWithAd = shouldInsertAd
+    ? [...breeders.slice(0, AD_INSERT_INDEX), AD_PLACEHOLDER, ...breeders.slice(AD_INSERT_INDEX)]
+    : breeders;
 
   if (breeders.length === 0) {
     return (
@@ -81,8 +89,20 @@ export default function SiteBreederList() {
 
   return (
     <BreederList>
-      {breeders.map((breeder, index) => {
-        const isLastBeforeMore = hasNextPage && index === breeders.length - 1;
+      {breedersWithAd.map((item, index) => {
+        const isAd = '__type' in item && item.__type === 'ad';
+        const isLastBeforeMore = hasNextPage && index === breedersWithAd.length - 1;
+
+        if (isAd) {
+          return (
+            <div key="explore-breeder-ad">
+              <ExploreBreederAd />
+              {index < breedersWithAd.length - 1 && !isLastBeforeMore && <Separator className="my-4" />}
+            </div>
+          );
+        }
+
+        const breeder = item as BreederType;
         return (
           <div key={`${breeder.breederId}-${index}`}>
             <Link href={`/explore/breeder/${breeder.breederId}`} className="block">
@@ -148,7 +168,7 @@ export default function SiteBreederList() {
                 </div>
               </Breeder>
             </Link>
-            {index < breeders.length - 1 && !isLastBeforeMore && <Separator className="my-4" />}
+            {index < breedersWithAd.length - 1 && !isLastBeforeMore && <Separator className="my-4" />}
           </div>
         );
       })}
