@@ -29,7 +29,6 @@ export interface FaqDto {
 export interface AvailablePetDto {
   petId: string;
   name: string;
-  birthDate: string;
   breed: string;
   breederId: string;
   breederName: string;
