@@ -70,7 +70,7 @@ function LoginSuccessContent() {
 
           // 로그인 성공 - returnUrl이 있으면 그곳으로, 없으면 홈으로 이동
           const returnUrl = searchParams.get('returnUrl') || '/';
-          console.log('[Login Success] returnUrl:', returnUrl, 'searchParams:', Array.from(searchParams.entries()));
+
           router.replace(returnUrl);
         } else {
           console.error('쿠키 설정 실패');
