@@ -26,7 +26,7 @@ const fetchHomeAnimals = async (): Promise<HomeAnimalsResponse> => {
       avatarUrl: pet.mainPhoto,
       name: pet.name,
       sex: 'male', // 백엔드 API에 성별 정보가 없어 기본값 사용
-      birth: `${pet.birthDate}일 생`, // 개월수를 birth로 표시
+      birth: `${pet.ageInMonths}일 생`, // 개월수를 birth로 표시
       price: pet.price !== null ? pet.price.toLocaleString('ko-KR') + '원' : null, // 비로그인 시 null
       breed: pet.breed,
       status: 'available' as const, // 분양 가능 상태
