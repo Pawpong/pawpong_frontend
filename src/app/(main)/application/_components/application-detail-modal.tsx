@@ -72,7 +72,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
   });
 
   const dialogContentClass =
-    'w-full h-full lg:w-[37.5rem] lg:h-[37.5rem] lg:translate-x-[-50%] lg:translate-y-[-50%] lg:top-[50%] lg:left-[50%] top-0 left-0 translate-x-0 translate-y-0 rounded-none lg:rounded-2xl border-none';
+    'w-full h-full md:w-[37.5rem] md:h-[37.5rem] md:translate-x-[-50%] md:translate-y-[-50%] md:top-[50%] md:left-[50%] top-0 left-0 translate-x-0 translate-y-0 rounded-none md:rounded-2xl md:overflow-hidden border-none';
 
   if (isLoading) {
     return (
@@ -82,7 +82,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
             <DialogTitle>로딩 중</DialogTitle>
           </VisuallyHidden>
           {/* 헤더 */}
-          <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none lg:rounded-t-2xl"></div>
+          <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none md:rounded-t-2xl"></div>
           {/* 상단 구분선 */}
           <div className="h-px bg-[#E1E1E1]" />
           {/* 로딩 영역 */}
@@ -92,7 +92,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
           {/* 하단 구분선 */}
           <div className="h-px bg-[#E1E1E1]" />
           {/* 하단 버튼 영역 (빈 공간) */}
-          <div className="bg-white px-6 py-4 rounded-b-none lg:rounded-b-2xl h-[57px]"></div>
+          <div className="bg-white px-6 py-4 rounded-b-none md:rounded-b-2xl h-[57px]"></div>
         </DialogContent>
       </Dialog>
     );
@@ -106,7 +106,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
             <DialogTitle>오류</DialogTitle>
           </VisuallyHidden>
           {/* 헤더 */}
-          <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none lg:rounded-t-2xl"></div>
+          <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none md:rounded-t-2xl"></div>
           {/* 상단 구분선 */}
           <div className="h-px bg-[#E1E1E1]" />
           {/* 오류 영역 */}
@@ -119,7 +119,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
           {/* 하단 구분선 */}
           <div className="h-px bg-[#E1E1E1]" />
           {/* 하단 버튼 영역 (빈 공간) */}
-          <div className="bg-white px-6 py-4 rounded-b-none lg:rounded-b-2xl h-[57px]"></div>
+          <div className="bg-white px-6 py-4 rounded-b-none md:rounded-b-2xl h-[57px]"></div>
         </DialogContent>
       </Dialog>
     );
@@ -140,7 +140,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
           <DialogTitle>입양 신청 상세</DialogTitle>
         </VisuallyHidden>
         {/* 헤더 - 닫기 버튼만 */}
-        <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none lg:rounded-t-2xl"></div>
+        <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none md:rounded-t-2xl"></div>
 
         {/* 상단 구분선 */}
         <div className="h-px bg-[#E1E1E1]" />
@@ -366,7 +366,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
         <div className="h-px bg-[#E1E1E1]" />
 
         {/* 하단 버튼 영역 */}
-        <div className="bg-white px-6 py-4 rounded-b-none lg:rounded-b-2xl flex items-center justify-between">
+        <div className="bg-white px-6 py-4 rounded-b-none md:rounded-2xl flex items-center justify-between">
           {application.status !== 'consultation_completed' && (
             <div className="flex items-center gap-1">
               <svg
