@@ -16,16 +16,16 @@ export default function SocialLoginList() {
   const returnUrl = searchParams.get('returnUrl') || '';
 
   // 이미 로그인되어 있는지 확인
-  // 쿠키가 있으면 탐색 페이지로 이동 (use-auth-guard에서 토큰 유효성 검증)
+  // 쿠키가 있으면 returnUrl이 있으면 그곳으로, 없으면 홈으로 이동
   const checkAlreadyLoggedIn = (): boolean => {
     // 쿠키에서 accessToken 확인
     const cookies = document.cookie.split(';');
     const hasAccessToken = cookies.some((cookie) => cookie.trim().startsWith('accessToken='));
 
     if (hasAccessToken) {
-      // alert 없이 바로 탐색 페이지로 이동
-      // 토큰이 유효하지 않으면 use-auth-guard에서 쿠키 삭제 후 로그인 페이지로 리다이렉트
-      router.push('/explore');
+      // returnUrl이 있으면 그곳으로, 없으면 홈으로 이동
+      const redirectUrl = returnUrl || '/';
+      router.push(redirectUrl);
       return true;
     }
 
