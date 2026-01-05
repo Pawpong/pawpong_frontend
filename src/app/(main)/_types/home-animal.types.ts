@@ -8,7 +8,7 @@ export interface HomeAnimalData {
   name: string;
   sex: 'male' | 'female';
   birth: string;
-  price: string;
+  price: string | null; // 비로그인 시 null
   breed: string;
   status: 'available' | 'reserved' | 'completed';
 }
