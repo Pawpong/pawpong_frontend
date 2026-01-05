@@ -11,4 +11,5 @@ export interface HomeAnimalData {
   price: string | null; // 비로그인 시 null
   breed: string;
   status: 'available' | 'reserved' | 'completed';
+  isAd?: boolean; // 광고 여부
 }

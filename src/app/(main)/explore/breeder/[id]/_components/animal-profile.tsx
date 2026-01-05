@@ -1,6 +1,7 @@
 import Female from '@/assets/icons/female';
 import Male from '@/assets/icons/male';
 import AdoptionStatusBadge from '@/components/adoption-status-badge';
+import AdBadge from '@/components/ad-badge';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { Lock } from 'lucide-react';
@@ -12,6 +13,7 @@ const sexInfo = {
 
 export default function AnimalProfile({
   data: { avatarUrl, name, sex, birth, price, breed, status },
+  isAd = false,
   onClick,
 }: {
   data: {
@@ -23,6 +25,7 @@ export default function AnimalProfile({
     breed: string;
     status?: 'available' | 'reserved' | 'completed';
   };
+  isAd?: boolean;
   onClick?: () => void;
 }) {
   const Icon = sexInfo[sex].icon;
@@ -75,8 +78,11 @@ export default function AnimalProfile({
             )}
           </div>
         </div>
-        <div className="rounded bg-tertiary-500 py-1.5 px-2.5 w-fit text-body-xs font-medium text-primary-500">
-          {breed}
+        <div className="flex items-center gap-[8px]">
+          <div className="rounded bg-tertiary-500 py-1.5 px-2.5 w-fit text-body-xs font-medium text-primary-500">
+            {breed}
+          </div>
+          {isAd && <AdBadge />}
         </div>
       </div>
     </div>
