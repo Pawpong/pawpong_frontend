@@ -128,8 +128,17 @@ export default function UserInfoSection() {
       let errorMessage = '인증번호 발송에 실패했습니다.';
 
       if (error instanceof Error) {
-        // "이미 등록된 전화번호입니다" 같은 메시지 체크
-        if (error.message.includes('이미') || error.message.includes('등록') || error.message.includes('전화번호')) {
+        const errorMsg = error.message.toLowerCase();
+        // 3분 이내 재전송 시도 감지 (백엔드 에러 메시지에 "이미", "전송", "3분" 등이 포함된 경우)
+        if (
+          (errorMsg.includes('이미') && errorMsg.includes('전송')) ||
+          errorMsg.includes('3분') ||
+          (errorMsg.includes('이미') && errorMsg.includes('코드')) ||
+          (errorMsg.includes('재전송') && errorMsg.includes('시간'))
+        ) {
+          errorMessage = '이미 인증번호를 전송했어요. 3분 후에 다시 시도해주세요';
+        } else if (errorMsg.includes('이미') && errorMsg.includes('등록') && errorMsg.includes('전화번호')) {
+          // 이미 등록된 전화번호 (회원가입 완료된 번호)
           errorMessage = '이미 등록된 전화번호예요';
         } else {
           errorMessage = error.message;
