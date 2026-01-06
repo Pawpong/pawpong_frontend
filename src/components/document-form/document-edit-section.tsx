@@ -144,7 +144,7 @@ export default function DocumentEditSection() {
           ...prev[level],
           [key]: {
             file,
-            fileName: null,
+            fileName: file.name, // 파일명 저장
             url: previewUrl,
             isUploaded: false,
           },
@@ -283,22 +283,17 @@ export default function DocumentEditSection() {
           level={level}
           animal={animal}
           documents={getDocumentsForForm()}
+          documentStates={documents}
           existingFileNames={getExistingFileNames()}
           oathChecked={oathChecked}
           onLevelChange={(newLevel) => {
             setLevel(newLevel);
             setHasUnsavedChanges(true);
-            // 레벨 변경 시 기존 제출 문서 처리
-            if (newLevel === submittedLevel) {
-              // 기존 제출 레벨로 돌아오면 기존 문서 복원
-              setDocumentsByLevel((prev) => ({
-                ...prev,
-                [newLevel]: submittedDocuments,
-              }));
+            // 레벨 변경 시 oath 체크 상태만 업데이트
+            // 각 레벨의 문서는 documentsByLevel에 이미 저장되어 있으므로 자동으로 유지됨
+            if (newLevel === submittedLevel && Object.keys(documentsByLevel[newLevel]).length > 0) {
               setOathChecked(true);
             } else {
-              // 다른 레벨로 변경하면 해당 레벨의 문서는 유지 (이미 있으면 그대로, 없으면 빈 객체)
-              // 새로 첨부한 파일은 유지되도록 함
               setOathChecked(false);
             }
           }}

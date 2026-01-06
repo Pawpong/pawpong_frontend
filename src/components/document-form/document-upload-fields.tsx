@@ -3,10 +3,18 @@
 import FileButton from '@/app/signup/_components/sections/file-button';
 import { DOCUMENT_KEYS, type Animal, type Level } from './document-constants';
 
+interface DocumentState {
+  file: File | null;
+  fileName: string | null;
+  url: string | null;
+  isUploaded: boolean;
+}
+
 interface DocumentUploadFieldsProps {
   level: Level;
   animal: Animal;
   documents: Record<string, File | null>;
+  documentStates?: Record<string, DocumentState>; // 전체 문서 상태
   existingFileNames?: Record<string, string>; // 기존 업로드된 파일명들
   onFileUpload: (key: string) => (file: File) => void;
   onFileDelete: (key: string) => () => void;
@@ -16,6 +24,7 @@ export default function DocumentUploadFields({
   level,
   animal,
   documents,
+  documentStates = {},
   existingFileNames = {},
   onFileUpload,
   onFileDelete,
@@ -28,7 +37,7 @@ export default function DocumentUploadFields({
       <div className="flex flex-col gap-2.5">
         <FileButton
           file={documents[DOCUMENT_KEYS.ID_CARD] ?? null}
-          existingFileName={existingFileNames[DOCUMENT_KEYS.ID_CARD]}
+          existingFileName={documentStates[DOCUMENT_KEYS.ID_CARD]?.fileName || existingFileNames[DOCUMENT_KEYS.ID_CARD]}
           onUpload={onFileUpload(DOCUMENT_KEYS.ID_CARD)}
           onDelete={onFileDelete(DOCUMENT_KEYS.ID_CARD)}
         >
@@ -43,7 +52,7 @@ export default function DocumentUploadFields({
       <div className="flex flex-col gap-3">
         <FileButton
           file={documents[DOCUMENT_KEYS.BUSINESS_LICENSE] ?? null}
-          existingFileName={existingFileNames[DOCUMENT_KEYS.BUSINESS_LICENSE]}
+          existingFileName={documentStates[DOCUMENT_KEYS.BUSINESS_LICENSE]?.fileName || existingFileNames[DOCUMENT_KEYS.BUSINESS_LICENSE]}
           onUpload={onFileUpload(DOCUMENT_KEYS.BUSINESS_LICENSE)}
           onDelete={onFileDelete(DOCUMENT_KEYS.BUSINESS_LICENSE)}
         >
@@ -52,7 +61,7 @@ export default function DocumentUploadFields({
         {level === 'elite' && (
           <FileButton
             file={documents[DOCUMENT_KEYS.CONTRACT_SAMPLE] ?? null}
-            existingFileName={existingFileNames[DOCUMENT_KEYS.CONTRACT_SAMPLE]}
+            existingFileName={documentStates[DOCUMENT_KEYS.CONTRACT_SAMPLE]?.fileName || existingFileNames[DOCUMENT_KEYS.CONTRACT_SAMPLE]}
             onUpload={onFileUpload(DOCUMENT_KEYS.CONTRACT_SAMPLE)}
             onDelete={onFileDelete(DOCUMENT_KEYS.CONTRACT_SAMPLE)}
           >
@@ -66,7 +75,7 @@ export default function DocumentUploadFields({
         <div className="flex flex-col gap-2.5">
           <FileButton
             file={documents[breederDocKey] ?? null}
-            existingFileName={existingFileNames[breederDocKey]}
+            existingFileName={documentStates[breederDocKey]?.fileName || existingFileNames[breederDocKey]}
             onUpload={onFileUpload(breederDocKey)}
             onDelete={onFileDelete(breederDocKey)}
           >
