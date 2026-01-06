@@ -40,10 +40,16 @@ export default function DocumentEditSection() {
   const [showExitDialog, setShowExitDialog] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  // 문서 상태 (각 타입별로 관리)
-  const [documents, setDocuments] = useState<Record<string, DocumentState>>({});
+  // 문서 상태 (레벨별로 분리해서 관리)
+  const [documentsByLevel, setDocumentsByLevel] = useState<Record<Level, Record<string, DocumentState>>>({
+    new: {},
+    elite: {},
+  });
   // 기존 제출된 문서 (레벨 변경 시에도 유지)
   const [submittedDocuments, setSubmittedDocuments] = useState<Record<string, DocumentState>>({});
+
+  // 현재 레벨의 문서만 가져오기
+  const documents = documentsByLevel[level];
 
   // 기존 데이터 로드
   useEffect(() => {
@@ -93,7 +99,11 @@ export default function DocumentEditSection() {
               isUploaded: true,
             };
           });
-          setDocuments(docState);
+          // 레벨별로 문서 저장
+          setDocumentsByLevel((prev) => ({
+            ...prev,
+            [status.level || 'new']: docState,
+          }));
           setSubmittedDocuments(docState); // 기존 제출 문서 저장
           setSubmittedLevel(status.level || null); // 기존 제출 레벨 저장
           setOathChecked(true);
@@ -128,33 +138,39 @@ export default function DocumentEditSection() {
 
       const previewUrl = URL.createObjectURL(file);
 
-      setDocuments((prev) => ({
+      setDocumentsByLevel((prev) => ({
         ...prev,
-        [key]: {
-          file,
-          fileName: null,
-          url: previewUrl,
-          isUploaded: false,
+        [level]: {
+          ...prev[level],
+          [key]: {
+            file,
+            fileName: null,
+            url: previewUrl,
+            isUploaded: false,
+          },
         },
       }));
     },
-    [],
+    [level],
   );
 
   // 파일 삭제 핸들러
   const handleFileDelete = useCallback(
     (key: string) => () => {
       setHasUnsavedChanges(true);
-      setDocuments((prev) => {
-        const newDocs = { ...prev };
+      setDocumentsByLevel((prev) => {
+        const newDocs = { ...prev[level] };
         if (newDocs[key]?.url && !newDocs[key]?.isUploaded) {
           URL.revokeObjectURL(newDocs[key].url!);
         }
         delete newDocs[key];
-        return newDocs;
+        return {
+          ...prev,
+          [level]: newDocs,
+        };
       });
     },
-    [],
+    [level],
   );
 
   // documents를 File | null 형태로 변환
@@ -275,11 +291,14 @@ export default function DocumentEditSection() {
             // 레벨 변경 시 기존 제출 문서 처리
             if (newLevel === submittedLevel) {
               // 기존 제출 레벨로 돌아오면 기존 문서 복원
-              setDocuments(submittedDocuments);
+              setDocumentsByLevel((prev) => ({
+                ...prev,
+                [newLevel]: submittedDocuments,
+              }));
               setOathChecked(true);
             } else {
-              // 다른 레벨로 변경하면 문서 초기화
-              setDocuments({});
+              // 다른 레벨로 변경하면 해당 레벨의 문서는 유지 (이미 있으면 그대로, 없으면 빈 객체)
+              // 새로 첨부한 파일은 유지되도록 함
               setOathChecked(false);
             }
           }}
