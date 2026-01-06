@@ -68,7 +68,7 @@ export default function LevelUpgradeDialog({
         status.documents.forEach((doc) => {
           docState[doc.type] = {
             file: null,
-            fileName: doc.type,
+            fileName: doc.fileName || doc.originalFileName || doc.type, // GCS 파일명 저장
             url: doc.url,
             isUploaded: true,
           };
@@ -91,7 +91,7 @@ export default function LevelUpgradeDialog({
         ...prev,
         [key]: {
           file,
-          fileName: null,
+          fileName: file.name, // 파일명 저장
           url: previewUrl,
           isUploaded: false,
         },
@@ -119,7 +119,13 @@ export default function LevelUpgradeDialog({
   const getDocumentsForForm = useCallback((): Record<string, File | null> => {
     const result: Record<string, File | null> = {};
     Object.entries(documents).forEach(([key, state]) => {
-      result[key] = state.file;
+      // 새로 업로드한 파일이 있으면 그것을 사용
+      if (state.file) {
+        result[key] = state.file;
+      } else {
+        // 파일이 없으면 null (existingFileName으로 표시됨)
+        result[key] = null;
+      }
     });
     return result;
   }, [documents]);
@@ -128,7 +134,8 @@ export default function LevelUpgradeDialog({
   const getExistingFileNames = useCallback((): Record<string, string> => {
     const result: Record<string, string> = {};
     Object.entries(documents).forEach(([key, state]) => {
-      if (state.isUploaded && state.fileName) {
+      // 업로드된 파일이거나 파일명이 있으면 추가
+      if (state.fileName) {
         result[key] = state.fileName;
       }
     });
@@ -256,6 +263,7 @@ export default function LevelUpgradeDialog({
                 level={level}
                 animal={animal}
                 documents={getDocumentsForForm()}
+                documentStates={documents}
                 existingFileNames={getExistingFileNames()}
                 onFileUpload={handleFileUpload}
                 onFileDelete={handleFileDelete}

@@ -22,9 +22,17 @@ export function useFileUpload({ onUpload, onDelete, file, maxSizeMB, errorMessag
   }, [maxSizeMB, errorMessage]);
 
   useEffect(() => {
-    setFileName(file?.name ?? '');
-    if (file) {
+    // file?.name이 있고, size가 0보다 크면 (실제 파일) 파일명 업데이트
+    // size가 0이면 더미 파일이므로 파일명 유지
+    if (file && file.size > 0) {
+      setFileName(file.name);
       setError('');
+    } else if (file && file.size === 0) {
+      // 더미 파일인 경우 파일명만 업데이트 (기존 파일 표시용)
+      setFileName(file.name);
+    } else if (!file) {
+      // file이 null인 경우에만 초기화
+      setFileName('');
     }
   }, [file]);
 
