@@ -6,10 +6,18 @@ import DocumentUploadFields from './document-upload-fields';
 import LevelTabs from './level-tabs';
 import OathCheckbox from './oath-checkbox';
 
+interface DocumentState {
+  file: File | null;
+  fileName: string | null;
+  url: string | null;
+  isUploaded: boolean;
+}
+
 interface DocumentFormContentProps {
   level: Level;
   animal: Animal;
   documents: Record<string, File | null>;
+  documentStates?: Record<string, DocumentState>;
   existingFileNames?: Record<string, string>;
   oathChecked: boolean;
   onLevelChange: (level: Level) => void;
@@ -22,6 +30,7 @@ export default function DocumentFormContent({
   level,
   animal,
   documents,
+  documentStates,
   existingFileNames,
   oathChecked,
   onLevelChange,
@@ -40,6 +49,7 @@ export default function DocumentFormContent({
           level={level}
           animal={animal}
           documents={documents}
+          documentStates={documentStates}
           existingFileNames={existingFileNames}
           onFileUpload={onFileUpload}
           onFileDelete={onFileDelete}
