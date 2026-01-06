@@ -24,7 +24,7 @@ export default function HomeBreederGrid() {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {animals.map((animal) => (
             <Link key={animal.id} href={`/explore/breeder/${animal.breederId}`} className="block">
-              <AnimalProfile data={animal} />
+              <AnimalProfile data={animal} isAd={animal.isAd} />
             </Link>
           ))}
         </div>

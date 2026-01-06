@@ -40,6 +40,7 @@ export interface AvailablePetDto {
     city: string;
     district: string;
   };
+  isAd?: boolean; // 광고 여부
 }
 
 /** API 응답 래퍼 타입 */
