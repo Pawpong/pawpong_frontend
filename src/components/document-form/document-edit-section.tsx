@@ -49,7 +49,7 @@ export default function DocumentEditSection() {
   const [submittedDocuments, setSubmittedDocuments] = useState<Record<string, DocumentState>>({});
 
   // 현재 레벨의 문서만 가져오기
-  const documents = documentsByLevel[level];
+  const documents = documentsByLevel[level] || {};
 
   // 기존 데이터 로드
   useEffect(() => {
