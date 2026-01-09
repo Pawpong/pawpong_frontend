@@ -47,7 +47,7 @@ const fetchHomeAnimals = async (): Promise<HomeAnimalsResponse> => {
         price: pet.price !== null ? pet.price.toLocaleString('ko-KR') + '원' : null, // 비로그인 시 null
         breed: pet.breed,
         status: 'available' as const, // 분양 가능 상태
-        isAd: pet.isAd ?? false, // 광고 여부
+        isAd: pet.isAd ?? true, // 광고 여부
       };
     });
 
