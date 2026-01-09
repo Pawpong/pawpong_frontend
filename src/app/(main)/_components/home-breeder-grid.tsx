@@ -7,7 +7,6 @@ import DownArrow from '@/assets/icons/long-down-arrow.svg';
 
 import BreederProfileSectionHeader from '@/components/breeder-profile/breeder-profile-section-header';
 import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
-import BreederProfileSectionMore from '@/components/breeder-profile/breeder-profile-section-more';
 import { useHomeAnimals } from '../_hooks/use-home-animals';
 
 export default function HomeBreederGrid() {

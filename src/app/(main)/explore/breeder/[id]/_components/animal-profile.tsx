@@ -1,10 +1,10 @@
 import Female from '@/assets/icons/female';
 import Male from '@/assets/icons/male';
 import AdoptionStatusBadge from '@/components/adoption-status-badge';
-import AdBadge from '@/components/ad-badge';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { Lock } from 'lucide-react';
+import BreedAdInfo from '@/components/breed-ad-info';
 
 const sexInfo = {
   male: { icon: Male, className: 'text-gender-male-500' },
@@ -78,12 +78,15 @@ export default function AnimalProfile({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-[8px]">
-          <div className="rounded bg-tertiary-500 py-1.5 px-2.5 w-fit text-body-xs font-medium text-primary-500">
-            {breed}
+        {isAd ? (
+          <BreedAdInfo breed={breed} />
+        ) : (
+          <div className="flex items-center gap-[8px]">
+            <div className="rounded bg-tertiary-500 py-1.5 px-2.5 w-fit text-body-xs font-medium text-primary-500">
+              {breed}
+            </div>
           </div>
-          {isAd && <AdBadge />}
-        </div>
+        )}
       </div>
     </div>
   );
