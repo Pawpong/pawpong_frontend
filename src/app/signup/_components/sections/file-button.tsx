@@ -60,7 +60,6 @@ export default function FileButton({
               e.stopPropagation();
               handleDelete(e);
             }}
-            className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
           >
             <CloseTertiary className="size-6" />
           </button>
