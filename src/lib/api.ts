@@ -7,9 +7,24 @@ const getBaseURL = () => {
     return process.env.NEXT_PUBLIC_API_BASE_URL.replace(/\/+$/, '');
   }
 
-  // 2순위: 브라우저 환경에서 localhost 감지
-  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-    return 'http://localhost:8080';
+  // 2순위: 브라우저 환경에서 자동 감지
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+
+    // Vercel 개발 배포
+    if (hostname.includes('pawpongdev.vercel.app')) {
+      return 'https://dev-api.pawpong.kr';
+    }
+
+    // 프로덕션
+    if (hostname.includes('pawpong.kr')) {
+      return 'https://api.pawpong.kr';
+    }
+
+    // localhost
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:8080';
+    }
   }
 
   // 3순위: 프로덕션 환경
