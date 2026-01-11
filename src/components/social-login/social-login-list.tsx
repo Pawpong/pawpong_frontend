@@ -8,7 +8,37 @@ import SocialLoginIcon from './social-login-icon';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 // trailing slash 제거하여 이중 슬래시 방지
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080').replace(/\/+$/, '');
+const getApiBaseUrl = () => {
+  // 1순위: 환경 변수
+  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+    return process.env.NEXT_PUBLIC_API_BASE_URL.replace(/\/+$/, '');
+  }
+
+  // 2순위: 브라우저 환경에서 자동 감지
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+
+    // Vercel 개발 배포
+    if (hostname.includes('pawpongdev.vercel.app')) {
+      return 'https://dev-api.pawpong.kr';
+    }
+
+    // 프로덕션
+    if (hostname.includes('pawpong.kr')) {
+      return 'https://api.pawpong.kr';
+    }
+
+    // localhost
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:8080';
+    }
+  }
+
+  // 3순위: 기본값
+  return 'http://localhost:8080';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export default function SocialLoginList() {
   const router = useRouter();
