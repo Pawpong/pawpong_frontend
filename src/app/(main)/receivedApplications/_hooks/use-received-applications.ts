@@ -5,7 +5,8 @@ import {
   getApplicationDetail,
   type ReceivedApplicationItemDto,
   type ReceivedApplicationDetailDto,
-} from '@/lib/breeder-management';
+} from '@/api/breeder-management';
+import { formatDateToISO } from '@/utils/date-utils';
 
 export interface ReceivedApplicationItem {
   id: string;
@@ -39,7 +40,7 @@ const mapDtoToReceivedApplication = (dto: ReceivedApplicationItemDto): ReceivedA
     applicantNickname: dto.adopterNickname || dto.adopterName, // 닉네임 우선, 없으면 이름
     animalInfo: dto.petName || dto.preferredPetInfo || dto.standardResponses?.preferredPetDescription || '분양 중인 아이 정보',
     status: statusMap[dto.status] || 'before',
-    applicationDate: new Date(dto.appliedAt).toISOString().split('T')[0],
+    applicationDate: formatDateToISO(dto.appliedAt),
   };
 };
 

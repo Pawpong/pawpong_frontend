@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useNavigationGuardContext } from '@/contexts/navigation-guard-context';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import type { NavItem } from './nav-items';
 import { Separator } from '../ui/separator';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
@@ -11,7 +11,7 @@ import { CollapsibleProvider, useCollapsible } from '../filter-sidebar/collapsib
 import Minus from '@/assets/icons/minus';
 import Plus from '@/assets/icons/plus';
 import { SheetClose } from '../ui/sheet';
-import { logout } from '@/lib/auth';
+import { logout } from '@/api/auth';
 import { useToast } from '@/hooks/use-toast';
 import { useAuthStore } from '@/stores/auth-store';
 

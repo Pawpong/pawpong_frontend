@@ -2,10 +2,9 @@
 
 import Container from '@/components/ui/container';
 import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
 import NoticeListItem from './_components/notice-list-item';
 import NoticeDialog from './_components/notice-dialog';
-import DownArrow from '@/assets/icons/long-down-arrow.svg';
+import LoadMoreButton from '@/components/ui/load-more-button';
 import { useNotices } from './_hooks/use-notices';
 
 export default function InformationPage() {
@@ -51,19 +50,11 @@ export default function InformationPage() {
 
             {/* 더보기 버튼 */}
             {hasNextPage && (
-              <div className="flex justify-center pb-20">
-                <Button
-                  variant="ghost"
-                  onClick={() => fetchNextPage()}
-                  disabled={isFetchingNextPage}
-                  className="bg-[var(--color-grayscale-gray1)] hover:bg-[var(--color-grayscale-gray2)] h-12 py-2.5 gap-1 rounded-full has-[>svg]:px-0 has-[>svg]:pl-5 has-[>svg]:pr-3 disabled:opacity-50"
-                >
-                  <span className="text-body-s font-medium text-grayscale-gray6">
-                    {isFetchingNextPage ? '로딩 중...' : '더보기'}
-                  </span>
-                  <DownArrow />
-                </Button>
-              </div>
+              <LoadMoreButton
+                onClick={() => fetchNextPage()}
+                isLoading={isFetchingNextPage}
+                wrapperClassName="pb-20"
+              />
             )}
           </>
         )}

@@ -3,9 +3,9 @@
 import { useEffect, useLayoutEffect } from 'react';
 import { useAuthStore } from '@/stores/auth-store';
 import type { VerificationStatus } from '@/stores/auth-store';
-import { getAdopterProfile } from '@/lib/adopter';
-import { getMyBreederProfile } from '@/lib/breeder';
-import { getUserRoleFromCookie } from '@/lib/cookie-utils';
+import { getAdopterProfile } from '@/api/adopter';
+import { getMyBreederProfile } from '@/api/breeder';
+import { getUserRoleFromCookie } from '@/api/cookie-utils';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { setUser, hasHydrated, user } = useAuthStore();

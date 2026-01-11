@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getMyApplications, type ApplicationListItemDto } from '@/lib/application';
-import { getReceivedApplications, type ReceivedApplicationItemDto } from '@/lib/breeder';
+import { getMyApplications, type ApplicationListItemDto } from '@/api/application';
+import { getReceivedApplications, type ReceivedApplicationItemDto } from '@/api/breeder';
 import { useAuthStore } from '@/stores/auth-store';
-import { getUserRoleFromCookie } from '@/lib/cookie-utils';
+import { getUserRoleFromCookie } from '@/api/cookie-utils';
 
 export interface ApplicationItem {
   breederId?: string;

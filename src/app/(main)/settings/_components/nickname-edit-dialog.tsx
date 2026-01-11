@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { checkNicknameDuplicate } from '@/lib/auth';
+import { checkNicknameDuplicate } from '@/api/auth';
 import Close from '@/assets/icons/close';
 import Check from '@/assets/icons/check';
 import ErrorIcon from '@/assets/icons/error';

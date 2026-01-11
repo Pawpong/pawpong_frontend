@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 
 export default function Container({
   wrapperClassName,

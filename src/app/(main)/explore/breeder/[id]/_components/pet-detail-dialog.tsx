@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { useRouter } from 'next/navigation';
 import { useCounselFormStore } from '@/stores/counsel-form-store';
 import { useAuthStore } from '@/stores/auth-store';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { Lock } from 'lucide-react';
 

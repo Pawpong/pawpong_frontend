@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { ComponentProps } from 'react';
 
 export default function SignupFormSection({ className, children }: ComponentProps<'div'>) {

@@ -4,7 +4,7 @@ import SignupFormItems from '@/components/signup-form-section/signup-form-items'
 import SignupFormSection from '@/components/signup-form-section/signup-form-section';
 import SignupFormTitle from '@/components/signup-form-section/signup-form-title';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import useSignupFormStore, { UserType } from '@/stores/signup-form-store';
 import Image from 'next/image';
 

@@ -5,7 +5,7 @@ import Heart from '@/assets/icons/heart.svg';
 // import HeartBlackFill from '@/assets/icons/heart-black-fill.svg';
 import HeartGray from '@/assets/icons/heart-gray-no-fill.svg';
 import HeartGrayFill from '@/assets/icons/heart-gray-fill.svg';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { Button } from '../ui/button';
 import HeartFill from '@/assets/icons/heart-fill.svg';
 import { useToggleFavorite } from '@/app/(main)/saved/_hooks/use-favorites';

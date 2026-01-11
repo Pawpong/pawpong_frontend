@@ -10,7 +10,7 @@ import ReviewDialog from './review-dialog';
 import ReviewWriteDialog from './review-write-dialog';
 import { Badge } from '@/components/ui/badge';
 import ApplicationDetailModal from './application-detail-modal';
-import { getReviewByApplicationId } from '@/lib/review';
+import { getReviewByApplicationId } from '@/api/review';
 
 interface ApplicationListItemProps {
   applicationId: string;

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getBreederPets } from '@/lib/breeder';
+import { getBreederPets } from '@/api/breeder';
 
 export interface BreederPetItem {
   petId: string;

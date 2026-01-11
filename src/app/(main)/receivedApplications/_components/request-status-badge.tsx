@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import Check from '@/assets/icons/check-pixel.svg';
 import ThreeDot from '@/assets/icons/three-dot.svg';
 

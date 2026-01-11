@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getNoticeList, type Notice } from '@/lib/notice';
+import { getNoticeList, type Notice } from '@/api/notice';
 
 export interface NoticeItem {
   id: string;

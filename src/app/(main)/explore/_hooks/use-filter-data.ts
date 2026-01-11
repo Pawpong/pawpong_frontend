@@ -1,9 +1,9 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getBreeds } from '@/lib/breeds';
-import { getAllDistricts } from '@/lib/districts';
-import { getBreederLevels, getAdoptionStatus } from '@/lib/filter-options';
+import { getBreeds } from '@/api/breeds';
+import { getAllDistricts } from '@/api/districts';
+import { getBreederLevels, getAdoptionStatus } from '@/api/filter-options';
 import { useMemo } from 'react';
 
 /**

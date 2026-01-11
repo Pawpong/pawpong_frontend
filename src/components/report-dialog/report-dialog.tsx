@@ -10,7 +10,7 @@ import RadioInactive from '@/assets/icons/radio-inactive.svg';
 import { reportDescription, reportReasons, reportTitle, type ReportReason } from '@/constants/report';
 import { breederReportDescription, breederReportReasons, breederReportTitle } from '@/constants/breeder-report';
 import ReportSuccessDialog from './report-success-dialog';
-import { reportBreeder, reportReview } from '@/lib/report';
+import { reportBreeder, reportReview } from '@/api/report';
 import { useToast } from '@/hooks/use-toast';
 
 interface ReportDialogProps {

@@ -24,7 +24,7 @@ import {
 } from '@/utils/profile-validation';
 import { useBreederProfile, useUpdateBreederProfile } from './_hooks/use-breeder-profile';
 import { syncParentPets, syncAvailablePets } from '@/utils/profile-sync';
-import { uploadSingleFile, uploadRepresentativePhotos } from '@/lib/upload';
+import { uploadSingleFile, uploadRepresentativePhotos } from '@/api/upload';
 import ProfileBannerCarousel from '@/components/profile-banner/profile-banner-carousel';
 import useFormGuard from '@/hooks/use-form-guard';
 import ExitConfirmDialog from '@/components/exit-confirmation-dialog';

@@ -3,7 +3,7 @@
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getReceivedApplicationDetail, updateApplicationStatus } from '@/lib/breeder';
+import { getReceivedApplicationDetail, updateApplicationStatus } from '@/api/breeder';
 import { toast } from '@/hooks/use-toast';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 

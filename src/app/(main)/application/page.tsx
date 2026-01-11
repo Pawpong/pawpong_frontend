@@ -1,14 +1,13 @@
 'use client';
 
 import Container from '@/components/ui/container';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import ApplicationListItem from './_components/application-list-item';
-import DownArrow from '@/assets/icons/long-down-arrow.svg';
+import LoadMoreButton from '@/components/ui/load-more-button';
 import { useApplications } from './_hooks/use-applications';
 import { useAuthGuard } from '@/hooks/use-auth-guard';
 import { useAuthStore } from '@/stores/auth-store';
-import { getUserRoleFromCookie } from '@/lib/cookie-utils';
+import { getUserRoleFromCookie } from '@/api/cookie-utils';
 import { useState, useEffect } from 'react';
 
 const ApplicationPage = () => {
@@ -75,19 +74,7 @@ const ApplicationPage = () => {
 
             {/* 더보기 버튼 */}
             {hasNextPage && (
-              <div className="flex justify-center">
-                <Button
-                  variant="ghost"
-                  onClick={handleLoadMore}
-                  disabled={isFetchingNextPage}
-                  className="bg-[#F5F5F5] hover:bg-[#EEEEEE] h-12 py-2.5 gap-1 rounded-full has-[>svg]:px-0 has-[>svg]:pl-5 has-[>svg]:pr-3 disabled:opacity-50"
-                >
-                  <span className="text-body-s font-medium text-[#545454]">
-                    {isFetchingNextPage ? '로딩 중...' : '더보기'}
-                  </span>
-                  <DownArrow />
-                </Button>
-              </div>
+              <LoadMoreButton onClick={handleLoadMore} isLoading={isFetchingNextPage} variant="custom" />
             )}
           </>
         )}

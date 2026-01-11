@@ -16,10 +16,10 @@ import {
 } from '@/components/ui/large-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { Animal } from '@/stores/signup-form-store';
 import { useState, useEffect } from 'react';
-import { getBreeds } from '@/lib/breeds';
+import { getBreeds } from '@/api/breeds';
 
 interface BreedCategory {
   category: string;

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { getAdopterFaqs, getBreederFaqs, type FaqDto } from '@/lib/home';
+import { getAdopterFaqs, getBreederFaqs, type FaqDto } from '@/api/home';
 import { useAuthStore } from '@/stores/auth-store';
 import BreederProfileSectionHeader from '@/components/breeder-profile/breeder-profile-section-header';
 import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';

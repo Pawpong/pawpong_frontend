@@ -4,10 +4,10 @@ import { use, useState } from 'react';
 import Header from '../../_components/header';
 import AnimalProfile from '../_components/animal-profile';
 import { useBreederProfile, useBreederPetsInfinite, useParentPets } from '../_hooks/use-breeder-detail';
-import { Button } from '@/components/ui/button';
-import DownArrow from '@/assets/icons/long-down-arrow.svg';
+import LoadMoreButton from '@/components/ui/load-more-button';
 import { useAuthStore } from '@/stores/auth-store';
 import PetDetailDialog, { type PetDetailData } from '../_components/pet-detail-dialog';
+import { formatBirthDateToKorean } from '@/utils/date-utils';
 
 interface PageProps {
   params: Promise<{
@@ -29,21 +29,6 @@ export default function PetsPage({ params }: PageProps) {
   const { data: parentPetsData } = useParentPets(breederId, 1, 100);
   const [selectedPet, setSelectedPet] = useState<PetDetailData | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  // 날짜 포맷팅 함수 (브리더 상세 페이지와 동일)
-  const formatBirthDate = (dateString: string | Date | undefined) => {
-    if (!dateString) return '';
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return '';
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      return `${year}년 ${month}월 ${day}일 생`;
-    } catch {
-      return '';
-    }
-  };
 
   // 분양 가능 개체 매핑 - 모든 페이지의 데이터를 합침
   type Pet = {
@@ -79,7 +64,7 @@ export default function PetsPage({ params }: PageProps) {
         avatarUrl: pet.mainPhoto || '/animal-sample.png',
         name: pet.name,
         sex: pet.gender,
-        birth: formatBirthDate(pet.birthDate),
+        birth: formatBirthDateToKorean(pet.birthDate),
         price: user ? `${pet.price?.toLocaleString() || 0}원` : null,
         breed: pet.breed,
         status:
@@ -116,7 +101,7 @@ export default function PetsPage({ params }: PageProps) {
           avatarUrl: parent.photoUrl || '/animal-sample.png',
           name: parent.name,
           sex: parent.gender,
-          birth: formatBirthDate(parent.birthDate),
+          birth: formatBirthDateToKorean(parent.birthDate),
           breed: parent.breed,
         }),
       ) || [];
@@ -177,19 +162,7 @@ export default function PetsPage({ params }: PageProps) {
               />
               {/* 더보기 버튼 - 첫 페이지가 8개 이상이고 다음 페이지가 있을 때만 표시 */}
               {firstPageCount >= 8 && hasNextPage && (
-                <div className="flex justify-center">
-                  <Button
-                    variant="ghost"
-                    onClick={() => fetchNextPage()}
-                    disabled={isFetchingNextPage}
-                    className="bg-[var(--color-grayscale-gray1)] hover:bg-[var(--color-grayscale-gray2)] h-12 py-2.5 gap-1 rounded-full has-[>svg]:px-0 has-[>svg]:pl-5 has-[>svg]:pr-3 disabled:opacity-50"
-                  >
-                    <span className="text-body-s font-medium text-grayscale-gray6">
-                      {isFetchingNextPage ? '로딩 중...' : '더보기'}
-                    </span>
-                    <DownArrow />
-                  </Button>
-                </div>
+                <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} />
               )}
             </div>
           )}

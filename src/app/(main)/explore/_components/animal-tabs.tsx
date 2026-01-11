@@ -6,7 +6,7 @@ import Dog from '@/assets/icons/dog';
 import { Button } from '@/components/ui/button';
 import Container from '@/components/ui/container';
 import useAnimal from '@/hooks/use-animal';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import Link from 'next/link';
 
 const animalTabsItems = [

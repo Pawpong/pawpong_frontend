@@ -379,6 +379,7 @@ export interface UploadedDocumentDto {
   url: string;
   fileName: string;
   size: number;
+  originalFileName?: string; // 원본 파일명 (화면 표시용)
 }
 
 /** 서류 업로드 응답 DTO */

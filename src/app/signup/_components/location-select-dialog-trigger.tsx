@@ -17,9 +17,9 @@ import {
 } from '@/components/ui/large-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { useState, useEffect } from 'react';
-import { getAllDistricts, type District } from '@/lib/districts';
+import { getAllDistricts, type District } from '@/api/districts';
 
 export default function LocationSelectDialogTrigger({
   onSubmitLocation,

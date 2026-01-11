@@ -1,0 +1,23 @@
+## 변경 사항
+
+날짜 포맷 함수들을 `src/utils/date-utils.ts`로 분리하여 재사용성을 높였습니다.
+
+### 추가된 함수
+- `formatBirthDateToKorean`: "YYYY년 MM월 DD일 생" 형식
+- `formatDateToDotNotation`: "YYYY. MM. DD." 형식
+- `formatDateToISO`: "YYYY-MM-DD" 형식 (ISO 날짜)
+
+### 수정된 파일
+- `src/utils/date-utils.ts` (신규 생성)
+- `src/app/(main)/_hooks/use-home-animals.ts`
+- `src/app/(main)/explore/breeder/[id]/_components/breeder-detail-client.tsx`
+- `src/app/(main)/explore/breeder/[id]/_components/breeding-animals.tsx`
+- `src/app/(main)/explore/breeder/[id]/parents/page.tsx`
+- `src/app/(main)/explore/breeder/[id]/pets/page.tsx`
+- `src/app/(main)/myapplication/_hooks/use-my-reviews.ts`
+- `src/app/(main)/receivedApplications/_hooks/use-received-applications.ts`
+
+### 변경 내용
+- 중복된 날짜 포맷 로직을 utils 함수로 통합
+- 모든 파일에서 일관된 날짜 포맷 함수 사용
+- 코드 중복 제거 및 유지보수성 향상

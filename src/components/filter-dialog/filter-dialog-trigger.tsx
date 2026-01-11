@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useSegment } from '@/hooks/use-segment';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { findParentAndChildren, useFilterStore } from '@/stores/filter-store';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';

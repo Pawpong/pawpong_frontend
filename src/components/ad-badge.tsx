@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 
 interface AdBadgeProps {
   text?: string;

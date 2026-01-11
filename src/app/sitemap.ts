@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import apiClient from '@/lib/api';
+import apiClient from '@/api/api';
 
 // 사이트맵 생성 시 사용할 환경 변수
 const baseUrl = 'https://pawpong.kr';

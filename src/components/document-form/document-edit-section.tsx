@@ -13,7 +13,7 @@ import {
   uploadVerificationDocuments,
   submitVerificationDocuments,
   type UploadedDocumentDto,
-} from '@/lib/breeder-management';
+} from '@/api/breeder-management';
 import type { Animal, Level } from '@/components/document-form/document-constants';
 import { useToast } from '@/hooks/use-toast';
 
@@ -23,6 +23,7 @@ interface DocumentState {
   fileName: string | null;
   url: string | null;
   isUploaded: boolean;
+  originalFileName?: string; // 화면 표시용 원본 파일명
 }
 
 export default function DocumentEditSection() {
@@ -74,14 +75,28 @@ export default function DocumentEditSection() {
             breeder_certification: 'breederCatCertificate',
           };
 
-          // URL에서 파일명 추출 함수
-          const extractFileNameFromUrl = (url: string): string => {
+          // GCS 경로에서 파일명 추출 함수 (verification/userId/uuid.ext)
+          const extractGcsFileName = (urlOrPath: string): string => {
             try {
               // URL에서 path 부분 추출 (쿼리 파라미터 제외)
-              const urlPath = url.split('?')[0];
-              // 마지막 / 이후의 파일명 추출
-              const fileName = urlPath.split('/').pop() || '';
-              return fileName;
+              const urlPath = urlOrPath.split('?')[0];
+
+              // URL인 경우 도메인 제거 (예: https://storage.googleapis.com/bucket/verification/...)
+              const pathParts = urlPath.split('/');
+              const verificationIndex = pathParts.findIndex(p => p === 'verification');
+
+              if (verificationIndex !== -1) {
+                // verification/ 이후 경로 추출
+                return pathParts.slice(verificationIndex).join('/');
+              }
+
+              // 이미 GCS 경로인 경우 (verification/...)
+              if (urlPath.startsWith('verification/')) {
+                return urlPath;
+              }
+
+              // 마지막 / 이후의 파일명만 추출
+              return pathParts[pathParts.length - 1] || '';
             } catch {
               return '';
             }
@@ -90,13 +105,20 @@ export default function DocumentEditSection() {
           const docState: Record<string, DocumentState> = {};
           status.documents.forEach((doc) => {
             const frontendKey = apiTypeToKey[doc.type] || doc.type;
-            // 백엔드에서 제공하는 originalFileName을 우선 사용, 없으면 URL에서 추출
-            const fileName = doc.originalFileName || extractFileNameFromUrl(doc.url);
+
+            // GCS 파일 경로 저장 (verification/userId/uuid.ext 형식)
+            // 백엔드 제출 시 이 경로를 그대로 전달해야 함
+            const gcsFileName = extractGcsFileName(doc.url);
+
+            // 화면 표시용 파일명 (originalFileName 우선, 없으면 GCS 파일명)
+            const displayFileName = doc.originalFileName || gcsFileName.split('/').pop() || '';
+
             docState[frontendKey] = {
               file: null,
-              fileName,
+              fileName: gcsFileName, // GCS 경로 전체 저장 (중요!)
               url: doc.url,
               isUploaded: true,
+              originalFileName: displayFileName, // 화면 표시용
             };
           });
           // 레벨별로 문서 저장
@@ -209,14 +231,29 @@ export default function DocumentEditSection() {
     try {
       const newFiles: File[] = [];
       const newTypes: string[] = [];
-      const existingDocs: { type: string; fileName: string }[] = [];
+      const existingDocs: { type: string; fileName: string; originalFileName?: string }[] = [];
 
       Object.entries(documents).forEach(([type, state]) => {
+        console.log(`[handleSubmit] Processing document - type: ${type}`, {
+          hasFile: !!state.file,
+          isUploaded: state.isUploaded,
+          fileName: state.fileName,
+          originalFileName: state.originalFileName,
+        });
+
         if (state.file && !state.isUploaded) {
+          // 새로 업로드한 파일
           newFiles.push(state.file);
           newTypes.push(type);
+          console.log(`[handleSubmit] Added to newFiles: ${type}`);
         } else if (state.isUploaded && state.fileName) {
-          existingDocs.push({ type, fileName: state.fileName });
+          // 기존 파일 유지 - GCS 경로 전체를 전달
+          existingDocs.push({
+            type,
+            fileName: state.fileName, // verification/userId/uuid.ext 형식
+            originalFileName: state.originalFileName, // 화면 표시용 원본 파일명
+          });
+          console.log(`[handleSubmit] Added to existingDocs: ${type} - ${state.fileName}`);
         }
       });
 
@@ -227,13 +264,17 @@ export default function DocumentEditSection() {
         uploadedDocs = uploadResult.documents;
       }
 
+      // 기존 서류 + 새로 업로드한 서류 병합
       const allDocs = [
         ...existingDocs,
         ...uploadedDocs.map((doc) => ({
           type: doc.type,
           fileName: doc.fileName,
+          originalFileName: doc.originalFileName,
         })),
       ];
+
+      console.log('[handleSubmit] 제출할 서류:', allDocs);
 
       await submitVerificationDocuments({
         level,
@@ -264,7 +305,25 @@ export default function DocumentEditSection() {
     router.back();
   };
 
-  const isSubmitDisabled = !oathChecked || isSubmitting || Object.keys(documents).length === 0;
+  // 제출 버튼 활성화 조건
+  const isSubmitDisabled = (() => {
+    if (!oathChecked || isSubmitting || Object.keys(documents).length === 0) {
+      return true;
+    }
+
+    // Elite 레벨인 경우 브리더 인증 서류 필수 검증
+    if (level === 'elite') {
+      const hasBreederCert =
+        documents['breederCatCertificate'] ||
+        documents['breederDogCertificate'];
+
+      if (!hasBreederCert) {
+        return true;
+      }
+    }
+
+    return false;
+  })();
 
   if (isLoading) {
     return (

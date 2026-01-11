@@ -1,6 +1,6 @@
 import Crown from '@/assets/icons/crown';
 import Plant from '@/assets/icons/plant';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 
 export default function LevelBadge({ level, className }: { level: 'elite' | 'new'; className?: string }) {
   const levelInfo = {

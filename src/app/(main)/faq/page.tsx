@@ -2,7 +2,7 @@
 
 import Container from '@/components/ui/container';
 import FaqItemComponent from './_components/faq-item';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import DownArrow from '@/assets/icons/long-down-arrow.svg';
 import { Button } from '@/components/ui/button';
 import { useFaqPage } from './_hooks/use-faq-page';

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { ComponentProps } from 'react';
 import GridContainer from '../ui/grid-container';
 

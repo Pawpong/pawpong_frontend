@@ -10,6 +10,7 @@ import AnimalProfile from './animal-profile';
 import PetDetailDialog, { type PetDetailData } from './pet-detail-dialog';
 import { useParentPets } from '../_hooks/use-breeder-detail';
 import EmptyPetState from './empty-pet-state';
+import { formatBirthDateToKorean } from '@/utils/date-utils';
 
 export default function BreedingAnimals({
   data,
@@ -58,7 +59,7 @@ export default function BreedingAnimals({
           avatarUrl: parent.photoUrl || '/animal-sample.png',
           name: parent.name,
           sex: parent.gender,
-          birth: formatBirthDate(parent.birthDate),
+          birth: formatBirthDateToKorean(parent.birthDate),
           breed: parent.breed,
         }),
       ) || [];
@@ -78,20 +79,6 @@ export default function BreedingAnimals({
 
     setSelectedPet(petDetail);
     setIsDialogOpen(true);
-  };
-
-  const formatBirthDate = (dateString: string | Date | undefined) => {
-    if (!dateString) return '';
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return '';
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      return `${year}년 ${month}월 ${day}일 생`;
-    } catch {
-      return '';
-    }
   };
 
   return (

@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { getBreederProfile, getBreederPets, getParentPets, getBreederReviews } from '@/lib/breeder';
+import { getBreederProfile, getBreederPets, getParentPets, getBreederReviews } from '@/api/breeder';
 
 /**
  * 브리더 프로필 정보 조회 훅

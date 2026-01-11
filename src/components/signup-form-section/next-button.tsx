@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import React from 'react';
 import { Button } from '../ui/button';
 

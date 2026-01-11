@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import ReportDialog from '@/components/report-dialog/report-dialog';
 import { useToggleFavorite, useFavorites } from '@/app/(main)/saved/_hooks/use-favorites';
 import { useAuthStore } from '@/stores/auth-store';
-import type { FavoriteItemDto } from '@/lib/adopter';
+import type { FavoriteItemDto } from '@/api/adopter';
 
 interface HeaderProps {
   breederNickname: string;

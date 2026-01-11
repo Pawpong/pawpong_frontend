@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { exploreBreeders, getPopularBreeders, type Breeder, type SearchBreederParams } from '@/lib/breeder';
+import { exploreBreeders, getPopularBreeders, type Breeder, type SearchBreederParams } from '@/api/breeder';
 
 const PAGE_SIZE = 20;
 

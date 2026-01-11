@@ -20,7 +20,7 @@ import { useState } from 'react';
 import BreedsSelectDialogTrigger from '../breeds-select-dialog-trigger';
 import LocationSelectDialogTrigger from '../location-select-dialog-trigger';
 import { breederInfoSchema, type BreederInfoFormData } from './breeder-info-schema';
-import { checkBreederNameDuplicate } from '@/lib/auth';
+import { checkBreederNameDuplicate } from '@/api/auth';
 import { useToast } from '@/hooks/use-toast';
 
 export default function BreederInfoSection() {

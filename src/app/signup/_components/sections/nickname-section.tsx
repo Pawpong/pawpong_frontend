@@ -8,7 +8,7 @@ import SignupFormTitle from '@/components/signup-form-section/signup-form-title'
 import UndoButton from '@/components/signup-form-section/undo-button';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { checkNicknameDuplicate, completeAdopterRegistration } from '@/lib/auth';
+import { checkNicknameDuplicate, completeAdopterRegistration } from '@/api/auth';
 import useSignupFormStore from '@/stores/signup-form-store';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

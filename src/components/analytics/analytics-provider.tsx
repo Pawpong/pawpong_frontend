@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { pageview } from '@/lib/analytics';
+import { pageview } from '@/api/analytics';
 
 /**
  * Google Analytics 페이지뷰 자동 트래킹 Provider

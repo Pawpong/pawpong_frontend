@@ -2,8 +2,7 @@
 
 import AnimalProfile from '@/app/(main)/explore/breeder/[id]/_components/animal-profile';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import DownArrow from '@/assets/icons/long-down-arrow.svg';
+import LoadMoreButton from '@/components/ui/load-more-button';
 
 import BreederProfileSectionHeader from '@/components/breeder-profile/breeder-profile-section-header';
 import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
@@ -29,19 +28,11 @@ export default function HomeBreederGrid() {
         </div>
       </div>
       {hasNextPage && (
-        <div className="flex justify-center pb-20 lg:pb-24">
-          <Button
-            variant="ghost"
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            className="bg-[var(--color-grayscale-gray1)] hover:bg-[var(--color-grayscale-gray2)] h-12 py-2.5 gap-1 rounded-full has-[>svg]:px-0 has-[>svg]:pl-5 has-[>svg]:pr-3 disabled:opacity-50"
-          >
-            <span className="text-body-s font-medium text-grayscale-gray6">
-              {isFetchingNextPage ? '로딩 중...' : '더보기'}
-            </span>
-            <DownArrow />
-          </Button>
-        </div>
+        <LoadMoreButton
+          onClick={() => fetchNextPage()}
+          isLoading={isFetchingNextPage}
+          wrapperClassName="pb-20 lg:pb-24"
+        />
       )}
     </div>
   );

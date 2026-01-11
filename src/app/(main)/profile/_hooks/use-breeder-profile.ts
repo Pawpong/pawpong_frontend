@@ -13,7 +13,7 @@ import {
   type ProfileUpdateRequest,
   type ParentPetAddRequest,
   type AvailablePetAddRequest,
-} from '@/lib/breeder-management';
+} from '@/api/breeder-management';
 
 /**
  * 브리더 프로필 조회 훅

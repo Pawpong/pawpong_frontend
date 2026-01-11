@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import apiClient from '@/lib/api';
+import apiClient from '@/api/api';
 
 interface CounselBanner {
   bannerId: string;

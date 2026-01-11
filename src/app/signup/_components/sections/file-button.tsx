@@ -4,7 +4,7 @@ import FileIcon from '@/assets/icons/file';
 import CloseTertiary from '@/assets/icons/close-tertiary.svg';
 import ErrorMessage from '@/components/error-message';
 import { useFileUpload } from '../hooks/use-file-upload';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 
 interface FileButtonProps {
   children: React.ReactNode;
@@ -60,7 +60,6 @@ export default function FileButton({
               e.stopPropagation();
               handleDelete(e);
             }}
-            className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
           >
             <CloseTertiary className="size-6" />
           </button>
