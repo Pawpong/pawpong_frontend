@@ -24,6 +24,7 @@ import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useBreederProfile, useBreederPets, useParentPets, useBreederReviews } from '../_hooks/use-breeder-detail';
 import { useAuthStore } from '@/stores/auth-store';
 import { useAnalytics } from '@/hooks/use-analytics';
+import { formatBirthDateToKorean, formatDateToISO } from '@/utils/date-utils';
 
 interface BreederDetailClientProps {
   breederId: string;
@@ -291,28 +292,13 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
   // 브리더 소개 - API 응답 구조에 맞게 처리
   const breederDescription = (apiData.description || profileInfo?.profileDescription || '').trim();
 
-  // 날짜 포맷팅 함수 (YYYY년 MM월 DD일 생 형식)
-  const formatBirthDate = (dateString: string | Date | undefined) => {
-    if (!dateString) return '';
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return '';
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      return `${year}년 ${month}월 ${day}일 생`;
-    } catch {
-      return '';
-    }
-  };
-
   // 분양 가능 개체 매핑 (비회원은 가격 정보를 볼 수 없음)
   const breedingAnimals = ((petsData?.items || []) as BreederPetItem[]).map((pet) => ({
     id: pet.petId,
     avatarUrl: pet.mainPhoto || '/animal-sample.png',
     name: pet.name,
     sex: pet.gender,
-    birth: formatBirthDate(pet.birthDate),
+    birth: formatBirthDateToKorean(pet.birthDate),
     price: user ? `${pet.price?.toLocaleString() || 0}원` : null,
     breed: pet.breed,
     status:
@@ -327,7 +313,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     avatarUrl: pet.photoUrl || '/animal-sample.png',
     name: pet.name,
     sex: pet.gender,
-    birth: formatBirthDate(pet.birthDate),
+    birth: formatBirthDateToKorean(pet.birthDate),
     price: '', // 부모견은 가격이 없음
     breed: pet.breed,
     description: pet.description,
@@ -347,19 +333,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
 
     // 날짜 필드: 백엔드에서 writtenAt을 반환
     const dateString = review.writtenAt || review.createdAt;
-    let formattedDate = '';
-
-    if (dateString) {
-      try {
-        const date = new Date(dateString);
-        // 유효한 날짜인지 확인
-        if (!isNaN(date.getTime())) {
-          formattedDate = date.toISOString().split('T')[0];
-        }
-      } catch (error) {
-        console.error('Invalid date format:', dateString, error);
-      }
-    }
+    const formattedDate = formatDateToISO(dateString);
 
     // reviewType 매핑: 정규화된 값 또는 원본 값으로 매핑 시도
     const mappedType = typeMap[normalizedReviewType] || typeMap[rawReviewType] || '상담 후기';

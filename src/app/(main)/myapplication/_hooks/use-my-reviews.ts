@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getMyReviews, type MyReviewItemDto } from '@/lib/review';
+import { formatDateToDotNotation } from '@/utils/date-utils';
 
 export interface MyReviewItem {
   reviewId: string;
@@ -33,27 +34,18 @@ const mapDtoToMyReviewItem = (dto: MyReviewItemDto): MyReviewItem => {
     adoption: '입양 후기',
   };
 
-  // 날짜 포맷팅: ISO 8601 -> "2024. 01. 15." 형식
-  const formatDate = (dateString: Date | string): string => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}. ${month}. ${day}.`;
-  };
-
   return {
     reviewId: dto.reviewId,
     applicationId: dto.applicationId,
     breederId: dto.breederId || '',
     breederName: dto.breederNickname,
     breederLevel: dto.breederLevel === 'gold' || dto.breederLevel === 'platinum' ? 'elite' : 'new',
-    applicationDate: formatDate(dto.writtenAt), // 작성일을 신청일로 사용
+    applicationDate: formatDateToDotNotation(dto.writtenAt), // 작성일을 신청일로 사용
     profileImage: dto.breederProfileImage || '/profile-empty.svg',
     animalType: dto.breedingPetType as 'cat' | 'dog',
     reviewType: reviewTypeMap[dto.reviewType] || '상담 후기',
     reviewContent: dto.content,
-    reviewDate: formatDate(dto.writtenAt),
+    reviewDate: formatDateToDotNotation(dto.writtenAt),
   };
 };
 

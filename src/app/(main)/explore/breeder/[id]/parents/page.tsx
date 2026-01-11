@@ -7,6 +7,7 @@ import { useBreederProfile, useParentPetsInfinite } from '../_hooks/use-breeder-
 import { Button } from '@/components/ui/button';
 import DownArrow from '@/assets/icons/long-down-arrow.svg';
 import PetDetailDialog, { type PetDetailData } from '../_components/pet-detail-dialog';
+import { formatBirthDateToKorean } from '@/utils/date-utils';
 
 interface PageProps {
   params: Promise<{
@@ -26,21 +27,6 @@ export default function ParentsPage({ params }: PageProps) {
   } = useParentPetsInfinite(breederId, 8);
   const [selectedPet, setSelectedPet] = useState<PetDetailData | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  // 날짜 포맷팅 함수 (브리더 상세 페이지와 동일)
-  const formatBirthDate = (dateString: string | Date | undefined) => {
-    if (!dateString) return '';
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return '';
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      return `${year}년 ${month}월 ${day}일 생`;
-    } catch {
-      return '';
-    }
-  };
 
   // 부모견/부모묘 매핑 - 모든 페이지의 데이터를 합침
   type ParentPet = {
@@ -73,7 +59,7 @@ export default function ParentsPage({ params }: PageProps) {
         avatarUrl: pet.photoUrl || '/animal-sample.png',
         name: pet.name,
         sex: pet.gender,
-        birth: formatBirthDate(pet.birthDate),
+        birth: formatBirthDateToKorean(pet.birthDate),
         price: '', // 부모견은 가격이 없음
         breed: pet.breed,
         description: pet.description,
