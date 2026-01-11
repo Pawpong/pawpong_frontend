@@ -1,6 +1,6 @@
 'use client';
 import Gnb from '@/components/gnb/gnb';
-import Footer from '@/components/footer';
+import Footer from '@/components/footer/Footer';
 import { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import { NavigationGuardProvider } from '@/contexts/navigation-guard-context';
