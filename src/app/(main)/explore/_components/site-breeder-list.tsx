@@ -20,7 +20,7 @@ import LevelBadge from '@/components/level-badge';
 import { Button } from '@/components/ui/button';
 import GrayDot from '@/assets/icons/gray-dot.svg';
 import ExploreBreederAd from './explore-breeder-ad';
-import DownArrow from '@/assets/icons/long-down-arrow.svg';
+import LoadMoreButton from '@/components/ui/load-more-button';
 import { useBreeders } from '../_hooks/use-breeders';
 import { useFilterStore } from '@/stores/filter-store';
 import { mapFiltersToParams } from '@/lib/filter-mapper';
@@ -173,18 +173,8 @@ export default function SiteBreederList() {
         );
       })}
       {hasNextPage && (
-        <div className="col-span-full flex justify-center mt-8">
-          <Button
-            variant="ghost"
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            className="bg-[var(--color-grayscale-gray1)] hover:bg-[var(--color-grayscale-gray2)] h-12 py-2.5 gap-1 rounded-full has-[>svg]:px-0 has-[>svg]:pl-5 has-[>svg]:pr-3 disabled:opacity-50"
-          >
-            <span className="text-body-s font-medium text-grayscale-gray6">
-              {isFetchingNextPage ? '로딩 중...' : '더보기'}
-            </span>
-            <DownArrow />
-          </Button>
+        <div className="col-span-full mt-8">
+          <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} />
         </div>
       )}
     </BreederList>

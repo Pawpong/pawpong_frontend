@@ -4,8 +4,7 @@ import { use, useState } from 'react';
 import Header from '../../_components/header';
 import AnimalProfile from '../_components/animal-profile';
 import { useBreederProfile, useBreederPetsInfinite, useParentPets } from '../_hooks/use-breeder-detail';
-import { Button } from '@/components/ui/button';
-import DownArrow from '@/assets/icons/long-down-arrow.svg';
+import LoadMoreButton from '@/components/ui/load-more-button';
 import { useAuthStore } from '@/stores/auth-store';
 import PetDetailDialog, { type PetDetailData } from '../_components/pet-detail-dialog';
 import { formatBirthDateToKorean } from '@/utils/date-utils';
@@ -163,19 +162,7 @@ export default function PetsPage({ params }: PageProps) {
               />
               {/* 더보기 버튼 - 첫 페이지가 8개 이상이고 다음 페이지가 있을 때만 표시 */}
               {firstPageCount >= 8 && hasNextPage && (
-                <div className="flex justify-center">
-                  <Button
-                    variant="ghost"
-                    onClick={() => fetchNextPage()}
-                    disabled={isFetchingNextPage}
-                    className="bg-[var(--color-grayscale-gray1)] hover:bg-[var(--color-grayscale-gray2)] h-12 py-2.5 gap-1 rounded-full has-[>svg]:px-0 has-[>svg]:pl-5 has-[>svg]:pr-3 disabled:opacity-50"
-                  >
-                    <span className="text-body-s font-medium text-grayscale-gray6">
-                      {isFetchingNextPage ? '로딩 중...' : '더보기'}
-                    </span>
-                    <DownArrow />
-                  </Button>
-                </div>
+                <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} />
               )}
             </div>
           )}
