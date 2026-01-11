@@ -1,6 +1,6 @@
 import RequestStatusBadge from './request-status-badge';
 import ReceivedApplicationDialog from './received-application-dialog';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import type { CounselFormData } from '@/stores/counsel-form-store';
 
 interface ReceivedApplicationListItemProps {

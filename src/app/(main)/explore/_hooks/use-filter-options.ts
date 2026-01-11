@@ -8,7 +8,7 @@ import {
   getDogSizes,
   getCatFurLengths,
   getAdoptionStatus,
-} from '@/lib/filter-options';
+} from '@/api/filter-options';
 
 /**
  * 전체 필터 옵션 조회 hook

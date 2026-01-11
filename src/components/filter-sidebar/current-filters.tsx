@@ -1,5 +1,5 @@
 import Close from '@/assets/icons/close';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { Button } from '../ui/button';
 import { KOREA_DISTRICTS } from '@/constants/districts';
 import { useMemo } from 'react';

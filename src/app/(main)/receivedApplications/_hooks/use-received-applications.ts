@@ -5,7 +5,7 @@ import {
   getApplicationDetail,
   type ReceivedApplicationItemDto,
   type ReceivedApplicationDetailDto,
-} from '@/lib/breeder-management';
+} from '@/api/breeder-management';
 import { formatDateToISO } from '@/utils/date-utils';
 
 export interface ReceivedApplicationItem {

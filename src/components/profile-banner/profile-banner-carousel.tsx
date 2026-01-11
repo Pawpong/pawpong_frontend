@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getActiveProfileBanners, type ProfileBanner } from '@/lib/profile-banner';
+import { getActiveProfileBanners, type ProfileBanner } from '@/api/profile-banner';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';

@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getMyReviews, type MyReviewItemDto } from '@/lib/review';
+import { getMyReviews, type MyReviewItemDto } from '@/api/review';
 import { formatDateToDotNotation } from '@/utils/date-utils';
 
 export interface MyReviewItem {

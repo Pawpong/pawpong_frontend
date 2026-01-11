@@ -1,7 +1,7 @@
 import Female from '@/assets/icons/female';
 import Male from '@/assets/icons/male';
 import AdoptionStatusBadge from '@/components/adoption-status-badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import Image from 'next/image';
 import { Lock } from 'lucide-react';
 import BreedAdInfo from '@/components/breed-ad-info';

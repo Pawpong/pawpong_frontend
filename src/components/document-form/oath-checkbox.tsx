@@ -4,7 +4,7 @@ import OathDialogTrigger from '@/app/signup/_components/oath-dialog-trigger';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { type Level } from './document-constants';
 
 interface OathCheckboxProps {

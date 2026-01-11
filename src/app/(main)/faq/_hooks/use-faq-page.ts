@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 import { useFaqs } from './use-faqs';
-import type { FaqDto } from '@/lib/home';
+import type { FaqDto } from '@/api/home';
 
 type TabType = 'adopter' | 'breeder';
 

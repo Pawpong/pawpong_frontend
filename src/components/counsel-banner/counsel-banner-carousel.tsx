@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getActiveCounselBanners, type CounselBanner } from '@/lib/counsel-banner';
+import { getActiveCounselBanners, type CounselBanner } from '@/api/counsel-banner';
 import { useRouter } from 'next/navigation';
 
 export default function CounselBannerCarousel() {

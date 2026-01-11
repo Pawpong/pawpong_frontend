@@ -7,7 +7,7 @@ import LoadMoreButton from '@/components/ui/load-more-button';
 import { useApplications } from './_hooks/use-applications';
 import { useAuthGuard } from '@/hooks/use-auth-guard';
 import { useAuthStore } from '@/stores/auth-store';
-import { getUserRoleFromCookie } from '@/lib/cookie-utils';
+import { getUserRoleFromCookie } from '@/api/cookie-utils';
 import { useState, useEffect } from 'react';
 
 const ApplicationPage = () => {

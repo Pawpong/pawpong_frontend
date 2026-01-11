@@ -9,8 +9,8 @@ import {
   updatePetStatus,
   type ParentPetAddRequest,
   type AvailablePetAddRequest,
-} from '@/lib/breeder-management';
-import { uploadParentPetPhoto, uploadAvailablePetPhoto } from '@/lib/upload';
+} from '@/api/breeder-management';
+import { uploadParentPetPhoto, uploadAvailablePetPhoto } from '@/api/upload';
 
 type PetStatus = 'available' | 'reserved' | 'adopted';
 

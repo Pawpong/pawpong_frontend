@@ -1,7 +1,7 @@
 'use client';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getAvailablePets, type AvailablePetDto } from '@/lib/home';
+import { getAvailablePets, type AvailablePetDto } from '@/api/home';
 import type { HomeAnimalData } from '../_types/home-animal.types';
 import { formatBirthDateToKorean } from '@/utils/date-utils';
 

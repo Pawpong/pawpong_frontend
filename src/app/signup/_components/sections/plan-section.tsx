@@ -5,7 +5,7 @@ import SignupFormSection from '@/components/signup-form-section/signup-form-sect
 import SignupFormTitle from '@/components/signup-form-section/signup-form-title';
 import UndoButton from '@/components/signup-form-section/undo-button';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import useSignupFormStore, { Plan } from '@/stores/signup-form-store';
 import Image from 'next/image';
 

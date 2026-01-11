@@ -4,7 +4,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as React from 'react';
 
 import Close from '@/assets/icons/close';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import CircleBadge from '../circle-badge';
 import { buttonVariants } from './button';
 

@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import DownArrow from '@/assets/icons/long-down-arrow.svg';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 
 interface LoadMoreButtonProps {
   onClick: () => void;

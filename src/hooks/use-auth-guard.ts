@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
-import { getAdopterProfile } from '@/lib/adopter';
-import { getMyBreederProfile } from '@/lib/breeder';
-import { getUserRoleFromCookie } from '@/lib/cookie-utils';
+import { getAdopterProfile } from '@/api/adopter';
+import { getMyBreederProfile } from '@/api/breeder';
+import { getUserRoleFromCookie } from '@/api/cookie-utils';
 
 interface UseAuthGuardOptions {
   redirectTo?: string;

@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getFavorites, addFavorite, removeFavorite } from '@/lib/adopter';
+import { getFavorites, addFavorite, removeFavorite } from '@/api/adopter';
 
 /**
  * 즐겨찾기 목록 조회 hook

@@ -13,7 +13,7 @@ import {
   uploadVerificationDocuments,
   submitVerificationDocuments,
   type UploadedDocumentDto,
-} from '@/lib/breeder-management';
+} from '@/api/breeder-management';
 import type { Animal, Level } from '@/components/document-form/document-constants';
 import { useToast } from '@/hooks/use-toast';
 

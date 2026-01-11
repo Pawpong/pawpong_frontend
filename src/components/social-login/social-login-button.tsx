@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { Button } from '../ui/button';
 
 export default function SocialLoginButton({ className, children, ...props }: React.ComponentProps<'button'>) {

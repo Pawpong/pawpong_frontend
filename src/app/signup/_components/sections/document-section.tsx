@@ -11,8 +11,8 @@ import SignupFormTitle from '@/components/signup-form-section/signup-form-title'
 import UndoButton from '@/components/signup-form-section/undo-button';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { cn } from '@/lib/utils';
-import { completeBreederRegistration, uploadBreederDocuments, uploadProfileImage } from '@/lib/auth';
+import { cn } from '@/api/utils';
+import { completeBreederRegistration, uploadBreederDocuments, uploadProfileImage } from '@/api/auth';
 import useSignupFormStore from '@/stores/signup-form-store';
 import { useRouter } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';

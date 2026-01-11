@@ -1,9 +1,9 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getMyBreederProfile } from '@/lib/breeder';
+import { getMyBreederProfile } from '@/api/breeder';
 import { NAV_ITEMS_BREEDER, type NavItem } from '@/components/gnb/nav-items';
-import { getUserRoleFromCookie } from '@/lib/cookie-utils';
+import { getUserRoleFromCookie } from '@/api/cookie-utils';
 import { useAuthStore } from '@/stores/auth-store';
 
 /**

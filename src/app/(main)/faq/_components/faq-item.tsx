@@ -1,7 +1,7 @@
 'use client';
 
-import { FaqDto } from '@/lib/home';
-import { cn } from '@/lib/utils';
+import { FaqDto } from '@/api/home';
+import { cn } from '@/api/utils';
 import { ChevronDown } from 'lucide-react';
 interface FaqItemProps {
   item: FaqDto;

@@ -11,8 +11,8 @@ import ProfileImageWithBadge from '@/components/breeder/profile-image-with-badge
 import BreederInfo from '@/components/breeder/breeder-info';
 import RightArrow from '@/assets/icons/right-arrow.svg';
 import Close from '@/assets/icons/close';
-import { cn } from '@/lib/utils';
-import { createReview, getReviewByApplicationId, type MyReviewItemDto } from '@/lib/review';
+import { cn } from '@/api/utils';
+import { createReview, getReviewByApplicationId, type MyReviewItemDto } from '@/api/review';
 import { useToast } from '@/hooks/use-toast';
 
 interface ReviewWriteDialogProps {

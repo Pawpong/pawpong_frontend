@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import ErrorIcon from '@/assets/icons/error';
 
 interface ExitConfirmDialogProps {

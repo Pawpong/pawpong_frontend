@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import PictureRemove from '@/assets/icons/picture-delete.svg';
 export interface ImageFile {
   id: string;

@@ -1,4 +1,4 @@
-import type { ApplicationCreateRequest } from '@/lib/application';
+import type { ApplicationCreateRequest } from '@/api/application';
 import type { CounselFormData } from '../_types/counsel';
 
 export function mapToApplicationRequest(formData: CounselFormData, breederId: string, petId?: string): ApplicationCreateRequest {

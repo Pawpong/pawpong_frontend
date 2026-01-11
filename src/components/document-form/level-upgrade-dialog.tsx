@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { LargeDialog, LargeDialogContent, LargeDialogTrigger, LargeDialogClose } from '@/components/ui/large-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Close from '@/assets/icons/close';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { LEVEL_INFO, DOCUMENT_KEYS, type Animal, type Level } from './document-constants';
 import DocumentUploadFields from './document-upload-fields';
 import OathCheckbox from './oath-checkbox';
@@ -14,7 +14,7 @@ import {
   uploadVerificationDocuments,
   submitVerificationDocuments,
   type UploadedDocumentDto,
-} from '@/lib/breeder-management';
+} from '@/api/breeder-management';
 import { useToast } from '@/hooks/use-toast';
 
 interface DocumentState {

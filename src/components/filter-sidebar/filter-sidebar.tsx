@@ -1,7 +1,7 @@
 'use client';
 
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { useFilterStore } from '@/stores/filter-store';
 import { Separator } from '../ui/separator';
 import AdoptableFilter from './adoptable-filter';

@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSortOptions } from '../_hooks/use-filter-options';
 

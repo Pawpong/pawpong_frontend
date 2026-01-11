@@ -5,7 +5,7 @@
  */
 
 import { useCallback } from 'react';
-import * as analytics from '@/lib/analytics';
+import * as analytics from '@/api/analytics';
 
 export const useAnalytics = () => {
   // 페이지뷰 트래킹

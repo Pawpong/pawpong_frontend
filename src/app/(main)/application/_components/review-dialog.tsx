@@ -14,9 +14,9 @@ import BreederInfo from '@/components/breeder/breeder-info';
 import RightArrow from '@/assets/icons/right-arrow.svg';
 import Close from '@/assets/icons/close';
 import Arrow from '@/assets/icons/arrow';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import ReviewWriteDialog from './review-write-dialog';
-import { getApplicationDetail, type ApplicationDetailDto } from '@/lib/application';
+import { getApplicationDetail, type ApplicationDetailDto } from '@/api/application';
 
 interface ReviewDialogProps {
   applicationId: string;

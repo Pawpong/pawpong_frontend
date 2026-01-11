@@ -1,7 +1,7 @@
 'use client';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getMyApplications, type ApplicationListItemDto } from '@/lib/application';
+import { getMyApplications, type ApplicationListItemDto } from '@/api/application';
 
 interface MyApplicationsResponse {
   data: ApplicationListItemDto[];

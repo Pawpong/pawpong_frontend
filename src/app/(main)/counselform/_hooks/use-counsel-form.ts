@@ -11,7 +11,7 @@ import { useCounselFormStore } from '@/stores/counsel-form-store';
 import { formatPhoneNumber } from '@/utils/phone';
 import { isFormComplete, isFormEmpty } from '@/utils/counsel-form-validation';
 import { useCreateApplication } from '../_hooks/use-application';
-import type { ApplicationCreateRequest } from '@/lib/application';
+import type { ApplicationCreateRequest } from '@/api/application';
 import { mapToApplicationRequest } from '../_utils/form-mapper';
 import { usePetOptions } from './use-pet-options';
 import { counselSchema } from '../_utils/validators';

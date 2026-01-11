@@ -1,7 +1,7 @@
 'use client';
 
 import Camera from '@/assets/icons/camera.svg';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import { useState, useRef, useEffect } from 'react';
 import ImagePreview, { ImageFile } from './image-preview';
 

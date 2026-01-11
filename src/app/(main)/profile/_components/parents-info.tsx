@@ -11,7 +11,7 @@ import Female from '@/assets/icons/female.svg';
 import PictureRemove from '@/assets/icons/picture-delete.svg';
 import Image from 'next/image';
 import { useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,

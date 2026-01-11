@@ -8,7 +8,7 @@ import {
   markAllAsRead,
   deleteNotification,
   NotificationResponseDto,
-} from "@/lib/notification";
+} from "@/api/notification";
 import { useAuthStore } from "@/stores/auth-store";
 
 /** 알림 목록 조회 훅 */

@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getAdopterFaqs, getBreederFaqs, type FaqDto } from '@/lib/home';
+import { getAdopterFaqs, getBreederFaqs, type FaqDto } from '@/api/home';
 
 type UserType = 'adopter' | 'breeder';
 

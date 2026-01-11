@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getBanners, type BannerDto } from '@/lib/home';
+import { getBanners, type BannerDto } from '@/api/home';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
 
