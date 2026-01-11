@@ -11,8 +11,8 @@ const getBaseURL = () => {
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
 
-    // Vercel 개발 배포
-    if (hostname.includes('pawpongdev.vercel.app')) {
+    // 개발 환경 (dev.pawpong.kr)
+    if (hostname.includes('dev.pawpong.kr')) {
       return 'https://dev-api.pawpong.kr';
     }
 
