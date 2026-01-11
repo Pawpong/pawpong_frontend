@@ -1,6 +1,6 @@
-import FooterLinks from './FooterLinks';
-import FooterSNS from './FooterSNS';
-import FooterCompanyInfo from './FooterCompanyInfo';
+import FooterLinks from './footer-links';
+import FooterSNS from './footer-SNS';
+import FooterCompanyInfo from './footer-company-info';
 
 export default function Footer() {
   return (
