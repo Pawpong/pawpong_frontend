@@ -199,10 +199,13 @@ export default function DocumentSection() {
   const handleSubmit = async () => {
     setSubmitAttempted(true);
 
-    // 필수 서류 검증 (브리더 인증 서류 제외)
-    // 엘리트: 신분증 사본, 동물생산업 등록증, 표준 입양계약서 샘플 (3개 필수)
+    // 필수 서류 검증
+    // 엘리트: 신분증 사본, 동물생산업 등록증, 표준 입양계약서 샘플, 브리더 인증 서류 (4개 필수)
     // 뉴: 신분증 사본, 동물생산업 등록증 (2개 필수)
-    const missingRequired = !hasIdCard || !hasAnimalLicense || (level === 'elite' && !hasContractSample);
+    const missingRequired =
+      !hasIdCard ||
+      !hasAnimalLicense ||
+      (level === 'elite' && (!hasContractSample || !hasBreederCert));
 
     const currentCheck = check[level];
 

@@ -44,17 +44,25 @@ export function useBreederNavItems(): { navItems: NavItem[]; isLoading: boolean 
     if (item.name === '마이' && item.children) {
       return {
         ...item,
-        children: item.children.map((child) => {
-          // '내 프로필' 메뉴는 승인된 경우에만 활성화하고 브리더 상세페이지로 이동
-          if (child.name === '내 프로필') {
-            return {
-              ...child,
-              href: isApproved ? `/explore/breeder/${breederProfile.breederId}` : child.href,
-              variant: isApproved ? 'default' : ('disabled' as const),
-            };
-          }
-          return child;
-        }),
+        children: item.children
+          .filter((child) => {
+            // showForVerificationStatus가 설정된 경우, 현재 상태가 포함되어 있는지 확인
+            if (child.showForVerificationStatus && verificationStatus) {
+              return child.showForVerificationStatus.includes(verificationStatus);
+            }
+            return true; // showForVerificationStatus가 없으면 항상 표시
+          })
+          .map((child) => {
+            // '내 프로필' 메뉴는 승인된 경우에만 활성화하고 브리더 상세페이지로 이동
+            if (child.name === '내 프로필') {
+              return {
+                ...child,
+                href: isApproved ? `/explore/breeder/${breederProfile.breederId}` : child.href,
+                variant: isApproved ? 'default' : ('disabled' as const),
+              };
+            }
+            return child;
+          }),
       };
     }
     return item;
