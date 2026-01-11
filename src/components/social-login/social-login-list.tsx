@@ -22,8 +22,8 @@ export default function SocialLoginList() {
     // 2순위: 브라우저 환경에서 자동 감지
     const hostname = window.location.hostname;
 
-    // Vercel 개발 배포
-    if (hostname.includes('pawpongdev.vercel.app')) {
+    // 개발 환경 (dev.pawpong.kr 또는 Vercel 개발 배포)
+    if (hostname.includes('dev.pawpong.kr')) {
       return 'https://dev-api.pawpong.kr';
     }
 
