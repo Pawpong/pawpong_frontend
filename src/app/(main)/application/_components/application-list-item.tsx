@@ -40,7 +40,14 @@ const getStatusBadge = (status: string) => {
     case 'consultation_pending':
       return (
         <Badge className="bg-[#A0C8F4] text-[#4F3B2E] hover:bg-[#A0C8F4] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="shrink-0"
+          >
             <rect x="3" y="7" width="2" height="2" fill="#4F3B2E" />
             <rect x="7" y="7" width="2" height="2" fill="#4F3B2E" />
             <rect x="11" y="7" width="2" height="2" fill="#4F3B2E" />
@@ -51,8 +58,21 @@ const getStatusBadge = (status: string) => {
     case 'consultation_completed':
       return (
         <Badge className="bg-[#A0A0A0] text-white hover:bg-[#A0A0A0] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-            <path d="M4 8L6.5 10.5L12 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="shrink-0"
+          >
+            <path
+              d="M4 8L6.5 10.5L12 5"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
           <span className="text-caption font-medium">상담 완료</span>
         </Badge>
@@ -60,8 +80,21 @@ const getStatusBadge = (status: string) => {
     case 'adoption_approved':
       return (
         <Badge className="bg-[#A0A0A0] text-white hover:bg-[#A0A0A0] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-            <path d="M4 8L6.5 10.5L12 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="shrink-0"
+          >
+            <path
+              d="M4 8L6.5 10.5L12 5"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
           <span className="text-caption font-medium">입양 승인</span>
         </Badge>
@@ -69,8 +102,21 @@ const getStatusBadge = (status: string) => {
     case 'adoption_rejected':
       return (
         <Badge className="bg-[#A0A0A0] text-white hover:bg-[#A0A0A0] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-            <path d="M5 5L11 11M11 5L5 11" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="shrink-0"
+          >
+            <path
+              d="M5 5L11 11M11 5L5 11"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
           <span className="text-caption font-medium">입양 거절</span>
         </Badge>
@@ -110,7 +156,6 @@ export default function ApplicationListItem({
 
   // 입양자 화면 (브리더 정보 표시)
   if (!isBreeder && breederName && breederLevel) {
-
     const hasReview = !!existingReview;
     const buttonText = hasReview ? '후기 보기' : '후기 작성';
 
