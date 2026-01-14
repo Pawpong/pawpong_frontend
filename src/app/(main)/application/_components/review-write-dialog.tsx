@@ -1,19 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Dialog, DialogContent, DialogClose, DialogTitle } from '@/components/ui/dialog';
+import { useEffect, useState } from 'react';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import ProfileImageWithBadge from '@/components/breeder/profile-image-with-badge';
-import BreederInfo from '@/components/breeder/breeder-info';
-import RightArrow from '@/assets/icons/right-arrow.svg';
-import Close from '@/assets/icons/close';
-import { cn } from '@/api/utils';
-import { createReview } from '@/api/review';
-import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
+
+import { useReviewWrite } from '../_hooks/use-review-write';
+import ReviewHeader from './review-header';
+import BreederSummary from './breeder-summary';
+import ReviewTabs from './review-tabs';
+import ReviewTextarea from './review-textarea';
+import ReviewFooter from './review-footer';
 
 interface ReviewWriteDialogProps {
   open: boolean;
@@ -38,61 +35,28 @@ export default function ReviewWriteDialog({
   profileImage,
   animalType,
 }: ReviewWriteDialogProps) {
-  const router = useRouter();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<'상담 후기' | '입양 후기'>('상담 후기');
   const [reviewText, setReviewText] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
 
   // 다이얼로그가 열릴 때마다 초기화
   useEffect(() => {
     if (open) {
-      setReviewText('');
       setActiveTab('상담 후기');
+      setReviewText('');
     }
   }, [open]);
 
-  const createReviewMutation = useMutation({
-    mutationFn: createReview,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['my-reviews'] });
-      queryClient.invalidateQueries({ queryKey: ['applications'] });
-      queryClient.invalidateQueries({ queryKey: ['review-by-application', applicationId] });
-      toast({
-        title: '후기가 작성되었습니다.',
-        position: 'default',
-      });
-      onOpenChange(false);
-      router.push('/myapplication');
-    },
-    onError: (error) => {
-      toast({
-        title: '후기 작성에 실패했습니다.',
-        description: error instanceof Error ? error.message : '다시 시도해주세요.',
-        position: 'default',
-      });
-    },
+  const { submitReview, isLoading } = useReviewWrite({
+    applicationId,
+    onSuccessClose: () => onOpenChange(false),
   });
 
   const handleSubmit = () => {
-    if (!reviewText.trim()) {
-      toast({
-        title: '후기 내용을 입력해주세요.',
-        position: 'default',
-      });
-      return;
-    }
-
     const reviewType = activeTab === '상담 후기' ? 'consultation' : 'adoption';
-
-    // 항상 새로 작성
-    createReviewMutation.mutate({
-      applicationId,
-      reviewType,
-      content: reviewText,
-    });
+    submitReview(reviewText, reviewType);
   };
+
+  const placeholder = activeTab === '상담 후기' ? '브리더님과의 상담은 어떠셨나요?' : '입양하는 과정은 어떠셨나요?';
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -103,130 +67,29 @@ export default function ReviewWriteDialog({
         <VisuallyHidden>
           <DialogTitle>후기 작성</DialogTitle>
         </VisuallyHidden>
-        {/* 헤더 */}
-        <div className="flex flex-col gap-[10px] items-start pt-6 px-5 pb-[10px] md:pt-6 md:px-6 md:pb-[10px] shrink-0">
-          <div className="flex gap-1 items-center justify-end w-full">
-            <DialogClose asChild>
-              <Button variant="secondary" size="icon">
-                <Close className="size-7" />
-              </Button>
-            </DialogClose>
-          </div>
-        </div>
 
-        {/* 구분선 */}
-        <div className="h-px bg-grayscale-gray2 w-full shrink-0" />
+        <ReviewHeader onClose={() => onOpenChange(false)} />
 
-        {/* 스크롤 가능한 콘텐츠 영역 */}
+        <Separator />
+
         <div className="bg-[var(--color-tertiary-500)] flex flex-col gap-5 flex-1 min-h-0 overflow-y-auto px-5 pt-6 md:px-6 pb-6">
-          {/* 브리더 정보 - 전체 클릭 시 브리더 페이지로 이동 */}
-          <div
-            className="flex items-center justify-between w-full cursor-pointer hover:opacity-80 transition-opacity"
-            onClick={() => {
-              onOpenChange(false);
-              router.push(`/explore/breeder/${breederId}`);
-            }}
-          >
-            <div className="flex gap-5 items-center grow">
-              <ProfileImageWithBadge src={profileImage} alt={breederName} animalType={animalType} size={68} />
-              <BreederInfo
-                breederName={breederName}
-                breederLevel={breederLevel}
-                applicationDate={applicationDate}
-                className="gap-3"
-              />
-            </div>
-            <Button
-              className="gap-1 text-grayscale-gray5 text-body-xs h-auto p-0 has-[>svg]:px-0 hover:bg-transparent"
-              onClick={(e) => {
-                e.stopPropagation();
-                onOpenChange(false);
-                router.push(`/explore/breeder/${breederId}`);
-              }}
-            >
-              <span>보기</span>
-              <RightArrow className="size-5" />
-            </Button>
-          </div>
+          <BreederSummary
+            breederId={breederId}
+            breederName={breederName}
+            breederLevel={breederLevel}
+            applicationDate={applicationDate}
+            profileImage={profileImage}
+            animalType={animalType}
+            onOpenChange={onOpenChange}
+          />
 
-          {/* 탭 및 후기 작성 영역 */}
-          <div className="flex flex-col gap-5 items-start w-full">
-            {/* 탭 */}
-            <div className="flex gap-4 items-start">
-              <button onClick={() => setActiveTab('상담 후기')} className="flex flex-col items-start">
-                <p
-                  className={cn(
-                    'text-body-m font-semibold',
-                    activeTab === '상담 후기' ? 'text-primary-500' : 'text-grayscale-gray5',
-                  )}
-                >
-                  상담 후기
-                </p>
-                <div className="h-[2px] w-full mt-1.5">
-                  {activeTab === '상담 후기' && <div className="bg-primary-500 h-[2px] w-full" />}
-                </div>
-              </button>
-              <button onClick={() => setActiveTab('입양 후기')} className="flex flex-col items-start">
-                <p
-                  className={cn(
-                    'text-body-m font-semibold',
-                    activeTab === '입양 후기' ? 'text-primary-500' : 'text-grayscale-gray5',
-                  )}
-                >
-                  입양 후기
-                </p>
-                <div className="h-[2px] w-full mt-1.5">
-                  {activeTab === '입양 후기' && <div className="bg-primary-500 h-[2px] w-full" />}
-                </div>
-              </button>
-            </div>
-
-            {/* 후기 Textarea */}
-            <div className="bg-white flex flex-col items-start rounded-lg w-full">
-              <div className="box-border flex flex-col gap-[var(--space-16)] items-start pb-0 pt-[var(--space-12)] px-[var(--space-16)] relative w-full">
-                <Textarea
-                  value={reviewText}
-                  onChange={(e) => {
-                    const newValue = e.target.value;
-                    if (newValue.length <= 800) {
-                      setReviewText(newValue);
-                    }
-                  }}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                  placeholder={
-                    activeTab === '상담 후기' ? '브리더님과의 상담은 어떠셨나요?' : '입양하는 과정은 어떠셨나요?'
-                  }
-                  maxLength={800}
-                  showLength={false}
-                  currentLength={reviewText.length}
-                  className="min-h-[140px] border-0 focus-visible:ring-0 focus-visible:ring-offset-0 p-0 text-body-xs placeholder:text-grayscale-gray5"
-                />
-              </div>
-              <div className="bg-white box-border flex gap-[10px] items-center justify-end pb-[var(--space-12)] pt-[var(--space-16)] px-[var(--space-16)] relative rounded-bl-lg rounded-br-lg shrink-0 w-full min-h-[44px]">
-                <p
-                  className={`text-[14px] font-medium text-grayscale-gray5 text-right leading-[20px] ${
-                    isFocused ? 'opacity-100' : 'opacity-0'
-                  }`}
-                >
-                  <span className="text-[#4e9cf1]">{reviewText.length}</span>
-                  /800
-                </p>
-              </div>
-            </div>
+          <div className="flex flex-col gap-4 items-start w-full">
+            <ReviewTabs activeTab={activeTab} onChange={setActiveTab} />
+            <ReviewTextarea value={reviewText} onChange={setReviewText} placeholder={placeholder} />
           </div>
         </div>
 
-        {/* 하단 버튼 */}
-        <>
-          {/* 구분선 */}
-          <div className="h-px bg-grayscale-gray2 w-full shrink-0" />
-          <div className="bg-white flex gap-2.5 items-start justify-end pb-4 pt-4 px-5 md:pb-6 md:pt-4 md:px-6 shrink-0">
-            <button className="button-brown" onClick={handleSubmit}>
-              후기 작성하기
-            </button>
-          </div>
-        </>
+        <ReviewFooter onSubmit={handleSubmit} disabled={isLoading} />
       </DialogContent>
     </Dialog>
   );

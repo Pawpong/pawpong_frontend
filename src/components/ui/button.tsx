@@ -11,7 +11,7 @@ const buttonVariants = cva(
       variant: {
         // 기본 버튼: 주요 액션에 사용 (예: 회원가입, 제출 등)
         default: 'bg-primary text-white hover:bg-primary-600 ',
-
+        primary: 'bg-primary-500 text-white hover:bg-primary-600 ',
         // 아웃라인 버튼: 보조 액션에 사용 (예: 취소, 뒤로가기 등)
         outline:
           'border bg-background hover:bg-branding-bg border-[#EEEBDE] hover:text-primary-500 dark:bg-input/30 dark:border-input dark:hover:bg-input/50',

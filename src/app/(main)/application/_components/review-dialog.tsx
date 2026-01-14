@@ -370,9 +370,9 @@ export default function ReviewDialog({
           {/* 하단 버튼 - 후기 작성 가능할 때만 내용 표시, 그렇지 않으면 빈 공간 */}
           <div className="bg-white flex gap-2.5 items-start justify-end overflow-clip pb-6 pt-4 px-6 shrink-0">
             {canWriteReview && (
-              <button className="button-brown" onClick={handleReviewWriteClick}>
+              <Button variant="primary" onClick={handleReviewWriteClick}>
                 후기 작성하기
-              </button>
+              </Button>
             )}
           </div>
         </DialogContent>

@@ -9,7 +9,12 @@ import NotificationEmptyState from './notification-empty-state';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { NOTIFICATION_CONFIG, NotificationType, getNotificationTargetUrl } from '@/constants/notification-messages';
-import { useNotifications, useMarkAllAsRead, useMarkAsRead, transformNotificationForUI } from '@/hooks/use-notifications';
+import {
+  useNotifications,
+  useMarkAllAsRead,
+  useMarkAsRead,
+  transformNotificationForUI,
+} from '@/hooks/use-notifications';
 import ReviewWriteDialog from '@/app/(main)/application/_components/review-write-dialog';
 
 // UI에서 사용할 알림 데이터 인터페이스
