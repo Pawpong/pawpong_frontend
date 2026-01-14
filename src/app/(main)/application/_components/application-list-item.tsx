@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import ProfileImageWithBadge from '@/components/breeder/profile-image-with-badge';
 import BreederInfo from '@/components/breeder/breeder-info';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,6 @@ import ReviewDialog from './review-dialog';
 import ReviewWriteDialog from './review-write-dialog';
 import { Badge } from '@/components/ui/badge';
 import ApplicationDetailModal from './application-detail-modal';
-import { getReviewByApplicationId } from '@/api/review';
 
 interface ApplicationListItemProps {
   applicationId: string;
@@ -145,19 +143,13 @@ export default function ApplicationListItem({
   // 입양자 화면용 상태
   const canWriteReview = status === 'consultation_completed' || status === 'adoption_approved';
   const [showReviewWriteDialog, setShowReviewWriteDialog] = useState(false);
-  const { data: existingReview } = useQuery({
-    queryKey: ['review-by-application', applicationId],
-    queryFn: () => getReviewByApplicationId(applicationId),
-    enabled: !isBreeder && canWriteReview, // 입양자이고 후기 작성 가능할 때만 쿼리 실행
-  });
 
   // 브리더 화면용 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 입양자 화면 (브리더 정보 표시)
   if (!isBreeder && breederName && breederLevel) {
-    const hasReview = !!existingReview;
-    const buttonText = hasReview ? '후기 보기' : '후기 작성';
+    const buttonText = '후기 작성';
 
     const handleReviewButtonClick = (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -198,7 +190,7 @@ export default function ApplicationListItem({
                     onClick={handleReviewButtonClick}
                   >
                     <span className="text-body-xs font-normal text-grayscale-gray6">{buttonText}</span>
-                    {!hasReview && <Pencil className="size-4" />}
+                    <Pencil className="size-4" />
                   </Button>
                 )}
               </div>
@@ -212,7 +204,7 @@ export default function ApplicationListItem({
                 onClick={handleReviewButtonClick}
               >
                 <span className="text-body-xs font-normal text-grayscale-gray6">{buttonText}</span>
-                {!hasReview && <Pencil className="size-4" />}
+                <Pencil className="size-4" />
               </Button>
             )}
           </div>
