@@ -25,10 +25,8 @@ import { BREEDER_PROFILE_ERROR } from '@/constants/errors/breeder-profile-error'
 
 export default function ParentsInfo({
   form,
-  maxParents,
 }: {
   form: ReturnType<typeof useFormContext<ProfileFormData>>;
-  maxParents?: number;
 }) {
   const { control, watch, formState, getValues, setValue } = form;
   const { errors } = formState;
@@ -54,10 +52,7 @@ export default function ParentsInfo({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const MAX_PARENTS = maxParents ?? 100;
-
   const addParent = () => {
-    if (fields.length >= MAX_PARENTS) return;
     append({
       id: `parent-${Date.now()}-${Math.random()}`,
       name: '',
@@ -349,12 +344,11 @@ export default function ParentsInfo({
       </div>
 
       {/* 추가하기 버튼 */}
-      {fields.length < MAX_PARENTS && (
-        <Button
-          onClick={addParent}
-          variant="addParent"
-          className="bg-tertiary-700 flex gap-1 items-center overflow-hidden pl-3 pr-5 py-2.5 relative rounded-full shrink-0"
-        >
+      <Button
+        onClick={addParent}
+        variant="addParent"
+        className="bg-tertiary-700 flex gap-1 items-center overflow-hidden pl-3 pr-5 py-2.5 relative rounded-full shrink-0"
+      >
           <div className="overflow-hidden relative shrink-0 size-7 flex items-center justify-center">
             <Plus />
           </div>
@@ -362,7 +356,6 @@ export default function ParentsInfo({
             추가하기
           </p>
         </Button>
-      )}
     </div>
   );
 }

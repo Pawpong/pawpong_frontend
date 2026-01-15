@@ -57,11 +57,11 @@ export default function Parents({
     <BreederProfileSection>
       <BreederProfileSectionHeader>
         <BreederProfileSectionTitle>엄마 · 아빠</BreederProfileSectionTitle>
-        {data.length > 1 ? (
+        {data.length > 3 && (
           <div onClick={handleMoreClick}>
             <BreederProfileSectionMore />
           </div>
-        ) : null}
+        )}
       </BreederProfileSectionHeader>
       {data.length === 0 ? (
         <EmptyPetState />

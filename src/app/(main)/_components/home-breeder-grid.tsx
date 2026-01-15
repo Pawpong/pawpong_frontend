@@ -3,7 +3,6 @@
 import AnimalProfile from '@/app/(main)/explore/breeder/[id]/_components/animal-profile';
 import Link from 'next/link';
 import LoadMoreButton from '@/components/ui/load-more-button';
-
 import BreederProfileSectionHeader from '@/components/breeder-profile/breeder-profile-section-header';
 import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
 import { useHomeAnimals } from '../_hooks/use-home-animals';

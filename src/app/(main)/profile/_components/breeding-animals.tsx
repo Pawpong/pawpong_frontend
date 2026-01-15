@@ -58,10 +58,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const MAX_ANIMALS = 6;
-
   const addAnimal = () => {
-    if (fields.length >= MAX_ANIMALS) return;
     append({
       id: `animal-${Date.now()}-${Math.random()}`,
       name: '',
@@ -606,20 +603,18 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
       </div>
 
       {/* 추가하기 버튼 */}
-      {fields.length < MAX_ANIMALS && (
-        <Button
-          onClick={addAnimal}
-          variant="addParent"
-          className="bg-tertiary-700 flex gap-1 items-center overflow-hidden pl-3 pr-5 py-2.5 relative rounded-full shrink-0"
-        >
-          <div className="overflow-hidden relative shrink-0 size-7 flex items-center justify-center">
-            <Plus />
-          </div>
-          <p className="font-medium leading-body-s relative shrink-0 text-grayscale-gray6 text-body-s text-center text-nowrap">
-            추가하기
-          </p>
-        </Button>
-      )}
+      <Button
+        onClick={addAnimal}
+        variant="addParent"
+        className="bg-tertiary-700 flex gap-1 items-center overflow-hidden pl-3 pr-5 py-2.5 relative rounded-full shrink-0"
+      >
+        <div className="overflow-hidden relative shrink-0 size-7 flex items-center justify-center">
+          <Plus />
+        </div>
+        <p className="font-medium leading-body-s relative shrink-0 text-grayscale-gray6 text-body-s text-center text-nowrap">
+          추가하기
+        </p>
+      </Button>
     </div>
   );
 }
