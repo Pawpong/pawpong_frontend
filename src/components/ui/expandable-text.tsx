@@ -33,7 +33,7 @@ export function ExpandableText({
         {/* 텍스트 영역 */}
         <div
           ref={textRef}
-          className={cn('overflow-hidden text-body-s text-primary-500 transition-all')}
+          className={cn('overflow-hidden text-body-s text-primary-500 transition-all whitespace-pre-wrap')}
           style={expanded ? {} : { maxHeight: '200px' }}
         >
           {data}
