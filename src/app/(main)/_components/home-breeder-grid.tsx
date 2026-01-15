@@ -13,6 +13,10 @@ export default function HomeBreederGrid() {
 
   const animals = data?.pages.flatMap((page) => page.data) ?? [];
 
+  if (animals.length === 0) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col gap-20 mb-20">
       <div className="flex flex-col gap-7">
