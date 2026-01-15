@@ -3,10 +3,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, Volume2, VolumeX } from 'lucide-react';
 import Hls from 'hls.js';
-import { FeedVideo, getHlsStreamUrl } from '@/lib/feed';
+import { FeedVideo, getHlsStreamUrl } from '@/app/api/feed';
 import { useToggleVideoLike } from '../_hooks/use-feed';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
+import { cn } from '@/api/utils';
 
 interface FeedVideoCardProps {
   video: FeedVideo;
