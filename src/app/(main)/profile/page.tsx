@@ -541,7 +541,7 @@ export default function ProfilePage() {
               animal={animalType}
             />
             {/* 엄마 아빠 정보 */}
-            <ParentsInfo form={form} maxParents={apiProfileData?.verificationInfo?.plan === 'basic' ? 4 : undefined} />
+            <ParentsInfo form={form} />
             {/* 분양 중인 아이 */}
             <BreedingAnimals form={form} />
             {/* 탈퇴하기 링크 */}

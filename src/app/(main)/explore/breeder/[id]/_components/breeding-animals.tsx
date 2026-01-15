@@ -85,11 +85,11 @@ export default function BreedingAnimals({
     <BreederProfileSection>
       <BreederProfileSectionHeader>
         <BreederProfileSectionTitle>분양 중인 아이들</BreederProfileSectionTitle>
-        {data.length > 3 ? (
+        {data.length > 3 && (
           <div onClick={handleMoreClick}>
             <BreederProfileSectionMore />
           </div>
-        ) : null}
+        )}
       </BreederProfileSectionHeader>
       {data.length === 0 ? (
         <EmptyPetState />

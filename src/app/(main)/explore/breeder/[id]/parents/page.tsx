@@ -114,7 +114,7 @@ export default function ParentsPage({ params }: PageProps) {
             </div>
           ) : (
             <div className="w-full flex flex-col items-center gap-10 md:gap-[60px] lg:gap-20">
-              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-20">
                 {allParentPets.map((parent) => (
                   <AnimalProfile key={parent.id} data={parent} onClick={() => handlePetClick(parent)} />
                 ))}
