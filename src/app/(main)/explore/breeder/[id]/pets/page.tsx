@@ -147,7 +147,7 @@ export default function PetsPage({ params }: PageProps) {
             </div>
           ) : (
             <div className="w-full flex flex-col items-center gap-10 md:gap-[60px] lg:gap-20">
-              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-20">
                 {allPets.map((pet) => (
                   <AnimalProfile key={pet.id} data={pet} onClick={() => handlePetClick(pet)} />
                 ))}
