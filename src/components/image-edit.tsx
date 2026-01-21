@@ -44,6 +44,7 @@ export default function ImageEdit({
         file: null,
         preview: url,
         isUrl: true,
+        type: url.match(/\.(mp4|webm|ogg|mov|avi|wmv|flv|mkv)$/i) ? 'video/*' : 'image/*',
       }));
       setImageFiles(existingImages);
       initializedRef.current = true;
@@ -74,6 +75,7 @@ export default function ImageEdit({
       file,
       preview: URL.createObjectURL(file),
       isUrl: false,
+      type: file.type,
     }));
 
     // 추가하려는 파일 수와 기존 파일 수를 합쳐서 maxCount를 초과하는지 확인
@@ -113,7 +115,7 @@ export default function ImageEdit({
 
   return (
     <div className="flex gap-2">
-      <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileSelect} />
+      <input ref={fileInputRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={handleFileSelect} />
 
       {/* 카메라 박스 */}
       <div
