@@ -149,8 +149,7 @@ describe('profile-validation utilities', () => {
             breed: ['말티즈'],
             birthDate: '20200101',
             gender: 'male',
-            imageFile: null,
-            imagePreview: null,
+            photos: [],
           },
         ],
         animals: [],
@@ -180,8 +179,7 @@ describe('profile-validation utilities', () => {
             adoptionStatus: 'available',
             price: '1500000',
             isCounselMode: false,
-            imageFile: null,
-            imagePreview: null,
+            photos: [],
           },
         ],
       };
@@ -206,8 +204,7 @@ describe('profile-validation utilities', () => {
             breed: [],
             birthDate: '',
             gender: null,
-            imageFile: null,
-            imagePreview: null,
+            photos: [],
           },
         ],
         animals: [],
@@ -225,8 +222,7 @@ describe('profile-validation utilities', () => {
         breed: [],
         birthDate: '',
         gender: null,
-        imageFile: null,
-        imagePreview: null,
+        photos: [],
       };
 
       expect(isParentEmpty(parent)).toBe(true);
@@ -239,8 +235,7 @@ describe('profile-validation utilities', () => {
         breed: [],
         birthDate: '',
         gender: null,
-        imageFile: null,
-        imagePreview: null,
+        photos: [],
       };
 
       expect(isParentEmpty(parent)).toBe(false);
@@ -253,8 +248,7 @@ describe('profile-validation utilities', () => {
         breed: ['말티즈'],
         birthDate: '',
         gender: null,
-        imageFile: null,
-        imagePreview: null,
+        photos: [],
       };
 
       expect(isParentEmpty(parent)).toBe(false);
@@ -267,8 +261,7 @@ describe('profile-validation utilities', () => {
         breed: [],
         birthDate: '20200101',
         gender: null,
-        imageFile: null,
-        imagePreview: null,
+        photos: [],
       };
 
       expect(isParentEmpty(parent)).toBe(false);
@@ -281,36 +274,33 @@ describe('profile-validation utilities', () => {
         breed: [],
         birthDate: '',
         gender: 'male' as const,
-        imageFile: null,
-        imagePreview: null,
+        photos: [],
       };
 
       expect(isParentEmpty(parent)).toBe(false);
     });
 
-    it('should return false when imageFile exists', () => {
+    it('should return false when imageFiles exists', () => {
       const parent = {
         id: '1',
         name: '',
         breed: [],
         birthDate: '',
         gender: null,
-        imageFile: new File([''], 'test.jpg'),
-        imagePreview: null,
+        photos: [new File([''], 'test.jpg')],
       };
 
       expect(isParentEmpty(parent)).toBe(false);
     });
 
-    it('should return false when imagePreview exists', () => {
+    it('should return false when imagePreviews exists', () => {
       const parent = {
         id: '1',
         name: '',
         breed: [],
         birthDate: '',
         gender: null,
-        imageFile: null,
-        imagePreview: 'data:image/jpeg;base64,test',
+        photos: ['data:image/jpeg;base64,test'],
       };
 
       expect(isParentEmpty(parent)).toBe(false);
@@ -323,8 +313,7 @@ describe('profile-validation utilities', () => {
         breed: [],
         birthDate: '',
         gender: null,
-        imageFile: null,
-        imagePreview: null,
+        photos: [],
       };
 
       expect(isParentEmpty(parent)).toBe(true);
@@ -342,8 +331,7 @@ describe('profile-validation utilities', () => {
         adoptionStatus: '',
         price: '',
         isCounselMode: false,
-        imageFile: null,
-        imagePreview: null,
+        photos: [],
       };
 
       expect(isAnimalEmpty(animal)).toBe(true);
@@ -360,8 +348,7 @@ describe('profile-validation utilities', () => {
           adoptionStatus: '',
           price: '',
           isCounselMode: false,
-          imageFile: null,
-          imagePreview: null,
+          photos: [],
         }),
       ).toBe(false);
 
@@ -375,8 +362,7 @@ describe('profile-validation utilities', () => {
           adoptionStatus: '',
           price: '',
           isCounselMode: false,
-          imageFile: null,
-          imagePreview: null,
+          photos: [],
         }),
       ).toBe(false);
 
@@ -390,8 +376,7 @@ describe('profile-validation utilities', () => {
           adoptionStatus: '',
           price: '',
           isCounselMode: false,
-          imageFile: null,
-          imagePreview: null,
+          photos: [],
         }),
       ).toBe(false);
 
@@ -405,8 +390,7 @@ describe('profile-validation utilities', () => {
           adoptionStatus: '',
           price: '',
           isCounselMode: false,
-          imageFile: null,
-          imagePreview: null,
+          photos: [],
         }),
       ).toBe(false);
 
@@ -420,8 +404,7 @@ describe('profile-validation utilities', () => {
           adoptionStatus: 'available',
           price: '',
           isCounselMode: false,
-          imageFile: null,
-          imagePreview: null,
+          photos: [],
         }),
       ).toBe(false);
 
@@ -435,8 +418,7 @@ describe('profile-validation utilities', () => {
           adoptionStatus: '',
           price: '1500000',
           isCounselMode: false,
-          imageFile: null,
-          imagePreview: null,
+          photos: [],
         }),
       ).toBe(false);
     });
@@ -451,8 +433,7 @@ describe('profile-validation utilities', () => {
           breed: [],
           birthDate: '',
           gender: null,
-          imageFile: null,
-          imagePreview: null,
+          photos: [],
         },
       ];
 
@@ -468,8 +449,7 @@ describe('profile-validation utilities', () => {
           breed: ['말티즈'],
           birthDate: '20200101',
           gender: 'male' as const,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -485,8 +465,7 @@ describe('profile-validation utilities', () => {
           breed: [],
           birthDate: '20200101',
           gender: 'male' as const,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -502,8 +481,7 @@ describe('profile-validation utilities', () => {
           breed: ['말티즈'],
           birthDate: '',
           gender: 'male' as const,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -522,8 +500,7 @@ describe('profile-validation utilities', () => {
             breed: ['말티즈'],
             birthDate: date,
             gender: 'male' as const,
-            imageFile: new File([''], 'test.jpg'),
-            imagePreview: null,
+            photos: [new File([''], 'test.jpg')],
           },
         ];
 
@@ -543,8 +520,7 @@ describe('profile-validation utilities', () => {
             breed: ['말티즈'],
             birthDate: date,
             gender: 'male' as const,
-            imageFile: new File([''], 'test.jpg'),
-            imagePreview: null,
+            photos: [new File([''], 'test.jpg')],
           },
         ];
 
@@ -561,8 +537,7 @@ describe('profile-validation utilities', () => {
           breed: ['말티즈'],
           birthDate: '20200101',
           gender: null,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -578,8 +553,7 @@ describe('profile-validation utilities', () => {
           breed: ['말티즈'],
           birthDate: '20200101',
           gender: 'male' as const,
-          imageFile: null,
-          imagePreview: null,
+          photos: [],
         },
       ];
 
@@ -595,8 +569,7 @@ describe('profile-validation utilities', () => {
           breed: ['말티즈'],
           birthDate: '20200101',
           gender: 'male' as const,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -612,8 +585,7 @@ describe('profile-validation utilities', () => {
           breed: ['말티즈'],
           birthDate: '20200101',
           gender: 'male' as const,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
         {
           id: '2',
@@ -621,8 +593,7 @@ describe('profile-validation utilities', () => {
           breed: ['푸들'],
           birthDate: '20210101',
           gender: 'female' as const,
-          imageFile: new File([''], 'test2.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test2.jpg')],
         },
         {
           id: '3',
@@ -630,8 +601,7 @@ describe('profile-validation utilities', () => {
           breed: [],
           birthDate: '',
           gender: null,
-          imageFile: null,
-          imagePreview: null,
+          photos: [],
         },
       ];
 
@@ -654,8 +624,7 @@ describe('profile-validation utilities', () => {
           adoptionStatus: '',
           price: '',
           isCounselMode: false,
-          imageFile: null,
-          imagePreview: null,
+          photos: [],
         },
       ];
 
@@ -673,8 +642,7 @@ describe('profile-validation utilities', () => {
         adoptionStatus: '',
         price: '',
         isCounselMode: false,
-        imageFile: null,
-        imagePreview: null,
+        photos: [],
       };
 
       // Add just name to make it non-empty
@@ -700,8 +668,7 @@ describe('profile-validation utilities', () => {
           adoptionStatus: 'available',
           price: '',
           isCounselMode: true,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -720,8 +687,7 @@ describe('profile-validation utilities', () => {
           adoptionStatus: 'available',
           price: '',
           isCounselMode: false,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -740,8 +706,7 @@ describe('profile-validation utilities', () => {
           adoptionStatus: 'available',
           price: '1500000',
           isCounselMode: false,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -749,7 +714,7 @@ describe('profile-validation utilities', () => {
       expect(errors[0]?.birthDate).toBe(BREEDER_PROFILE_ERROR.BIRTH_DATE_INVALID);
     });
 
-    it('should accept imagePreview as alternative to imageFile', () => {
+    it('should accept imagePreviews as alternative to imageFiles', () => {
       const animals = [
         {
           id: '1',
@@ -760,8 +725,7 @@ describe('profile-validation utilities', () => {
           adoptionStatus: 'available',
           price: '1500000',
           isCounselMode: false,
-          imageFile: null,
-          imagePreview: 'data:image/jpeg;base64,test',
+          photos: ['data:image/jpeg;base64,test'],
         },
       ];
 
@@ -780,8 +744,7 @@ describe('profile-validation utilities', () => {
           adoptionStatus: 'available',
           price: '1500000',
           isCounselMode: false,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -799,8 +762,7 @@ describe('profile-validation utilities', () => {
           breed: ['말티즈'],
           birthDate: '20201301', // Month 13
           gender: 'male' as const,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -816,8 +778,7 @@ describe('profile-validation utilities', () => {
           breed: ['말티즈'],
           birthDate: '20200132', // Day 32
           gender: 'male' as const,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -833,8 +794,7 @@ describe('profile-validation utilities', () => {
           breed: ['말티즈'],
           birthDate: '20200229', // Valid leap year date
           gender: 'male' as const,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -848,8 +808,7 @@ describe('profile-validation utilities', () => {
           breed: ['말티즈'],
           birthDate: '20210229', // Invalid non-leap year date
           gender: 'male' as const,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ];
 
@@ -866,8 +825,7 @@ describe('profile-validation utilities', () => {
           breed: ['말티즈'],
           birthDate: '20190229',
           gender: 'male' as const,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ]);
       expect(feb29[0]?.birthDate).toBe(BREEDER_PROFILE_ERROR.BIRTH_DATE_INVALID);
@@ -880,8 +838,7 @@ describe('profile-validation utilities', () => {
           breed: ['말티즈'],
           birthDate: '20200431',
           gender: 'male' as const,
-          imageFile: new File([''], 'test.jpg'),
-          imagePreview: null,
+          photos: [new File([''], 'test.jpg')],
         },
       ]);
       expect(apr31[0]?.birthDate).toBe(BREEDER_PROFILE_ERROR.BIRTH_DATE_INVALID);
