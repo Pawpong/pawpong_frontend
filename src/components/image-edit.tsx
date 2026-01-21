@@ -4,6 +4,7 @@ import Camera from '@/assets/icons/camera.svg';
 import { cn } from '@/api/utils';
 import { useState, useRef, useEffect } from 'react';
 import ImagePreview, { ImageFile } from './image-preview';
+import { useToast } from '@/hooks/use-toast';
 
 interface ImageEditProps {
   className?: string;
@@ -33,6 +34,7 @@ export default function ImageEdit({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
   const initializedRef = useRef(false);
+  const { toast } = useToast();
 
   // Initialize with existing images (URLs)
   useEffect(() => {
@@ -54,6 +56,19 @@ export default function ImageEdit({
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    
+    // 이미 최대 개수에 도달한 경우 토스트 표시 후 종료
+    if (imageFiles.length >= maxCount) {
+      toast({
+        title: `상세 사진·영상은 최대 ${maxCount}장 등록할 수 있어요`,
+        position: 'split',
+      });
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      return;
+    }
+
     const newFiles: ImageFile[] = files.map((file) => ({
       id: `${file.name}-${Date.now()}-${Math.random()}`,
       file,
@@ -61,10 +76,25 @@ export default function ImageEdit({
       isUrl: false,
     }));
 
-    const updatedFiles = [...imageFiles, ...newFiles].slice(0, maxCount);
-    setImageFiles(updatedFiles);
-    // Return File objects for new uploads, string URLs for existing images
-    onFileChange?.(updatedFiles.map((img) => (img.isUrl ? img.preview : img.file!)));
+    // 추가하려는 파일 수와 기존 파일 수를 합쳐서 maxCount를 초과하는지 확인
+    const totalCount = imageFiles.length + newFiles.length;
+    if (totalCount > maxCount) {
+      toast({
+        title: `상세 사진·영상은 최대 ${maxCount}장 등록할 수 있어요`,
+        position: 'split',
+      });
+      // maxCount까지만 추가
+      const remainingSlots = maxCount - imageFiles.length;
+      const filesToAdd = newFiles.slice(0, remainingSlots);
+      const updatedFiles = [...imageFiles, ...filesToAdd];
+      setImageFiles(updatedFiles);
+      onFileChange?.(updatedFiles.map((img) => (img.isUrl ? img.preview : img.file!)));
+    } else {
+      const updatedFiles = [...imageFiles, ...newFiles];
+      setImageFiles(updatedFiles);
+      // Return File objects for new uploads, string URLs for existing images
+      onFileChange?.(updatedFiles.map((img) => (img.isUrl ? img.preview : img.file!)));
+    }
 
     if (fileInputRef.current) {
       fileInputRef.current.value = '';

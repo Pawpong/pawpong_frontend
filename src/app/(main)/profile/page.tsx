@@ -121,7 +121,7 @@ export default function ProfilePage() {
           breed: [],
           gender: null,
           description: '',
-          // photos: [],
+          photos: [],
         },
       ],
       animals: [
@@ -208,7 +208,7 @@ export default function ProfilePage() {
               gender: pet.gender || null,
               imagePreview: pet.photoFileName || undefined,
               description: pet.description || '',
-              // photos: pet.photos || [],
+              photos: pet.photos || [],
             }))
           : [
               {
@@ -218,7 +218,7 @@ export default function ProfilePage() {
                 breed: [],
                 gender: null,
                 description: '',
-                // photos: [],
+                photos: [],
               },
             ];
 
@@ -269,7 +269,7 @@ export default function ProfilePage() {
                 price: pet.price?.toString() || '',
                 isCounselMode: pet.price === 0,
                 imagePreview: pet.photos?.[0] || undefined,
-                // photos: pet.photos || [],
+                photos: pet.photos || [],
               }))
             : [
                 {
@@ -284,7 +284,7 @@ export default function ProfilePage() {
                   fatherId: '',
                   price: '',
                   isCounselMode: false,
-                  // photos: [],
+                  photos: [],
                 },
               ],
       });
