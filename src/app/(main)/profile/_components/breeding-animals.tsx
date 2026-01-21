@@ -23,7 +23,7 @@ import { useFieldArray, useFormContext, Controller } from 'react-hook-form';
 import type { ProfileFormData } from '@/stores/profile-store';
 import ErrorMessage from '@/components/error-message';
 import { BREEDER_PROFILE_ERROR } from '@/constants/errors/breeder-profile-error';
-// import ImageEdit from '@/components/image-edit';
+import ImageEdit from '@/components/image-edit';
 
 export default function BreedingAnimals({ form }: { form: ReturnType<typeof useFormContext<ProfileFormData>> }) {
   const { control, watch, formState, getValues, setValue } = form;
@@ -54,7 +54,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
         fatherId: '',
         price: '',
         isCounselMode: false,
-        // photos: [],
+        photos: [],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,7 +73,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
       fatherId: '',
       price: '',
       isCounselMode: false,
-      // photos: [],
+      photos: [],
     });
   };
 
@@ -595,7 +595,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
               </div>
 
               {/* 사진·영상 */}
-              {/* <div className="flex flex-col gap-3 items-start w-full">
+              <div className="flex flex-col gap-3 items-start w-full">
                 <Controller
                   name={`animals.${index}.photos`}
                   control={control}
@@ -616,7 +616,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                 <p className="text-caption-s text-grayscale-gray5 font-medium">
                   아이를 잘 보여줄 수 있는 사진·영상은 최대 4개까지 등록할 수 있어요
                 </p>
-              </div> */}
+              </div>
 
               {/* 구분선 (마지막 항목이 아닐 때만) */}
               {index < fields.length - 1 && (

@@ -7,6 +7,7 @@ export interface ImageFile {
   file: File | null; // null for URL-based images
   preview: string;
   isUrl?: boolean; // true if this is a URL-based image
+  type?: string; // MIME type (image/* or video/*)
 }
 
 interface ImagePreviewProps {
@@ -52,22 +53,42 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
     }
   };
 
+  const isVideo = (image: ImageFile) => {
+    if (image.file) {
+      return image.file.type.startsWith('video/');
+    }
+    // URL인 경우 확장자로 판단
+    return image.preview.match(/\.(mp4|webm|ogg|mov|avi|wmv|flv|mkv)$/i) !== null;
+  };
+
   return (
     <div className={cn('flex gap-[10px]', getLayoutClass())}>
-      {images.slice(0, maxImages).map((image) => (
-        <div key={image.id} className="relative">
-          <img
-            src={image.preview}
-            alt={`preview ${image.id}`}
-            className={cn('rounded-lg object-contain bg-white border border-gray-200', getImageSizeClass())}
-          />
-          {showRemoveButton && (
-            <button onClick={() => onRemove(image.id)} className="absolute top-1 right-1   flex ">
-              <PictureRemove className="group-hover:[&_path]:fill-[#4F3B2E]" />
-            </button>
-          )}
-        </div>
-      ))}
+      {images.slice(0, maxImages).map((image) => {
+        const isVideoFile = isVideo(image);
+        return (
+          <div key={image.id} className="relative">
+            {isVideoFile ? (
+              <video
+                src={image.preview}
+                className={cn('rounded-lg object-contain bg-white border border-gray-200', getImageSizeClass())}
+                muted
+                playsInline
+              />
+            ) : (
+              <img
+                src={image.preview}
+                alt={`preview ${image.id}`}
+                className={cn('rounded-lg object-contain bg-white border border-gray-200', getImageSizeClass())}
+              />
+            )}
+            {showRemoveButton && (
+              <button onClick={() => onRemove(image.id)} className="absolute top-1 right-1   flex ">
+                <PictureRemove className="group-hover:[&_path]:fill-[#4F3B2E]" />
+              </button>
+            )}
+          </div>
+        );
+      })}
       {images.length > maxImages && (
         <div className={cn('relative', getImageSizeClass())}>
           <div

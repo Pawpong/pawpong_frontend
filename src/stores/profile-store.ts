@@ -36,14 +36,14 @@ export const useProfileStore = create<ProfileStore>()(
           ...parent,
           imageFile: undefined,
           imagePreview: undefined,
-          // photos: parent.photos?.filter((photo): photo is string => typeof photo === 'string') || [],
+          photos: parent.photos?.filter((photo): photo is string => typeof photo === 'string') || [],
         })),
         // animals에서 imageFile, imagePreview 제외, photos는 URL 문자열만 유지
         animals: state.profileData.animals.map((animal) => ({
           ...animal,
           imageFile: undefined,
           imagePreview: undefined,
-          // photos: animal.photos?.filter((photo): photo is string => typeof photo === 'string') || [],
+          photos: animal.photos?.filter((photo): photo is string => typeof photo === 'string') || [],
         })),
         };
 

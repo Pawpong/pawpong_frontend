@@ -71,7 +71,7 @@ const parentItemSchema = z.object({
   imagePreview: z.string().optional(),
   imageFile: z.union([z.instanceof(File), z.undefined()]).optional(),
   description: stringWithEmptyDefault(),
-  // photos: z.array(z.union([z.instanceof(File), z.string()])).default([]),
+  photos: z.array(z.union([z.instanceof(File), z.string()])).default([]),
 });
 
 const isAnimalItemEmpty = (animal: {
@@ -107,7 +107,7 @@ const breedingAnimalItemSchema = z.object({
   fatherId: stringWithEmptyDefault(),
   price: stringWithEmptyDefault(),
   isCounselMode: booleanWithFalseDefault(),
-  // photos: z.array(z.union([z.instanceof(File), z.string()])).default([]),
+  photos: z.array(z.union([z.instanceof(File), z.string()])).default([]),
 });
 
 export const profileFormSchema = z
