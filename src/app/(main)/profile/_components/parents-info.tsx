@@ -22,12 +22,9 @@ import { useFieldArray, useFormContext, Controller } from 'react-hook-form';
 import type { ProfileFormData } from '@/stores/profile-store';
 import ErrorMessage from '@/components/error-message';
 import { BREEDER_PROFILE_ERROR } from '@/constants/errors/breeder-profile-error';
+// import ImageEdit from '@/components/image-edit';
 
-export default function ParentsInfo({
-  form,
-}: {
-  form: ReturnType<typeof useFormContext<ProfileFormData>>;
-}) {
+export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormContext<ProfileFormData>> }) {
   const { control, watch, formState, getValues, setValue } = form;
   const { errors } = formState;
   const selectedBreeds = watch('breeds');
@@ -332,6 +329,30 @@ export default function ParentsInfo({
                 />
               </div>
 
+              {/* 사진·영상 */}
+              {/* <div className="flex flex-col gap-3 items-start w-full">
+                <Controller
+                  name={`parents.${index}.photos`}
+                  control={control}
+                  render={({ field }) => (
+                    <ImageEdit
+                      maxCount={4}
+                      status="Default"
+                      labelText="사진·영상"
+                      initialImages={
+                        Array.isArray(field.value) ? field.value.filter((v): v is string => typeof v === 'string') : []
+                      }
+                      onFileChange={(files) => {
+                        field.onChange(files);
+                      }}
+                    />
+                  )}
+                />
+                <p className="text-caption-s text-grayscale-gray5 font-medium">
+                  아이를 잘 보여줄 수 있는 사진·영상은 최대 4개까지 등록할 수 있어요
+                </p>
+              </div> */}
+
               {/* 구분선 (마지막 항목이 아닐 때만) */}
               {index < fields.length - 1 && (
                 <div className="pt-8 pb-8 w-full -mt-3">
@@ -349,13 +370,13 @@ export default function ParentsInfo({
         variant="addParent"
         className="bg-tertiary-700 flex gap-1 items-center overflow-hidden pl-3 pr-5 py-2.5 relative rounded-full shrink-0"
       >
-          <div className="overflow-hidden relative shrink-0 size-7 flex items-center justify-center">
-            <Plus />
-          </div>
-          <p className="font-medium leading-body-s relative shrink-0 text-grayscale-gray6 text-body-s text-center text-nowrap">
-            추가하기
-          </p>
-        </Button>
+        <div className="overflow-hidden relative shrink-0 size-7 flex items-center justify-center">
+          <Plus />
+        </div>
+        <p className="font-medium leading-body-s relative shrink-0 text-grayscale-gray6 text-body-s text-center text-nowrap">
+          추가하기
+        </p>
+      </Button>
     </div>
   );
 }

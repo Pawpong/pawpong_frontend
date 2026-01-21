@@ -15,6 +15,7 @@ interface ImageEditProps {
   previewSize?: 'small' | 'medium' | 'large';
   previewLayout?: 'grid' | 'horizontal' | 'vertical';
   initialImages?: string[];
+  labelText?: string;
 }
 
 export default function ImageEdit({
@@ -27,6 +28,7 @@ export default function ImageEdit({
   previewSize = 'medium',
   previewLayout = 'horizontal',
   initialImages = [],
+  labelText,
 }: ImageEditProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
@@ -86,7 +88,7 @@ export default function ImageEdit({
       {/* 카메라 박스 */}
       <div
         className={cn(
-          'bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group',
+          'bg-white flex flex-col gap-1.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group',
           'pb-2.5 pt-2 px-0 border border-transparent',
           currentStatus === 'Hover' && 'bg-gray-50',
           isError && '',
@@ -103,7 +105,7 @@ export default function ImageEdit({
 
         {limit === 'on' && (
           <div className={cn('text-caption-s font-medium', isError ? 'text-status-error-500' : 'text-grayscale-gray5')}>
-            {imageFiles.length}/{maxCount}
+            {labelText || `${imageFiles.length}/${maxCount}`}
           </div>
         )}
       </div>

@@ -53,7 +53,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
   };
 
   return (
-    <div className={cn('flex gap-3', getLayoutClass())}>
+    <div className={cn('flex gap-[10px]', getLayoutClass())}>
       {images.slice(0, maxImages).map((image) => (
         <div key={image.id} className="relative">
           <img
