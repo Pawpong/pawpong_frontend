@@ -6,7 +6,6 @@ import AnimalSection from './sections/animal-section';
 import BreederInfoSection from './sections/breeder-info-section';
 import DocumentSection from './sections/document-section';
 import NicknameSection from './sections/nickname-section';
-import PlanSection from './sections/plan-section';
 import SignupComplete from './sections/signup-complete';
 import UserInfoSection from './sections/user-info-section';
 import UserTypeSection from './sections/user-type-section';
@@ -16,7 +15,6 @@ const flowInfo: Record<UserType, React.ComponentType[]> = {
   breeder: [
     UserTypeSection,
     AnimalSection,
-    PlanSection,
     UserInfoSection,
     BreederInfoSection,
     DocumentSection,
