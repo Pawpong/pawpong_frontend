@@ -50,7 +50,7 @@ export default function OathCheckbox({ level, checked, onCheckedChange }: OathCh
             />
           </div>
           <span className="text-body-xs text-grayscale-gray6 select-none">
-            (필수) {level === 'elite' ? '엘리트' : '뉴'} 레벨 브리더 입점 서약서
+            (필수) 브리더 입점 서약서
           </span>
         </div>
 
