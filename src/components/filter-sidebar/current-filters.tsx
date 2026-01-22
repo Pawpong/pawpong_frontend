@@ -17,8 +17,6 @@ const FILTER_ORDER = [
   '대형견', '골든 리트리버', '래브라도 리트리버', '알래스칸 말라뮤트', '진돗개', '풍산개', '차우차우', '도베르만', '사모예드', '러프 콜리', '말라뮤트', '셰퍼드', '아메리칸 불리', '아프간하운드',
   // 지역 (KOREA_DISTRICTS 순서)
   ...KOREA_DISTRICTS.flatMap(district => [district.province, ...district.cities]),
-  // 브리더 레벨
-  '엘리트', '뉴',
 ];
 
 // --- 수정: props 타입 정의 및 onRemove 추가 ---

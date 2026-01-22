@@ -22,14 +22,6 @@ export const locationFilters: Filter = {
   })),
 };
 
-export const levelFilters: Filter = {
-  label: '브리더 레벨',
-  children: [
-    { label: '엘리트', value: 'elite' },
-    { label: '뉴', value: 'new' },
-  ],
-};
-
 export const catBreedFilters: Filter = {
   label: '품종',
   children: [
@@ -137,6 +129,6 @@ export const dogBreedFilters: Filter = {
 };
 
 export const filter = {
-  cat: [adoptableFilters, catBreedFilters, locationFilters, levelFilters],
-  dog: [adoptableFilters, dogBreedFilters, locationFilters, levelFilters],
+  cat: [adoptableFilters, catBreedFilters, locationFilters],
+  dog: [adoptableFilters, dogBreedFilters, locationFilters],
 };
