@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import LevelBadge from '../../../../../../components/level-badge';
 import { useCounselFormStore } from '@/stores/counsel-form-store';
 import { useAuthStore } from '@/stores/auth-store';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
@@ -67,7 +66,6 @@ export default function BreederProfile({
         <div className="flex-1 space-y-4 flex flex-col md:justify-between">
           <div className="flex items-center flex-wrap gap-2">
             <span className="text-heading-3 text-primary-500 font-semibold">{nickname}</span>
-            <LevelBadge level={level} />
           </div>
           <div className="space-y-3">
             <div className="text-body-s mb-2 text-grayscale-gray5">

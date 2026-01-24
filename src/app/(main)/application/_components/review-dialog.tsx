@@ -22,7 +22,6 @@ interface ReviewDialogProps {
   applicationId: string;
   breederId: string;
   breederName: string;
-  breederLevel: 'elite' | 'new';
   applicationDate: string;
   profileImage: string;
   animalType: 'cat' | 'dog';
@@ -34,7 +33,6 @@ export default function ReviewDialog({
   applicationId,
   breederId,
   breederName,
-  breederLevel,
   applicationDate,
   profileImage,
   animalType,
@@ -108,7 +106,6 @@ export default function ReviewDialog({
                 <ProfileImageWithBadge src={profileImage} alt={breederName} animalType={animalType} size={68} />
                 <BreederInfo
                   breederName={breederName}
-                  breederLevel={breederLevel}
                   applicationDate={applicationDate}
                   className="gap-3"
                 />
@@ -385,7 +382,6 @@ export default function ReviewDialog({
         open={showReviewWriteDialog}
         onOpenChange={setShowReviewWriteDialog}
         breederName={breederName}
-        breederLevel={breederLevel}
         applicationDate={applicationDate}
         profileImage={profileImage}
         animalType={animalType}

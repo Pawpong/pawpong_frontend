@@ -10,7 +10,6 @@ interface MyReviewListItemProps {
   applicationId: string | null;
   breederId: string;
   breederName: string;
-  breederLevel: 'elite' | 'new';
   applicationDate: string;
   profileImage: string;
   animalType: 'cat' | 'dog';
@@ -23,7 +22,6 @@ export default function MyReviewListItem({
   applicationId,
   breederId,
   breederName,
-  breederLevel,
   applicationDate,
   profileImage,
   animalType,
@@ -40,7 +38,6 @@ export default function MyReviewListItem({
           <div className="flex flex-col gap-2 items-start justify-center">
             <BreederInfo
               breederName={breederName}
-              breederLevel={breederLevel}
               applicationDate={applicationDate}
               className="gap-0"
               hideDate={true}

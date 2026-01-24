@@ -16,7 +16,6 @@ import BreederName from '@/components/breeder-list/breeder-name';
 import BreederPrice from '@/components/breeder-list/breeder-price';
 import BreederProfile from '@/components/breeder-list/breeder-profile';
 import BreederTags from '@/components/breeder-list/breeder-tags';
-import LevelBadge from '@/components/level-badge';
 import { Button } from '@/components/ui/button';
 import GrayDot from '@/assets/icons/gray-dot.svg';
 import ExploreBreederAd from './explore-breeder-ad';
@@ -112,7 +111,6 @@ export default function SiteBreederList() {
                     <BreederAvatar src={breeder.profileImage} animal={(breeder.petType as 'cat' | 'dog') || petType} />
                     <div className="flex items-center gap-2">
                       <BreederName>{breeder.breederName}</BreederName>
-                      <LevelBadge level={breeder.breederLevel as 'elite' | 'new'} />
                     </div>
                   </BreederHeader>
                   <BreederContent>
