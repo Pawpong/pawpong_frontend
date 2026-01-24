@@ -32,7 +32,6 @@ interface ReviewWriteData {
   applicationId: string;
   breederId: string;
   breederName: string;
-  breederLevel: 'elite' | 'new';
   applicationDate: string;
   profileImage: string;
   animalType: 'cat' | 'dog';
@@ -87,7 +86,7 @@ export default function NotificationDialog({ children }: NotificationDialogProps
 
       // consult_completed 타입인 경우 후기 작성 다이얼로그 띄우기
       if (notification.type === 'consult_completed' && notification.variables) {
-        const { applicationId, breederId, breederName, breederLevel, applicationDate, profileImage, animalType } =
+        const { applicationId, breederId, breederName, applicationDate, profileImage, animalType } =
           notification.variables;
 
         if (applicationId && breederId) {
@@ -99,7 +98,6 @@ export default function NotificationDialog({ children }: NotificationDialogProps
             applicationId,
             breederId,
             breederName: breederName || '브리더',
-            breederLevel: (breederLevel as 'elite' | 'new') || 'new',
             applicationDate: applicationDate || '',
             profileImage: profileImage || '',
             animalType: (animalType as 'cat' | 'dog') || 'cat',
@@ -270,7 +268,6 @@ export default function NotificationDialog({ children }: NotificationDialogProps
           open={showReviewWriteDialog}
           onOpenChange={setShowReviewWriteDialog}
           breederName={reviewWriteData.breederName}
-          breederLevel={reviewWriteData.breederLevel}
           applicationDate={reviewWriteData.applicationDate}
           profileImage={reviewWriteData.profileImage}
           animalType={reviewWriteData.animalType}

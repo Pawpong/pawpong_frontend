@@ -18,7 +18,6 @@ interface ReviewWriteDialogProps {
   applicationId: string;
   breederId: string;
   breederName: string;
-  breederLevel: 'elite' | 'new';
   applicationDate: string;
   profileImage: string;
   animalType: 'cat' | 'dog';
@@ -30,7 +29,6 @@ export default function ReviewWriteDialog({
   applicationId,
   breederId,
   breederName,
-  breederLevel,
   applicationDate,
   profileImage,
   animalType,
@@ -76,7 +74,6 @@ export default function ReviewWriteDialog({
           <BreederSummary
             breederId={breederId}
             breederName={breederName}
-            breederLevel={breederLevel}
             applicationDate={applicationDate}
             profileImage={profileImage}
             animalType={animalType}

@@ -10,10 +10,9 @@ interface ProgressStep {
 
 const breederSteps: ProgressStep[] = [
   { number: 1, label: '브리딩 동물 선택', flowIndex: 1 },
-  { number: 2, label: '구독 플랜 선택', flowIndex: 2 },
-  { number: 3, label: '계정 정보 입력', flowIndex: 3 },
-  { number: 4, label: '브리더 정보 입력', flowIndex: 4 },
-  { number: 5, label: '입점 서류 등록', flowIndex: 5 },
+  { number: 2, label: '계정 정보 입력', flowIndex: 2 },
+  { number: 3, label: '브리더 정보 입력', flowIndex: 3 },
+  { number: 4, label: '입점 서류 등록', flowIndex: 4 },
 ];
 
 export default function SignupProgressOverlay() {

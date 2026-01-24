@@ -14,7 +14,6 @@ import BreederTags from '@/components/breeder-list/breeder-tags';
 import BreederAvatar from '@/components/breeder-list/breeder-avatar';
 import BreederLikeButton from '@/components/breeder-list/breader-like-button';
 import AdoptionStatusBadge from '@/components/adoption-status-badge';
-import LevelBadge from '@/components/level-badge';
 import GrayDot from '@/assets/icons/gray-dot.svg';
 import BreederList from '@/components/breeder-list/breeder-list';
 import Container from '@/components/ui/container';
@@ -71,7 +70,6 @@ export default function SavedList() {
                         <BreederAvatar src={breeder.profileImage} />
                         <div className="flex items-center gap-2">
                           <BreederName>{breeder.breederName}</BreederName>
-                          <LevelBadge level={(breeder.breederLevel || 'new') as 'elite' | 'new'} />
                         </div>
                       </BreederHeader>
                       <BreederContent>

@@ -7,7 +7,6 @@ import RightArrow from '@/assets/icons/right-arrow.svg';
 interface BreederSummaryProps {
   breederId: string;
   breederName: string;
-  breederLevel: 'elite' | 'new';
   applicationDate: string;
   profileImage: string;
   animalType: 'cat' | 'dog';
@@ -17,7 +16,6 @@ interface BreederSummaryProps {
 export default function BreederSummary({
   breederId,
   breederName,
-  breederLevel,
   applicationDate,
   profileImage,
   animalType,
@@ -44,7 +42,6 @@ export default function BreederSummary({
         />
         <BreederInfo
           breederName={breederName}
-          breederLevel={breederLevel}
           applicationDate={applicationDate}
           className="gap-3"
         />
