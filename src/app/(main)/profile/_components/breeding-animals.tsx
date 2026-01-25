@@ -139,21 +139,16 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                   onClick={() => {
                     const input = document.createElement('input');
                     input.type = 'file';
-                    input.accept = 'image/*';
+                    input.accept = 'image/*,video/*';
                     input.onchange = (e: Event) => {
                       const target = e.target as HTMLInputElement;
                       const file = target.files?.[0];
                       if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (event: ProgressEvent<FileReader>) => {
-                          if (event.target?.result) {
-                            updateAnimal(index, {
-                              imagePreview: event.target.result as string,
-                              imageFile: file,
-                            });
-                          }
-                        };
-                        reader.readAsDataURL(file);
+                        const url = URL.createObjectURL(file);
+                        updateAnimal(index, {
+                          imagePreview: url,
+                          imageFile: file,
+                        });
                       }
                     };
                     input.click();
@@ -161,13 +156,23 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                   className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden relative"
                 >
                   {animal.imagePreview ? (
-                    <Image
-                      src={animal.imagePreview}
-                      alt="Animal"
-                      fill
-                      className="object-contain rounded-lg"
-                      unoptimized
-                    />
+                    animal.imageFile?.type.startsWith('video/') ||
+                    (!animal.imageFile && animal.imagePreview.match(/\.(mp4|webm|ogg|mov|avi|wmv|flv|mkv)$/i)) ? (
+                      <video
+                        src={animal.imagePreview}
+                        className="object-contain rounded-lg w-full h-full bg-black"
+                        muted
+                        playsInline
+                      />
+                    ) : (
+                      <Image
+                        src={animal.imagePreview}
+                        alt="Animal"
+                        fill
+                        className="object-contain rounded-lg"
+                        unoptimized
+                      />
+                    )
                   ) : (
                     <Camera
                       className={cn(

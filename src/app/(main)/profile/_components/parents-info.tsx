@@ -108,21 +108,17 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                   onClick={() => {
                     const input = document.createElement('input');
                     input.type = 'file';
-                    input.accept = 'image/*';
+                    input.accept = 'image/*,video/*';
                     input.onchange = (e: Event) => {
                       const target = e.target as HTMLInputElement;
                       const file = target.files?.[0];
                       if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (event: ProgressEvent<FileReader>) => {
-                          if (event.target?.result) {
-                            updateParent(index, {
-                              imagePreview: event.target.result as string,
-                              imageFile: file,
-                            });
-                          }
-                        };
-                        reader.readAsDataURL(file);
+                        const isVideo = file.type.startsWith('video/');
+                        const url = URL.createObjectURL(file);
+                        updateParent(index, {
+                          imagePreview: url,
+                          imageFile: file,
+                        });
                       }
                     };
                     input.click();
@@ -130,13 +126,23 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                   className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden relative"
                 >
                   {parent.imagePreview ? (
-                    <Image
-                      src={parent.imagePreview}
-                      alt="Parent"
-                      fill
-                      className="object-contain rounded-lg"
-                      unoptimized
-                    />
+                    parent.imageFile?.type.startsWith('video/') ||
+                    (!parent.imageFile && parent.imagePreview.match(/\.(mp4|webm|ogg|mov|avi|wmv|flv|mkv)$/i)) ? (
+                      <video
+                        src={parent.imagePreview}
+                        className="object-contain rounded-lg w-full h-full bg-black"
+                        muted
+                        playsInline
+                      />
+                    ) : (
+                      <Image
+                        src={parent.imagePreview}
+                        alt="Parent"
+                        fill
+                        className="object-contain rounded-lg"
+                        unoptimized
+                      />
+                    )
                   ) : (
                     <Camera
                       className={cn(

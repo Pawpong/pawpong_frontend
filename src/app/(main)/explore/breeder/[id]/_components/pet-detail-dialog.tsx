@@ -144,7 +144,7 @@ export default function PetDetailDialog({
         <div className="bg-white flex flex-col gap-7 min-h-0 overflow-y-auto px-6 pt-5 pb-10">
           {/* 프로필 이미지 */}
           <div className="flex justify-center">
-            <div className="relative w-[17.5rem] h-[17.5rem] rounded-2xl overflow-hidden">
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden">
               <Image
                 src={getValidImageUrl(pet.avatarUrl)}
                 alt={`${pet.name}의 사진`}
