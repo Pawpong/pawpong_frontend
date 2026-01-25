@@ -31,20 +31,22 @@ export const useProfileStore = create<ProfileStore>()(
           representativePhotos: state.profileData.representativePhotos.filter(
             (photo): photo is string => typeof photo === 'string',
           ),
-        // parents에서 imageFile, imagePreview 제외, photos는 URL 문자열만 유지
-        parents: state.profileData.parents.map((parent) => ({
-          ...parent,
-          imageFile: undefined,
-          imagePreview: undefined,
-          photos: parent.photos?.filter((photo): photo is string => typeof photo === 'string') || [],
-        })),
-        // animals에서 imageFile, imagePreview 제외, photos는 URL 문자열만 유지
-        animals: state.profileData.animals.map((animal) => ({
-          ...animal,
-          imageFile: undefined,
-          imagePreview: undefined,
-          photos: animal.photos?.filter((photo): photo is string => typeof photo === 'string') || [],
-        })),
+          // parents에서 imageFile, imagePreview, isVideo 제외, photos는 URL 문자열만 유지
+          parents: state.profileData.parents.map((parent) => ({
+            ...parent,
+            imageFile: undefined,
+            imagePreview: undefined,
+            isVideo: undefined,
+            photos: parent.photos?.filter((photo): photo is string => typeof photo === 'string') || [],
+          })),
+          // animals에서 imageFile, imagePreview, isVideo 제외, photos는 URL 문자열만 유지
+          animals: state.profileData.animals.map((animal) => ({
+            ...animal,
+            imageFile: undefined,
+            imagePreview: undefined,
+            isVideo: undefined,
+            photos: animal.photos?.filter((photo): photo is string => typeof photo === 'string') || [],
+          })),
         };
 
         return { ...state, profileData: sanitizedData };

@@ -14,6 +14,7 @@ import { useAuthStore } from '@/stores/auth-store';
 import { cn } from '@/api/utils';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { Lock } from 'lucide-react';
+import { isVideoUrl } from '@/utils/video-thumbnail';
 
 import RightArrow from '@/assets/icons/right-arrow.svg';
 import Close from '@/assets/icons/close';
@@ -72,6 +73,7 @@ export default function PetDetailDialog({
   if (!pet) return null;
 
   const Icon = sexInfo[pet.sex].icon;
+  const isMainVideo = pet.avatarUrl ? isVideoUrl(pet.avatarUrl) : false;
 
   const getValidImageUrl = (url: string) => {
     if (!url) return '/animal-sample.png';
@@ -85,7 +87,6 @@ export default function PetDetailDialog({
       return;
     }
     clearCounselFormData();
-    // type이 'pet'이고 pet이 있을 때만 petId 전달
     const petIdParam = type === 'pet' && pet ? `&petId=${pet.id}` : '';
     router.push(`/counselform?breederId=${breederId}${petIdParam}`);
     onOpenChange(false);
@@ -99,10 +100,8 @@ export default function PetDetailDialog({
     birth: string;
     breed: string;
   }) => {
-    // 현재 다이얼로그 닫기
     onOpenChange(false);
 
-    // 부모 정보를 PetDetailData로 변환
     const parentDetail: PetDetailData = {
       id: parent.id,
       avatarUrl: parent.avatarUrl,
@@ -145,13 +144,24 @@ export default function PetDetailDialog({
           {/* 프로필 이미지 */}
           <div className="flex justify-center">
             <div className="relative w-[17.5rem] h-[17.5rem] rounded-2xl overflow-hidden">
-              <Image
-                src={getValidImageUrl(pet.avatarUrl)}
-                alt={`${pet.name}의 사진`}
-                fill
-                className="object-cover"
-                unoptimized={getValidImageUrl(pet.avatarUrl).startsWith('http')}
-              />
+              {isMainVideo ? (
+                <video
+                  src={pet.avatarUrl}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              ) : (
+                <Image
+                  src={getValidImageUrl(pet.avatarUrl)}
+                  alt={`${pet.name}의 사진`}
+                  fill
+                  className="object-cover"
+                  unoptimized={getValidImageUrl(pet.avatarUrl).startsWith('http')}
+                />
+              )}
             </div>
           </div>
 
@@ -201,37 +211,51 @@ export default function PetDetailDialog({
               <div className="flex flex-col gap-3.5">
                 <h4 className="text-body-m font-semibold text-grayscale-gray6">엄마 · 아빠</h4>
                 <div className="flex flex-col gap-3.5">
-                  {pet.parents.map((parent) => (
-                    <div key={parent.id} className="flex items-center gap-6">
-                      <div className="relative w-[6.25rem] h-[6.25rem] rounded-lg overflow-hidden flex-shrink-0">
-                        <Image
-                          src={getValidImageUrl(parent.avatarUrl)}
-                          alt={`${parent.name}의 사진`}
-                          fill
-                          className="object-cover"
-                          unoptimized={getValidImageUrl(parent.avatarUrl).startsWith('http')}
-                        />
-                      </div>
-                      <div className="flex-1 flex flex-col gap-1.5">
-                        <div className="flex items-center gap-0.5">
-                          <span className="text-body-m font-semibold text-primary-500">{parent.name}</span>
-                          {(() => {
-                            const ParentIcon = sexInfo[parent.sex].icon;
-                            return <ParentIcon className={cn('w-5 h-5', sexInfo[parent.sex].className)} />;
-                          })()}
+                  {pet.parents.map((parent) => {
+                    const isParentVideo = parent.avatarUrl ? isVideoUrl(parent.avatarUrl) : false;
+                    return (
+                      <div key={parent.id} className="flex items-center gap-6">
+                        <div className="relative w-[6.25rem] h-[6.25rem] rounded-lg overflow-hidden flex-shrink-0">
+                          {isParentVideo ? (
+                            <video
+                              src={parent.avatarUrl}
+                              className="absolute inset-0 w-full h-full object-cover"
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                            />
+                          ) : (
+                            <Image
+                              src={getValidImageUrl(parent.avatarUrl)}
+                              alt={`${parent.name}의 사진`}
+                              fill
+                              className="object-cover"
+                              unoptimized={getValidImageUrl(parent.avatarUrl).startsWith('http')}
+                            />
+                          )}
                         </div>
-                        <div className="text-body-s text-grayscale-gray5">{parent.birth}</div>
+                        <div className="flex-1 flex flex-col gap-1.5">
+                          <div className="flex items-center gap-0.5">
+                            <span className="text-body-m font-semibold text-primary-500">{parent.name}</span>
+                            {(() => {
+                              const ParentIcon = sexInfo[parent.sex].icon;
+                              return <ParentIcon className={cn('w-5 h-5', sexInfo[parent.sex].className)} />;
+                            })()}
+                          </div>
+                          <div className="text-body-s text-grayscale-gray5">{parent.birth}</div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          className="text-body-xs text-grayscale-gray5 gap-1 h-auto p-0"
+                          onClick={() => handleParentClick(parent)}
+                        >
+                          보기
+                          <RightArrow className="size-5" />
+                        </Button>
                       </div>
-                      <Button
-                        variant="ghost"
-                        className="text-body-xs text-grayscale-gray5 gap-1 h-auto p-0"
-                        onClick={() => handleParentClick(parent)}
-                      >
-                        보기
-                        <RightArrow className="size-5" />
-                      </Button>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </>

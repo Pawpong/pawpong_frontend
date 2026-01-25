@@ -9,9 +9,11 @@ import Male from '@/assets/icons/male.svg';
 import Plus from '@/assets/icons/plus.svg';
 import Female from '@/assets/icons/female.svg';
 import PictureRemove from '@/assets/icons/picture-delete.svg';
+import PlayIcon from '@/assets/icons/play.svg';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { cn } from '@/api/utils';
+import { isVideoFile, extractVideoThumbnail } from '@/utils/video-thumbnail';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -108,21 +110,35 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                   onClick={() => {
                     const input = document.createElement('input');
                     input.type = 'file';
-                    input.accept = 'image/*';
-                    input.onchange = (e: Event) => {
+                    input.accept = '.jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm';
+                    input.onchange = async (e: Event) => {
                       const target = e.target as HTMLInputElement;
                       const file = target.files?.[0];
                       if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (event: ProgressEvent<FileReader>) => {
-                          if (event.target?.result) {
-                            updateParent(index, {
-                              imagePreview: event.target.result as string,
-                              imageFile: file,
-                            });
+                        const isVideo = isVideoFile(file);
+                        let preview: string;
+
+                        if (isVideo) {
+                          try {
+                            preview = await extractVideoThumbnail(file);
+                          } catch {
+                            preview = URL.createObjectURL(file);
                           }
-                        };
-                        reader.readAsDataURL(file);
+                        } else {
+                          preview = await new Promise<string>((resolve) => {
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                              resolve(event.target?.result as string);
+                            };
+                            reader.readAsDataURL(file);
+                          });
+                        }
+
+                        updateParent(index, {
+                          imagePreview: preview,
+                          imageFile: file,
+                          isVideo,
+                        });
                       }
                     };
                     input.click();
@@ -130,13 +146,22 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                   className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden relative"
                 >
                   {parent.imagePreview ? (
-                    <Image
-                      src={parent.imagePreview}
-                      alt="Parent"
-                      fill
-                      className="object-contain rounded-lg"
-                      unoptimized
-                    />
+                    <>
+                      <Image
+                        src={parent.imagePreview}
+                        alt="Parent"
+                        fill
+                        className="object-contain rounded-lg"
+                        unoptimized
+                      />
+                      {parent.isVideo && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="bg-black/50 rounded-full p-1.5">
+                            <PlayIcon className="w-4 h-4 [&_path]:fill-white" />
+                          </div>
+                        </div>
+                      )}
+                    </>
                   ) : (
                     <Camera
                       className={cn(
@@ -154,6 +179,7 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                       updateParent(index, {
                         imagePreview: undefined,
                         imageFile: undefined,
+                        isVideo: undefined,
                       });
                     }}
                     className="absolute top-1 right-1 bg-[var(--primary-500-basic,#4f3b2e)] rounded-full size-6 flex items-center justify-center hover:opacity-80 transition-opacity"
