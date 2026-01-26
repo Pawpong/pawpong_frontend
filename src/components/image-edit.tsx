@@ -5,6 +5,7 @@ import { cn } from '@/api/utils';
 import { useState, useRef, useEffect } from 'react';
 import ImagePreview, { ImageFile } from './image-preview';
 import { useToast } from '@/hooks/use-toast';
+import { isVideoFile, extractVideoThumbnail, isVideoUrl, extractVideoThumbnailFromUrl } from '@/utils/video-thumbnail';
 
 interface ImageEditProps {
   className?: string;
@@ -39,15 +40,36 @@ export default function ImageEdit({
   // Initialize with existing images (URLs)
   useEffect(() => {
     if (initialImages.length > 0 && !initializedRef.current) {
-      const existingImages: ImageFile[] = initialImages.map((url, index) => ({
-        id: `existing-${index}-${Date.now()}`,
-        file: null,
-        preview: url,
-        isUrl: true,
-        type: url.match(/\.(mp4|webm|ogg|mov|avi|wmv|flv|mkv)$/i) ? 'video/*' : 'image/*',
-      }));
-      setImageFiles(existingImages);
       initializedRef.current = true;
+
+      const processInitialImages = async () => {
+        const existingImages: ImageFile[] = await Promise.all(
+          initialImages.map(async (url, index) => {
+            const isVideo = isVideoUrl(url);
+            let preview = url;
+
+            // 동영상 URL인 경우 썸네일 추출
+            if (isVideo) {
+              try {
+                preview = await extractVideoThumbnailFromUrl(url);
+              } catch {
+                preview = url;
+              }
+            }
+
+            return {
+              id: `existing-${index}-${Date.now()}`,
+              file: null,
+              preview,
+              isUrl: true,
+              isVideo,
+            };
+          })
+        );
+        setImageFiles(existingImages);
+      };
+
+      processInitialImages();
     }
   }, [initialImages]);
 
@@ -55,9 +77,9 @@ export default function ImageEdit({
     fileInputRef.current?.click();
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    
+
     // 이미 최대 개수에 도달한 경우 토스트 표시 후 종료
     if (imageFiles.length >= maxCount) {
       toast({
@@ -70,13 +92,31 @@ export default function ImageEdit({
       return;
     }
 
-    const newFiles: ImageFile[] = files.map((file) => ({
-      id: `${file.name}-${Date.now()}-${Math.random()}`,
-      file,
-      preview: URL.createObjectURL(file),
-      isUrl: false,
-      type: file.type,
-    }));
+    // 파일별로 썸네일 생성 (동영상은 첫 프레임 추출)
+    const newFiles: ImageFile[] = await Promise.all(
+      files.map(async (file) => {
+        const isVideo = isVideoFile(file);
+        let preview: string;
+
+        if (isVideo) {
+          try {
+            preview = await extractVideoThumbnail(file);
+          } catch {
+            preview = URL.createObjectURL(file);
+          }
+        } else {
+          preview = URL.createObjectURL(file);
+        }
+
+        return {
+          id: `${file.name}-${Date.now()}-${Math.random()}`,
+          file,
+          preview,
+          isUrl: false,
+          isVideo,
+        };
+      })
+    );
 
     // 추가하려는 파일 수와 기존 파일 수를 합쳐서 maxCount를 초과하는지 확인
     const totalCount = imageFiles.length + newFiles.length;
@@ -115,7 +155,7 @@ export default function ImageEdit({
 
   return (
     <div className="flex gap-2">
-      <input ref={fileInputRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={handleFileSelect} />
+      <input ref={fileInputRef} type="file" accept=".jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm" multiple className="hidden" onChange={handleFileSelect} />
 
       {/* 카메라 박스 */}
       <div

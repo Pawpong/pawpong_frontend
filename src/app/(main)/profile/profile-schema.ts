@@ -70,6 +70,7 @@ const parentItemSchema = z.object({
   gender: genderWithNullDefault(),
   imagePreview: z.string().optional(),
   imageFile: z.union([z.instanceof(File), z.undefined()]).optional(),
+  isVideo: z.boolean().optional(),
   description: stringWithEmptyDefault(),
   photos: z.array(z.union([z.instanceof(File), z.string()])).default([]),
 });
@@ -101,6 +102,7 @@ const breedingAnimalItemSchema = z.object({
   gender: genderWithNullDefault(),
   imagePreview: z.string().optional(),
   imageFile: z.union([z.instanceof(File), z.undefined()]).optional(),
+  isVideo: z.boolean().optional(),
   description: stringWithEmptyDefault(),
   adoptionStatus: stringWithEmptyDefault(),
   motherId: stringWithEmptyDefault(),

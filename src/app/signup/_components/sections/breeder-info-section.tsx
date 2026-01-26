@@ -136,7 +136,7 @@ export default function BreederInfoSection() {
               onClick={() => {
                 const input = document.createElement('input');
                 input.type = 'file';
-                input.accept = 'image/*';
+                input.accept = '.jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm';
                 input.onchange = (e: Event) => {
                   const target = e.target as HTMLInputElement;
                   const file = target.files?.[0];

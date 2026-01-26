@@ -29,6 +29,7 @@ import ProfileBannerCarousel from '@/components/profile-banner/profile-banner-ca
 import useFormGuard from '@/hooks/use-form-guard';
 import ExitConfirmDialog from '@/components/exit-confirmation-dialog';
 import useBrowserNavigationGuard from '@/hooks/use-browser-navigation-guard';
+import { isVideoUrl } from '@/utils/video-thumbnail';
 
 type BreederProfileApi = {
   breederId?: string;
@@ -207,6 +208,7 @@ export default function ProfilePage() {
               breed: pet.breed ? [pet.breed] : [],
               gender: pet.gender || null,
               imagePreview: pet.photoFileName || undefined,
+              isVideo: pet.photoFileName ? isVideoUrl(pet.photoFileName) : undefined,
               description: pet.description || '',
               photos: pet.photos || [],
             }))
@@ -269,6 +271,7 @@ export default function ProfilePage() {
                 price: pet.price?.toString() || '',
                 isCounselMode: pet.price === 0,
                 imagePreview: pet.photos?.[0] || undefined,
+                isVideo: pet.photos?.[0] ? isVideoUrl(pet.photos[0]) : undefined,
                 photos: pet.photos || [],
               }))
             : [
