@@ -124,9 +124,18 @@ export async function syncParentPets(
       // 임시 ID → 실제 petId 매핑 저장
       idMapping.set(parent.id, newPetId);
 
-      // 이미지가 있으면 업로드
+      // 1. 대표 사진 업로드
       if (parent.imageFile) {
         await uploadParentPetPhoto(newPetId, parent.imageFile);
+      }
+
+      // 2. 추가 사진·영상 업로드
+      if (parent.photos && parent.photos.length > 0) {
+        for (const item of parent.photos) {
+          if (item instanceof File) {
+            await uploadParentPetPhoto(newPetId, item);
+          }
+        }
       }
     } else {
       // 기존 부모견은 ID 그대로 유지
@@ -154,9 +163,18 @@ export async function syncParentPets(
         });
       }
 
-      // 이미지가 변경된 경우 업로드
+      // 1. 대표 사진 업로드
       if (parent.imageFile) {
         await uploadParentPetPhoto(parent.id, parent.imageFile);
+      }
+
+      // 2. 추가 사진·영상 업로드
+      if (parent.photos && parent.photos.length > 0) {
+        for (const item of parent.photos) {
+          if (item instanceof File) {
+            await uploadParentPetPhoto(parent.id, item);
+          }
+        }
       }
     }
   }
@@ -237,9 +255,18 @@ export async function syncAvailablePets(
         await updatePetStatus(newPetId, desiredStatus);
       }
 
-      // 이미지가 있으면 업로드
+      // 1. 대표 사진 업로드
       if (animal.imageFile) {
         await uploadAvailablePetPhoto(newPetId, animal.imageFile);
+      }
+
+      // 2. 추가 사진·영상 업로드
+      if (animal.photos && animal.photos.length > 0) {
+        for (const item of animal.photos) {
+          if (item instanceof File) {
+            await uploadAvailablePetPhoto(newPetId, item);
+          }
+        }
       }
     } else {
       // 기존 분양 개체 수정
@@ -280,9 +307,18 @@ export async function syncAvailablePets(
         });
       }
 
-      // 이미지가 변경된 경우 업로드
+      // 1. 대표 사진 업로드
       if (animal.imageFile) {
         await uploadAvailablePetPhoto(animal.id, animal.imageFile);
+      }
+
+      // 2. 추가 사진·영상 업로드
+      if (animal.photos && animal.photos.length > 0) {
+        for (const item of animal.photos) {
+          if (item instanceof File) {
+            await uploadAvailablePetPhoto(animal.id, item);
+          }
+        }
       }
     }
   }
