@@ -8,6 +8,7 @@ interface TextareaProps extends React.ComponentProps<'textarea'> {
   maxLength?: number;
   showLength?: boolean;
   currentLength?: number; // 외부에서 글자 수를 전달받을 수 있음
+  wrapperClassName?: string; // wrapper div의 className을 커스터마이징할 수 있음
 }
 
 function Textarea({
@@ -17,6 +18,7 @@ function Textarea({
   value: controlledValue,
   onChange: controlledOnChange,
   currentLength,
+  wrapperClassName,
   ...props
 }: TextareaProps) {
   const isControlled = controlledValue !== undefined;
@@ -36,7 +38,7 @@ function Textarea({
   };
 
   return (
-    <div className="bg-white rounded-lg w-full relative overflow-hidden">
+    <div className={cn('bg-white rounded-lg w-full relative overflow-hidden', wrapperClassName)}>
       <textarea
         ref={textareaRef}
         data-slot="textarea"
