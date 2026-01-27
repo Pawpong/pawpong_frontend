@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useBreakpoint } from '@/hooks/use-breakpoint';
 import Pencil from '@/assets/icons/pencil.svg';
+import SirenMuted from '@/assets/icons/siren-muted.svg';
+import ReportDialog from '@/components/report-dialog/report-dialog';
 
 interface ReviewListItemProps {
   review: {
@@ -18,7 +20,7 @@ interface ReviewListItemProps {
 }
 
 export default function ReviewListItem({ review }: ReviewListItemProps) {
-  const isMobile = !useBreakpoint('md');
+  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
   const typeLabel = review.reviewType || '후기';
 
   const handleReplyClick = () => {
@@ -27,27 +29,26 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="text-body-s font-semibold text-grayscale-gray5">
-            {review.adopterName || '익명'}
-          </div>
-          {!isMobile && (
+    <>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="text-body-s font-semibold text-grayscale-gray5">
+              {review.adopterName || '익명'}
+            </div>
             <div className="text-body-s text-grayscale-gray5">
               {typeLabel}・{review.formattedDate}
             </div>
-          )}
+          </div>
+          <Button
+            variant="ghost"
+            className="gap-1 text-grayscale-gray5 text-body-xs px-0 has-[>svg]:px-0"
+            onClick={() => setIsReportDialogOpen(true)}
+          >
+            <SirenMuted className="size-5" />
+            <div>신고하기</div>
+          </Button>
         </div>
-        {review.isReported && (
-          <div className="text-body-xs text-status-error-500">신고됨</div>
-        )}
-      </div>
-      {isMobile && (
-        <div className="text-body-s text-grayscale-gray5">
-          {typeLabel}・{review.formattedDate}
-        </div>
-      )}
       <div className="font-medium text-body-m text-primary-500 break-all">{review.comment}</div>
       
       {/* 답변하기 버튼  */}
@@ -62,6 +63,13 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
             <Pencil className="size-4" />
         </Button>
       </div>
-    </div>
+      </div>
+      <ReportDialog
+        open={isReportDialogOpen}
+        onOpenChange={setIsReportDialogOpen}
+        type="review"
+        reviewId={review.reviewId}
+      />
+    </>
   );
 }
