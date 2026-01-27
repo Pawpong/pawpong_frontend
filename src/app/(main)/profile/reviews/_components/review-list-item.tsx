@@ -7,6 +7,8 @@ import Check from '@/assets/icons/check-default.svg';
 import Pencil from '@/assets/icons/pencil.svg';
 import SirenMuted from '@/assets/icons/siren-muted.svg';
 import Close from '@/assets/icons/close-default.svg';
+import Trash from '@/assets/icons/trash.svg';
+import Cat from '@/assets/icons/cat';
 import ReportDialog from '@/components/report-dialog/report-dialog';
 
 interface ReviewListItemProps {
@@ -26,7 +28,16 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState('');
+  const [submittedReply, setSubmittedReply] = useState<string | null>(null);
   const typeLabel = review.reviewType || '후기';
+
+  // 현재 날짜 포맷팅 (YYYY. MM. DD.)
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}. ${month}. ${day}.`;
+  };
 
   const handleReplyClick = () => {
     setIsReplying(true);
@@ -40,8 +51,23 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
   const handleSubmitReply = () => {
     // TODO: 답글 제출 API 호출
     console.log('답글 제출:', review.reviewId, replyText);
-    setIsReplying(false);
-    setReplyText('');
+    if (replyText.trim()) {
+      setSubmittedReply(replyText);
+      setIsReplying(false);
+      setReplyText('');
+    }
+  };
+
+  const handleDeleteReply = () => {
+    setSubmittedReply(null);
+  };
+
+  const handleEditReply = () => {
+    if (submittedReply) {
+      setReplyText(submittedReply);
+      setSubmittedReply(null);
+      setIsReplying(true);
+    }
   };
 
   return (
@@ -67,8 +93,45 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
         </div>
       <div className="font-medium text-body-m text-primary-500 break-all">{review.comment}</div>
       
-      {/* 답글 작성 버튼 또는 답글 작성 폼 */}
-      {!isReplying ? (
+      {/* 답글 작성 버튼 또는 답글 작성 폼 또는 제출된 답글 */}
+      {submittedReply ? (
+        // 제출된 답글 UI
+        <div className="mt-2">
+          <div className="flex gap-3">
+            {/* 브리더 프로필 이미지 */}
+            <div className="w-10 h-10 rounded-lg bg-grayscale-gray2 flex items-center justify-center shrink-0">
+              <Cat className="w-6 h-6 text-grayscale-gray5" />
+            </div>
+            {/* 답글 내용 - gray-1 배경 */}
+            <div className="flex-1 bg-grayscale-gray1 rounded-lg p-4 flex flex-col gap-2">
+              <div className="text-body-s text-grayscale-gray5">
+                브리더명 {formatDate(new Date())}
+              </div>
+              <div className="text-body-xs text-grayscale-gray6 break-all">{submittedReply}</div>
+              {/* 버튼들 - 하단 */}
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <Button
+                  variant="ghost"
+                  className="bg-white text-body-xs text-grayscale-gray6 gap-1 px-3 py-2 h-auto hover:bg-gray-50 border-0"
+                  onClick={handleEditReply}
+                >
+                  수정
+                  <Pencil className="size-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="bg-white text-body-xs text-grayscale-gray6 gap-1 px-3 py-2 h-auto hover:bg-gray-50 border-0"
+                  onClick={handleDeleteReply}
+                >
+                  삭제
+                  <Trash  />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : !isReplying ? (
+        // 답글 작성 버튼
         <div className="mt-2">
           <Button
             variant="secondary"
@@ -80,10 +143,11 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
           </Button>
         </div>
       ) : (
-        <div className="mt-4">
-          <div className="bg-grayscale-gray1 rounded-lg flex flex-col relative min-h-[200px]">
+        // 답글 작성 폼
+        <div className="mt-2">
+          <div className="bg-grayscale-gray1 rounded-lg flex flex-col relative">
             {/* 텍스트 입력 영역 */}
-            <div className="bg-grayscale-gray1 pt-[var(--space-12)] pr-[var(--space-16)] pb-0 pl-[var(--space-16)] flex-1 rounded-lg">
+            <div className="px-4 pt-3 pb-0">
               <Textarea
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
@@ -92,11 +156,11 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
                 showLength={false}
                 currentLength={replyText.length}
                 wrapperClassName="bg-grayscale-gray1"
-                className="min-h-[8rem] bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 p-0 text-body-xs placeholder:text-grayscale-gray5 resize-none"
+                className="min-h-[120px] bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 p-0 text-body-xs placeholder:text-grayscale-gray5 resize-none"
               />
             </div>
             {/* 하단 영역: 문자 카운터 + 버튼 */}
-            <div className="flex items-center justify-between pt-[var(--space-12)] pr-[var(--space-16)] pb-[var(--space-16)] pl-[var(--space-16)]">
+            <div className="flex items-center justify-between px-4 pb-3 pt-2">
               {/* 문자 카운터 - 왼쪽 */}
               <div className="text-[14px] font-medium leading-[20px]">
                 <span className="text-[#4e9cf1]">{replyText.length}</span>
@@ -106,20 +170,19 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
               <div className="flex gap-2">
                 <Button
                   variant="ghost"
-                  className="bg-white text-body-xs text-grayscale-gray6 gap-1 pt-[var(--space-8)] pr-[var(--space-8)] pb-[var(--space-8)] pl-[var(--space-12)]  hover:bg-gray-50 border-0"
+                  className="bg-white text-body-xs text-grayscale-gray6 gap-1 px-3 py-2 h-auto hover:bg-gray-50 border-0"
                   onClick={handleCancelReply}
                 >
                   취소
-                  <Close />
+                  <Close className="size-4" />
                 </Button>
                 <Button
                   variant="tertiary"
-                  className="pt-[var(--space-8)] pr-[var(--space-8)] pb-[var(--space-8)] pl-[var(--space-12)] text-body-xs gap-1 text-white border-0 text-grayscale-gray6"
+                  className="px-3 py-2 h-auto text-body-xs gap-1 text-grayscale-gray6 border-0"
                   onClick={handleSubmitReply}
-             
                 >
                   등록
-                  <Check  />
+                  <Check className="size-4" />
                 </Button>
               </div>
             </div>
