@@ -43,6 +43,9 @@ export default function ReviewsPage() {
           type?: string;
           petName?: string;
           isReported?: boolean;
+          breederNickname?: string;
+          breederProfileImage?: string | null;
+          breedingPetType?: string;
         }) => {
           const typeMap: Record<string, string> = {
             consultation: '상담 후기',
@@ -72,6 +75,9 @@ export default function ReviewsPage() {
             createdAt: dateString,
             formattedDate: formattedDate || '날짜 없음',
             reviewType: typeMap[review.type || ''] || '후기',
+            breederNickname: review.breederNickname || user?.name,
+            breederProfileImage: review.breederProfileImage,
+            breedingPetType: review.breedingPetType,
           };
         },
       ) || [];

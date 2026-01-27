@@ -9,6 +9,8 @@ import SirenMuted from '@/assets/icons/siren-muted.svg';
 import Close from '@/assets/icons/close-default.svg';
 import Trash from '@/assets/icons/trash.svg';
 import Cat from '@/assets/icons/cat';
+import Dog from '@/assets/icons/dog';
+import Image from 'next/image';
 import ReportDialog from '@/components/report-dialog/report-dialog';
 
 interface ReviewListItemProps {
@@ -21,6 +23,9 @@ interface ReviewListItemProps {
     createdAt: string;
     formattedDate: string;
     reviewType: string;
+    breederNickname?: string;
+    breederProfileImage?: string | null;
+    breedingPetType?: string;
   };
 }
 
@@ -99,20 +104,38 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
         <div className="mt-2">
           <div className="flex gap-3">
             {/* 브리더 프로필 이미지 */}
-            <div className="w-10 h-10 rounded-lg bg-grayscale-gray2 flex items-center justify-center shrink-0">
-              <Cat className="w-6 h-6 text-grayscale-gray5" />
+            <div className="w-10 h-10 rounded-lg bg-grayscale-gray1 flex items-center justify-center shrink-0 overflow-hidden">
+              {review.breederProfileImage ? (
+                <Image
+                  src={review.breederProfileImage}
+                  alt={review.breederNickname || '브리더'}
+                  width={40}
+                  height={40}
+                  className="object-cover w-full h-full"
+                  unoptimized={review.breederProfileImage.startsWith('http')}
+                />
+              ) : (
+                (() => {
+                  const petType = review.breedingPetType?.toLowerCase();
+                  const IconComponent = petType === 'cat' ? Cat : Dog;
+                  return <IconComponent className="w-6 h-6 text-grayscale-gray5" />;
+                })()
+              )}
             </div>
             {/* 답글 내용 - gray-1 배경 */}
-            <div className="flex-1 bg-grayscale-gray1 rounded-lg p-4 flex flex-col gap-2">
-              <div className="text-body-s text-grayscale-gray5">
-                브리더명 {formatDate(new Date())}
+            <div className="flex-1 bg-grayscale-gray1 rounded-lg p-5 flex flex-col gap-2.5">
+              <div className="flex items-center gap-2">
+                <span className="text-body-m font-semibold text-primary-500">
+                  {review.breederNickname }
+                </span>
+                <span className="text-body-s text-grayscale-gray5">{formatDate(new Date())}</span>
               </div>
-              <div className="text-body-xs text-grayscale-gray6 break-all">{submittedReply}</div>
+              <div className="text-body-m font-medium text-primary-500 break-all">{submittedReply}</div>
               {/* 버튼들 - 하단 */}
-              <div className="flex items-center justify-end gap-2 pt-2">
+              <div className="flex items-center justify-end gap-2">
                 <Button
                   variant="ghost"
-                  className="bg-white text-body-xs text-grayscale-gray6 gap-1 px-3 py-2 h-auto hover:bg-gray-50 border-0"
+                  className="bg-white text-body-xs font-normal text-grayscale-gray6 gap-1 pt-2 pr-2 pb-2 pl-3 h-auto hover:bg-gray-50 border-0"
                   onClick={handleEditReply}
                 >
                   수정
@@ -120,11 +143,11 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
                 </Button>
                 <Button
                   variant="ghost"
-                  className="bg-white text-body-xs text-grayscale-gray6 gap-1 px-3 py-2 h-auto hover:bg-gray-50 border-0"
+                  className="bg-white text-body-xs font-normal text-grayscale-gray6 gap-1 pt-2 pr-2 pb-2 pl-3 h-auto hover:bg-gray-50 border-0"
                   onClick={handleDeleteReply}
                 >
                   삭제
-                  <Trash  />
+                  <Trash  className="text-grayscale-gray6" />
                 </Button>
               </div>
             </div>
