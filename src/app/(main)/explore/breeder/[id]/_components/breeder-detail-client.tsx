@@ -218,6 +218,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     breed: string;
     status?: 'available' | 'reserved' | 'adopted' | string;
     description?: string;
+    photos?: string[];
   };
 
   type ParentPetItem = {
@@ -228,6 +229,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     birthDate?: string;
     breed: string;
     description?: string;
+    photos?: string[];
   };
 
   type ReviewItem = {
@@ -304,6 +306,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     status:
       pet.status === 'adopted' ? 'completed' : ((pet.status || 'available') as 'available' | 'reserved' | 'completed'),
     description: pet.description,
+    photos: pet.photos || [],
   }));
 
   // 부모견/부모묘 매핑 - 페이지네이션 응답 형태 처리
@@ -317,6 +320,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     price: '', // 부모견은 가격이 없음
     breed: pet.breed,
     description: pet.description,
+    photos: pet.photos || [],
   }));
 
   // 후기 매핑

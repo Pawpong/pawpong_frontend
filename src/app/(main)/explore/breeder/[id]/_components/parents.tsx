@@ -25,6 +25,7 @@ export default function Parents({
     price: string;
     breed: string;
     description?: string;
+    photos?: string[];
   }[];
   breederId: string;
   breederDescription?: string;
@@ -47,6 +48,7 @@ export default function Parents({
       birth: pet.birth,
       breed: pet.breed,
       description: pet.description,
+      photos: pet.photos || [],
     };
 
     setSelectedPet(petDetail);

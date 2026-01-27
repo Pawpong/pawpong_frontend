@@ -34,6 +34,7 @@ export interface PetDetailData {
   breed: string;
   status?: 'available' | 'reserved' | 'completed';
   description?: string;
+  photos?: string[];
   parents?: {
     id: string;
     avatarUrl: string;
@@ -41,6 +42,7 @@ export interface PetDetailData {
     sex: 'male' | 'female';
     birth: string;
     breed: string;
+    photos?: string[];
   }[];
 }
 
@@ -99,6 +101,7 @@ export default function PetDetailDialog({
     sex: 'male' | 'female';
     birth: string;
     breed: string;
+    photos?: string[];
   }) => {
     onOpenChange(false);
 
@@ -109,6 +112,7 @@ export default function PetDetailDialog({
       sex: parent.sex,
       birth: parent.birth,
       breed: parent.breed,
+      photos: parent.photos || [],
     };
 
     setSelectedParent(parentDetail);
@@ -203,6 +207,39 @@ export default function PetDetailDialog({
               <div className="text-body-s text-grayscale-gray6 whitespace-pre-wrap">{pet.description}</div>
             )}
           </div>
+
+          {/* Photos 섹션 - 소개글 밑에 표시 */}
+          {pet.photos && pet.photos.length > 0 && (
+            <div className="flex flex-col gap-3">
+              <div className="space-y-3">
+                {pet.photos.map((photo, index) => {
+                  const isVideo = isVideoUrl(photo);
+                  return (
+                    <div key={index} className="relative w-full aspect-video rounded-lg overflow-hidden">
+                      {isVideo ? (
+                        <video
+                          src={photo}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                        />
+                      ) : (
+                        <Image
+                          src={getValidImageUrl(photo)}
+                          alt={`${pet.name} 사진 ${index + 1}`}
+                          fill
+                          className="object-cover"
+                          unoptimized={getValidImageUrl(photo).startsWith('http')}
+                        />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* 엄마아빠 섹션 (분양 중인 아이만) */}
           {type === 'pet' && pet.parents && pet.parents.length > 0 && (
