@@ -61,6 +61,13 @@ export function useBreederNavItems(): { navItems: NavItem[]; isLoading: boolean 
                 variant: isApproved ? 'default' : ('disabled' as const),
               };
             }
+            // '후기 관리' 메뉴는 승인된 경우에만 활성화
+            if (child.name === '후기 관리') {
+              return {
+                ...child,
+                variant: isApproved ? 'default' : ('disabled' as const),
+              };
+            }
             return child;
           }),
       };

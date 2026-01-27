@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type VerificationStatus = 'pending' | 'approved' | 'rejected';
+export type VerificationStatus = 'pending' | 'approved' | 'rejected' | 'reviewing' | 'not_submitted';
 
 export interface AuthUser {
   userId: string;

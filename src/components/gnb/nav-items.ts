@@ -95,6 +95,7 @@ export const NAV_ITEMS_BREEDER: NavItem[] = [
     requiresAuth: true,
     children: [
       { name: '내 프로필', href: '/profile' },
+      { name: '후기 관리', href: '/profile/reviews' },
       {
         name: '입점 서류 수정',
         href: '/profile/documents',
