@@ -36,6 +36,7 @@ export default function ParentsPage({ params }: PageProps) {
     birthDate?: string;
     breed: string;
     description?: string;
+    photos?: string[];
   };
 
   type MappedParentPet = {
@@ -47,6 +48,7 @@ export default function ParentsPage({ params }: PageProps) {
     price: string;
     breed: string;
     description?: string;
+    photos?: string[];
   };
 
   // 모든 페이지의 데이터를 합쳐서 매핑
@@ -62,6 +64,7 @@ export default function ParentsPage({ params }: PageProps) {
         price: '', // 부모견은 가격이 없음
         breed: pet.breed,
         description: pet.description,
+        photos: pet.photos || [],
       })) || [];
 
   // 첫 페이지의 총 개수 확인 (더보기 버튼 표시 여부 결정용)
@@ -87,6 +90,7 @@ export default function ParentsPage({ params }: PageProps) {
       birth: pet.birth,
       breed: pet.breed,
       description: pet.description,
+      photos: pet.photos || [],
     };
 
     setSelectedPet(petDetail);

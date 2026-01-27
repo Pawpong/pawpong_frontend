@@ -28,6 +28,7 @@ export default function BreedingAnimals({
     breed: string;
     status?: 'available' | 'reserved' | 'completed';
     description?: string;
+    photos?: string[];
   }[];
   breederId: string;
   breederDescription?: string;
@@ -54,6 +55,7 @@ export default function BreedingAnimals({
           gender: 'male' | 'female';
           birthDate?: string;
           breed: string;
+          photos?: string[];
         }) => ({
           id: parent.petId,
           avatarUrl: parent.photoUrl || '/animal-sample.png',
@@ -61,6 +63,7 @@ export default function BreedingAnimals({
           sex: parent.gender,
           birth: formatBirthDateToKorean(parent.birthDate),
           breed: parent.breed,
+          photos: parent.photos || [],
         }),
       ) || [];
 
@@ -74,6 +77,7 @@ export default function BreedingAnimals({
       breed: pet.breed,
       status: pet.status || 'available',
       description: pet.description,
+      photos: pet.photos || [],
       parents: parents,
     };
 
