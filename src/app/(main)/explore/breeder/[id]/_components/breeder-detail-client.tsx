@@ -394,7 +394,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
             />
           )}
 
-          {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} breederId={breederId} />}
+          {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} breederId={breederId} isOwnProfile={isOwnProfile} />}
         </div>
       </div>
       {!isLg && (
