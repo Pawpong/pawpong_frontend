@@ -12,6 +12,7 @@ import Cat from '@/assets/icons/cat';
 import Dog from '@/assets/icons/dog';
 import Image from 'next/image';
 import ReportDialog from '@/components/report-dialog/report-dialog';
+import ConfirmDialog from '@/components/confirm-dialog';
 
 interface ReviewListItemProps {
   review: {
@@ -34,6 +35,7 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [submittedReply, setSubmittedReply] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const typeLabel = review.reviewType || '후기';
 
   // 현재 날짜 포맷팅 (YYYY. MM. DD.)
@@ -63,8 +65,17 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
     }
   };
 
-  const handleDeleteReply = () => {
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    setIsDeleteDialogOpen(false);
     setSubmittedReply(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteDialogOpen(false);
   };
 
   const handleEditReply = () => {
@@ -135,7 +146,7 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
               <div className="flex items-center justify-end gap-2">
                 <Button
                   variant="ghost"
-                  className="bg-white text-body-xs font-normal text-grayscale-gray6 gap-1 pt-2 pr-2 pb-2 pl-3 h-auto hover:bg-gray-50 border-0"
+                  className="bg-white text-body-xs font-normal text-grayscale-gray6 gap-1 pt-2 pr-2 pb-2 pl-3 h-auto hover:bg-grayscale-gray2 border-0"
                   onClick={handleEditReply}
                 >
                   수정
@@ -143,8 +154,8 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
                 </Button>
                 <Button
                   variant="ghost"
-                  className="bg-white text-body-xs font-normal text-grayscale-gray6 gap-1 pt-2 pr-2 pb-2 pl-3 h-auto hover:bg-gray-50 border-0"
-                  onClick={handleDeleteReply}
+                  className="bg-white text-body-xs font-normal text-grayscale-gray6 gap-1 pt-2 pr-2 pb-2 pl-3 h-auto hover:bg-grayscale-gray2 border-0"
+                  onClick={handleDeleteClick}
                 >
                   삭제
                   <Trash  className="text-grayscale-gray6" />
@@ -193,7 +204,7 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
               <div className="flex gap-2">
                 <Button
                   variant="ghost"
-                  className="bg-white text-body-xs text-grayscale-gray6 gap-1 px-3 py-2 h-auto hover:bg-gray-50 border-0"
+                  className="bg-white text-body-xs text-grayscale-gray6 gap-1 px-3 py-2 h-auto hover:bg-grayscale-gray2 border-0"
                   onClick={handleCancelReply}
                 >
                   취소
@@ -218,6 +229,18 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
         onOpenChange={setIsReportDialogOpen}
         type="review"
         reviewId={review.reviewId}
+      />
+
+      {/* 삭제 확인 모달 */}
+      <ConfirmDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        title="답글을 삭제할까요?"
+        description="삭제한 답글은 복구할 수 없어요."
+        confirmText="삭제"
+        cancelText="취소"
       />
     </>
   );
