@@ -60,8 +60,8 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
     console.log('답글 제출:', review.reviewId, replyText);
     if (replyText.trim()) {
       setSubmittedReply(replyText);
-      setIsReplying(false);
-      setReplyText('');
+    setIsReplying(false);
+    setReplyText('');
     }
   };
 
