@@ -10,6 +10,7 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useBreederReviewsInfinite } from '@/app/(main)/explore/breeder/[id]/_hooks/use-breeder-detail';
 import EmptyReviewsState from './_components/empty-reviews-state';
 import ReviewListItem from './_components/review-list-item';
+import { formatDateToDotNotation } from '@/utils/date-utils';
 
 const PAGE_SIZE = 10;
 
@@ -55,16 +56,7 @@ export default function ReviewsPage() {
 
           // 날짜 필드: 백엔드에서 writtenAt을 반환
           const dateString = review.writtenAt || review.createdAt;
-          let formattedDate = '';
-
-          if (dateString) {
-            try {
-              const date = new Date(dateString);
-              formattedDate = date.toLocaleDateString('ko-KR');
-            } catch {
-              formattedDate = '날짜 없음';
-            }
-          }
+          const formattedDate = formatDateToDotNotation(dateString);
 
           return {
             reviewId: review.reviewId,
@@ -123,6 +115,7 @@ export default function ReviewsPage() {
           <EmptyReviewsState />
         ) : (
           <>
+            {/* 후기 리스트 */}
             <div className="flex flex-col gap-7">
               {allReviews.map((review, index) => (
                 <div key={review.reviewId} className="flex flex-col">
@@ -132,13 +125,11 @@ export default function ReviewsPage() {
               ))}
             </div>
 
-            {/* 더보기 버튼 */}
-            {hasNextPage && (
-              <LoadMoreButton
-                onClick={handleLoadMore}
-                isLoading={isFetchingNextPage}
-                wrapperClassName="pb-20 lg:pb-24"
-              />
+            {/* 더보기 버튼 - 후기가 10개 이상이면 표시 */}
+            {allReviews.length >= 10 && (
+              <div className="mt-4 md:mt-9 lg:mt-10 pb-20 lg:pb-24">
+                <LoadMoreButton onClick={handleLoadMore} isLoading={isFetchingNextPage} disabled={!hasNextPage} />
+              </div>
             )}
           </>
         )}
