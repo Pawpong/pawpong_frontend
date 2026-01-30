@@ -1,14 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { dynamicClient } from '@/utils/dynamic-client';
 import { useRouter } from 'next/navigation';
 import BreederProfileSection from '@/components/breeder-profile/breeder-profile-section';
 import BreederProfileSectionHeader from '@/components/breeder-profile/breeder-profile-section-header';
 import BreederProfileSectionMore from '@/components/breeder-profile/breeder-profile-section-more';
 import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
 import AnimalProfile from './animal-profile';
-import PetDetailDialog, { type PetDetailData } from './pet-detail-dialog';
+import type { PetDetailData } from './pet-detail-dialog';
 import EmptyPetState from './empty-pet-state';
+
+const PetDetailDialog = dynamicClient(() => import('./pet-detail-dialog'));
 
 export default function Parents({
   data,

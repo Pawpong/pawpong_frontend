@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BreederProfile from '@/app/(main)/explore/breeder/[id]/_components/breeder-profile';
 import { Separator } from '@/components/ui/separator';
 import BreederDescription from './breeder-description';
@@ -347,7 +347,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
       nickname: review.adopterName || review.adopterNickname || '익명',
       date: formattedDate || '날짜 없음',
       content: review.content,
-      reviewType: typeMap[review.type || ''] || '상담 후기',
+      reviewType: mappedType,
     };
   });
 

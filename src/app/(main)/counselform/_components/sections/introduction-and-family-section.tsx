@@ -3,7 +3,7 @@ import InputField from '../shared/input-field';
 import { CheckboxField } from '../shared/checkbox-field';
 import { QuestionBlock } from '../shared/question-block';
 
-export function IntroductionAndFamilySection() {
+export default function IntroductionAndFamilySection() {
   return (
     <div className="flex flex-col gap-8 w-full">
       <IntroductionField />

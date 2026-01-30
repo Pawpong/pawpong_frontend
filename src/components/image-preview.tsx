@@ -3,6 +3,7 @@
 import { cn } from '@/api/utils';
 import PictureRemove from '@/assets/icons/picture-delete.svg';
 import PlayIcon from '@/assets/icons/play.svg';
+import Image from 'next/image';
 
 export interface ImageFile {
   id: string;
@@ -59,10 +60,13 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
     <div className={cn('flex gap-3', getLayoutClass())}>
       {images.slice(0, maxImages).map((image) => (
         <div key={image.id} className="relative">
-          <img
+          <Image
             src={image.preview}
             alt={`preview ${image.id}`}
+            width={80}
+            height={80}
             className={cn('rounded-lg object-contain bg-white border border-gray-200', getImageSizeClass())}
+            unoptimized={image.isUrl || image.preview.startsWith('blob:')}
           />
           {image.isVideo && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

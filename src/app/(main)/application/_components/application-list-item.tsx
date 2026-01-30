@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { dynamicClient } from '@/utils/dynamic-client';
 import ProfileImageWithBadge from '@/components/breeder/profile-image-with-badge';
 import BreederInfo from '@/components/breeder/breeder-info';
 import { Button } from '@/components/ui/button';
 import Pencil from '@/assets/icons/pencil.svg';
-import ReviewDialog from './review-dialog';
+const ReviewDialog = dynamicClient(() => import('./review-dialog'));
 import ReviewWriteDialog from './review-write-dialog';
 import { Badge } from '@/components/ui/badge';
 import ApplicationDetailModal from './application-detail-modal';
@@ -132,6 +133,7 @@ export default function ApplicationListItem({
   breederId,
   breederName,
   animalType,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   adopterId,
   adopterName,
   petName,
