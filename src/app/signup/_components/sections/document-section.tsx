@@ -1,7 +1,6 @@
 'use client';
 
 import ErrorIcon from '@/assets/icons/error';
-import SignupFormDescription from '@/components/signup-form-section/signup-form-description';
 import SignupFormHeader from '@/components/signup-form-section/signup-form-header';
 import SignupFormItems from '@/components/signup-form-section/signup-form-items';
 import SignupFormSection from '@/components/signup-form-section/signup-form-section';

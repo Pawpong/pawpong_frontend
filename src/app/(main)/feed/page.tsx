@@ -2,12 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { FeedVideoCard } from './_components/feed-video-card';
-import { CommentsDialog } from './_components/comments-dialog';
-import { TagSearchBar } from './_components/tag-search-bar';
 import { useFeedVideos } from './_hooks/use-feed';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2, TrendingUp, Clock, Flame } from 'lucide-react';
+import { dynamicClient } from '@/utils/dynamic-client';
+
+const FeedVideoCard = dynamicClient(() => import('./_components/feed-video-card').then((mod) => mod.FeedVideoCard), {
+  loading: () => <Skeleton className="w-full h-[520px] rounded-2xl" />,
+});
+
+const CommentsDialog = dynamicClient(() => import('./_components/comments-dialog').then((mod) => mod.CommentsDialog));
+
+const TagSearchBar = dynamicClient(() => import('./_components/tag-search-bar').then((mod) => mod.TagSearchBar), {
+  loading: () => <Skeleton className="w-full h-12 rounded-xl" />,
+});
 
 /**
  * Pawpong 피드 페이지
