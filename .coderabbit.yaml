@@ -1,8 +1,5 @@
 language: 'ko-KR'
 early_access: false
-base_branches:
-  - main
-  - dev
 reviews:
   profile: 'chill'
   request_changes_workflow: false
@@ -15,4 +12,3 @@ reviews:
     drafts: false
 chat:
   auto_reply: true
-
