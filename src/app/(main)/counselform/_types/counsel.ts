@@ -26,4 +26,3 @@ export interface CounselFormData {
   adoptionTiming: string;
   additionalMessage: string;
 }
-

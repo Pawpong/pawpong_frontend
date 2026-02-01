@@ -36,7 +36,9 @@ export default function DocumentUploadFields({
       <div className="flex flex-col gap-2.5">
         <FileButton
           file={documents[DOCUMENT_KEYS.ID_CARD] ?? null}
-          existingFileName={documentStates[DOCUMENT_KEYS.ID_CARD]?.originalFileName || existingFileNames[DOCUMENT_KEYS.ID_CARD]}
+          existingFileName={
+            documentStates[DOCUMENT_KEYS.ID_CARD]?.originalFileName || existingFileNames[DOCUMENT_KEYS.ID_CARD]
+          }
           onUpload={onFileUpload(DOCUMENT_KEYS.ID_CARD)}
           onDelete={onFileDelete(DOCUMENT_KEYS.ID_CARD)}
         >
@@ -51,7 +53,10 @@ export default function DocumentUploadFields({
       <div className="flex flex-col gap-2.5">
         <FileButton
           file={documents[DOCUMENT_KEYS.BUSINESS_LICENSE] ?? null}
-          existingFileName={documentStates[DOCUMENT_KEYS.BUSINESS_LICENSE]?.originalFileName || existingFileNames[DOCUMENT_KEYS.BUSINESS_LICENSE]}
+          existingFileName={
+            documentStates[DOCUMENT_KEYS.BUSINESS_LICENSE]?.originalFileName ||
+            existingFileNames[DOCUMENT_KEYS.BUSINESS_LICENSE]
+          }
           onUpload={onFileUpload(DOCUMENT_KEYS.BUSINESS_LICENSE)}
           onDelete={onFileDelete(DOCUMENT_KEYS.BUSINESS_LICENSE)}
         >

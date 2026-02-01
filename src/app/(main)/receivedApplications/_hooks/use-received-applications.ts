@@ -38,7 +38,8 @@ const mapDtoToReceivedApplication = (dto: ReceivedApplicationItemDto): ReceivedA
   return {
     id: dto.applicationId,
     applicantNickname: dto.adopterNickname || dto.adopterName, // 닉네임 우선, 없으면 이름
-    animalInfo: dto.petName || dto.preferredPetInfo || dto.standardResponses?.preferredPetDescription || '분양 중인 아이 정보',
+    animalInfo:
+      dto.petName || dto.preferredPetInfo || dto.standardResponses?.preferredPetDescription || '분양 중인 아이 정보',
     status: statusMap[dto.status] || 'before',
     applicationDate: formatDateToISO(dto.appliedAt),
   };

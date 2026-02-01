@@ -95,13 +95,13 @@ export const NAV_ITEMS_BREEDER: NavItem[] = [
     requiresAuth: true,
     children: [
       { name: '내 프로필', href: '/profile' },
-      { name: '상담 신청서 관리', href: '/receivedApplications' },
+      { name: '상담 신청서 관리', href: '/modify-counselform' },
       { name: '후기 관리', href: '/profile/reviews' },
       {
         name: '입점 서류 수정',
         href: '/profile/documents',
         // APPROVED 상태가 아닐 때만 표시 (pending, reviewing, rejected, not_submitted)
-        showForVerificationStatus: ['pending', 'reviewing', 'rejected', 'not_submitted']
+        showForVerificationStatus: ['pending', 'reviewing', 'rejected', 'not_submitted'],
       },
       { name: '찜한 브리더', href: '/saved' },
       { name: '공지사항', href: '/announcements' },

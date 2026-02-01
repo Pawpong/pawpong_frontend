@@ -64,7 +64,7 @@ export default function ImageEdit({
               isUrl: true,
               isVideo,
             };
-          })
+          }),
         );
         setImageFiles(existingImages);
       };
@@ -115,7 +115,7 @@ export default function ImageEdit({
           isUrl: false,
           isVideo,
         };
-      })
+      }),
     );
 
     // 추가하려는 파일 수와 기존 파일 수를 합쳐서 maxCount를 초과하는지 확인
@@ -155,7 +155,14 @@ export default function ImageEdit({
 
   return (
     <div className="flex gap-2">
-      <input ref={fileInputRef} type="file" accept=".jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm" multiple className="hidden" onChange={handleFileSelect} />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm"
+        multiple
+        className="hidden"
+        onChange={handleFileSelect}
+      />
 
       {/* 카메라 박스 */}
       <div

@@ -33,8 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // 이미 완전한 user 정보가 있으면 조회하지 않음
     // userId가 있고, 브리더인 경우 verificationStatus도 있어야 완전한 상태
-    const isCompleteUser =
-      user?.userId && (user.role !== 'breeder' || user.verificationStatus !== undefined);
+    const isCompleteUser = user?.userId && (user.role !== 'breeder' || user.verificationStatus !== undefined);
     if (isCompleteUser) return;
 
     const initAuth = async () => {

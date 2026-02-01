@@ -13,7 +13,7 @@ interface GnbProps {
   navVariant?: 'default' | 'breeder';
 }
 
-export default function Gnb({ variant = 'default', navVariant = 'breeder' }: GnbProps) {
+export default function Gnb({ variant = 'tertiary', navVariant = 'breeder' }: GnbProps) {
   const isLg = useBreakpoint('lg');
   const { user } = useAuthStore();
   const bgClass = variant === 'tertiary' ? 'bg-tertiary-500' : 'bg-background';

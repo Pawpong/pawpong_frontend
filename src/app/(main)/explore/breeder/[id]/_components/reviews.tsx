@@ -30,7 +30,7 @@ export default function Reviews({ data, breederId, isOwnProfile = false }: Revie
                   className="gap-1 has-[>svg]:px-0 text-body-xs font-medium text-secondary-700"
                 >
                   <div>관리</div>
-                  <Pencil  />
+                  <Pencil />
                 </Button>
               </Link>
             ) : (
@@ -42,9 +42,11 @@ export default function Reviews({ data, breederId, isOwnProfile = false }: Revie
         )}
       </BreederProfileSectionHeader>
       <div className="flex flex-col gap-8 ">
-        {displayedReviews.map((e: { id: string; nickname: string; date: string; content: string; reviewType?: string }) => (
-          <Review key={e.id} data={e} />
-        ))}
+        {displayedReviews.map(
+          (e: { id: string; nickname: string; date: string; content: string; reviewType?: string }) => (
+            <Review key={e.id} data={e} />
+          ),
+        )}
       </div>
     </BreederProfileSection>
   );

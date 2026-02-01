@@ -73,9 +73,7 @@ const ApplicationPage = () => {
             </div>
 
             {/* 더보기 버튼 */}
-            {hasNextPage && (
-              <LoadMoreButton onClick={handleLoadMore} isLoading={isFetchingNextPage} variant="custom" />
-            )}
+            {hasNextPage && <LoadMoreButton onClick={handleLoadMore} isLoading={isFetchingNextPage} variant="custom" />}
           </>
         )}
       </div>

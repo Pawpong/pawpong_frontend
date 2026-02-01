@@ -110,8 +110,7 @@ export function useFilterData(filterType: '입양 상태' | '품종' | '지역',
   }, [filterType, breedsQuery.data, districtsQuery.data, adoptionStatusQuery.data]);
 
   // 로딩 및 에러 상태
-  const isLoading =
-    breedsQuery.isLoading || districtsQuery.isLoading || adoptionStatusQuery.isLoading;
+  const isLoading = breedsQuery.isLoading || districtsQuery.isLoading || adoptionStatusQuery.isLoading;
 
   const error = breedsQuery.error || districtsQuery.error || adoptionStatusQuery.error;
 
@@ -164,8 +163,7 @@ export function useAllFiltersData(petType: 'cat' | 'dog', enabled: boolean = fal
     ];
   }, [adoptionStatusQuery.data, breedsQuery.data, districtsQuery.data]);
 
-  const isLoading =
-    adoptionStatusQuery.isLoading || breedsQuery.isLoading || districtsQuery.isLoading;
+  const isLoading = adoptionStatusQuery.isLoading || breedsQuery.isLoading || districtsQuery.isLoading;
 
   const error = adoptionStatusQuery.error || breedsQuery.error || districtsQuery.error;
 

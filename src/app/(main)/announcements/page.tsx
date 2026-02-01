@@ -50,11 +50,7 @@ export default function InformationPage() {
 
             {/* 더보기 버튼 */}
             {hasNextPage && (
-              <LoadMoreButton
-                onClick={() => fetchNextPage()}
-                isLoading={isFetchingNextPage}
-                wrapperClassName="pb-20"
-              />
+              <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} wrapperClassName="pb-20" />
             )}
           </>
         )}
