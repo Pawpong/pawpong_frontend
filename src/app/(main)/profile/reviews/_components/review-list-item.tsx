@@ -211,9 +211,7 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
               {/* 답글 내용 - gray-1 배경 */}
               <div className="flex-1 bg-grayscale-gray1 rounded-lg p-5 flex flex-col gap-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-body-m font-semibold text-primary-500">
-                    {review.breederNickname}
-                  </span>
+                  <span className="text-body-m font-semibold text-primary-500">{review.breederNickname}</span>
                   <span className="text-body-s text-grayscale-gray5">{formatDate(replyDate)}</span>
                 </div>
                 <div className="text-body-m font-medium text-primary-500 break-all">{submittedReply}</div>
@@ -244,11 +242,7 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
         ) : !isReplying ? (
           // 답글 작성 버튼
           <div className="mt-2">
-            <Button
-              variant="secondary"
-              className="px-0 py-2 pr-2 pl-3 gap-1 shrink-0"
-              onClick={handleReplyClick}
-            >
+            <Button variant="secondary" className="px-0 py-2 pr-2 pl-3 gap-1 shrink-0" onClick={handleReplyClick}>
               <span className="text-body-xs font-normal text-grayscale-gray6">답글 작성</span>
               <Pencil className="size-4" />
             </Button>
