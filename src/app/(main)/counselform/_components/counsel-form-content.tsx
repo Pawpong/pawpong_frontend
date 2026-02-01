@@ -38,6 +38,7 @@ function CounselFormContentInner() {
           <div className="flex w-full flex-col items-center pb-20 md:pb-24  md:px-4 lg:px-0.5">
             {COUNSEL_FORM_SECTIONS.map((section, index: number) => {
               const isLast = index === COUNSEL_FORM_SECTIONS.length - 1;
+              const isAdditionalMessage = section.id === 'additional-message';
 
               return (
                 <div key={section.id} className="w-full">
@@ -61,7 +62,7 @@ function CounselFormContentInner() {
                       }
                     }
                   })()}
-                  {!isLast && <Separator className="bg-grayscale-gray2 my-15" />}
+                  {!isLast && !isAdditionalMessage && <Separator className="bg-grayscale-gray2 my-15" />}
                 </div>
               );
             })}
