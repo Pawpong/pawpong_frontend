@@ -25,6 +25,16 @@ export const counselSchema = z.object({
   interestedAnimalDetails: z.string(),
   adoptionTiming: z.string(),
   additionalMessage: z.string(),
+
+  // 브리더 추가 질문 (선택적)
+  breederQuestions: z
+    .array(
+      z.object({
+        question: z.string().min(1, '질문을 입력해 주세요.'),
+      }),
+    )
+    .optional()
+    .default([]),
 });
 
 export type CounselFormSchema = z.infer<typeof counselSchema>;

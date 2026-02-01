@@ -25,4 +25,7 @@ export interface CounselFormData {
   interestedAnimalDetails: string;
   adoptionTiming: string;
   additionalMessage: string;
+
+  // 브리더 추가 질문
+  breederQuestions?: Array<{ question: string }>;
 }
