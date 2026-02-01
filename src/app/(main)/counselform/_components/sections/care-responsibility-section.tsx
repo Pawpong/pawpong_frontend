@@ -1,9 +1,12 @@
 import { CheckboxField } from '../shared/checkbox-field';
 import { QuestionBlock } from '../shared/question-block';
+import { SectionHeader } from '../shared/section-header';
+import { CARE_RESPONSIBILITY } from '@/constants/counsel-form';
 
 export default function CareResponsibilitySection() {
   return (
     <div className="flex flex-col gap-8 w-full">
+      <SectionHeader title={CARE_RESPONSIBILITY.sectionTitle} subtitle={CARE_RESPONSIBILITY.description} />
       <QuestionBlock title="정기 예방접종·건강검진·훈련 등 기본 케어를 책임지고 해주실 수 있나요?">
         <CheckboxField name="basicCare" label="네" />
       </QuestionBlock>

@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import Plus from '@/assets/icons/plus';
 import Trash from '@/assets/icons/trash.svg';
 import type { CounselFormData } from '@/app/(main)/counselform/_types/counsel';
+import { SectionHeader } from '@/app/(main)/counselform/_components/shared/section-header';
+import { BREEDER_ADDITIONAL_QUESTION } from '@/constants/counsel-form';
 
 export default function BreederAdditionalQuestionSection() {
   const { control } = useFormContext<CounselFormData>();
@@ -15,10 +17,7 @@ export default function BreederAdditionalQuestionSection() {
 
   return (
     <div className="flex flex-col w-full gap-8">
-      <div className="flex flex-col items-start w-full gap-1.5">
-        <h2 className="text-body-l font-semibold text-grayscale-gray7 w-full">브리더 추가 질문</h2>
-        <p className="text-body-s font-medium text-grayscale-gray5">브리더가 개별적으로 확인하고 싶은 사항에 답변해 주세요.</p>
-      </div>
+      <SectionHeader title={BREEDER_ADDITIONAL_QUESTION.title} subtitle={BREEDER_ADDITIONAL_QUESTION.subtitle} />
       <div className="flex flex-col w-full gap-8">
         {fields.length > 0 && (
           <div className="flex flex-col w-full gap-8">
