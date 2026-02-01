@@ -241,6 +241,10 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     createdAt?: string;
     type?: string; // 백엔드 API가 type으로 반환
     reviewType?: string;
+    // 브리더 답글 관련 필드
+    replyContent?: string | null;
+    replyWrittenAt?: string | null;
+    replyUpdatedAt?: string | null;
   };
 
   // 프로필 데이터 매핑
@@ -348,6 +352,13 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
       date: formattedDate || '날짜 없음',
       content: review.content,
       reviewType: mappedType,
+      // 브리더 답글 정보 전달
+      replyContent: review.replyContent || undefined,
+      replyWrittenAt: review.replyWrittenAt || undefined,
+      replyUpdatedAt: review.replyUpdatedAt || undefined,
+      breederNickname: profileData.breederName,
+      breederProfileImage: avatarUrl !== '/profile-empty.svg' ? avatarUrl : undefined,
+      breedingPetType: animalType,
     };
   });
 

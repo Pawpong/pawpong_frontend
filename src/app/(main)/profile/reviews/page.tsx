@@ -47,6 +47,9 @@ export default function ReviewsPage() {
           breederNickname?: string;
           breederProfileImage?: string | null;
           breedingPetType?: string;
+          replyContent?: string | null;
+          replyWrittenAt?: string | null;
+          replyUpdatedAt?: string | null;
         }) => {
           const typeMap: Record<string, string> = {
             consultation: '상담 후기',
@@ -70,6 +73,9 @@ export default function ReviewsPage() {
             breederNickname: review.breederNickname || user?.name,
             breederProfileImage: review.breederProfileImage,
             breedingPetType: review.breedingPetType,
+            replyContent: review.replyContent || undefined,
+            replyWrittenAt: review.replyWrittenAt || undefined,
+            replyUpdatedAt: review.replyUpdatedAt || undefined,
           };
         },
       ) || [];

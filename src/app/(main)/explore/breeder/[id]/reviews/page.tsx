@@ -37,6 +37,9 @@ export default function ReviewsPage({ params }: PageProps) {
           writtenAt?: string;
           content: string;
           type?: string;
+          replyContent?: string | null;
+          replyWrittenAt?: string | null;
+          replyUpdatedAt?: string | null;
         }) => {
           const typeMap: Record<string, string> = {
             consultation: '상담 후기',
@@ -48,12 +51,21 @@ export default function ReviewsPage({ params }: PageProps) {
           const dateString = review.writtenAt || review.createdAt;
           const formattedDate = formatDateToDotNotation(dateString);
 
+          // 프로필 이미지 URL 생성
+          const avatarUrl = profileData?.profileImageFileName || undefined;
+
           return {
             id: review.reviewId,
             nickname: review.adopterName || review.adopterNickname || '익명',
             date: formattedDate || '날짜 없음',
             content: review.content,
             reviewType: typeMap[review.type || ''] || '상담 후기',
+            replyContent: review.replyContent || undefined,
+            replyWrittenAt: review.replyWrittenAt || undefined,
+            replyUpdatedAt: review.replyUpdatedAt || undefined,
+            breederNickname: profileData?.breederName,
+            breederProfileImage: avatarUrl,
+            breedingPetType: undefined,
           };
         },
       ) || [];

@@ -7,8 +7,22 @@ import Review from './review';
 import { Button } from '@/components/ui/button';
 import Pencil from '@/assets/icons/pencil.svg';
 
+interface ReviewData {
+  id: string;
+  nickname: string;
+  date: string;
+  content: string;
+  reviewType?: string;
+  replyContent?: string | null;
+  replyWrittenAt?: string | null;
+  replyUpdatedAt?: string | null;
+  breederNickname?: string;
+  breederProfileImage?: string | null;
+  breedingPetType?: string;
+}
+
 interface ReviewsProps {
-  data: { id: string; nickname: string; date: string; content: string; reviewType?: string }[];
+  data: ReviewData[];
   breederId: string;
   isOwnProfile?: boolean;
 }
@@ -42,11 +56,9 @@ export default function Reviews({ data, breederId, isOwnProfile = false }: Revie
         )}
       </BreederProfileSectionHeader>
       <div className="flex flex-col gap-8 ">
-        {displayedReviews.map(
-          (e: { id: string; nickname: string; date: string; content: string; reviewType?: string }) => (
-            <Review key={e.id} data={e} />
-          ),
-        )}
+        {displayedReviews.map((e: ReviewData) => (
+          <Review key={e.id} data={e} />
+        ))}
       </div>
     </BreederProfileSection>
   );

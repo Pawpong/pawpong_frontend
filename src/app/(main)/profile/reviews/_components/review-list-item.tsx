@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import Check from '@/assets/icons/check-default.svg';
@@ -13,6 +14,8 @@ import Dog from '@/assets/icons/dog';
 import Image from 'next/image';
 import ReportDialog from '@/components/report-dialog/report-dialog';
 import ConfirmDialog from '@/components/confirm-dialog';
+import { addReviewReply, updateReviewReply, deleteReviewReply } from '@/app/api/breeder-management';
+import { useToast } from '@/hooks/use-toast';
 
 interface ReviewListItemProps {
   review: {
@@ -27,41 +30,114 @@ interface ReviewListItemProps {
     breederNickname?: string;
     breederProfileImage?: string | null;
     breedingPetType?: string;
+    // 브리더 답글 관련 필드
+    replyContent?: string;
+    replyWrittenAt?: string;
+    replyUpdatedAt?: string;
   };
 }
 
 export default function ReviewListItem({ review }: ReviewListItemProps) {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
   const [replyText, setReplyText] = useState('');
-  const [submittedReply, setSubmittedReply] = useState<string | null>(null);
+  // 서버에서 받은 답글이 있으면 초기값으로 설정
+  const [submittedReply, setSubmittedReply] = useState<string | null>(review.replyContent || null);
+  const [replyDate, setReplyDate] = useState<string | null>(review.replyUpdatedAt || review.replyWrittenAt || null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // 수정 모드인지 여부
   const typeLabel = review.reviewType || '후기';
 
-  // 현재 날짜 포맷팅 (YYYY. MM. DD.)
-  const formatDate = (date: Date) => {
+  // 날짜 포맷팅
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}. ${month}. ${day}.`;
   };
 
+  // 답글 등록 mutation
+  const addReplyMutation = useMutation({
+    mutationFn: (content: string) => addReviewReply(review.reviewId, content),
+    onSuccess: (data) => {
+      setSubmittedReply(data.replyContent);
+      setReplyDate(data.replyWrittenAt);
+      setIsReplying(false);
+      setReplyText('');
+      toast({ title: '답글이 등록되었습니다.', position: 'default' });
+      // 후기 목록 갱신
+      queryClient.invalidateQueries({ queryKey: ['breeder-my-reviews'] });
+    },
+    onError: (error) => {
+      console.error('답글 등록 실패:', error);
+      toast({ title: '답글 등록에 실패했습니다.', position: 'default' });
+    },
+  });
+
+  // 답글 수정 mutation
+  const updateReplyMutation = useMutation({
+    mutationFn: (content: string) => updateReviewReply(review.reviewId, content),
+    onSuccess: (data) => {
+      setSubmittedReply(data.replyContent);
+      setReplyDate(data.replyUpdatedAt || data.replyWrittenAt);
+      setIsReplying(false);
+      setIsEditing(false);
+      setReplyText('');
+      toast({ title: '답글이 수정되었습니다.', position: 'default' });
+      // 후기 목록 갱신
+      queryClient.invalidateQueries({ queryKey: ['breeder-my-reviews'] });
+    },
+    onError: (error) => {
+      console.error('답글 수정 실패:', error);
+      toast({ title: '답글 수정에 실패했습니다.', position: 'default' });
+    },
+  });
+
+  // 답글 삭제 mutation
+  const deleteReplyMutation = useMutation({
+    mutationFn: () => deleteReviewReply(review.reviewId),
+    onSuccess: () => {
+      setSubmittedReply(null);
+      setReplyDate(null);
+      setIsDeleteDialogOpen(false);
+      toast({ title: '답글이 삭제되었습니다.', position: 'default' });
+      // 후기 목록 갱신
+      queryClient.invalidateQueries({ queryKey: ['breeder-my-reviews'] });
+    },
+    onError: (error) => {
+      console.error('답글 삭제 실패:', error);
+      toast({ title: '답글 삭제에 실패했습니다.', position: 'default' });
+      setIsDeleteDialogOpen(false);
+    },
+  });
+
   const handleReplyClick = () => {
     setIsReplying(true);
+    setIsEditing(false);
   };
 
   const handleCancelReply = () => {
     setIsReplying(false);
+    setIsEditing(false);
     setReplyText('');
   };
 
   const handleSubmitReply = () => {
-    // TODO: 답글 제출 API 호출
-    console.log('답글 제출:', review.reviewId, replyText);
-    if (replyText.trim()) {
-      setSubmittedReply(replyText);
-      setIsReplying(false);
-      setReplyText('');
+    if (!replyText.trim()) {
+      toast({ title: '답글 내용을 입력해주세요.', position: 'default' });
+      return;
+    }
+
+    if (isEditing) {
+      // 수정 모드
+      updateReplyMutation.mutate(replyText);
+    } else {
+      // 새 답글 등록
+      addReplyMutation.mutate(replyText);
     }
   };
 
@@ -70,8 +146,7 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
   };
 
   const handleDeleteConfirm = () => {
-    setIsDeleteDialogOpen(false);
-    setSubmittedReply(null);
+    deleteReplyMutation.mutate();
   };
 
   const handleDeleteCancel = () => {
@@ -81,10 +156,12 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
   const handleEditReply = () => {
     if (submittedReply) {
       setReplyText(submittedReply);
-      setSubmittedReply(null);
       setIsReplying(true);
+      setIsEditing(true);
     }
   };
+
+  const isLoading = addReplyMutation.isPending || updateReplyMutation.isPending || deleteReplyMutation.isPending;
 
   return (
     <>
@@ -108,7 +185,7 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
         <div className="font-medium text-body-m text-primary-500 break-all">{review.comment}</div>
 
         {/* 답글 작성 버튼 또는 답글 작성 폼 또는 제출된 답글 */}
-        {submittedReply ? (
+        {submittedReply && !isReplying ? (
           // 제출된 답글 UI
           <div className="mt-2">
             <div className="flex gap-3">
@@ -134,8 +211,10 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
               {/* 답글 내용 - gray-1 배경 */}
               <div className="flex-1 bg-grayscale-gray1 rounded-lg p-5 flex flex-col gap-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-body-m font-semibold text-primary-500">{review.breederNickname}</span>
-                  <span className="text-body-s text-grayscale-gray5">{formatDate(new Date())}</span>
+                  <span className="text-body-m font-semibold text-primary-500">
+                    {review.breederNickname}
+                  </span>
+                  <span className="text-body-s text-grayscale-gray5">{formatDate(replyDate)}</span>
                 </div>
                 <div className="text-body-m font-medium text-primary-500 break-all">{submittedReply}</div>
                 {/* 버튼들 - 하단 */}
@@ -144,6 +223,7 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
                     variant="ghost"
                     className="bg-white text-body-xs font-normal text-grayscale-gray6 gap-1 pt-2 pr-2 pb-2 pl-3 h-auto hover:bg-grayscale-gray2 border-0"
                     onClick={handleEditReply}
+                    disabled={isLoading}
                   >
                     수정
                     <Pencil className="size-4" />
@@ -152,6 +232,7 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
                     variant="ghost"
                     className="bg-white text-body-xs font-normal text-grayscale-gray6 gap-1 pt-2 pr-2 pb-2 pl-3 h-auto hover:bg-grayscale-gray2 border-0"
                     onClick={handleDeleteClick}
+                    disabled={isLoading}
                   >
                     삭제
                     <Trash className="text-grayscale-gray6" />
@@ -163,7 +244,11 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
         ) : !isReplying ? (
           // 답글 작성 버튼
           <div className="mt-2">
-            <Button variant="secondary" className="px-0 py-2 pr-2 pl-3 gap-1 shrink-0" onClick={handleReplyClick}>
+            <Button
+              variant="secondary"
+              className="px-0 py-2 pr-2 pl-3 gap-1 shrink-0"
+              onClick={handleReplyClick}
+            >
               <span className="text-body-xs font-normal text-grayscale-gray6">답글 작성</span>
               <Pencil className="size-4" />
             </Button>
@@ -198,6 +283,7 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
                     variant="ghost"
                     className="bg-white text-body-xs text-grayscale-gray6 gap-1 px-3 py-2 h-auto hover:bg-grayscale-gray2 border-0"
                     onClick={handleCancelReply}
+                    disabled={isLoading}
                   >
                     취소
                     <Close className="size-4" />
@@ -206,8 +292,9 @@ export default function ReviewListItem({ review }: ReviewListItemProps) {
                     variant="tertiary"
                     className="px-3 py-2 h-auto text-body-xs gap-1 text-grayscale-gray6 border-0"
                     onClick={handleSubmitReply}
+                    disabled={isLoading}
                   >
-                    등록
+                    {isLoading ? '처리중...' : isEditing ? '수정' : '등록'}
                     <Check className="size-4" />
                   </Button>
                 </div>

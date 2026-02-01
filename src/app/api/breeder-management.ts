@@ -734,6 +734,10 @@ export interface MyReviewItemDto {
   visibility: 'public' | 'private';
   isReported: boolean;
   createdAt: string;
+  // 브리더 답글 관련 필드
+  replyContent?: string;
+  replyWrittenAt?: string;
+  replyUpdatedAt?: string;
 }
 
 /**
@@ -857,6 +861,96 @@ export const updateApplicationForm = async (data: ApplicationFormUpdateRequest):
       throw error;
     }
     throw new Error('Unknown error during application form update');
+  }
+};
+
+// ==================== 후기 답글 API ====================
+
+/** 후기 답글 응답 DTO */
+export interface ReviewReplyResponseDto {
+  reviewId: string;
+  replyContent: string;
+  replyWrittenAt: string;
+  replyUpdatedAt?: string;
+}
+
+/** 후기 답글 삭제 응답 DTO */
+export interface ReviewReplyDeleteResponseDto {
+  reviewId: string;
+  message: string;
+}
+
+/**
+ * 후기 답글 등록
+ * POST /api/breeder-management/reviews/:reviewId/reply
+ */
+export const addReviewReply = async (reviewId: string, content: string): Promise<ReviewReplyResponseDto> => {
+  try {
+    const response = await apiClient.post<ApiResponse<ReviewReplyResponseDto>>(
+      `/api/breeder-management/reviews/${reviewId}/reply`,
+      { content },
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error('답글 등록에 실패했습니다.');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Add review reply error:', error.message);
+      throw error;
+    }
+    throw new Error('답글 등록 중 오류가 발생했습니다.');
+  }
+};
+
+/**
+ * 후기 답글 수정
+ * PATCH /api/breeder-management/reviews/:reviewId/reply
+ */
+export const updateReviewReply = async (reviewId: string, content: string): Promise<ReviewReplyResponseDto> => {
+  try {
+    const response = await apiClient.patch<ApiResponse<ReviewReplyResponseDto>>(
+      `/api/breeder-management/reviews/${reviewId}/reply`,
+      { content },
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error('답글 수정에 실패했습니다.');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Update review reply error:', error.message);
+      throw error;
+    }
+    throw new Error('답글 수정 중 오류가 발생했습니다.');
+  }
+};
+
+/**
+ * 후기 답글 삭제
+ * DELETE /api/breeder-management/reviews/:reviewId/reply
+ */
+export const deleteReviewReply = async (reviewId: string): Promise<ReviewReplyDeleteResponseDto> => {
+  try {
+    const response = await apiClient.delete<ApiResponse<ReviewReplyDeleteResponseDto>>(
+      `/api/breeder-management/reviews/${reviewId}/reply`,
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error('답글 삭제에 실패했습니다.');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Delete review reply error:', error.message);
+      throw error;
+    }
+    throw new Error('답글 삭제 중 오류가 발생했습니다.');
   }
 };
 
