@@ -21,6 +21,14 @@ import ErrorIcon from '@/assets/icons/error-gray.svg';
 import type { CounselFormData } from '@/stores/counsel-form-store';
 import { useUpdateApplicationStatus, useApplicationDetail } from '../_hooks/use-received-applications';
 import { formatPhoneNumber } from '@/utils/phone';
+import { SectionHeader } from '@/app/(main)/counselform/_components/shared/section-header';
+import {
+  ADOPTER_AND_FAMILY_INFO,
+  LIVING_ENVIRONMENT,
+  CARE_RESPONSIBILITY,
+  PET_SELECTION,
+  BREEDER_ADDITIONAL_QUESTION,
+} from '@/constants/counsel-form';
 
 interface ReceivedApplicationDialogProps {
   id: string;
@@ -200,6 +208,7 @@ export default function ReceivedApplicationDialog({
 
           {/* 자기소개 섹션 */}
           <div className="flex flex-col gap-8 items-start w-full">
+            <SectionHeader title={ADOPTER_AND_FAMILY_INFO.sectionTitle} subtitle={ADOPTER_AND_FAMILY_INFO.description} />
             <div className="flex flex-col gap-3 w-full">
               <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">간단하게 자기소개 부탁드려요.</h2>
               <Textarea
@@ -249,6 +258,7 @@ export default function ReceivedApplicationDialog({
 
           {/* 생활 패턴 섹션 */}
           <div className="flex flex-col gap-8 items-start w-full">
+            <SectionHeader title={LIVING_ENVIRONMENT.sectionTitle} subtitle={LIVING_ENVIRONMENT.description} />
             <div className="flex flex-col gap-3 w-full">
               <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
                 평균적으로 집을 비우는 시간은 얼마나 되나요?
@@ -298,6 +308,7 @@ export default function ReceivedApplicationDialog({
 
           {/* 케어 관련 섹션 */}
           <div className="flex flex-col gap-8 items-start w-full">
+            <SectionHeader title={CARE_RESPONSIBILITY.sectionTitle} subtitle={CARE_RESPONSIBILITY.description} />
             <div className="flex flex-col gap-3 w-full">
               <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
                 정기 예방접종·건강검진·훈련 등 기본 케어를 책임지고 해주실 수 있나요?
@@ -323,6 +334,7 @@ export default function ReceivedApplicationDialog({
 
           {/* 선택 사항 섹션 */}
           <div className="flex flex-col gap-8 items-start w-full">
+            <SectionHeader title={PET_SELECTION.sectionTitle} subtitle={PET_SELECTION.description} />
             <div className="flex flex-col gap-3 w-full">
               <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">마음에 두신 아이가 있으신가요?</h2>
               {formData?.interestedAnimal && (
@@ -358,17 +370,20 @@ export default function ReceivedApplicationDialog({
           <div className="h-px bg-grayscale-gray2 w-full" />
 
           {/* 마지막 메시지 */}
-          <div className="flex flex-col gap-3 items-start w-full">
-            <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
-              마지막으로 궁금하신 점이나 남기시고 싶으신 말씀이 있나요?
-            </h2>
-            <Textarea
-              value={formData?.additionalMessage || ''}
-              readOnly
-              maxLength={800}
-              showLength={(formData?.additionalMessage || '').length > 0}
-              currentLength={(formData?.additionalMessage || '').length}
-            />
+          <div className="flex flex-col gap-8 items-start w-full">
+            <SectionHeader title={BREEDER_ADDITIONAL_QUESTION.title} subtitle={BREEDER_ADDITIONAL_QUESTION.subtitle} />
+            <div className="flex flex-col gap-3 w-full">
+              <h2 className="text-body-s font-semibold text-grayscale-gray6 w-full">
+                마지막으로 궁금하신 점이나 남기시고 싶으신 말씀이 있나요?
+              </h2>
+              <Textarea
+                value={formData?.additionalMessage || ''}
+                readOnly
+                maxLength={800}
+                showLength={(formData?.additionalMessage || '').length > 0}
+                currentLength={(formData?.additionalMessage || '').length}
+              />
+            </div>
           </div>
         </div>
 

@@ -6,6 +6,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getReceivedApplicationDetail, updateApplicationStatus } from '@/api/breeder';
 import { toast } from '@/hooks/use-toast';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { SectionHeader } from '@/app/(main)/counselform/_components/shared/section-header';
+import {
+  ADOPTER_AND_FAMILY_INFO,
+  LIVING_ENVIRONMENT,
+  CARE_RESPONSIBILITY,
+  PET_SELECTION,
+  BREEDER_ADDITIONAL_QUESTION,
+} from '@/constants/counsel-form';
 
 interface ApplicationDetailModalProps {
   open: boolean;
@@ -224,6 +232,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
 
             {/* 섹션 2: 자기소개 + 가족 구성원 + 동의 + 알러지 */}
             <div className="flex flex-col gap-8">
+              <SectionHeader title={ADOPTER_AND_FAMILY_INFO.sectionTitle} subtitle={ADOPTER_AND_FAMILY_INFO.description} />
               <QuestionField
                 question="간단하게 자기소개 부탁드려요."
                 answer={
@@ -260,6 +269,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
 
             {/* 섹션 3: 집 비우는 시간 + 공간 소개 + 이전 반려동물 */}
             <div className="flex flex-col gap-8">
+              <SectionHeader title={LIVING_ENVIRONMENT.sectionTitle} subtitle={LIVING_ENVIRONMENT.description} />
               <QuestionField
                 question="평균적으로 집을 비우는 시간은 얼마나 되나요?"
                 answer={<InputField value={application.standardResponses.timeAwayFromHome} />}
@@ -298,6 +308,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
 
             {/* 섹션 4: 케어 책임 + 치료비 */}
             <div className="flex flex-col gap-8">
+              <SectionHeader title={CARE_RESPONSIBILITY.sectionTitle} subtitle={CARE_RESPONSIBILITY.description} />
               <QuestionField
                 question="정기 예방접종·건강검진·훈련 등 기본 케어를 책임지고 해주실 수 있나요?"
                 answer={
@@ -325,6 +336,7 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
 
             {/* 섹션 5: 마음에 두신 아이 + 입양 시기 */}
             <div className="flex flex-col gap-8">
+              <SectionHeader title={PET_SELECTION.sectionTitle} subtitle={PET_SELECTION.description} />
               <QuestionField
                 question="마음에 두신 아이가 있으신가요?"
                 answer={
@@ -349,16 +361,19 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
             <div className="h-px bg-[#E1E1E1]" />
 
             {/* 섹션 6: 마지막 질문 */}
-            <QuestionField
-              question="마지막으로 궁금하신 점이나 남기시고 싶으신 말씀이 있나요?"
-              answer={
-                <TextAreaField
-                  value={application.standardResponses.additionalNotes || '답변답변답변'}
-                  charCount={6}
-                  maxCount={800}
-                />
-              }
-            />
+            <div className="flex flex-col gap-8">
+              <SectionHeader title={BREEDER_ADDITIONAL_QUESTION.title} subtitle={BREEDER_ADDITIONAL_QUESTION.subtitle} />
+              <QuestionField
+                question="마지막으로 궁금하신 점이나 남기시고 싶으신 말씀이 있나요?"
+                answer={
+                  <TextAreaField
+                    value={application.standardResponses.additionalNotes || '답변답변답변'}
+                    charCount={6}
+                    maxCount={800}
+                  />
+                }
+              />
+            </div>
           </div>
         </div>
 
