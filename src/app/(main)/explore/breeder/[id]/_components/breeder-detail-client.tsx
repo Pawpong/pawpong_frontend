@@ -117,8 +117,8 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
       router.push('/login');
       return;
     }
-    // GA4 상담 신청 버튼 클릭 트래킹
-    trackButtonClick('상담 신청하기', '브리더 프로필');
+    // GA4 입양 신청 버튼 클릭 트래킹
+    trackButtonClick('입양 신청하기', '브리더 프로필');
     clearCounselFormData();
     router.push(`/counselform?breederId=${breederId}`);
   };
@@ -419,7 +419,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
             onClick={handleCounselClick}
             disabled={isOwnProfile || isBreeder}
           >
-            상담 신청하기
+            입양 신청하기
           </Button>
         </div>
       )}

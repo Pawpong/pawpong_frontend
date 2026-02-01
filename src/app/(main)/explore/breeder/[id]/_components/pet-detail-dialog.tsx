@@ -311,7 +311,7 @@ export default function PetDetailDialog({
               onClick={handleCounselClick}
               disabled={isOwnProfile || isBreeder}
             >
-              상담 신청하기
+              입양 신청하기
             </Button>
           ) : (
             <Button
