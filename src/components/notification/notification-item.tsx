@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import { cn } from "@/api/utils";
+import React from 'react';
+import { cn } from '@/api/utils';
 
 interface NotificationItemProps {
   icon: React.ReactNode;
@@ -11,19 +11,13 @@ interface NotificationItemProps {
   className?: string;
 }
 
-export default function NotificationItem({
-  icon,
-  content,
-  date,
-  onClick,
-  className,
-}: NotificationItemProps) {
+export default function NotificationItem({ icon, content, date, onClick, className }: NotificationItemProps) {
   return (
     <div
       className={cn(
-        "flex flex-row gap-4 p-3 rounded-lg",
-        onClick && "cursor-pointer hover:opacity-80 transition-opacity",
-        className
+        'flex flex-row gap-4 p-3 rounded-lg',
+        onClick && 'cursor-pointer hover:opacity-80 transition-opacity',
+        className,
       )}
       onClick={onClick}
     >

@@ -61,9 +61,7 @@ export default function ReceivedApplicationsPage() {
             </div>
 
             {/* 더보기 버튼 */}
-            {hasNextPage && (
-              <LoadMoreButton onClick={handleLoadMore} isLoading={isFetchingNextPage} />
-            )}
+            {hasNextPage && <LoadMoreButton onClick={handleLoadMore} isLoading={isFetchingNextPage} />}
           </div>
         </>
       )}

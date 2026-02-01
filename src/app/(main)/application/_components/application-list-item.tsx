@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { dynamicClient } from '@/utils/dynamic-client';
 import ProfileImageWithBadge from '@/components/breeder/profile-image-with-badge';
 import BreederInfo from '@/components/breeder/breeder-info';
 import { Button } from '@/components/ui/button';
 import Pencil from '@/assets/icons/pencil.svg';
-import ReviewDialog from './review-dialog';
+const ReviewDialog = dynamicClient(() => import('./review-dialog'));
 import ReviewWriteDialog from './review-write-dialog';
 import { Badge } from '@/components/ui/badge';
 import ApplicationDetailModal from './application-detail-modal';
@@ -19,7 +20,6 @@ interface ApplicationListItemProps {
   // 입양자용 (브리더 정보)
   breederId?: string;
   breederName?: string;
-  breederLevel?: 'elite' | 'new';
   animalType?: 'cat' | 'dog';
   petBreed?: string;
   // 브리더용 (입양자 정보)
@@ -132,8 +132,8 @@ export default function ApplicationListItem({
   isBreeder,
   breederId,
   breederName,
-  breederLevel,
   animalType,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   adopterId,
   adopterName,
   petName,
@@ -148,7 +148,7 @@ export default function ApplicationListItem({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 입양자 화면 (브리더 정보 표시)
-  if (!isBreeder && breederName && breederLevel) {
+  if (!isBreeder && breederName) {
     const buttonText = '후기 작성';
 
     const handleReviewButtonClick = (e: React.MouseEvent) => {
@@ -162,7 +162,6 @@ export default function ApplicationListItem({
           applicationId={applicationId}
           breederId={breederId!}
           breederName={breederName}
-          breederLevel={breederLevel}
           applicationDate={applicationDate}
           profileImage={profileImage}
           animalType={(animalType || 'cat') as 'cat' | 'dog'}
@@ -179,7 +178,7 @@ export default function ApplicationListItem({
 
             {/* 브리더 정보 + 날짜/버튼 영역 */}
             <div className="flex-1 flex flex-col gap-2 md:gap-3">
-              <BreederInfo breederName={breederName} breederLevel={breederLevel} />
+              <BreederInfo breederName={breederName} />
               <div className="flex justify-between items-center gap-2">
                 <p className="text-body-s font-normal text-grayscale-gray5 whitespace-nowrap">{applicationDate}</p>
                 {/* 후기 버튼 - 상담 완료/입양 승인 상태에서만 표시 */}
@@ -217,7 +216,6 @@ export default function ApplicationListItem({
           open={showReviewWriteDialog}
           onOpenChange={setShowReviewWriteDialog}
           breederName={breederName}
-          breederLevel={breederLevel}
           applicationDate={applicationDate}
           profileImage={profileImage}
           animalType={(animalType || 'cat') as 'cat' | 'dog'}

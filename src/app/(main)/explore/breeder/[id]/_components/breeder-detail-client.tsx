@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BreederProfile from '@/app/(main)/explore/breeder/[id]/_components/breeder-profile';
 import { Separator } from '@/components/ui/separator';
 import BreederDescription from './breeder-description';
@@ -172,8 +172,8 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
                 {isNotFoundError
                   ? '브리더 정보가 존재하지 않거나\n접근할 수 없어요.'
                   : isOwnProfile
-                  ? '탈퇴 처리된 계정이에요.\n다시 로그인해 주세요.'
-                  : '이미 탈퇴한 브리더의 프로필은\n조회할 수 없어요.'}
+                    ? '탈퇴 처리된 계정이에요.\n다시 로그인해 주세요.'
+                    : '이미 탈퇴한 브리더의 프로필은\n조회할 수 없어요.'}
               </SimpleDialogDescription>
             </SimpleDialogHeader>
             <SimpleDialogFooter className="grid-cols-1">
@@ -218,6 +218,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     breed: string;
     status?: 'available' | 'reserved' | 'adopted' | string;
     description?: string;
+    photos?: string[];
   };
 
   type ParentPetItem = {
@@ -228,6 +229,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     birthDate?: string;
     breed: string;
     description?: string;
+    photos?: string[];
   };
 
   type ReviewItem = {
@@ -239,6 +241,10 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     createdAt?: string;
     type?: string; // 백엔드 API가 type으로 반환
     reviewType?: string;
+    // 브리더 답글 관련 필드
+    replyContent?: string | null;
+    replyWrittenAt?: string | null;
+    replyUpdatedAt?: string | null;
   };
 
   // 프로필 데이터 매핑
@@ -257,12 +263,12 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     ? !apiPriceRange
       ? '가격 미설정'
       : apiPriceRange.display === 'not_set'
-      ? '가격 미설정'
-      : apiPriceRange.display === 'consultation'
-      ? '상담 후 공개'
-      : apiPriceRange.display === 'range'
-      ? `${apiPriceRange.min?.toLocaleString()}원 ~ ${apiPriceRange.max?.toLocaleString()}원`
-      : '가격 미설정'
+        ? '가격 미설정'
+        : apiPriceRange.display === 'consultation'
+          ? '상담 후 공개'
+          : apiPriceRange.display === 'range'
+            ? `${apiPriceRange.min?.toLocaleString()}원 ~ ${apiPriceRange.max?.toLocaleString()}원`
+            : '가격 미설정'
     : null;
 
   // API 응답에서 직접 값 추출 (profileImage, location, breederLevel 등)
@@ -304,6 +310,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     status:
       pet.status === 'adopted' ? 'completed' : ((pet.status || 'available') as 'available' | 'reserved' | 'completed'),
     description: pet.description,
+    photos: pet.photos || [],
   }));
 
   // 부모견/부모묘 매핑 - 페이지네이션 응답 형태 처리
@@ -317,6 +324,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     price: '', // 부모견은 가격이 없음
     breed: pet.breed,
     description: pet.description,
+    photos: pet.photos || [],
   }));
 
   // 후기 매핑
@@ -343,7 +351,14 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
       nickname: review.adopterName || review.adopterNickname || '익명',
       date: formattedDate || '날짜 없음',
       content: review.content,
-      reviewType: typeMap[review.type || ''] || '상담 후기',
+      reviewType: mappedType,
+      // 브리더 답글 정보 전달
+      replyContent: review.replyContent || undefined,
+      replyWrittenAt: review.replyWrittenAt || undefined,
+      replyUpdatedAt: review.replyUpdatedAt || undefined,
+      breederNickname: profileData.breederName,
+      breederProfileImage: avatarUrl !== '/profile-empty.svg' ? avatarUrl : undefined,
+      breedingPetType: animalType,
     };
   });
 
@@ -390,7 +405,9 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
             />
           )}
 
-          {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} breederId={breederId} />}
+          {!isReviewsLoading && reviews.length > 0 && (
+            <Reviews data={reviews} breederId={breederId} isOwnProfile={isOwnProfile} />
+          )}
         </div>
       </div>
       {!isLg && (

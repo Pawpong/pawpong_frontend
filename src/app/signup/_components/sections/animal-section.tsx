@@ -24,12 +24,14 @@ const animalInfo: AnimalCategoryCard[] = [
 
 export default function AnimalSection() {
   const setAnimal = useSignupFormStore((e) => e.setAnimal);
+  const setPlan = useSignupFormStore((e) => e.setPlan);
   const nextFlowIndex = useSignupFormStore((e) => e.nextFlowIndex);
 
   const animalsWithOnClick = animalInfo.map((animal) => ({
     ...animal,
     onClick: () => {
       setAnimal(animal.name as Animal);
+      setPlan('basic'); // 요금제 선택 화면 삭제로 인해 기본값으로 'basic' 설정
       nextFlowIndex();
     },
   }));

@@ -4,9 +4,6 @@ import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useMemo, useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import ProfileBasicInfo from './_components/profile-basic-info';
-import ParentsInfo from './_components/parents-info';
-import BreedingAnimals from './_components/breeding-animals';
 import { useToast } from '@/hooks/use-toast';
 import { useForm, FormProvider, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,10 +22,20 @@ import {
 import { useBreederProfile, useUpdateBreederProfile } from './_hooks/use-breeder-profile';
 import { syncParentPets, syncAvailablePets } from '@/utils/profile-sync';
 import { uploadSingleFile, uploadRepresentativePhotos } from '@/api/upload';
-import ProfileBannerCarousel from '@/components/profile-banner/profile-banner-carousel';
 import useFormGuard from '@/hooks/use-form-guard';
-import ExitConfirmDialog from '@/components/exit-confirmation-dialog';
 import useBrowserNavigationGuard from '@/hooks/use-browser-navigation-guard';
+import { isVideoUrl } from '@/utils/video-thumbnail';
+import { dynamicClient } from '@/utils/dynamic-client';
+
+const ProfileBasicInfo = dynamicClient(() => import('./_components/profile-basic-info'));
+
+const ParentsInfo = dynamicClient(() => import('./_components/parents-info'));
+
+const BreedingAnimals = dynamicClient(() => import('./_components/breeding-animals'));
+
+const ProfileBannerCarousel = dynamicClient(() => import('@/components/profile-banner/profile-banner-carousel'));
+
+const ExitConfirmDialog = dynamicClient(() => import('@/components/exit-confirmation-dialog'));
 
 type BreederProfileApi = {
   breederId?: string;
@@ -59,6 +66,7 @@ type BreederProfileApi = {
     gender?: 'male' | 'female';
     photoFileName?: string;
     description?: string;
+    photos?: string[];
   }>;
   availablePetInfo?: Array<{
     petId?: string;
@@ -119,6 +127,8 @@ export default function ProfilePage() {
           birthDate: '',
           breed: [],
           gender: null,
+          description: '',
+          photos: [],
         },
       ],
       animals: [
@@ -134,6 +144,7 @@ export default function ProfilePage() {
           fatherId: '',
           price: '',
           isCounselMode: false,
+          // photos: [],
         },
       ],
     },
@@ -203,7 +214,9 @@ export default function ProfilePage() {
               breed: pet.breed ? [pet.breed] : [],
               gender: pet.gender || null,
               imagePreview: pet.photoFileName || undefined,
+              isVideo: pet.photoFileName ? isVideoUrl(pet.photoFileName) : undefined,
               description: pet.description || '',
+              photos: pet.photos || [],
             }))
           : [
               {
@@ -213,6 +226,7 @@ export default function ProfilePage() {
                 breed: [],
                 gender: null,
                 description: '',
+                photos: [],
               },
             ];
 
@@ -263,6 +277,8 @@ export default function ProfilePage() {
                 price: pet.price?.toString() || '',
                 isCounselMode: pet.price === 0,
                 imagePreview: pet.photos?.[0] || undefined,
+                isVideo: pet.photos?.[0] ? isVideoUrl(pet.photos[0]) : undefined,
+                photos: pet.photos || [],
               }))
             : [
                 {
@@ -277,6 +293,7 @@ export default function ProfilePage() {
                   fatherId: '',
                   price: '',
                   isCounselMode: false,
+                  photos: [],
                 },
               ],
       });
@@ -567,7 +584,7 @@ export default function ProfilePage() {
           onConfirm={handleNavigationConfirm}
           onCancel={handleNavigationCancel}
           open={showNavigationDialog}
-          onOpenChange={(open) => {
+          onOpenChange={(open: boolean) => {
             if (!open) {
               handleNavigationCancel();
             }
@@ -581,7 +598,7 @@ export default function ProfilePage() {
           onConfirm={handleBrowserConfirm}
           onCancel={handleBrowserCancel}
           open={showBrowserGuard}
-          onOpenChange={(open) => {
+          onOpenChange={(open: boolean) => {
             if (!open) {
               handleBrowserCancel();
             }

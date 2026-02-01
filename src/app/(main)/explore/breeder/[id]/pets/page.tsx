@@ -1,13 +1,16 @@
 'use client';
 
 import { use, useState } from 'react';
+import { dynamicClient } from '@/utils/dynamic-client';
 import Header from '../../_components/header';
 import AnimalProfile from '../_components/animal-profile';
 import { useBreederProfile, useBreederPetsInfinite, useParentPets } from '../_hooks/use-breeder-detail';
 import LoadMoreButton from '@/components/ui/load-more-button';
 import { useAuthStore } from '@/stores/auth-store';
-import PetDetailDialog, { type PetDetailData } from '../_components/pet-detail-dialog';
+import type { PetDetailData } from '../_components/pet-detail-dialog';
 import { formatBirthDateToKorean } from '@/utils/date-utils';
+
+const PetDetailDialog = dynamicClient(() => import('../_components/pet-detail-dialog'));
 
 interface PageProps {
   params: Promise<{

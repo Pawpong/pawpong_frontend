@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import SignupFormItems from '@/components/signup-form-section/signup-form-items';
 import SignupFormSection from '@/components/signup-form-section/signup-form-section';
+import SignupFormHeader from '@/components/signup-form-section/signup-form-header';
+import SignupFormTitle from '@/components/signup-form-section/signup-form-title';
 import { Button } from '@/components/ui/button';
 import DocumentFormContent from '@/components/document-form/document-form-content';
 import SubmitSuccessDialog from '@/components/document-form/submit-success-dialog';
@@ -31,7 +33,8 @@ export default function DocumentEditSection() {
   const { toast } = useToast();
 
   // 상태 관리
-  const [level, setLevel] = useState<Level>('new');
+  const [level] = useState<Level>('new'); // 레벨은 기본값으로 고정
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [submittedLevel, setSubmittedLevel] = useState<Level | null>(null); // 기존 제출된 레벨
   const [animal] = useState<Animal>('cat');
   const [oathChecked, setOathChecked] = useState(false);
@@ -47,10 +50,11 @@ export default function DocumentEditSection() {
     elite: {},
   });
   // 기존 제출된 문서 (레벨 변경 시에도 유지)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [submittedDocuments, setSubmittedDocuments] = useState<Record<string, DocumentState>>({});
 
   // 현재 레벨의 문서만 가져오기
-  const documents = documentsByLevel[level] || {};
+  const documents = useMemo(() => documentsByLevel[level] || {}, [documentsByLevel, level]);
 
   // 기존 데이터 로드
   useEffect(() => {
@@ -58,11 +62,6 @@ export default function DocumentEditSection() {
       try {
         setIsLoading(true);
         const status = await getVerificationStatus();
-
-        // 기존 레벨 설정
-        if (status.level) {
-          setLevel(status.level);
-        }
 
         // 기존 문서 상태 설정
         if (status.documents && status.documents.length > 0) {
@@ -83,7 +82,7 @@ export default function DocumentEditSection() {
 
               // URL인 경우 도메인 제거 (예: https://storage.googleapis.com/bucket/verification/...)
               const pathParts = urlPath.split('/');
-              const verificationIndex = pathParts.findIndex(p => p === 'verification');
+              const verificationIndex = pathParts.findIndex((p) => p === 'verification');
 
               if (verificationIndex !== -1) {
                 // verification/ 이후 경로 추출
@@ -311,17 +310,6 @@ export default function DocumentEditSection() {
       return true;
     }
 
-    // Elite 레벨인 경우 브리더 인증 서류 필수 검증
-    if (level === 'elite') {
-      const hasBreederCert =
-        documents['breederCatCertificate'] ||
-        documents['breederDogCertificate'];
-
-      if (!hasBreederCert) {
-        return true;
-      }
-    }
-
     return false;
   })();
 
@@ -338,6 +326,9 @@ export default function DocumentEditSection() {
   return (
     <>
       <SignupFormSection className="gap-15 mt-[3.5rem] md:gap-20 lg:gap-20">
+        <SignupFormHeader>
+          <SignupFormTitle>브리더 입점 서류를 등록해 주세요</SignupFormTitle>
+        </SignupFormHeader>
         <DocumentFormContent
           level={level}
           animal={animal}
@@ -345,17 +336,7 @@ export default function DocumentEditSection() {
           documentStates={documents}
           existingFileNames={getExistingFileNames()}
           oathChecked={oathChecked}
-          onLevelChange={(newLevel) => {
-            setLevel(newLevel);
-            setHasUnsavedChanges(true);
-            // 레벨 변경 시 oath 체크 상태만 업데이트
-            // 각 레벨의 문서는 documentsByLevel에 이미 저장되어 있으므로 자동으로 유지됨
-            if (newLevel === submittedLevel && Object.keys(documentsByLevel[newLevel]).length > 0) {
-              setOathChecked(true);
-            } else {
-              setOathChecked(false);
-            }
-          }}
+          onLevelChange={() => {}} // 레벨 변경 비활성화
           onFileUpload={handleFileUpload}
           onFileDelete={handleFileDelete}
           onOathCheckedChange={setOathChecked}

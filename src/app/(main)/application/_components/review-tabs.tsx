@@ -11,16 +11,9 @@ export default function ReviewTabs({ activeTab, onChange }: ReviewTabsProps) {
   return (
     <div className="flex gap-4 items-start">
       {tabs.map((tab) => (
-        <button
-          key={tab}
-          onClick={() => onChange(tab)}
-          className="flex flex-col items-start"
-        >
+        <button key={tab} onClick={() => onChange(tab)} className="flex flex-col items-start">
           <p
-            className={cn(
-              'text-body-m font-semibold',
-              activeTab === tab ? 'text-primary-500' : 'text-grayscale-gray5',
-            )}
+            className={cn('text-body-m font-semibold', activeTab === tab ? 'text-primary-500' : 'text-grayscale-gray5')}
           >
             {tab}
           </p>

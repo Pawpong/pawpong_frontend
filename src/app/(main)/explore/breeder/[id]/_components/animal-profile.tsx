@@ -1,3 +1,5 @@
+'use client';
+
 import Female from '@/assets/icons/female';
 import Male from '@/assets/icons/male';
 import AdoptionStatusBadge from '@/components/adoption-status-badge';
@@ -5,6 +7,7 @@ import { cn } from '@/api/utils';
 import Image from 'next/image';
 import { Lock } from 'lucide-react';
 import BreedAdInfo from '@/components/breed-ad-info';
+import { isVideoUrl } from '@/utils/video-thumbnail';
 
 const sexInfo = {
   male: { icon: Male, className: 'text-gender-male-500' },
@@ -29,29 +32,39 @@ export default function AnimalProfile({
   onClick?: () => void;
 }) {
   const Icon = sexInfo[sex].icon;
+  const isVideo = avatarUrl ? isVideoUrl(avatarUrl) : false;
 
   // 이미지 URL 검증 및 폴백 처리
   const getValidImageUrl = (url: string) => {
     if (!url) return '/animal-sample.png';
-    // http:// 또는 https://로 시작하면 그대로 사용
     if (url.startsWith('http://') || url.startsWith('https://')) {
       return url;
     }
-    // 상대 경로인 경우 플레이스홀더 사용 (실제 이미지 파일이 없으므로)
     return '/animal-sample.png';
   };
 
   return (
     <div className="space-y-4 cursor-pointer" onClick={onClick}>
       <div className="relative w-full max-w-[22.0625rem] aspect-square md:max-w-[13.66669rem] lg:max-w-none overflow-hidden rounded-lg">
-        <Image
-          src={getValidImageUrl(avatarUrl)}
-          alt={`${name}의 사진`}
-          width={200}
-          height={200}
-          className="w-full h-full object-cover"
-          unoptimized={getValidImageUrl(avatarUrl).startsWith('http')}
-        />
+        {isVideo ? (
+          <video
+            src={avatarUrl}
+            className="absolute inset-0 w-full h-full object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        ) : (
+          <Image
+            src={getValidImageUrl(avatarUrl)}
+            alt={`${name}의 사진`}
+            width={200}
+            height={200}
+            className="w-full h-full object-cover"
+            unoptimized={getValidImageUrl(avatarUrl).startsWith('http')}
+          />
+        )}
         {status && (
           <div className="absolute top-3 left-3">
             <AdoptionStatusBadge status={status} />

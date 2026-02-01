@@ -57,9 +57,9 @@ export const uploadRepresentativePhotos = async (files: File[]): Promise<UploadR
 export const uploadParentPetPhoto = async (petId: string, file: File): Promise<UploadResponse> => {
   try {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('files', file);
 
-    const response = await apiClient.post<ApiResponse<UploadResponse>>(
+    const response = await apiClient.post<ApiResponse<UploadResponse | UploadResponse[]>>(
       `/api/upload/parent-pet-photos/${petId}`,
       formData,
       {
@@ -74,7 +74,9 @@ export const uploadParentPetPhoto = async (petId: string, file: File): Promise<U
       throw new Error('Failed to upload parent pet photo');
     }
 
-    return response.data.data;
+    // 배열인 경우 첫 번째 요소 반환, 단일 객체인 경우 그대로 반환
+    const data = response.data.data;
+    return Array.isArray(data) ? data[0] : data;
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('Parent pet photo upload error:', error.message);
@@ -91,9 +93,9 @@ export const uploadParentPetPhoto = async (petId: string, file: File): Promise<U
 export const uploadAvailablePetPhoto = async (petId: string, file: File): Promise<UploadResponse> => {
   try {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('files', file);
 
-    const response = await apiClient.post<ApiResponse<UploadResponse>>(
+    const response = await apiClient.post<ApiResponse<UploadResponse | UploadResponse[]>>(
       `/api/upload/available-pet-photos/${petId}`,
       formData,
       {
@@ -108,7 +110,9 @@ export const uploadAvailablePetPhoto = async (petId: string, file: File): Promis
       throw new Error('Failed to upload available pet photo');
     }
 
-    return response.data.data;
+    // 배열인 경우 첫 번째 요소 반환, 단일 객체인 경우 그대로 반환
+    const data = response.data.data;
+    return Array.isArray(data) ? data[0] : data;
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('Available pet photo upload error:', error.message);

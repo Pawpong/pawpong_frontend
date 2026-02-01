@@ -18,6 +18,7 @@ export default function SettingsPage() {
   const { isLoading: isAuthLoading } = useAuthGuard();
   const { user, clearAuth } = useAuthStore();
   const [marketingAgreed, setMarketingAgreed] = useState(false);
+  const [consultationAgreed, setConsultationAgreed] = useState(false);
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [provider, setProvider] = useState<'local' | 'kakao' | 'google' | 'naver' | 'apple'>('kakao');
@@ -43,6 +44,10 @@ export default function SettingsPage() {
           if (profile.marketingAgreed !== undefined) {
             setMarketingAgreed(profile.marketingAgreed);
           }
+          // TODO: 상담 신청 알림톡 수신 동의 상태 로드 (API 연동 필요)
+          // if (profile.consultationAgreed !== undefined) {
+          //   setConsultationAgreed(profile.consultationAgreed);
+          // }
         } else {
           // 입양자 프로필 로드
           const profile = await getAdopterProfile();
@@ -114,6 +119,27 @@ export default function SettingsPage() {
       toast({
         title: checked ? '마케팅 수신 동의' : '마케팅 수신 거부',
         description: checked ? '광고성 정보 수신에 동의하셨습니다.' : '광고성 정보 수신을 거부하셨습니다.',
+        position: 'default',
+      });
+    } catch (error) {
+      toast({
+        title: '설정 변경 실패',
+        description: error instanceof Error ? error.message : '다시 시도해주세요.',
+        position: 'default',
+      });
+    }
+  };
+
+  const handleConsultationAgreedChange = async (checked: boolean) => {
+    if (!user) return;
+
+    try {
+      // TODO: 브리더 상담 신청 알림톡 수신 동의 변경 API 호출 (API 연동 필요)
+      // await updateBreederProfile({ consultationAgreed: checked });
+      setConsultationAgreed(checked);
+      toast({
+        title: checked ? '상담 신청 알림톡 수신 동의' : '상담 신청 알림톡 수신 거부',
+        description: checked ? '상담 신청 알림톡 수신에 동의하셨습니다.' : '상담 신청 알림톡 수신을 거부하셨습니다.',
         position: 'default',
       });
     } catch (error) {
@@ -212,6 +238,9 @@ export default function SettingsPage() {
           <EmailSettingsSection
             marketingAgreed={marketingAgreed}
             onMarketingAgreedChange={handleMarketingAgreedChange}
+            // isBreeder={user?.role === 'breeder'}
+            // consultationAgreed={consultationAgreed}
+            // onConsultationAgreedChange={handleConsultationAgreedChange}
           />
         </div>
 

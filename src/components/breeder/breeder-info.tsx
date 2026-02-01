@@ -1,8 +1,5 @@
-import LevelBadge from '@/components/level-badge';
-
 interface BreederInfoProps {
   breederName: string;
-  breederLevel: 'elite' | 'new';
   applicationDate?: string;
   nameWidth?: string;
   className?: string;
@@ -11,7 +8,6 @@ interface BreederInfoProps {
 
 export default function BreederInfo({
   breederName,
-  breederLevel,
   applicationDate,
 
   className = '',
@@ -21,7 +17,6 @@ export default function BreederInfo({
     <div className={`flex flex-col items-start ${className}`}>
       <div className="flex gap-2 items-center">
         <p className={`text-body-l font-semibold text-primary-500 `}>{breederName}</p>
-        <LevelBadge level={breederLevel} />
       </div>
       {applicationDate && !hideDate && (
         <p className="text-body-s font-normal text-grayscale-gray5 whitespace-nowrap">{applicationDate}</p>

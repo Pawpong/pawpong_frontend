@@ -2,11 +2,15 @@
 
 import { cn } from '@/api/utils';
 import PictureRemove from '@/assets/icons/picture-delete.svg';
+import PlayIcon from '@/assets/icons/play.svg';
+import Image from 'next/image';
+
 export interface ImageFile {
   id: string;
   file: File | null; // null for URL-based images
   preview: string;
   isUrl?: boolean; // true if this is a URL-based image
+  isVideo?: boolean; // true if this is a video file
 }
 
 interface ImagePreviewProps {
@@ -56,11 +60,21 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
     <div className={cn('flex gap-3', getLayoutClass())}>
       {images.slice(0, maxImages).map((image) => (
         <div key={image.id} className="relative">
-          <img
+          <Image
             src={image.preview}
             alt={`preview ${image.id}`}
+            width={80}
+            height={80}
             className={cn('rounded-lg object-contain bg-white border border-gray-200', getImageSizeClass())}
+            unoptimized={image.isUrl || image.preview.startsWith('blob:')}
           />
+          {image.isVideo && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="bg-black/50 rounded-full p-1.5">
+                <PlayIcon className="w-4 h-4 text-white [&_path]:fill-white" />
+              </div>
+            </div>
+          )}
           {showRemoveButton && (
             <button onClick={() => onRemove(image.id)} className="absolute top-1 right-1   flex ">
               <PictureRemove className="group-hover:[&_path]:fill-[#4F3B2E]" />

@@ -146,14 +146,7 @@ describe('counsel-form-validation utilities', () => {
       });
 
       it('should reject invalid phone formats', () => {
-        const invalidPhones = [
-          '01012345678',
-          '010-123-5678',
-          '010-1234-567',
-          '010 1234 5678',
-          'invalid',
-          '',
-        ];
+        const invalidPhones = ['01012345678', '010-123-5678', '010-1234-567', '010 1234 5678', 'invalid', ''];
 
         invalidPhones.forEach((phone) => {
           const form = { ...createCompleteForm(), phone };
@@ -264,7 +257,7 @@ describe('counsel-form-validation utilities', () => {
 
       it('should require all text fields to have actual content', () => {
         const form = createCompleteForm();
-        
+
         // Test each required text field individually
         expect(isFormComplete({ ...form, introduction: '' })).toBe(false);
         expect(isFormComplete({ ...form, familyMembers: '' })).toBe(false);

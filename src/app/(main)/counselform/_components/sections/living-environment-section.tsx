@@ -3,7 +3,7 @@ import LivingSpaceField from './living-space-field';
 import TextareaWithCount from '../shared/textarea-with-count';
 import { QuestionBlock } from '../shared/question-block';
 
-export function LivingEnvironmentSection() {
+export default function LivingEnvironmentSection() {
   return (
     <div className="flex flex-col gap-8 w-full">
       <QuestionBlock title="평균적으로 집을 비우는 시간은 얼마나 되나요?">

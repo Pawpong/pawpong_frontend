@@ -5,6 +5,7 @@ import Header from '../../_components/header';
 import Review from '../_components/review';
 import { useBreederProfile, useBreederReviewsInfinite } from '../_hooks/use-breeder-detail';
 import LoadMoreButton from '@/components/ui/load-more-button';
+import { formatDateToDotNotation } from '@/utils/date-utils';
 
 interface PageProps {
   params: Promise<{
@@ -35,7 +36,10 @@ export default function ReviewsPage({ params }: PageProps) {
           createdAt: string;
           writtenAt?: string;
           content: string;
-          type?: string; // 백엔드 API가 type으로 반환
+          type?: string;
+          replyContent?: string | null;
+          replyWrittenAt?: string | null;
+          replyUpdatedAt?: string | null;
         }) => {
           const typeMap: Record<string, string> = {
             consultation: '상담 후기',
@@ -45,16 +49,10 @@ export default function ReviewsPage({ params }: PageProps) {
 
           // 날짜 필드: 백엔드에서 writtenAt을 반환
           const dateString = review.writtenAt || review.createdAt;
-          let formattedDate = '';
+          const formattedDate = formatDateToDotNotation(dateString);
 
-          if (dateString) {
-            try {
-              const date = new Date(dateString);
-              formattedDate = date.toLocaleDateString('ko-KR');
-            } catch {
-              formattedDate = '날짜 없음';
-            }
-          }
+          // 프로필 이미지 URL 생성
+          const avatarUrl = profileData?.profileImageFileName || undefined;
 
           return {
             id: review.reviewId,
@@ -62,12 +60,15 @@ export default function ReviewsPage({ params }: PageProps) {
             date: formattedDate || '날짜 없음',
             content: review.content,
             reviewType: typeMap[review.type || ''] || '상담 후기',
+            replyContent: review.replyContent || undefined,
+            replyWrittenAt: review.replyWrittenAt || undefined,
+            replyUpdatedAt: review.replyUpdatedAt || undefined,
+            breederNickname: profileData?.breederName,
+            breederProfileImage: avatarUrl,
+            breedingPetType: undefined,
           };
         },
       ) || [];
-
-  // 첫 페이지의 총 개수 확인 (더보기 버튼 표시 여부 결정용)
-  const firstPageCount = reviewsData?.pages[0]?.items?.length || 0;
 
   return (
     <>
@@ -89,17 +90,20 @@ export default function ReviewsPage({ params }: PageProps) {
               <p className="text-body-s text-grayscale-gray5">등록된 후기가 없습니다.</p>
             </div>
           ) : (
-            <div className="w-full flex flex-col items-center gap-10 md:gap-[60px] lg:gap-20">
+            <>
+              {/* 후기 리스트 */}
               <div className="w-full flex flex-col gap-8">
                 {allReviews.map((review) => (
                   <Review key={review.id} data={review} />
                 ))}
               </div>
-              {/* 더보기 버튼 - 첫 페이지가 10개 이상이고 다음 페이지가 있을 때만 표시 */}
-              {firstPageCount >= 10 && hasNextPage && (
-                <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} />
+              {/* 더보기 버튼 - 후기가 3개 이상이고 다음 페이지가 있을 때만 표시 */}
+              {allReviews.length >= 3 && hasNextPage && (
+                <div className="mt-20">
+                  <LoadMoreButton onClick={() => fetchNextPage()} isLoading={isFetchingNextPage} />
+                </div>
               )}
-            </div>
+            </>
           )}
         </div>
       </div>

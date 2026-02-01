@@ -10,9 +10,11 @@ import Male from '@/assets/icons/male.svg';
 import Plus from '@/assets/icons/plus.svg';
 import Female from '@/assets/icons/female.svg';
 import PictureRemove from '@/assets/icons/picture-delete.svg';
+import PlayIcon from '@/assets/icons/play.svg';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { cn } from '@/api/utils';
+import { isVideoFile, extractVideoThumbnail } from '@/utils/video-thumbnail';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +25,7 @@ import { useFieldArray, useFormContext, Controller } from 'react-hook-form';
 import type { ProfileFormData } from '@/stores/profile-store';
 import ErrorMessage from '@/components/error-message';
 import { BREEDER_PROFILE_ERROR } from '@/constants/errors/breeder-profile-error';
+import ImageEdit from '@/components/image-edit';
 
 export default function BreedingAnimals({ form }: { form: ReturnType<typeof useFormContext<ProfileFormData>> }) {
   const { control, watch, formState, getValues, setValue } = form;
@@ -53,6 +56,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
         fatherId: '',
         price: '',
         isCounselMode: false,
+        photos: [],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,6 +75,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
       fatherId: '',
       price: '',
       isCounselMode: false,
+      photos: [],
     });
   };
 
@@ -136,21 +141,35 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                   onClick={() => {
                     const input = document.createElement('input');
                     input.type = 'file';
-                    input.accept = 'image/*';
-                    input.onchange = (e: Event) => {
+                    input.accept = '.jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm';
+                    input.onchange = async (e: Event) => {
                       const target = e.target as HTMLInputElement;
                       const file = target.files?.[0];
                       if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (event: ProgressEvent<FileReader>) => {
-                          if (event.target?.result) {
-                            updateAnimal(index, {
-                              imagePreview: event.target.result as string,
-                              imageFile: file,
-                            });
+                        const isVideo = isVideoFile(file);
+                        let preview: string;
+
+                        if (isVideo) {
+                          try {
+                            preview = await extractVideoThumbnail(file);
+                          } catch {
+                            preview = URL.createObjectURL(file);
                           }
-                        };
-                        reader.readAsDataURL(file);
+                        } else {
+                          preview = await new Promise<string>((resolve) => {
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                              resolve(event.target?.result as string);
+                            };
+                            reader.readAsDataURL(file);
+                          });
+                        }
+
+                        updateAnimal(index, {
+                          imagePreview: preview,
+                          imageFile: file,
+                          isVideo,
+                        });
                       }
                     };
                     input.click();
@@ -158,13 +177,22 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                   className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden relative"
                 >
                   {animal.imagePreview ? (
-                    <Image
-                      src={animal.imagePreview}
-                      alt="Animal"
-                      fill
-                      className="object-contain rounded-lg"
-                      unoptimized
-                    />
+                    <>
+                      <Image
+                        src={animal.imagePreview}
+                        alt="Animal"
+                        fill
+                        className="object-contain rounded-lg"
+                        unoptimized
+                      />
+                      {animal.isVideo && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="bg-black/50 rounded-full p-1.5">
+                            <PlayIcon className="w-4 h-4 [&_path]:fill-white" />
+                          </div>
+                        </div>
+                      )}
+                    </>
                   ) : (
                     <Camera
                       className={cn(
@@ -182,6 +210,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                       updateAnimal(index, {
                         imagePreview: undefined,
                         imageFile: undefined,
+                        isVideo: undefined,
                       });
                     }}
                     className="absolute top-1 right-1 bg-[var(--primary-500-basic,#4f3b2e)] rounded-full size-6 flex items-center justify-center hover:opacity-80 transition-opacity"
@@ -589,6 +618,30 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                     message={(errors.animals[index]?.price?.message as string) || BREEDER_PROFILE_ERROR.PRICE_REQUIRED}
                   />
                 )}
+              </div>
+
+              {/* 사진·영상 */}
+              <div className="flex flex-col gap-3 items-start w-full">
+                <Controller
+                  name={`animals.${index}.photos`}
+                  control={control}
+                  render={({ field }) => (
+                    <ImageEdit
+                      maxCount={4}
+                      status="Default"
+                      labelText="사진·영상"
+                      initialImages={
+                        Array.isArray(field.value) ? field.value.filter((v): v is string => typeof v === 'string') : []
+                      }
+                      onFileChange={(files) => {
+                        field.onChange(files);
+                      }}
+                    />
+                  )}
+                />
+                <p className="text-caption-s text-grayscale-gray5 font-medium">
+                  아이를 잘 보여줄 수 있는 사진·영상은 최대 4개까지 등록할 수 있어요
+                </p>
               </div>
 
               {/* 구분선 (마지막 항목이 아닐 때만) */}

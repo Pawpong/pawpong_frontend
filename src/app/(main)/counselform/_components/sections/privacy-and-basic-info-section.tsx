@@ -7,7 +7,7 @@ type Props = {
   onFormatPhone: (value: string) => string;
 };
 
-export function PrivacyAndBasicInfoSection({ onFormatPhone }: Props) {
+export default function PrivacyAndBasicInfoSection({ onFormatPhone }: Props) {
   return (
     <div className="flex flex-col gap-8 w-full">
       <QuestionBlock title="반려동물 입양 상담을 위한 개인정보 수집과 이용에 동의하시나요?">

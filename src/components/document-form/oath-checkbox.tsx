@@ -49,9 +49,7 @@ export default function OathCheckbox({ level, checked, onCheckedChange }: OathCh
               className={cn(isReadOnly && 'cursor-default')}
             />
           </div>
-          <span className="text-body-xs text-grayscale-gray6 select-none">
-            (필수) {level === 'elite' ? '엘리트' : '뉴'} 레벨 브리더 입점 서약서
-          </span>
+          <span className="text-body-xs text-grayscale-gray6 select-none">(필수) 브리더 입점 서약서</span>
         </div>
 
         <Button variant="ghost" className="flex items-center gap-2.5 text-grayscale-gray5 text-body-xs">

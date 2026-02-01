@@ -6,22 +6,13 @@ import AnimalSection from './sections/animal-section';
 import BreederInfoSection from './sections/breeder-info-section';
 import DocumentSection from './sections/document-section';
 import NicknameSection from './sections/nickname-section';
-import PlanSection from './sections/plan-section';
 import SignupComplete from './sections/signup-complete';
 import UserInfoSection from './sections/user-info-section';
 import UserTypeSection from './sections/user-type-section';
 const flowInfo: Record<UserType, React.ComponentType[]> = {
   guest: [UserTypeSection, UserInfoSection, NicknameSection, SignupComplete],
   adopter: [UserTypeSection, UserInfoSection, NicknameSection, SignupComplete],
-  breeder: [
-    UserTypeSection,
-    AnimalSection,
-    PlanSection,
-    UserInfoSection,
-    BreederInfoSection,
-    DocumentSection,
-    SignupComplete,
-  ],
+  breeder: [UserTypeSection, AnimalSection, UserInfoSection, BreederInfoSection, DocumentSection, SignupComplete],
 };
 export default function ClientPage() {
   const router = useRouter();

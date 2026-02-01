@@ -41,4 +41,3 @@ export function useCounselGuard(hasFormData: boolean) {
     handleBrowserCancel,
   };
 }
-

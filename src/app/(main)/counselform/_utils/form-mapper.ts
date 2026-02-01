@@ -1,13 +1,17 @@
 import type { ApplicationCreateRequest } from '@/api/application';
 import type { CounselFormData } from '../_types/counsel';
 
-export function mapToApplicationRequest(formData: CounselFormData, breederId: string, petId?: string): ApplicationCreateRequest {
+export function mapToApplicationRequest(
+  formData: CounselFormData,
+  breederId: string,
+  petId?: string,
+): ApplicationCreateRequest {
   const selectedPets = formData.interestedAnimal.filter((pet) => pet !== '특징 직접 입력');
   const preferredPetDescription = formData.interestedAnimal.includes('특징 직접 입력')
     ? formData.interestedAnimalDetails || undefined
     : selectedPets.length > 0
-    ? selectedPets.join('/')
-    : undefined;
+      ? selectedPets.join('/')
+      : undefined;
 
   return {
     name: formData.name,
@@ -30,4 +34,3 @@ export function mapToApplicationRequest(formData: CounselFormData, breederId: st
     additionalNotes: formData.additionalMessage || undefined,
   };
 }
-

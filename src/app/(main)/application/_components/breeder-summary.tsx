@@ -7,7 +7,6 @@ import RightArrow from '@/assets/icons/right-arrow.svg';
 interface BreederSummaryProps {
   breederId: string;
   breederName: string;
-  breederLevel: 'elite' | 'new';
   applicationDate: string;
   profileImage: string;
   animalType: 'cat' | 'dog';
@@ -17,7 +16,6 @@ interface BreederSummaryProps {
 export default function BreederSummary({
   breederId,
   breederName,
-  breederLevel,
   applicationDate,
   profileImage,
   animalType,
@@ -36,18 +34,8 @@ export default function BreederSummary({
       onClick={handleNavigateToBreeder}
     >
       <div className="flex gap-5 items-center grow">
-        <ProfileImageWithBadge
-          src={profileImage}
-          alt={breederName}
-          animalType={animalType}
-          size={68}
-        />
-        <BreederInfo
-          breederName={breederName}
-          breederLevel={breederLevel}
-          applicationDate={applicationDate}
-          className="gap-3"
-        />
+        <ProfileImageWithBadge src={profileImage} alt={breederName} animalType={animalType} size={68} />
+        <BreederInfo breederName={breederName} applicationDate={applicationDate} className="gap-3" />
       </div>
       <Button
         className="gap-1 text-grayscale-gray5 text-body-xs h-auto p-0 has-[>svg]:px-0 hover:bg-transparent"

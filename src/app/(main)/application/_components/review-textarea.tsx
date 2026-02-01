@@ -8,12 +8,7 @@ interface ReviewTextareaProps {
   maxLength?: number;
 }
 
-export default function ReviewTextarea({
-  value,
-  onChange,
-  placeholder,
-  maxLength = 800,
-}: ReviewTextareaProps) {
+export default function ReviewTextarea({ value, onChange, placeholder, maxLength = 800 }: ReviewTextareaProps) {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -44,8 +39,7 @@ export default function ReviewTextarea({
             isFocused ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <span className="text-[#4e9cf1]">{value.length}</span>
-          /{maxLength}
+          <span className="text-[#4e9cf1]">{value.length}</span>/{maxLength}
         </p>
       </div>
     </div>

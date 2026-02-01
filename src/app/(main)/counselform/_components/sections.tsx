@@ -1,9 +1,16 @@
-import { AdditionalMessageSection } from './sections/additional-message-section';
-import { CareResponsibilitySection } from './sections/care-responsibility-section';
-import { IntroductionAndFamilySection } from './sections/introduction-and-family-section';
-import { LivingEnvironmentSection } from './sections/living-environment-section';
-import { PetSelectionSection } from './sections/pet-selection-section';
-import { PrivacyAndBasicInfoSection } from './sections/privacy-and-basic-info-section';
+import { dynamicClient } from '@/utils/dynamic-client';
+
+const PrivacyAndBasicInfoSection = dynamicClient(() => import('./sections/privacy-and-basic-info-section'));
+
+const IntroductionAndFamilySection = dynamicClient(() => import('./sections/introduction-and-family-section'));
+
+const LivingEnvironmentSection = dynamicClient(() => import('./sections/living-environment-section'));
+
+const CareResponsibilitySection = dynamicClient(() => import('./sections/care-responsibility-section'));
+
+const PetSelectionSection = dynamicClient(() => import('./sections/pet-selection-section'));
+
+const AdditionalMessageSection = dynamicClient(() => import('./sections/additional-message-section'));
 
 export const COUNSEL_FORM_SECTIONS = [
   {

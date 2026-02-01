@@ -4,12 +4,6 @@ import { SearchBreederParams } from './breeder';
  * 필터 레이블을 백엔드 API 파라미터로 변환하는 매퍼
  */
 
-// 브리더 레벨 매핑
-const BREEDER_LEVEL_MAP: Record<string, 'elite' | 'new'> = {
-  엘리트: 'elite',
-  뉴: 'new',
-};
-
 // 강아지 크기 매핑
 const DOG_SIZE_MAP: Record<string, 'small' | 'medium' | 'large'> = {
   소형견: 'small',
@@ -53,15 +47,6 @@ const KOREA_PROVINCES = [
 export function mapFiltersToParams(activeFilters: string[], petType: 'cat' | 'dog'): Partial<SearchBreederParams> {
   const params: Partial<SearchBreederParams> = {};
 
-  // 브리더 레벨 필터
-  const breederLevels = activeFilters
-    .filter((filter) => filter in BREEDER_LEVEL_MAP)
-    .map((filter) => BREEDER_LEVEL_MAP[filter]);
-
-  if (breederLevels.length > 0) {
-    params.breederLevel = breederLevels;
-  }
-
   // 입양 가능 여부 필터
   if (activeFilters.includes('입양 가능')) {
     params.isAdoptionAvailable = true;
@@ -89,7 +74,6 @@ export function mapFiltersToParams(activeFilters: string[], petType: 'cat' | 'do
 
   // 알려진 필터들 (품종이나 지역 필터가 아닌 것들)
   const knownFilters = new Set([
-    ...Object.keys(BREEDER_LEVEL_MAP),
     ...Object.keys(DOG_SIZE_MAP),
     ...Object.keys(CAT_FUR_LENGTH_MAP),
     '입양 가능',
@@ -133,7 +117,7 @@ export function mapFiltersToParams(activeFilters: string[], petType: 'cat' | 'do
     params.city = cities;
   }
 
-  // 품종 필터 (브리더 레벨, 크기, 털 길이, 입양 가능, 지역이 아닌 나머지)
+  // 품종 필터 (크기, 털 길이, 입양 가능, 지역이 아닌 나머지)
   const breeds = activeFilters.filter((filter) => {
     // 알려진 필터가 아니고
     if (knownFilters.has(filter)) return false;

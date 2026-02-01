@@ -22,4 +22,3 @@ export default function SubmitButton({ isDisabled, isSubmitting, onSubmit }: Sub
     </div>
   );
 }
-

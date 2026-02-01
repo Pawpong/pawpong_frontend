@@ -8,7 +8,6 @@ import AdoptableFilter from './adoptable-filter';
 import BreedFilter from './breed-filter';
 import ClearFilters from './clear-filters';
 import CurrentFilters from './current-filters';
-import LevelFilter from './level-filter';
 import LocationFilter from './location-filter';
 import { useSidebar } from './sidebar-provider';
 
@@ -41,8 +40,6 @@ export default function FilterSidebar() {
           <BreedFilter />
           <Separator className="my-6" />
           <LocationFilter />
-          <Separator className="my-6" />
-          <LevelFilter />
         </div>
       </div>
     )

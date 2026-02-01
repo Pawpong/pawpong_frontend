@@ -1,4 +1,4 @@
-import { NoticeItem } from "../_hooks/use-notices";
+import { NoticeItem } from '../_hooks/use-notices';
 
 const mockContent = `본문 내용
 본문 내용

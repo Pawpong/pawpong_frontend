@@ -1,12 +1,15 @@
 'use client';
 
 import { use, useState } from 'react';
+import { dynamicClient } from '@/utils/dynamic-client';
 import Header from '../../_components/header';
 import AnimalProfile from '../_components/animal-profile';
 import { useBreederProfile, useParentPetsInfinite } from '../_hooks/use-breeder-detail';
 import LoadMoreButton from '@/components/ui/load-more-button';
-import PetDetailDialog, { type PetDetailData } from '../_components/pet-detail-dialog';
+import type { PetDetailData } from '../_components/pet-detail-dialog';
 import { formatBirthDateToKorean } from '@/utils/date-utils';
+
+const PetDetailDialog = dynamicClient(() => import('../_components/pet-detail-dialog'));
 
 interface PageProps {
   params: Promise<{
@@ -36,6 +39,7 @@ export default function ParentsPage({ params }: PageProps) {
     birthDate?: string;
     breed: string;
     description?: string;
+    photos?: string[];
   };
 
   type MappedParentPet = {
@@ -47,6 +51,7 @@ export default function ParentsPage({ params }: PageProps) {
     price: string;
     breed: string;
     description?: string;
+    photos?: string[];
   };
 
   // 모든 페이지의 데이터를 합쳐서 매핑
@@ -62,6 +67,7 @@ export default function ParentsPage({ params }: PageProps) {
         price: '', // 부모견은 가격이 없음
         breed: pet.breed,
         description: pet.description,
+        photos: pet.photos || [],
       })) || [];
 
   // 첫 페이지의 총 개수 확인 (더보기 버튼 표시 여부 결정용)
@@ -87,6 +93,7 @@ export default function ParentsPage({ params }: PageProps) {
       birth: pet.birth,
       breed: pet.breed,
       description: pet.description,
+      photos: pet.photos || [],
     };
 
     setSelectedPet(petDetail);

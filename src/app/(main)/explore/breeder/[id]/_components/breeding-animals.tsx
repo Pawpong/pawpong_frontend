@@ -1,16 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import { dynamicClient } from '@/utils/dynamic-client';
 import { useRouter } from 'next/navigation';
 import BreederProfileSection from '@/components/breeder-profile/breeder-profile-section';
 import BreederProfileSectionHeader from '@/components/breeder-profile/breeder-profile-section-header';
 import BreederProfileSectionMore from '@/components/breeder-profile/breeder-profile-section-more';
 import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
 import AnimalProfile from './animal-profile';
-import PetDetailDialog, { type PetDetailData } from './pet-detail-dialog';
+import type { PetDetailData } from './pet-detail-dialog';
 import { useParentPets } from '../_hooks/use-breeder-detail';
 import EmptyPetState from './empty-pet-state';
 import { formatBirthDateToKorean } from '@/utils/date-utils';
+
+const PetDetailDialog = dynamicClient(() => import('./pet-detail-dialog'));
 
 export default function BreedingAnimals({
   data,
@@ -28,6 +31,7 @@ export default function BreedingAnimals({
     breed: string;
     status?: 'available' | 'reserved' | 'completed';
     description?: string;
+    photos?: string[];
   }[];
   breederId: string;
   breederDescription?: string;
@@ -54,6 +58,7 @@ export default function BreedingAnimals({
           gender: 'male' | 'female';
           birthDate?: string;
           breed: string;
+          photos?: string[];
         }) => ({
           id: parent.petId,
           avatarUrl: parent.photoUrl || '/animal-sample.png',
@@ -61,6 +66,7 @@ export default function BreedingAnimals({
           sex: parent.gender,
           birth: formatBirthDateToKorean(parent.birthDate),
           breed: parent.breed,
+          photos: parent.photos || [],
         }),
       ) || [];
 
@@ -74,6 +80,7 @@ export default function BreedingAnimals({
       breed: pet.breed,
       status: pet.status || 'available',
       description: pet.description,
+      photos: pet.photos || [],
       parents: parents,
     };
 

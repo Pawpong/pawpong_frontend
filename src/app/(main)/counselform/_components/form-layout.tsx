@@ -36,4 +36,3 @@ export default function FormLayout({ children, hasFormData, isLgUp }: FormLayout
     </>
   );
 }
-

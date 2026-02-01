@@ -28,10 +28,7 @@ export async function POST() {
     console.error('쿠키 삭제 실패:', error);
 
     // 에러가 발생해도 쿠키는 삭제 시도
-    const res = NextResponse.json(
-      { ok: false, message: '쿠키 삭제 중 오류가 발생했습니다.' },
-      { status: 500 },
-    );
+    const res = NextResponse.json({ ok: false, message: '쿠키 삭제 중 오류가 발생했습니다.' }, { status: 500 });
 
     res.cookies.set('accessToken', '', { path: '/', maxAge: 0 });
     res.cookies.set('refreshToken', '', { path: '/', maxAge: 0 });

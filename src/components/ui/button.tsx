@@ -42,11 +42,11 @@ const buttonVariants = cva(
       },
       size: {
         // 기본 사이즈: 일반적인 버튼에 사용
-        default: 'px-2.5 py-1.5 has-[>svg]:px-3',
+        default: 'px-2.5 py-1.5',
         // 작은 사이즈: 작은 공간에 배치되는 버튼에 사용 4px
-        sm: 'rounded gap-1.5 px-3 has-[>svg]:px-2.5',
+        sm: 'rounded gap-1.5 px-3 ',
         // 큰 사이즈: 강조가 필요한 버튼에 사용 8px
-        lg: 'rounded-lg px-6 has-[>svg]:px-4',
+        lg: 'rounded-lg px-6 ',
         // 아이콘 사이즈: 아이콘만 있는 버튼에 사용 (정사각형)
         icon: 'size-9',
       },

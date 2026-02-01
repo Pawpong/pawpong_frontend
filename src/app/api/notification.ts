@@ -1,21 +1,21 @@
-import api from "./api";
+import api from './api';
 
 /** 알림 타입 */
 export type NotificationType =
-  | "BREEDER_APPROVED"
-  | "BREEDER_UNAPPROVED"
-  | "BREEDER_ONBOARDING_INCOMPLETE"
-  | "NEW_CONSULT_REQUEST"
-  | "NEW_REVIEW_REGISTERED"
-  | "CONSULT_COMPLETED"
-  | "NEW_PET_REGISTERED"
-  | "DOCUMENT_REMINDER";
+  | 'BREEDER_APPROVED'
+  | 'BREEDER_UNAPPROVED'
+  | 'BREEDER_ONBOARDING_INCOMPLETE'
+  | 'NEW_CONSULT_REQUEST'
+  | 'NEW_REVIEW_REGISTERED'
+  | 'CONSULT_COMPLETED'
+  | 'NEW_PET_REGISTERED'
+  | 'DOCUMENT_REMINDER';
 
 /** 알림 응답 DTO */
 export interface NotificationResponseDto {
   notificationId: string;
   userId: string;
-  userRole: "adopter" | "breeder";
+  userRole: 'adopter' | 'breeder';
   type: NotificationType;
   title: string;
   body: string;
@@ -78,7 +78,7 @@ interface ApiResponse<T> {
 export async function getNotifications(
   page: number = 1,
   limit: number = 20,
-  isRead?: boolean
+  isRead?: boolean,
 ): Promise<NotificationListResponse> {
   const params: Record<string, any> = {
     page,
@@ -88,13 +88,10 @@ export async function getNotifications(
     params.isRead = isRead;
   }
 
-  const response = await api.get<ApiResponse<NotificationListResponse>>(
-    "/api/notification",
-    { params }
-  );
+  const response = await api.get<ApiResponse<NotificationListResponse>>('/api/notification', { params });
 
   if (!response.data.success || !response.data.data) {
-    throw new Error(response.data.error || "알림 목록을 불러오는데 실패했습니다.");
+    throw new Error(response.data.error || '알림 목록을 불러오는데 실패했습니다.');
   }
 
   return response.data.data;
@@ -104,12 +101,10 @@ export async function getNotifications(
  * 읽지 않은 알림 수 조회
  */
 export async function getUnreadCount(): Promise<number> {
-  const response = await api.get<ApiResponse<UnreadCountResponseDto>>(
-    "/api/notification/unread-count"
-  );
+  const response = await api.get<ApiResponse<UnreadCountResponseDto>>('/api/notification/unread-count');
 
   if (!response.data.success || !response.data.data) {
-    throw new Error(response.data.error || "읽지 않은 알림 수를 불러오는데 실패했습니다.");
+    throw new Error(response.data.error || '읽지 않은 알림 수를 불러오는데 실패했습니다.');
   }
 
   return response.data.data.unreadCount;
@@ -119,15 +114,11 @@ export async function getUnreadCount(): Promise<number> {
  * 특정 알림 읽음 처리
  * @param notificationId 알림 ID
  */
-export async function markAsRead(
-  notificationId: string
-): Promise<MarkAsReadResponseDto> {
-  const response = await api.patch<ApiResponse<MarkAsReadResponseDto>>(
-    `/api/notification/${notificationId}/read`
-  );
+export async function markAsRead(notificationId: string): Promise<MarkAsReadResponseDto> {
+  const response = await api.patch<ApiResponse<MarkAsReadResponseDto>>(`/api/notification/${notificationId}/read`);
 
   if (!response.data.success || !response.data.data) {
-    throw new Error(response.data.error || "알림 읽음 처리에 실패했습니다.");
+    throw new Error(response.data.error || '알림 읽음 처리에 실패했습니다.');
   }
 
   return response.data.data;
@@ -137,12 +128,10 @@ export async function markAsRead(
  * 모든 알림 읽음 처리
  */
 export async function markAllAsRead(): Promise<MarkAllAsReadResponseDto> {
-  const response = await api.patch<ApiResponse<MarkAllAsReadResponseDto>>(
-    "/api/notification/read-all"
-  );
+  const response = await api.patch<ApiResponse<MarkAllAsReadResponseDto>>('/api/notification/read-all');
 
   if (!response.data.success || !response.data.data) {
-    throw new Error(response.data.error || "모든 알림 읽음 처리에 실패했습니다.");
+    throw new Error(response.data.error || '모든 알림 읽음 처리에 실패했습니다.');
   }
 
   return response.data.data;
@@ -153,11 +142,9 @@ export async function markAllAsRead(): Promise<MarkAllAsReadResponseDto> {
  * @param notificationId 알림 ID
  */
 export async function deleteNotification(notificationId: string): Promise<void> {
-  const response = await api.delete<ApiResponse<null>>(
-    `/api/notification/${notificationId}`
-  );
+  const response = await api.delete<ApiResponse<null>>(`/api/notification/${notificationId}`);
 
   if (!response.data.success) {
-    throw new Error(response.data.error || "알림 삭제에 실패했습니다.");
+    throw new Error(response.data.error || '알림 삭제에 실패했습니다.');
   }
 }

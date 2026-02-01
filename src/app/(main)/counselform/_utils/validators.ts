@@ -28,4 +28,3 @@ export const counselSchema = z.object({
 });
 
 export type CounselFormSchema = z.infer<typeof counselSchema>;
-
