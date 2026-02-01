@@ -12,14 +12,7 @@ import UserTypeSection from './sections/user-type-section';
 const flowInfo: Record<UserType, React.ComponentType[]> = {
   guest: [UserTypeSection, UserInfoSection, NicknameSection, SignupComplete],
   adopter: [UserTypeSection, UserInfoSection, NicknameSection, SignupComplete],
-  breeder: [
-    UserTypeSection,
-    AnimalSection,
-    UserInfoSection,
-    BreederInfoSection,
-    DocumentSection,
-    SignupComplete,
-  ],
+  breeder: [UserTypeSection, AnimalSection, UserInfoSection, BreederInfoSection, DocumentSection, SignupComplete],
 };
 export default function ClientPage() {
   const router = useRouter();

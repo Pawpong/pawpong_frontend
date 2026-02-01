@@ -187,13 +187,7 @@ describe('phone utilities', () => {
     });
 
     it('should handle copy-paste with various formats', () => {
-      const variations = [
-        '010-1234-5678',
-        '010.1234.5678',
-        '010 1234 5678',
-        '01012345678',
-        '(010) 1234-5678',
-      ];
+      const variations = ['010-1234-5678', '010.1234.5678', '010 1234 5678', '01012345678', '(010) 1234-5678'];
 
       variations.forEach((input) => {
         const formatted = formatPhoneNumber(input);

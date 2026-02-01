@@ -6,5 +6,9 @@ interface BreederProfileSectionProps {
 }
 
 export default function BreederProfileSection({ children, id }: BreederProfileSectionProps) {
-  return <div className="space-y-7" id={id}>{children}</div>;
+  return (
+    <div className="space-y-7" id={id}>
+      {children}
+    </div>
+  );
 }

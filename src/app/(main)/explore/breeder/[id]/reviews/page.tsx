@@ -36,7 +36,7 @@ export default function ReviewsPage({ params }: PageProps) {
           createdAt: string;
           writtenAt?: string;
           content: string;
-          type?: string; 
+          type?: string;
         }) => {
           const typeMap: Record<string, string> = {
             consultation: '상담 후기',

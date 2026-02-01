@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getNotifications,
   getUnreadCount,
@@ -8,15 +8,15 @@ import {
   markAllAsRead,
   deleteNotification,
   NotificationResponseDto,
-} from "@/api/notification";
-import { useAuthStore } from "@/stores/auth-store";
+} from '@/api/notification';
+import { useAuthStore } from '@/stores/auth-store';
 
 /** 알림 목록 조회 훅 */
 export function useNotifications(page: number = 1, limit: number = 50) {
   const { isAuthenticated, hasHydrated } = useAuthStore();
 
   return useQuery({
-    queryKey: ["notifications", page, limit],
+    queryKey: ['notifications', page, limit],
     queryFn: () => getNotifications(page, limit),
     staleTime: 1000 * 60, // 1분
     refetchOnWindowFocus: true,
@@ -29,7 +29,7 @@ export function useUnreadCount() {
   const { isAuthenticated, hasHydrated } = useAuthStore();
 
   return useQuery({
-    queryKey: ["notifications", "unread-count"],
+    queryKey: ['notifications', 'unread-count'],
     queryFn: getUnreadCount,
     staleTime: 1000 * 30, // 30초
     refetchInterval: 1000 * 60, // 1분마다 자동 갱신
@@ -46,7 +46,7 @@ export function useMarkAsRead() {
     mutationFn: markAsRead,
     onSuccess: () => {
       // 알림 목록과 읽지 않은 수 갱신
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
     },
   });
 }
@@ -59,7 +59,7 @@ export function useMarkAllAsRead() {
     mutationFn: markAllAsRead,
     onSuccess: () => {
       // 알림 목록과 읽지 않은 수 갱신
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
     },
   });
 }
@@ -72,7 +72,7 @@ export function useDeleteNotification() {
     mutationFn: deleteNotification,
     onSuccess: () => {
       // 알림 목록과 읽지 않은 수 갱신
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
     },
   });
 }
@@ -102,7 +102,7 @@ function formatRelativeTime(dateString: string): string {
   const diffDays = Math.floor(diffHours / 24);
 
   if (diffSeconds < 60) {
-    return "방금 전";
+    return '방금 전';
   } else if (diffMinutes < 60) {
     return `${diffMinutes}분 전`;
   } else if (diffHours < 24) {
@@ -111,9 +111,9 @@ function formatRelativeTime(dateString: string): string {
     return `${diffDays}일 전`;
   } else {
     // 7일 이상이면 날짜 표시
-    return date.toLocaleDateString("ko-KR", {
-      month: "long",
-      day: "numeric",
+    return date.toLocaleDateString('ko-KR', {
+      month: 'long',
+      day: 'numeric',
     });
   }
 }

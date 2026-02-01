@@ -1,28 +1,16 @@
 import { dynamicClient } from '@/utils/dynamic-client';
 
-const PrivacyAndBasicInfoSection = dynamicClient(() =>
-  import('./sections/privacy-and-basic-info-section'),
-);
+const PrivacyAndBasicInfoSection = dynamicClient(() => import('./sections/privacy-and-basic-info-section'));
 
-const IntroductionAndFamilySection = dynamicClient(() =>
-  import('./sections/introduction-and-family-section'),
-);
+const IntroductionAndFamilySection = dynamicClient(() => import('./sections/introduction-and-family-section'));
 
-const LivingEnvironmentSection = dynamicClient(() =>
-  import('./sections/living-environment-section'),
-);
+const LivingEnvironmentSection = dynamicClient(() => import('./sections/living-environment-section'));
 
-const CareResponsibilitySection = dynamicClient(() =>
-  import('./sections/care-responsibility-section'),
-);
+const CareResponsibilitySection = dynamicClient(() => import('./sections/care-responsibility-section'));
 
-const PetSelectionSection = dynamicClient(() =>
-  import('./sections/pet-selection-section'),
-);
+const PetSelectionSection = dynamicClient(() => import('./sections/pet-selection-section'));
 
-const AdditionalMessageSection = dynamicClient(() =>
-  import('./sections/additional-message-section'),
-);
+const AdditionalMessageSection = dynamicClient(() => import('./sections/additional-message-section'));
 
 export const COUNSEL_FORM_SECTIONS = [
   {

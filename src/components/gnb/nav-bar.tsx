@@ -78,7 +78,7 @@ function DropdownMenuWithState({
       <DropdownMenuContent
         align="start"
         sideOffset={12}
-        className="border border-grayscale-gray2/50 rounded-lg p-1 shadow-[0px_8px_24px_rgba(12,17,29,0.12)] "
+        className="border border-grayscale-gray2/50 rounded-lg p-1 shadow-[0px_8px_24px_rgba(12,17,29,0.12)] bg-white"
       >
         {item.children
           ?.filter((child) => {
@@ -197,7 +197,7 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
 
         // children이 있는 경우, children 중 하나가 활성화되어 있으면 부모도 활성화
         const isChildActive = hasChildren
-          ? item.children?.some((child) => currNav === child.href.slice(1)) ?? false
+          ? (item.children?.some((child) => currNav === child.href.slice(1)) ?? false)
           : false;
 
         // 홈화면일 때는 아무것도 활성화하지 않음
@@ -208,12 +208,12 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
         const active = isHomePage
           ? false
           : isApplicationMenu
-          ? currNav === 'application' || currNav === 'receivedApplications'
-          : isExploreMenu
-          ? currNav === item.href.slice(1) || isChildActive || isCounselFormPage
-          : hasChildren
-          ? currNav === item.href.slice(1) || isChildActive
-          : currNav === item.href.slice(1);
+            ? currNav === 'application' || currNav === 'receivedApplications'
+            : isExploreMenu
+              ? currNav === item.href.slice(1) || isChildActive || isCounselFormPage
+              : hasChildren
+                ? currNav === item.href.slice(1) || isChildActive
+                : currNav === item.href.slice(1);
 
         if (!hasChildren) {
           return (

@@ -282,7 +282,6 @@ export default function DocumentSection() {
     <SignupFormSection className="gap-15 md:gap-20 lg:gap-20">
       <SignupFormHeader>
         <SignupFormTitle>브리더 입점 서류를 등록해 주세요</SignupFormTitle>
-
       </SignupFormHeader>
       <SignupFormItems className="gap-8">
         <div className="flex flex-col gap-8">
@@ -336,9 +335,7 @@ export default function DocumentSection() {
                       }}
                     />
                   </div>
-                  <span className="text-body-xs text-grayscale-gray6 select-none">
-                    (필수) 브리더 입점 서약서
-                  </span>
+                  <span className="text-body-xs text-grayscale-gray6 select-none">(필수) 브리더 입점 서약서</span>
                 </div>
 
                 <Button variant="ghost" className="flex items-center gap-2.5 text-grayscale-gray5 text-body-xs">

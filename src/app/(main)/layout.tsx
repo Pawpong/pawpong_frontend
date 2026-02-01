@@ -14,7 +14,8 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const isProfilePage = pathname === '/profile';
   const isProfileDocumentsPage = pathname === '/profile/documents';
   const isCounselFormPage = pathname === '/counselform';
-  const useTertiaryVariant = isProfilePage || isProfileDocumentsPage || isCounselFormPage;
+  const isModifyCounselFormPage = pathname === '/modify-counselform';
+  const useTertiaryVariant = isProfilePage || isProfileDocumentsPage || isCounselFormPage || isModifyCounselFormPage;
 
   const navVariant = user?.role === 'breeder' ? 'breeder' : 'default';
 

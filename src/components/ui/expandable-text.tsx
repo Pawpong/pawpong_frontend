@@ -55,8 +55,8 @@ export function ExpandableText({
         {/* 접기 버튼 */}
       </div>
 
-      {overflow && (
-        !expanded ? (
+      {overflow &&
+        (!expanded ? (
           <Button
             className="p-0 pt-4 w-full flex items-center justify-center text-grayscale-gray5! hover:text-primary-500!"
             variant="ghost"
@@ -78,8 +78,7 @@ export function ExpandableText({
               <ChevronUp className="size-3.5" />
             </div>
           </Button>
-        )
-      )}
+        ))}
     </div>
   );
 }

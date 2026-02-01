@@ -9,14 +9,17 @@ export function Toaster() {
   const { toasts } = useToast();
 
   // position별로 토스트 그룹화
-  const toastsByPosition = toasts.reduce((acc, toast) => {
-    const position = (toast.position || 'default') as ToastPosition;
-    if (!acc[position]) {
-      acc[position] = [];
-    }
-    acc[position].push(toast);
-    return acc;
-  }, {} as Record<ToastPosition, typeof toasts>);
+  const toastsByPosition = toasts.reduce(
+    (acc, toast) => {
+      const position = (toast.position || 'default') as ToastPosition;
+      if (!acc[position]) {
+        acc[position] = [];
+      }
+      acc[position].push(toast);
+      return acc;
+    },
+    {} as Record<ToastPosition, typeof toasts>,
+  );
 
   const positions: ToastPosition[] = ['default', 'split'];
 

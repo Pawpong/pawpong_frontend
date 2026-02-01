@@ -172,8 +172,8 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
                 {isNotFoundError
                   ? '브리더 정보가 존재하지 않거나\n접근할 수 없어요.'
                   : isOwnProfile
-                  ? '탈퇴 처리된 계정이에요.\n다시 로그인해 주세요.'
-                  : '이미 탈퇴한 브리더의 프로필은\n조회할 수 없어요.'}
+                    ? '탈퇴 처리된 계정이에요.\n다시 로그인해 주세요.'
+                    : '이미 탈퇴한 브리더의 프로필은\n조회할 수 없어요.'}
               </SimpleDialogDescription>
             </SimpleDialogHeader>
             <SimpleDialogFooter className="grid-cols-1">
@@ -259,12 +259,12 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     ? !apiPriceRange
       ? '가격 미설정'
       : apiPriceRange.display === 'not_set'
-      ? '가격 미설정'
-      : apiPriceRange.display === 'consultation'
-      ? '상담 후 공개'
-      : apiPriceRange.display === 'range'
-      ? `${apiPriceRange.min?.toLocaleString()}원 ~ ${apiPriceRange.max?.toLocaleString()}원`
-      : '가격 미설정'
+        ? '가격 미설정'
+        : apiPriceRange.display === 'consultation'
+          ? '상담 후 공개'
+          : apiPriceRange.display === 'range'
+            ? `${apiPriceRange.min?.toLocaleString()}원 ~ ${apiPriceRange.max?.toLocaleString()}원`
+            : '가격 미설정'
     : null;
 
   // API 응답에서 직접 값 추출 (profileImage, location, breederLevel 등)
@@ -394,7 +394,9 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
             />
           )}
 
-          {!isReviewsLoading && reviews.length > 0 && <Reviews data={reviews} breederId={breederId} isOwnProfile={isOwnProfile} />}
+          {!isReviewsLoading && reviews.length > 0 && (
+            <Reviews data={reviews} breederId={breederId} isOwnProfile={isOwnProfile} />
+          )}
         </div>
       </div>
       {!isLg && (

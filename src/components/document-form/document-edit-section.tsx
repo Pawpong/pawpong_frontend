@@ -82,7 +82,7 @@ export default function DocumentEditSection() {
 
               // URL인 경우 도메인 제거 (예: https://storage.googleapis.com/bucket/verification/...)
               const pathParts = urlPath.split('/');
-              const verificationIndex = pathParts.findIndex(p => p === 'verification');
+              const verificationIndex = pathParts.findIndex((p) => p === 'verification');
 
               if (verificationIndex !== -1) {
                 // verification/ 이후 경로 추출

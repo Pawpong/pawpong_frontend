@@ -68,7 +68,13 @@ export default function ProfileBasicInfo({
     <div className="flex flex-col gap-8 items-start w-full">
       <div className="flex flex-col gap-3 items-center w-full">
         {/* 프로필 이미지 */}
-        <input ref={fileInputRef} type="file" accept=".jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm" className="hidden" onChange={handleProfileImageChange} />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm"
+          className="hidden"
+          onChange={handleProfileImageChange}
+        />
         <div className="relative">
           <div
             onClick={handleProfileImageClick}
