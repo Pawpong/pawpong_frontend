@@ -31,17 +31,17 @@ export default function MobileNavHeader() {
   return (
     <div className="flex items-center justify-between h-16 px-5 pr-[18px] py-3 shrink-0">
       <SheetClose asChild>
-        <Link href="/" onClick={handleClick}>
-          <Button variant={'ghost'} className="py-2 -mx-3 -my-2 h-auto has-[>svg]:px-2">
-            <Logo className="w-20 h-auto text-primary-500" />
+        <Link href="/" onClick={handleClick} aria-label="홈으로 이동">
+          <Button variant={'ghost'} className="py-2 -mx-3 -my-2 h-auto has-[>svg]:px-2" aria-label="포퐁 홈">
+            <Logo className="w-20 h-auto text-primary-500" aria-hidden="true" />
           </Button>
         </Link>
       </SheetClose>
       <div className="flex gap-4 items-center">
         {user ? <NoticeButton /> : <LoginButton />}
         <SheetClose asChild>
-          <button className="flex items-center justify-center size-6">
-            <Close className="size-5" />
+          <button className="flex items-center justify-center size-6" aria-label="메뉴 닫기">
+            <Close className="size-5" aria-hidden="true" />
           </button>
         </SheetClose>
       </div>

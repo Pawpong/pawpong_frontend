@@ -175,12 +175,13 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                     input.click();
                   }}
                   className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden relative"
+                  aria-label={animal.imagePreview ? '동물 사진 변경' : '동물 사진 업로드'}
                 >
                   {animal.imagePreview ? (
                     <>
                       <Image
                         src={animal.imagePreview}
-                        alt="Animal"
+                        alt={animal.name ? `${animal.name} 사진` : '동물 사진'}
                         fill
                         className="object-contain rounded-lg"
                         unoptimized
@@ -188,7 +189,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                       {animal.isVideo && (
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                           <div className="bg-black/50 rounded-full p-1.5">
-                            <PlayIcon className="w-4 h-4 [&_path]:fill-white" />
+                            <PlayIcon className="w-4 h-4 [&_path]:fill-white" aria-hidden="true" />
                           </div>
                         </div>
                       )}
@@ -199,6 +200,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                         'size-7 group-hover:[&_path]:fill-[#4F3B2E]',
                         errors.animals?.[index] && '[&_path]:fill-[#FF453A]',
                       )}
+                      aria-hidden="true"
                     />
                   )}
                 </button>
@@ -214,8 +216,9 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                       });
                     }}
                     className="absolute top-1 right-1 bg-[var(--primary-500-basic,#4f3b2e)] rounded-full size-6 flex items-center justify-center hover:opacity-80 transition-opacity"
+                    aria-label="사진 삭제"
                   >
-                    <PictureRemove />
+                    <PictureRemove aria-hidden="true" />
                   </button>
                 )}
               </div>

@@ -23,9 +23,9 @@ export default function LogoButton() {
   };
 
   return (
-    <Link href="/" onClick={handleClick}>
-      <Button variant={'ghost'} className="py-2 -mx-3 -my-2 h-auto has-[>svg]:px-2">
-        <Logo className="w-20 h-auto text-primary-500" />
+    <Link href="/" onClick={handleClick} aria-label="홈으로 이동">
+      <Button variant={'ghost'} className="py-2 -mx-3 -my-2 h-auto has-[>svg]:px-2" aria-label="포퐁 홈">
+        <Logo className="w-20 h-auto text-primary-500" aria-hidden="true" />
       </Button>
     </Link>
   );
