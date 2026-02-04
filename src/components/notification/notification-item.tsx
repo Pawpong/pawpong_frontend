@@ -12,17 +12,20 @@ interface NotificationItemProps {
 }
 
 export default function NotificationItem({ icon, content, date, onClick, className }: NotificationItemProps) {
+  const Component = onClick ? 'button' : 'div';
+  
   return (
-    <div
+    <Component
       className={cn(
-        'flex flex-row gap-4 p-3 rounded-lg',
+        'flex flex-row gap-4 p-3 rounded-lg text-left w-full',
         onClick && 'cursor-pointer hover:opacity-80 transition-opacity',
         className,
       )}
       onClick={onClick}
+      {...(onClick && { type: 'button' as const })}
     >
       {/* 아이콘 */}
-      <div className="w-[3rem] h-[3rem] bg-primary-500-basic flex items-center justify-center rounded-[0.5rem]">
+      <div className="w-[3rem] h-[3rem] bg-primary-500-basic flex items-center justify-center rounded-[0.5rem]" aria-hidden="true">
         {icon}
       </div>
       {/* 텍스트 영역 */}
@@ -32,6 +35,6 @@ export default function NotificationItem({ icon, content, date, onClick, classNa
         </p>
         <p className="text-caption font-medium text-grayscale-gray5">{date}</p>
       </div>
-    </div>
+    </Component>
   );
 }

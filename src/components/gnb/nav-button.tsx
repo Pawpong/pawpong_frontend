@@ -13,9 +13,9 @@ export default function NavButton({ navVariant = 'breeder' }: NavButtonProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="size-9 -m-1.5">
+        <Button variant="ghost" size="icon" className="size-9 -m-1.5" aria-label="메뉴 열기">
           <div className="flex items-center justify-center size-6">
-            <Menu />
+            <Menu aria-hidden="true" />
           </div>
         </Button>
       </SheetTrigger>

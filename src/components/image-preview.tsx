@@ -58,11 +58,11 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
 
   return (
     <div className={cn('flex gap-3', getLayoutClass())}>
-      {images.slice(0, maxImages).map((image) => (
+      {images.slice(0, maxImages).map((image, index) => (
         <div key={image.id} className="relative">
           <Image
             src={image.preview}
-            alt={`preview ${image.id}`}
+            alt={image.isVideo ? `동영상 미리보기 ${index + 1}` : `이미지 미리보기 ${index + 1}`}
             width={80}
             height={80}
             className={cn('rounded-lg object-contain bg-white border border-gray-200', getImageSizeClass())}
@@ -71,13 +71,17 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
           {image.isVideo && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="bg-black/50 rounded-full p-1.5">
-                <PlayIcon className="w-4 h-4 text-white [&_path]:fill-white" />
+                <PlayIcon className="w-4 h-4 text-white [&_path]:fill-white" aria-hidden="true" />
               </div>
             </div>
           )}
           {showRemoveButton && (
-            <button onClick={() => onRemove(image.id)} className="absolute top-1 right-1   flex ">
-              <PictureRemove className="group-hover:[&_path]:fill-[#4F3B2E]" />
+            <button 
+              onClick={() => onRemove(image.id)} 
+              className="absolute top-1 right-1 flex bg-[var(--primary-500-basic,#4f3b2e)] rounded-full p-1 hover:opacity-80 transition-opacity"
+              aria-label={`${image.isVideo ? '동영상' : '이미지'} ${index + 1} 삭제`}
+            >
+              <PictureRemove className="group-hover:[&_path]:fill-[#4F3B2E]" aria-hidden="true" />
             </button>
           )}
         </div>
@@ -89,6 +93,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
               'bg-gray-100 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 text-xs font-medium',
               getImageSizeClass(),
             )}
+            aria-label={`추가 이미지 ${images.length - maxImages}개`}
           >
             +{images.length - maxImages}
           </div>

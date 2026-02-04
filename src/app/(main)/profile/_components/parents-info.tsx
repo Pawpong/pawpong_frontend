@@ -94,8 +94,9 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                   <button
                     onClick={() => removeParent(index)}
                     className="flex gap-1 items-center relative shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+                    aria-label={`${parent.name || '부모'} ${index + 1} 삭제`}
                   >
-                    <Trash />
+                    <Trash aria-hidden="true" />
                     <p className="font-medium leading-body-xs relative shrink-0 text-grayscale-gray5 text-body-xs text-nowrap">
                       삭제하기
                     </p>
@@ -144,12 +145,13 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                     input.click();
                   }}
                   className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden relative"
+                  aria-label={parent.imagePreview ? '부모 사진 변경' : '부모 사진 업로드'}
                 >
                   {parent.imagePreview ? (
                     <>
                       <Image
                         src={parent.imagePreview}
-                        alt="Parent"
+                        alt={parent.name ? `${parent.name} 사진` : '부모 동물 사진'}
                         fill
                         className="object-contain rounded-lg"
                         unoptimized
@@ -157,7 +159,7 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                       {parent.isVideo && (
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                           <div className="bg-black/50 rounded-full p-1.5">
-                            <PlayIcon className="w-4 h-4 [&_path]:fill-white" />
+                            <PlayIcon className="w-4 h-4 [&_path]:fill-white" aria-hidden="true" />
                           </div>
                         </div>
                       )}
@@ -168,6 +170,7 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                         'size-7 group-hover:[&_path]:fill-[#4F3B2E]',
                         errors.parents?.[index] && '[&_path]:fill-[#FF453A]',
                       )}
+                      aria-hidden="true"
                     />
                   )}
                 </button>
@@ -183,8 +186,9 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                       });
                     }}
                     className="absolute top-1 right-1 bg-[var(--primary-500-basic,#4f3b2e)] rounded-full size-6 flex items-center justify-center hover:opacity-80 transition-opacity"
+                    aria-label="사진 삭제"
                   >
-                    <PictureRemove />
+                    <PictureRemove aria-hidden="true" />
                   </button>
                 )}
               </div>

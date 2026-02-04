@@ -1,10 +1,19 @@
 'use client';
+import dynamic from 'next/dynamic';
 import Container from '@/components/ui/container';
 import HomeBanner from './_components/home-banner';
 import AnimalCategoryButtons from './_components/animal-category-buttons';
-import HomeBreederGrid from './_components/home-breeder-grid';
-import FAQ from '@/app/(main)/_components/faq';
-import ServiceIntroBanner from './_components/service-intro-banner';
+
+// 성능 최적화: 초기 로딩 시 필요하지 않은 컴포넌트들을 dynamic import로 lazy loading
+const HomeBreederGrid = dynamic(() => import('./_components/home-breeder-grid'), {
+  loading: () => <div className="h-96 animate-pulse bg-gray-100 rounded-lg" />,
+});
+
+const FAQ = dynamic(() => import('@/app/(main)/_components/faq'), {
+  loading: () => <div className="h-64 animate-pulse bg-gray-100 rounded-lg" />,
+});
+
+const ServiceIntroBanner = dynamic(() => import('./_components/service-intro-banner'));
 
 export default function HomePage() {
   return (
