@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getActiveCounselBanners, type CounselBanner } from '@/api/counsel-banner';
 import { useRouter } from 'next/navigation';
@@ -79,13 +80,17 @@ export default function CounselBannerCarousel() {
     <div className="relative w-full h-full group">
       {/* Banner Image */}
       <div
-        className={`w-full h-full overflow-hidden rounded-[20px] ${currentBanner.linkUrl ? 'cursor-pointer' : ''}`}
+        className={`relative w-full h-full overflow-hidden rounded-[20px] ${currentBanner.linkUrl ? 'cursor-pointer' : ''}`}
         onClick={() => currentBanner.linkUrl && handleBannerClick(currentBanner)}
       >
-        <img
+        <Image
           src={currentBanner.imageUrl}
           alt={currentBanner.title || '상담 배너'}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
+          priority={currentIndex === 0}
+          sizes="100vw"
+          unoptimized={currentBanner.imageUrl.startsWith('http')}
         />
       </div>
 

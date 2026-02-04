@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Arrow from '@/assets/icons/arrow';
 import Camera from '@/assets/icons/camera';
 import ErrorIcon from '@/assets/icons/error';
@@ -155,8 +156,14 @@ export default function BreederInfoSection() {
               }}
             >
               {photoPreview ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={photoPreview} alt="Uploaded" className="object-cover w-full h-full rounded-lg" />
+                <Image
+                  src={photoPreview}
+                  alt="업로드된 브리더 사진"
+                  width={80}
+                  height={80}
+                  className="object-cover w-full h-full rounded-lg"
+                  unoptimized={photoPreview.startsWith('blob:') || photoPreview.startsWith('data:')}
+                />
               ) : (
                 <Camera className="text-grayscale-gray6 size-7" />
               )}
