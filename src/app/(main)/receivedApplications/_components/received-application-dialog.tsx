@@ -73,13 +73,6 @@ export default function ReceivedApplicationDialog({
     );
   };
 
-  // API 응답 확인을 위한 로그
-  useEffect(() => {
-    if (detailData) {
-      console.log('[받은 신청 상세] API 응답:', detailData);
-      console.log('[받은 신청 상세] preferredPetDescription:', detailData.standardResponses?.preferredPetDescription);
-    }
-  }, [detailData]);
 
   // detailData의 standardResponses를 formData로 변환
   const actualFormData: CounselFormData | null = detailData

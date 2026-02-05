@@ -49,15 +49,11 @@ const fetchReceivedApplications = async (page: number): Promise<ReceivedApplicat
   try {
     const result = await getReceivedApplications(page, PAGE_SIZE);
 
-    // API 응답 확인을 위한 로그
-    console.log('[받은 신청] API 응답:', result.applications);
-
     return {
       data: result.applications.map(mapDtoToReceivedApplication),
       hasMore: result.pagination.hasNextPage,
     };
   } catch (error) {
-    console.error('받은 신청 목록 조회 실패:', error);
     return {
       data: [],
       hasMore: false,

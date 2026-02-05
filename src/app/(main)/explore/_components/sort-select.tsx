@@ -11,6 +11,7 @@ import {
 import { cn } from '@/api/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSortOptions } from '../_hooks/use-filter-options';
+import { LoadingText } from '@/components/loading-state';
 
 export default function SortSelect() {
   // API에서 정렬 옵션 가져오기
@@ -41,7 +42,7 @@ export default function SortSelect() {
       <DropdownMenuContent>
         {isLoading ? (
           <DropdownMenuItem disabled>
-            <div className="text-gray-400 text-sm">로딩 중...</div>
+            <LoadingText className="text-gray-400 text-sm" />
           </DropdownMenuItem>
         ) : (
           sortItems.map((item) => (

@@ -8,6 +8,7 @@ import BreederProfileSectionHeader from '@/components/breeder-profile/breeder-pr
 import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
 import BreederProfileSectionMore from '@/components/breeder-profile/breeder-profile-section-more';
 import Link from 'next/link';
+import { LoadingText } from '@/components/loading-state';
 
 const FAQ = () => {
   const isMd = useBreakpoint('md');
@@ -52,7 +53,7 @@ const FAQ = () => {
           </Link>
         </BreederProfileSectionHeader>
         <div className="h-40 flex items-center justify-center">
-          <p className="text-body-m text-gray-400">FAQ 로딩 중...</p>
+          <LoadingText className="text-body-m text-gray-400" />
         </div>
       </div>
     );

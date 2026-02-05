@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getReceivedApplicationDetail, updateApplicationStatus } from '@/api/breeder';
 import { toast } from '@/hooks/use-toast';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { LoadingText } from '@/components/loading-state';
 
 interface ApplicationDetailModalProps {
   open: boolean;
@@ -74,57 +75,6 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
   const dialogContentClass =
     'w-full h-full md:w-[37.5rem] md:h-[37.5rem] md:translate-x-[-50%] md:translate-y-[-50%] md:top-[50%] md:left-[50%] top-0 left-0 translate-x-0 translate-y-0 rounded-none md:rounded-2xl md:overflow-hidden border-none';
 
-  if (isLoading) {
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className={`${dialogContentClass} p-0 gap-0 bg-white flex flex-col`}>
-          <VisuallyHidden>
-            <DialogTitle>로딩 중</DialogTitle>
-          </VisuallyHidden>
-          {/* 헤더 */}
-          <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none md:rounded-t-2xl"></div>
-          {/* 상단 구분선 */}
-          <div className="h-px bg-[#E1E1E1]" />
-          {/* 로딩 영역 */}
-          <div className="overflow-y-auto bg-[#F6F6EA] px-6 py-5 flex-1 flex items-center justify-center">
-            <p className="text-body-m text-grayscale-gray5">로딩 중...</p>
-          </div>
-          {/* 하단 구분선 */}
-          <div className="h-px bg-[#E1E1E1]" />
-          {/* 하단 버튼 영역 (빈 공간) */}
-          <div className="bg-white px-6 py-4 rounded-b-none md:rounded-b-2xl h-[57px]"></div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  if (!application) {
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className={`${dialogContentClass} p-0 gap-0 bg-white flex flex-col`}>
-          <VisuallyHidden>
-            <DialogTitle>오류</DialogTitle>
-          </VisuallyHidden>
-          {/* 헤더 */}
-          <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none md:rounded-t-2xl"></div>
-          {/* 상단 구분선 */}
-          <div className="h-px bg-[#E1E1E1]" />
-          {/* 오류 영역 */}
-          <div className="overflow-y-auto bg-[#F6F6EA] px-6 py-5 flex-1 flex flex-col items-center justify-center">
-            <p className="text-body-m text-grayscale-gray5">신청 정보를 찾을 수 없습니다.</p>
-            <Button onClick={() => onOpenChange(false)} className="mt-4">
-              닫기
-            </Button>
-          </div>
-          {/* 하단 구분선 */}
-          <div className="h-px bg-[#E1E1E1]" />
-          {/* 하단 버튼 영역 (빈 공간) */}
-          <div className="bg-white px-6 py-4 rounded-b-none md:rounded-b-2xl h-[57px]"></div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
   const handleCompleteConsultation = () => {
     completeConsultationMutation.mutate();
   };
@@ -133,20 +83,62 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
     cancelConsultationMutation.mutate();
   };
 
+  // 다이얼로그는 항상 하나로 유지하고, 내부 콘텐츠만 조건부 렌더링
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={`${dialogContentClass} p-0 gap-0 bg-white flex flex-col`}>
-        <VisuallyHidden>
-          <DialogTitle>입양 신청 상세</DialogTitle>
-        </VisuallyHidden>
-        {/* 헤더 - 닫기 버튼만 */}
-        <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none md:rounded-t-2xl"></div>
+        {isLoading ? (
+          <>
+            <VisuallyHidden>
+              <DialogTitle>로딩 중</DialogTitle>
+            </VisuallyHidden>
+            {/* 헤더 */}
+            <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none md:rounded-t-2xl"></div>
+            {/* 상단 구분선 */}
+            <div className="h-px bg-[#E1E1E1]" />
+            {/* 로딩 영역 */}
+            <div className="overflow-y-auto bg-[#F6F6EA] px-6 py-5 flex-1 flex items-center justify-center">
+              <LoadingText className="text-body-m text-grayscale-gray5" />
+            </div>
+            {/* 하단 구분선 */}
+            <div className="h-px bg-[#E1E1E1]" />
+            {/* 하단 버튼 영역 (빈 공간) */}
+            <div className="bg-white px-6 py-4 rounded-b-none md:rounded-b-2xl h-[57px]"></div>
+          </>
+        ) : !application ? (
+          <>
+            <VisuallyHidden>
+              <DialogTitle>오류</DialogTitle>
+            </VisuallyHidden>
+            {/* 헤더 */}
+            <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none md:rounded-t-2xl"></div>
+            {/* 상단 구분선 */}
+            <div className="h-px bg-[#E1E1E1]" />
+            {/* 오류 영역 */}
+            <div className="overflow-y-auto bg-[#F6F6EA] px-6 py-5 flex-1 flex flex-col items-center justify-center">
+              <p className="text-body-m text-grayscale-gray5">신청 정보를 찾을 수 없습니다.</p>
+              <Button onClick={() => onOpenChange(false)} className="mt-4">
+                닫기
+              </Button>
+            </div>
+            {/* 하단 구분선 */}
+            <div className="h-px bg-[#E1E1E1]" />
+            {/* 하단 버튼 영역 (빈 공간) */}
+            <div className="bg-white px-6 py-4 rounded-b-none md:rounded-b-2xl h-[57px]"></div>
+          </>
+        ) : (
+          <>
+            <VisuallyHidden>
+              <DialogTitle>입양 신청 상세</DialogTitle>
+            </VisuallyHidden>
+            {/* 헤더 - 닫기 버튼만 */}
+            <div className="flex gap-1 h-15 items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none md:rounded-t-2xl"></div>
 
-        {/* 상단 구분선 */}
-        <div className="h-px bg-[#E1E1E1]" />
+            {/* 상단 구분선 */}
+            <div className="h-px bg-[#E1E1E1]" />
 
-        {/* 스크롤 영역 */}
-        <div className="overflow-y-auto bg-[#F6F6EA] px-6 py-5 flex-1">
+            {/* 스크롤 영역 */}
+            <div className="overflow-y-auto bg-[#F6F6EA] px-6 py-5 flex-1">
           {/* 헤더: 입양자 닉네임 + 배지 */}
           <div className="flex flex-col gap-2 mb-8">
             <h2 className="text-xl font-semibold text-[#4F3B2E]">{application.adopterName}</h2>
@@ -418,6 +410,8 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
             </Button>
           )}
         </div>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

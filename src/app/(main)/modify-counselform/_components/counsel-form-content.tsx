@@ -8,6 +8,7 @@ import { FormLayout, SubmitButton, COUNSEL_FORM_SECTIONS } from '../sections';
 import ExitConfirmDialog from '@/components/exit-confirmation-dialog';
 import { Separator } from '@/components/ui/separator';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { LoadingState } from '@/components/loading-state';
 import { useCounselGuard } from '@/app/(main)/counselform/_hooks/use-counsel-guard';
 import { useCounselForm } from '@/app/(main)/counselform/_hooks/use-counsel-form';
 import { formatPhoneNumber } from '@/utils/phone';
@@ -106,7 +107,7 @@ function CounselFormContentInner() {
 
 export default function CounselFormContent() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">로딩 중...</div>}>
+    <Suspense fallback={<LoadingState fullScreen />}>
       <CounselFormContentInner />
     </Suspense>
   );

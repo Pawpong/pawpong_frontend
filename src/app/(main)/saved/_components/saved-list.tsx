@@ -19,6 +19,7 @@ import BreederList from '@/components/breeder-list/breeder-list';
 import Container from '@/components/ui/container';
 import EmptySavedList from './empty-saved-list';
 import { useFavorites } from '../_hooks/use-favorites';
+import { LoadingState } from '@/components/loading-state';
 
 export default function SavedList() {
   const { data, isLoading, error } = useFavorites(1, 20);
@@ -28,9 +29,7 @@ export default function SavedList() {
       <Container>
         <div className="flex-1 @container">
           <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">찜한 브리더</div>
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-grayscale-500">즐겨찾기 목록을 불러오는 중...</div>
-          </div>
+          <LoadingState />
         </div>
       </Container>
     );

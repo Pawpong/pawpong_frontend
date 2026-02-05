@@ -17,6 +17,7 @@ import Arrow from '@/assets/icons/arrow';
 import { cn } from '@/api/utils';
 import ReviewWriteDialog from './review-write-dialog';
 import { getApplicationDetail, type ApplicationDetailDto } from '@/api/application';
+import { LoadingText } from '@/components/loading-state';
 
 interface ReviewDialogProps {
   applicationId: string;
@@ -127,7 +128,7 @@ export default function ReviewDialog({
             {/* 로딩 상태 */}
             {isLoading && (
               <div className="flex justify-center py-10 flex-1">
-                <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
+                <LoadingText />
               </div>
             )}
 

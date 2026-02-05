@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { getBanners, type BannerDto } from '@/api/home';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
+import { LoadingText } from '@/components/loading-state';
 
 const HomeBanner = () => {
   const [banners, setBanners] = useState<BannerDto[]>([]);
@@ -35,36 +36,15 @@ const HomeBanner = () => {
         // 사용자 role 확인
         const userType = isAuthenticated ? user?.role : 'guest';
 
-        console.log('=== 배너 필터링 디버깅 ===');
-        console.log('로그인 여부:', isAuthenticated);
-        console.log('사용자 정보:', user);
-        console.log('사용자 타입:', userType);
-        console.log('전체 배너 수:', data.length);
-        console.log(
-          '배너 데이터:',
-          data.map((b) => ({
-            bannerId: b.bannerId,
-            targetAudience: b.targetAudience,
-          })),
-        );
-
         // 배너 필터링: targetAudience가 비어있거나, 현재 사용자 타입을 포함하는 배너만 표시
         const filteredBanners = data.filter((banner) => {
           // targetAudience가 없거나 비어있으면 전체에게 표시
           if (!banner.targetAudience || banner.targetAudience.length === 0) {
-            console.log(`배너 ${banner.bannerId}: targetAudience 없음 -> 전체 표시`);
             return true;
           }
           // 현재 사용자 타입이 targetAudience에 포함되어 있으면 표시
-          const shouldShow = banner.targetAudience.includes(userType as 'guest' | 'adopter' | 'breeder');
-          console.log(
-            `배너 ${banner.bannerId}: targetAudience=${banner.targetAudience}, userType=${userType}, 표시=${shouldShow}`,
-          );
-          return shouldShow;
+          return banner.targetAudience.includes(userType as 'guest' | 'adopter' | 'breeder');
         });
-
-        console.log('필터링된 배너 수:', filteredBanners.length);
-        console.log('=========================');
 
         setBanners(filteredBanners);
         setError(null);
@@ -107,7 +87,7 @@ const HomeBanner = () => {
   if (isLoading) {
     return (
       <div className="w-full aspect-square md:h-[380px] lg:aspect-[1919.21/380] flex items-center justify-center bg-gray-100 animate-pulse">
-        <p className="text-body-m text-gray-400">배너 로딩 중...</p>
+        <LoadingText className="text-body-m text-gray-400" />
       </div>
     );
   }
@@ -142,7 +122,7 @@ const HomeBanner = () => {
         fill
         className="object-cover"
         priority
-        unoptimized={currentImageUrl.startsWith('http')}
+        sizes="100vw"
       />
       {(currentBanner.title || currentBanner.description) && (
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">

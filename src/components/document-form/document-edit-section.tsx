@@ -18,6 +18,7 @@ import {
 } from '@/api/breeder-management';
 import type { Animal, Level } from '@/components/document-form/document-constants';
 import { useToast } from '@/hooks/use-toast';
+import { LoadingText } from '@/components/loading-state';
 
 /** 문서 상태 타입 */
 interface DocumentState {
@@ -317,7 +318,7 @@ export default function DocumentEditSection() {
     return (
       <SignupFormSection className="gap-15 mt-[3.5rem] md:gap-20 lg:gap-20">
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-grayscale-gray5">로딩 중...</div>
+          <LoadingText message="로딩 중..." />
         </div>
       </SignupFormSection>
     );

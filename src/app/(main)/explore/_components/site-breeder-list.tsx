@@ -28,6 +28,7 @@ import type { Breeder as BreederType, SearchBreederParams } from '@/api/breeder'
 import { useAuthStore } from '@/stores/auth-store';
 import { Lock } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { LoadingState } from '@/components/loading-state';
 
 export default function SiteBreederList() {
   const AD_INSERT_INDEX = 20;
@@ -57,11 +58,7 @@ export default function SiteBreederList() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-grayscale-500">브리더 목록을 불러오는 중...</div>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (error) {

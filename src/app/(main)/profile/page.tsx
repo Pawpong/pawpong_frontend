@@ -526,14 +526,6 @@ export default function ProfilePage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
-      </div>
-    );
-  }
-
   return (
     <FormProvider {...form}>
       <div className="min-h-screen flex w-full flex-col lg:flex-row">

@@ -5,6 +5,7 @@ import { getActiveProfileBanners, type ProfileBanner } from '@/api/profile-banne
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { LoadingText } from '@/components/loading-state';
 
 export default function ProfileBannerCarousel() {
   const [banners, setBanners] = useState<ProfileBanner[]>([]);
@@ -49,7 +50,7 @@ export default function ProfileBannerCarousel() {
   if (isLoading) {
     return (
       <div className="h-full w-full bg-primary-500 rounded-2xl animate-pulse flex items-center justify-center">
-        <p className="text-white text-sm">로딩 중...</p>
+        <LoadingText message="로딩 중..." className="text-white text-sm" />
       </div>
     );
   }

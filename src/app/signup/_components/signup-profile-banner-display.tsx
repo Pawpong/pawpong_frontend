@@ -6,6 +6,7 @@ import Image from 'next/image';
 import SignupProgressOverlay from './signup-progress-overlay';
 import signupBackground from '@/assets/images/signup-background.png';
 import useSignupFormStore from '@/stores/signup-form-store';
+import { LoadingText } from '@/components/loading-state';
 
 interface ProfileBanner {
   bannerId: string;
@@ -90,7 +91,9 @@ export default function SignupProfileBannerDisplay() {
     return (
       <div className="relative h-full flex items-center justify-center rounded-2xl overflow-hidden">
         <Image src={signupBackground} alt="Signup Background" fill className="object-cover" priority />
-        <div className="relative z-10 text-white">로딩 중...</div>
+        <div className="relative z-10">
+          <LoadingText className="text-white" />
+        </div>
       </div>
     );
   }

@@ -74,11 +74,6 @@ export default function WithdrawDialog({ open, onOpenChange, onConfirm, userType
 
   const handleAdoptionCompleteConfirm = (source: string, otherSource?: string) => {
     // 입양 완료 정보와 함께 탈퇴 처리
-    console.log('입양 경로:', source);
-    if (otherSource) {
-      console.log('기타 경로:', otherSource);
-    }
-    // 탈퇴 처리
     onConfirm('already_adopted', `입양경로: ${source}${otherSource ? ` - ${otherSource}` : ''}`);
     handleClose();
   };

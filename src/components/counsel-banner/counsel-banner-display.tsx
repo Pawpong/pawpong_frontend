@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import apiClient from '@/api/api';
+import { LoadingText } from '@/components/loading-state';
 
 interface CounselBanner {
   bannerId: string;
@@ -78,7 +79,7 @@ export default function CounselBannerDisplay() {
   if (isLoading) {
     return (
       <div className="relative bg-primary-600 h-full flex items-center justify-center">
-        <div className="text-white">로딩 중...</div>
+        <LoadingText message="로딩 중..." className="text-white" />
       </div>
     );
   }

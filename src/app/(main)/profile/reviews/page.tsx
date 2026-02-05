@@ -15,19 +15,15 @@ import { formatDateToDotNotation } from '@/utils/date-utils';
 const PAGE_SIZE = 10;
 
 export default function ReviewsPage() {
-  const { isLoading: isAuthLoading } = useAuthGuard();
+  useAuthGuard(); // 인증 체크만 수행
   const { user } = useAuthStore();
   const isMdUp = useBreakpoint('md');
   const breederId = user?.userId || '';
 
-  const {
-    data: reviewsData,
-    isLoading,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useBreederReviewsInfinite(breederId, PAGE_SIZE);
+  const { data: reviewsData, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useBreederReviewsInfinite(
+    breederId,
+    PAGE_SIZE,
+  );
 
   // 모든 페이지의 데이터를 합쳐서 매핑
   const allReviews =
@@ -85,19 +81,6 @@ export default function ReviewsPage() {
       fetchNextPage();
     }
   };
-
-  if (isAuthLoading || isLoading) {
-    return (
-      <Container>
-        <div className="flex-1 @container flex flex-col gap-6 lg:gap-10">
-          <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">후기 관리</div>
-          <div className="flex justify-center py-20">
-            <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
-          </div>
-        </div>
-      </Container>
-    );
-  }
 
   if (isError) {
     return (
