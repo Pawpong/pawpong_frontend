@@ -17,7 +17,7 @@ import BreederPrice from '@/components/breeder-list/breeder-price';
 import BreederProfile from '@/components/breeder-list/breeder-profile';
 import BreederTags from '@/components/breeder-list/breeder-tags';
 import { Button } from '@/components/ui/button';
-import GrayDot from '@/assets/icons/gray-dot.svg';
+
 import ExploreBreederAd from './explore-breeder-ad';
 import LoadMoreButton from '@/components/ui/load-more-button';
 import { useBreeders } from '../_hooks/use-breeders';
@@ -113,7 +113,7 @@ export default function SiteBreederList() {
                   <BreederContent>
                     <BreederDescription>
                       <BreederLocation>{breeder.location}</BreederLocation>
-                      <GrayDot className="block sm:hidden lg:block align-middle" />
+          
                       <BreederPrice>
                         {isLoggedIn ? (
                           !breeder.priceRange ? (
