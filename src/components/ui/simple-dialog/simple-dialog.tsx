@@ -11,10 +11,11 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogOverlay,
   DialogPortal,
   DialogTitle,
   DialogTrigger,
-} from './dialog';
+} from '../dialog/dialog';
 
 function SimpleDialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <Dialog {...props} />;
@@ -33,7 +34,7 @@ function SimpleDialogClose({ ...props }: React.ComponentProps<typeof DialogPrimi
 }
 
 function SimpleDialogOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
-  return <SimpleDialogOverlay className={cn(className)} {...props} />;
+  return <DialogOverlay className={cn(className)} {...props} />;
 }
 
 function SimpleDialogContent({

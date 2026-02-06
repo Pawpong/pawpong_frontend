@@ -5,8 +5,8 @@ import * as React from 'react';
 
 import Close from '@/assets/icons/close';
 import { cn } from '@/api/utils';
-import CircleBadge from '../circle-badge';
-import { buttonVariants } from './button';
+import CircleBadge from '@/components/circle-badge';
+import { buttonVariants } from '@/components/ui/button/button';
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;

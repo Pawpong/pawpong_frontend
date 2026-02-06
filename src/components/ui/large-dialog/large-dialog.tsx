@@ -11,10 +11,11 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogOverlay,
   DialogPortal,
   DialogTitle,
   DialogTrigger,
-} from './dialog';
+} from '../dialog/dialog';
 
 function LargeDialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <Dialog {...props} />;
@@ -33,7 +34,7 @@ function LargeDialogClose({ ...props }: React.ComponentProps<typeof DialogPrimit
 }
 
 function LargeDialogOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
-  return <LargeDialogOverlay className={cn(className)} {...props} />;
+  return <DialogOverlay className={cn(className)} {...props} />;
 }
 
 function LargeDialogContent({
