@@ -2,9 +2,14 @@ import FooterLinks from './footer-links';
 import FooterSNS from './footer-SNS';
 import FooterCompanyInfo from './footer-company-info';
 
-export default function Footer() {
+interface FooterProps {
+  variant?: 'default' | 'tertiary';
+}
+
+export default function Footer({ variant = 'default' }: FooterProps) {
+  const bgClass = variant === 'tertiary' ? 'bg-tertiary-500' : 'bg-white';
   return (
-    <footer className="bg-white">
+    <footer className={bgClass}>
       <div className="px-5 md:px-10 lg:px-12 py-7 lg:py-[28px] pb-9 lg:pb-9">
         {/* 상단 */}
         <div className="flex flex-row justify-between gap-10 md:gap-0 mb-10 lg:mb-10">
