@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 import { useAnalytics } from '@/hooks/use-analytics';
+import { LoadingState } from '@/components/loading-state';
 
 /**
  * 소셜 로그인 성공 후 토큰을 쿠키에 저장하는 페이지
@@ -98,28 +99,12 @@ function LoginSuccessContent() {
     );
   }
 
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="text-center">
-        <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
-        <p className="text-gray-600">로그인 처리 중...</p>
-      </div>
-    </div>
-  );
+  return <LoadingState fullScreen />;
 }
 
 export default function LoginSuccessPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-center">
-            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
-            <p className="text-gray-600">로딩 중...</p>
-          </div>
-        </div>
-      }
-    >
+    <Suspense fallback={<LoadingState fullScreen />}>
       <LoginSuccessContent />
     </Suspense>
   );

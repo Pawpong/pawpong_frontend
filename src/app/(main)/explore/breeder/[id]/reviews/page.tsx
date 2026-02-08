@@ -6,6 +6,7 @@ import Review from '../_components/review';
 import { useBreederProfile, useBreederReviewsInfinite } from '../_hooks/use-breeder-detail';
 import LoadMoreButton from '@/components/ui/load-more-button';
 import { formatDateToDotNotation } from '@/utils/date-utils';
+import { LoadingText } from '@/components/loading-state';
 
 interface PageProps {
   params: Promise<{
@@ -83,7 +84,7 @@ export default function ReviewsPage({ params }: PageProps) {
           {/* 콘텐츠 */}
           {isReviewsLoading ? (
             <div className="flex items-center justify-center py-20">
-              <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
+              <LoadingText />
             </div>
           ) : allReviews.length === 0 ? (
             <div className="flex items-center justify-center py-20">

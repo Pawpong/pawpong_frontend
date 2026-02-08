@@ -15,6 +15,7 @@ import {
   SimpleDialogFooter,
 } from '@/components/ui/simple-dialog';
 import { Button } from '@/components/ui/button';
+import { LoadingState } from '@/components/loading-state';
 
 /**
  * 로그인 페이지 내부 컴포넌트
@@ -101,7 +102,7 @@ function LoginContent() {
  */
 export default function Login() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">로딩 중...</div>}>
+    <Suspense fallback={<LoadingState fullScreen />}>
       <LoginContent />
     </Suspense>
   );

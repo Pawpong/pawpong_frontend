@@ -7,10 +7,11 @@ import LoadMoreButton from '@/components/ui/load-more-button';
 import { useMyReviews } from './_hooks/use-my-reviews';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useAuthGuard } from '@/hooks/use-auth-guard';
+import { LoadingState } from '@/components/loading-state';
 
 const MyApplicationPage = () => {
-  const { isLoading: isAuthLoading } = useAuthGuard();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useMyReviews();
+  useAuthGuard(); // 인증 체크만 수행
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useMyReviews();
   const allReviews = data?.pages.flatMap((page) => page.data) ?? [];
   const isMdUp = useBreakpoint('md');
 
@@ -20,25 +21,14 @@ const MyApplicationPage = () => {
     }
   };
 
-  if (isAuthLoading || isLoading) {
-    return (
-      <Container>
-        <div className="flex-1 @container flex flex-col gap-6 lg:gap-10">
-          <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">내 후기</div>
-          <div className="flex justify-center py-20">
-            <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
-          </div>
-        </div>
-      </Container>
-    );
-  }
-
   return (
     <Container>
       <div className="flex-1 @container flex flex-col gap-6 lg:gap-10">
         <div className="text-[#4F3B2E] text-heading-3 font-semibold mt-6 lg:mt-10">내 후기</div>
 
-        {allReviews.length === 0 ? (
+        {!data ? (
+          <LoadingState />
+        ) : allReviews.length === 0 ? (
           <div className="flex justify-center py-20">
             <p className="text-body-s text-grayscale-gray5">작성한 후기가 없습니다.</p>
           </div>

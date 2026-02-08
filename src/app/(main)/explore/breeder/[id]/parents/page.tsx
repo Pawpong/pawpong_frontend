@@ -8,6 +8,7 @@ import { useBreederProfile, useParentPetsInfinite } from '../_hooks/use-breeder-
 import LoadMoreButton from '@/components/ui/load-more-button';
 import type { PetDetailData } from '../_components/pet-detail-dialog';
 import { formatBirthDateToKorean } from '@/utils/date-utils';
+import { LoadingText } from '@/components/loading-state';
 
 const PetDetailDialog = dynamicClient(() => import('../_components/pet-detail-dialog'));
 
@@ -113,7 +114,7 @@ export default function ParentsPage({ params }: PageProps) {
           {/* 콘텐츠 */}
           {isParentPetsLoading ? (
             <div className="flex items-center justify-center py-20">
-              <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
+              <LoadingText />
             </div>
           ) : allParentPets.length === 0 ? (
             <div className="flex items-center justify-center py-20">

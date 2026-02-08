@@ -4,6 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import Arrow from '@/assets/icons/arrow';
 import { CheckIcon } from 'lucide-react';
+import DownArrow from '@/assets/icons/down-arrow.svg';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -25,6 +26,7 @@ export default function PetDropdownField({ availablePets }: { availablePets: Pet
   const { control } = useFormContext<CounselFormData>();
 
   return (
+    <div className="w-full">
     <Controller
       name="interestedAnimal"
       control={control}
@@ -50,7 +52,10 @@ export default function PetDropdownField({ availablePets }: { availablePets: Pet
                 <Arrow className="size-5 group-hover:[&_path]:fill-[#4F3B2E]" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] max-h-[300px] overflow-y-auto p-1 rounded-lg">
+            <DropdownMenuContent 
+              align="start"
+              className="w-[var(--radix-dropdown-menu-trigger-width)] max-h-[300px] overflow-y-auto p-1 rounded-lg"
+            >
               {availablePets.map((pet) => {
                 const petName = `${pet.name} (${pet.breed}, ${pet.gender === 'male' ? '수컷' : '암컷'})`;
                 const isSelected = selectedPets.includes(petName);
@@ -84,12 +89,13 @@ export default function PetDropdownField({ availablePets }: { availablePets: Pet
                 onSelect={() => field.onChange(selectedPets.includes('특징 직접 입력') ? [] : ['특징 직접 입력'])}
               >
                 <span className="flex-1">특징 직접 입력</span>
-                {selectedPets.includes('특징 직접 입력') && <CheckIcon className="size-4 shrink-0 text-primary-500" />}
+                {selectedPets.includes('특징 직접 입력') && <DownArrow className="size-4 shrink-0" />}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
       }}
     />
+    </div>
   );
 }

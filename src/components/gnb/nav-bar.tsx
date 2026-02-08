@@ -208,7 +208,7 @@ export default function NavBar({ navVariant = 'default' }: NavBarProps) {
         const active = isHomePage
           ? false
           : isApplicationMenu
-            ? currNav === 'application' || currNav === 'receivedApplications'
+            ? currNav === 'application'
             : isExploreMenu
               ? currNav === item.href.slice(1) || isChildActive || isCounselFormPage
               : hasChildren

@@ -208,12 +208,9 @@ export default function SettingsPage() {
     }
   };
 
-  if (isAuthLoading || isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
-      </div>
-    );
+  // 초기 마운트 대기
+  if (!user || isLoading) {
+    return null;
   }
 
   return (

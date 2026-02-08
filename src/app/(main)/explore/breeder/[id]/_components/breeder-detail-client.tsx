@@ -25,6 +25,7 @@ import { useBreederProfile, useBreederPets, useParentPets, useBreederReviews } f
 import { useAuthStore } from '@/stores/auth-store';
 import { useAnalytics } from '@/hooks/use-analytics';
 import { formatBirthDateToKorean, formatDateToISO } from '@/utils/date-utils';
+import { LoadingText } from '@/components/loading-state';
 
 interface BreederDetailClientProps {
   breederId: string;
@@ -150,7 +151,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
   if (isProfileLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
+        <LoadingText />
       </div>
     );
   }
@@ -160,7 +161,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     return (
       <>
         <div className="flex justify-center items-center min-h-[400px]">
-          <p className="text-body-s text-grayscale-gray5">브리더 정보를 불러오는 중...</p>
+          <LoadingText />
         </div>
         <SimpleDialog open={showDeletedAlert} onOpenChange={handleAlertClose}>
           <SimpleDialogContent>

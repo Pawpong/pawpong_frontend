@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getActiveCounselBanners, type CounselBanner } from '@/api/counsel-banner';
 import { useRouter } from 'next/navigation';
+import { LoadingState } from '@/components/loading-state';
 
 export default function CounselBannerCarousel() {
   const [banners, setBanners] = useState<CounselBanner[]>([]);
@@ -60,8 +61,8 @@ export default function CounselBannerCarousel() {
 
   if (isLoading) {
     return (
-      <div className="w-full h-full flex items-center justify-center bg-tertiary-500">
-        <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
+      <div className="w-full h-full bg-tertiary-500">
+        <LoadingState message="로딩 중..." />
       </div>
     );
   }

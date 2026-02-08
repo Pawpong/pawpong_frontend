@@ -58,11 +58,7 @@ export default function FaqPage() {
 
         {/* FAQ 리스트 */}
         <div className="flex flex-col items-center gap-20">
-          {isLoading ? (
-            <div className="w-full flex items-center justify-center py-20">
-              <p className="text-body-m text-grayscale-gray5">로딩 중...</p>
-            </div>
-          ) : error ? (
+          {error ? (
             <div className="w-full flex items-center justify-center py-20">
               <p className="text-body-m text-grayscale-gray5">FAQ를 불러오는데 실패했습니다.</p>
             </div>

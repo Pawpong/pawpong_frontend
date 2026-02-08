@@ -16,6 +16,7 @@ import {
   transformNotificationForUI,
 } from '@/hooks/use-notifications';
 import ReviewWriteDialog from '@/app/(main)/application/_components/review-write-dialog';
+import { LoadingText } from '@/components/loading-state';
 
 // UI에서 사용할 알림 데이터 인터페이스
 interface NotificationData {
@@ -197,7 +198,7 @@ export default function NotificationDialog({ children }: NotificationDialogProps
         >
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <p className="text-body-s text-grayscale-gray5">로딩 중...</p>
+              <LoadingText message="로딩 중..." />
             </div>
           ) : notifications.length === 0 ? (
             <NotificationEmptyState />
