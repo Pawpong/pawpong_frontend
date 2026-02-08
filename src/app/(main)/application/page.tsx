@@ -45,7 +45,7 @@ const ApplicationPage = () => {
 
   return (
     <Container>
-      <div className="flex-1 @container flex flex-col gap-3 pt-10 pb-20">
+      <div className="flex-1 @container flex flex-col gap-6 md:gap-7 lg:gap-10 pt-10 pb-20">
         <div className="text-[#4F3B2E] text-heading-3 font-semibold">{pageTitle}</div>
 
         {!data ? (
@@ -56,13 +56,23 @@ const ApplicationPage = () => {
           </div>
         ) : (
           <>
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-3">
               {allApplications.map((item, index) => (
                 <div key={item.applicationId || `application-${index}`}>
-                  <div className="py-[28px]">
+                  {isBreeder ? (
+                    // 브리더 모드(받은 신청): py 없음, separator 없음
                     <ApplicationListItem {...item} isBreeder={isBreeder} />
-                  </div>
-                  {index < allApplications.length - 1 && <Separator className="bg-grayscale-gray2" />}
+                  ) : (
+                    // 입양자 모드(신청 내역): separator에만 py-[28px]
+                    <>
+                      <ApplicationListItem {...item} isBreeder={isBreeder} />
+                      {index < allApplications.length - 1 && (
+                        <div className="py-[28px]">
+                          <Separator className="bg-grayscale-gray2" />
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
               ))}
             </div>

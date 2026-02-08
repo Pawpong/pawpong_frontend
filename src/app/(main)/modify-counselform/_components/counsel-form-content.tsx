@@ -1,10 +1,13 @@
 'use client';
 
-import React, { Suspense, type ComponentType } from 'react';
+import React, { Suspense } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { useSearchParams } from 'next/navigation';
 
-import { FormLayout, SubmitButton, COUNSEL_FORM_SECTIONS } from '../sections';
+import { FormLayout, SubmitButton } from '../sections';
+import { COUNSEL_SECTIONS } from '@/app/(main)/counselform/_constants/counsel-questions.constants';
+import { CounselSection } from '@/app/(main)/counselform/_components/shared/counsel-section';
+import BreederAdditionalQuestionSection from './sections/breeder-additional-question-section';
 import ExitConfirmDialog from '@/components/exit-confirmation-dialog';
 import { Separator } from '@/components/ui/separator';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
@@ -32,43 +35,35 @@ function CounselFormContentInner() {
     handleBrowserCancel,
   } = useCounselGuard(hasFormData);
 
+  // readonly 모드에서 사용할 formData
+  const formData = form.watch();
+
   return (
     <FormProvider {...form}>
       <FormLayout hasFormData={hasFormData} isLgUp={isLgUp}>
         <div className="w-full lg:w-1/2 flex flex-col">
           <div className="flex w-full flex-col items-center pb-20 md:pb-24  md:px-4 lg:px-0.5">
-            {COUNSEL_FORM_SECTIONS.map((section, index: number) => {
-              const isLast = index === COUNSEL_FORM_SECTIONS.length - 1;
-              const isBreederQuestion = section.id === 'breeder-additional-question';
-              const prevSection = index > 0 ? COUNSEL_FORM_SECTIONS[index - 1] : null;
-              const shouldAddGap = isBreederQuestion && prevSection?.id === 'pet-selection';
+            {COUNSEL_SECTIONS.filter((section) => section.sectionId !== 'additional-message').map((section, index, filteredSections) => {
+              const isLast = index === filteredSections.length - 1;
 
               return (
-                <div key={section.id} className="w-full">
-                  {(() => {
-                    switch (section.id) {
-                      case 'privacy-and-basic-info': {
-                        const SectionComponent = section.Component as ComponentType<{
-                          onFormatPhone: (v: string) => string;
-                        }>;
-                        return <SectionComponent onFormatPhone={(v: string) => formatPhoneNumber(v)} />;
-                      }
-                      case 'pet-selection': {
-                        const SectionComponent = section.Component as ComponentType<{
-                          availablePets: typeof availablePets;
-                        }>;
-                        return <SectionComponent availablePets={availablePets} />;
-                      }
-                      default: {
-                        const SectionComponent = section.Component as ComponentType;
-                        return <SectionComponent />;
-                      }
-                    }
-                  })()}
-                  {!isLast && !shouldAddGap && <Separator className="bg-grayscale-gray2 my-15" />}
+                <div key={section.sectionId} className="w-full">
+                  <CounselSection
+                    section={section}
+                    mode="readonly"
+                    formData={formData}
+                    availablePets={availablePets}
+                    onFormatPhone={formatPhoneNumber}
+                  />
+                  {!isLast && <Separator className="bg-grayscale-gray2 my-15" />}
                 </div>
               );
             })}
+            {/* 브리더 추가 질문 섹션 */}
+            <Separator className="bg-grayscale-gray2 my-15" />
+            <div className="w-full">
+              <BreederAdditionalQuestionSection />
+            </div>
           </div>
           <SubmitButton isDisabled={isDisabled} isSubmitting={isSubmitting} onSubmit={handleSubmit} />
         </div>

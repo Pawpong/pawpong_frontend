@@ -1,10 +1,12 @@
 'use client';
 
-import React, { Suspense, type ComponentType } from 'react';
+import React, { Suspense } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { useSearchParams } from 'next/navigation';
 
-import { FormLayout, SubmitButton, COUNSEL_FORM_SECTIONS } from '../sections';
+import { FormLayout, SubmitButton } from '../sections';
+import { COUNSEL_SECTIONS } from '../_constants/counsel-questions.constants';
+import { CounselSection } from './shared/counsel-section';
 import ExitConfirmDialog from '@/components/exit-confirmation-dialog';
 import { Separator } from '@/components/ui/separator';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
@@ -37,31 +39,17 @@ function CounselFormContentInner() {
       <FormLayout hasFormData={hasFormData} isLgUp={isLgUp}>
         <div className="w-full lg:w-1/2 flex flex-col">
           <div className="flex w-full flex-col items-center pb-20 md:pb-24  md:px-4 lg:px-0.5">
-            {COUNSEL_FORM_SECTIONS.map((section, index: number) => {
-              const isLast = index === COUNSEL_FORM_SECTIONS.length - 1;
+            {COUNSEL_SECTIONS.map((section, index: number) => {
+              const isLast = index === COUNSEL_SECTIONS.length - 1;
 
               return (
-                <div key={section.id} className="w-full">
-                  {(() => {
-                    switch (section.id) {
-                      case 'privacy-and-basic-info': {
-                        const SectionComponent = section.Component as ComponentType<{
-                          onFormatPhone: (v: string) => string;
-                        }>;
-                        return <SectionComponent onFormatPhone={(v: string) => formatPhoneNumber(v)} />;
-                      }
-                      case 'pet-selection': {
-                        const SectionComponent = section.Component as ComponentType<{
-                          availablePets: typeof availablePets;
-                        }>;
-                        return <SectionComponent availablePets={availablePets} />;
-                      }
-                      default: {
-                        const SectionComponent = section.Component as ComponentType;
-                        return <SectionComponent />;
-                      }
-                    }
-                  })()}
+                <div key={section.sectionId} className="w-full">
+                  <CounselSection
+                    section={section}
+                    mode="editable"
+                    availablePets={availablePets}
+                    onFormatPhone={formatPhoneNumber}
+                  />
                   {!isLast && <Separator className="bg-grayscale-gray2 my-15" />}
                 </div>
               );
