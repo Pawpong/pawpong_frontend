@@ -38,11 +38,11 @@ export function isFormEmpty(data: CounselFormData): boolean {
   return !fields.some(hasValue);
 }
 
+import { isCompletePhoneNumber } from '@/utils/phone';
+
 /**
  * 모든 필수 항목이 입력되었는지 확인
  */
-const PHONE_NUMBER_REGEX = /^\d{3}-\d{4}-\d{4}$/;
-
 export function isFormComplete(data: CounselFormData): boolean {
   const requiredFields: (keyof CounselFormData)[] = [
     'privacyAgreement',
@@ -64,7 +64,7 @@ export function isFormComplete(data: CounselFormData): boolean {
   ];
 
   const hasRequiredValues = requiredFields.every((key) => hasValue(data[key]));
-  const phoneValid = PHONE_NUMBER_REGEX.test(data.phone || '');
+  const phoneValid = isCompletePhoneNumber(data.phone || '');
   const emailValid = typeof data.email === 'string' && data.email.includes('@');
   // interestedAnimal이 배열이므로 '특징 직접 입력'이 포함되어 있는지 확인
   const detailsValid =

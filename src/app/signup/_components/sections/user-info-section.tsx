@@ -27,6 +27,7 @@ import PrivacyDialogTrigger from '../privacy-dialog-trigger';
 import TermDialogTrigger from '../term-dialog-trigger';
 import { useToast } from '@/hooks/use-toast';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { isCompletePhoneNumber } from '@/utils/phone';
 
 const messages: Array<{ type: 'success' | 'error'; text: string }> = [
   { type: 'success', text: '휴대폰 번호 인증을 성공했어요' },
@@ -103,10 +104,10 @@ export default function UserInfoSection() {
 
   // 인증번호 전송 시 타이머 시작
   const handleSendCode = async () => {
-    if (phoneNumber.length !== 13) {
+    if (!isCompletePhoneNumber(phoneNumber)) {
       toast({
         title: '올바른 휴대폰 번호를 입력해주세요',
-        description: '휴대폰 번호 형식을 확인해주세요.',
+        description: '010-1234-5678 형식으로 입력해주세요.',
         position: 'split',
       });
       return;
@@ -305,7 +306,7 @@ export default function UserInfoSection() {
               <Button
                 variant="tertiary"
                 className="px-4 py-3 whitespace-nowrap w-30 text-body-s"
-                disabled={phoneNumber.length !== 13 || isSending || isVerified}
+                disabled={!isCompletePhoneNumber(phoneNumber) || isSending || isVerified}
                 onClick={handleSendCode}
               >
                 {isSending ? '발송 중...' : isCodeSent ? '인증번호 재전송' : '인증번호 받기'}
@@ -430,8 +431,9 @@ export default function UserInfoSection() {
               }
 
               // 전화번호 검증
-              if (!phoneNumber) {
+              if (!phoneNumber || !isCompletePhoneNumber(phoneNumber)) {
                 setShowPhoneError(true);
+                setPhoneErrorMessage('올바른 휴대폰 번호 형식을 입력해주세요.');
                 hasError = true;
               } else {
                 setShowPhoneError(false);
