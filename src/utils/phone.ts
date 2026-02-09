@@ -13,5 +13,6 @@ export const formatPhoneNumber = (input: string): string => {
 };
 
 export const isCompletePhoneNumber = (value: string): boolean => {
-  return /^\d{3}-\d{4}-\d{4}$/.test(value);
+  // 유연한 전화번호 형식 허용: 02-123-4567, 010-1234-5678, 031-123-4567 등
+  return /^\d{2,3}-\d{3,4}-\d{4}$/.test(value);
 };

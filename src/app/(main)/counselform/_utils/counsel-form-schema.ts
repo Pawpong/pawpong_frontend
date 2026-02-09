@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isCompletePhoneNumber } from '@/utils/phone';
 
 export const counselFormSchema = z
   .object({
@@ -12,7 +13,7 @@ export const counselFormSchema = z
     phone: z
       .string()
       .min(1, '전화번호를 입력해 주세요.')
-      .regex(/^\d{3}-\d{4}-\d{4}$/, '010-1234-5678 형식으로 입력해 주세요.'),
+      .refine(isCompletePhoneNumber, '010-1234-5678 형식으로 입력해 주세요.'),
     email: z.string().email('올바른 이메일 형식을 입력해 주세요.').min(1, '이메일을 입력해 주세요.'),
 
     // 자기소개
