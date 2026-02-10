@@ -21,6 +21,7 @@ export interface SNSLink {
 export const FOOTER_LINKS: FooterLink[] = [
   { href: '/introduction', label: '서비스 소개' },
   { href: '/faq', label: '자주 묻는 질문' },
+  { href: '/announcements', label: '공지사항' },
   { href: '/terms-of-service', label: '이용 약관' },
   { href: '/terms-of-privacy', label: '개인정보처리방침' },
   {
