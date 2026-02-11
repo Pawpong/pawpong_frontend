@@ -16,10 +16,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: React.createElement(React.Fragment, null,
+    children: React.createElement(
+      React.Fragment,
+      null,
       React.createElement('div', null, '☑ 랙돌'),
       React.createElement('div', null, '☐ 브리티쉬 숏헤어'),
-      React.createElement('div', null, '☐ 러시안 블루')
+      React.createElement('div', null, '☐ 러시안 블루'),
     ),
   },
 };

@@ -16,6 +16,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: React.createElement('div', { style: { width: 16, height: 16, background: '#FEE500', borderRadius: '50%' } }),
+    children: React.createElement('div', {
+      style: { width: 16, height: 16, background: '#FEE500', borderRadius: '50%' },
+    }),
   },
 };

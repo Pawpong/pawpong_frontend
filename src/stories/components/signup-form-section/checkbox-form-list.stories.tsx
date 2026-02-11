@@ -16,9 +16,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: React.createElement(React.Fragment, null,
+    children: React.createElement(
+      React.Fragment,
+      null,
       React.createElement('div', { style: { padding: '8px 0' } }, '☑ 이용약관 동의'),
-      React.createElement('div', { style: { padding: '8px 0' } }, '☑ 개인정보처리방침 동의')
+      React.createElement('div', { style: { padding: '8px 0' } }, '☑ 개인정보처리방침 동의'),
     ),
   },
 };

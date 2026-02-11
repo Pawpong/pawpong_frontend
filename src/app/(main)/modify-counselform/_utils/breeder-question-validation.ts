@@ -70,10 +70,7 @@ export function getValidQuestions(questions: Question[]): Question[] {
 /**
  * 질문 변경사항 확인
  */
-export function hasQuestionChanges(
-  questions: Question[],
-  initialQuestions: Question[],
-): boolean {
+export function hasQuestionChanges(questions: Question[], initialQuestions: Question[]): boolean {
   if (questions.length !== initialQuestions.length) {
     return true;
   }

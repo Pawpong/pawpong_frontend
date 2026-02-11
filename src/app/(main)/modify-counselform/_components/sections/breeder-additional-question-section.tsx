@@ -6,11 +6,23 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Plus from '@/assets/icons/plus';
 import Trash from '@/assets/icons/trash.svg';
-import { useUpdateApplicationFormSimple, useApplicationForm } from '@/app/(main)/profile/application-form/_hooks/use-application-form-simple';
+import {
+  useUpdateApplicationFormSimple,
+  useApplicationForm,
+} from '@/app/(main)/profile/application-form/_hooks/use-application-form-simple';
 import { toast } from '@/hooks/use-toast';
 import { BREEDER_QUESTION_CONSTANTS, BREEDER_QUESTION_MESSAGES } from '../../_constants/breeder-question.constants';
-import { validateQuestions, getValidQuestions, hasQuestionChanges, hasValidInput } from '../../_utils/breeder-question-validation';
-import type { Question, BreederAdditionalQuestionSectionRef, BreederAdditionalQuestionSectionProps } from '../../_types/breeder-question.types';
+import {
+  validateQuestions,
+  getValidQuestions,
+  hasQuestionChanges,
+  hasValidInput,
+} from '../../_utils/breeder-question-validation';
+import type {
+  Question,
+  BreederAdditionalQuestionSectionRef,
+  BreederAdditionalQuestionSectionProps,
+} from '../../_types/breeder-question.types';
 
 const BreederAdditionalQuestionSection = forwardRef<
   BreederAdditionalQuestionSectionRef,
@@ -79,8 +91,15 @@ const BreederAdditionalQuestionSection = forwardRef<
           onError: (error: unknown) => {
             let errorMessage: string = BREEDER_QUESTION_MESSAGES.SAVE_ERROR_DEFAULT.description;
             if (error && typeof error === 'object' && 'response' in error) {
-              const axiosError = error as { response?: { data?: { message?: string; error?: string } }; message?: string };
-              errorMessage = axiosError.response?.data?.message || axiosError.response?.data?.error || axiosError.message || errorMessage;
+              const axiosError = error as {
+                response?: { data?: { message?: string; error?: string } };
+                message?: string;
+              };
+              errorMessage =
+                axiosError.response?.data?.message ||
+                axiosError.response?.data?.error ||
+                axiosError.message ||
+                errorMessage;
             } else if (error instanceof Error) {
               errorMessage = error.message;
             }
@@ -148,7 +167,7 @@ const BreederAdditionalQuestionSection = forwardRef<
         </p>
       </div>
 
-        <div className="flex flex-col w-full gap-8">
+      <div className="flex flex-col w-full gap-8">
         {/* 질문 입력 필드들 */}
         {questions.map((q, index) => (
           <div key={q.id} className="flex flex-col gap-2">
@@ -188,16 +207,16 @@ const BreederAdditionalQuestionSection = forwardRef<
         ))}
 
         {/* 추가하기 버튼 */}
-          <div className="flex justify-center">
-            <Button
-              variant="ghost"
+        <div className="flex justify-center">
+          <Button
+            variant="ghost"
             className="bg-tertiary-700 hover:bg-tertiary-800 h-12 gap-1 rounded-full py-2.5 pr-5 pl-3 disabled:opacity-50"
             onClick={handleAddQuestion}
             disabled={isMaxReached}
-            >
-              <Plus className="size-5" />
-              <span className="text-body-s font-medium text-grayscale-gray6">추가하기</span>
-            </Button>
+          >
+            <Plus className="size-5" />
+            <span className="text-body-s font-medium text-grayscale-gray6">추가하기</span>
+          </Button>
         </div>
 
         {isMaxReached && (

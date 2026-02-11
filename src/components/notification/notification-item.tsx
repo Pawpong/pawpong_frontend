@@ -13,7 +13,7 @@ interface NotificationItemProps {
 
 export default function NotificationItem({ icon, content, date, onClick, className }: NotificationItemProps) {
   const Component = onClick ? 'button' : 'div';
-  
+
   return (
     <Component
       className={cn(
@@ -25,7 +25,10 @@ export default function NotificationItem({ icon, content, date, onClick, classNa
       {...(onClick && { type: 'button' as const })}
     >
       {/* 아이콘 */}
-      <div className="w-[3rem] h-[3rem] bg-primary-500-basic flex items-center justify-center rounded-[0.5rem]" aria-hidden="true">
+      <div
+        className="w-[3rem] h-[3rem] bg-primary-500-basic flex items-center justify-center rounded-[0.5rem]"
+        aria-hidden="true"
+      >
         {icon}
       </div>
       {/* 텍스트 영역 */}

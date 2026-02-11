@@ -169,7 +169,7 @@ export default function ReviewDialog({
             {!isLoading && isApplicationError && (
               <div className="flex justify-center py-10 flex-1">
                 <p className="text-body-s text-grayscale-gray5">신청 내역을 불러올 수 없습니다.</p>
-                      </div>
+              </div>
             )}
 
             {/* 폼 내용 - 신청 데이터가 있고 에러가 없을 때만 표시 */}

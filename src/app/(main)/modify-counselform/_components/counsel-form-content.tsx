@@ -31,7 +31,14 @@ function CounselFormContentInner() {
     hasValidInput: boolean;
   }>({ hasChanges: false, hasValidInput: false });
 
-  const { form, availablePets, hasFormData, isDisabled, isSubmitting, handleSubmit: originalHandleSubmit } = useCounselForm({
+  const {
+    form,
+    availablePets,
+    hasFormData,
+    isDisabled,
+    isSubmitting,
+    handleSubmit: originalHandleSubmit,
+  } = useCounselForm({
     breederId,
     petId,
   });
@@ -86,29 +93,28 @@ function CounselFormContentInner() {
       <FormLayout hasFormData={hasFormData} isLgUp={isLgUp}>
         <div className="w-full lg:w-1/2 flex flex-col">
           <div className="flex w-full flex-col items-center pb-20 md:pb-24  md:px-4 lg:px-0.5">
-            {COUNSEL_SECTIONS.filter((section) => section.sectionId !== 'additional-message').map((section, index, filteredSections) => {
-              const isLast = index === filteredSections.length - 1;
+            {COUNSEL_SECTIONS.filter((section) => section.sectionId !== 'additional-message').map(
+              (section, index, filteredSections) => {
+                const isLast = index === filteredSections.length - 1;
 
-              return (
-                <div key={section.sectionId} className="w-full">
-                  <CounselSection
-                    section={section}
-                    mode="readonly"
-                    formData={formData}
-                    availablePets={availablePets}
-                    onFormatPhone={formatPhoneNumber}
-                  />
-                  {!isLast && <Separator className="bg-grayscale-gray2 my-15" />}
-                </div>
-              );
-            })}
+                return (
+                  <div key={section.sectionId} className="w-full">
+                    <CounselSection
+                      section={section}
+                      mode="readonly"
+                      formData={formData}
+                      availablePets={availablePets}
+                      onFormatPhone={formatPhoneNumber}
+                    />
+                    {!isLast && <Separator className="bg-grayscale-gray2 my-15" />}
+                  </div>
+                );
+              },
+            )}
             {/* 브리더 추가 질문 섹션 */}
             <Separator className="bg-grayscale-gray2 my-15" />
             <div className="w-full">
-              <BreederAdditionalQuestionSection
-                ref={breederQuestionRef}
-                onStateChange={handleStateChange}
-              />
+              <BreederAdditionalQuestionSection ref={breederQuestionRef} onStateChange={handleStateChange} />
             </div>
           </div>
           <SubmitButton isDisabled={isSubmitDisabled} isSubmitting={isSubmitting} onSubmit={handleSubmit} />

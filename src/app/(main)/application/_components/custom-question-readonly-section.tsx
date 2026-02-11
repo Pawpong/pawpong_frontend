@@ -45,11 +45,7 @@ export function CustomQuestionReadonlySection({ customResponses }: CustomQuestio
                   wrapperClassName="bg-white rounded-lg"
                 />
               ) : (
-                <Input
-                  value={response.answer || ''}
-                  readOnly
-                  className="h-12 bg-white rounded-lg"
-                />
+                <Input value={response.answer || ''} readOnly className="h-12 bg-white rounded-lg" />
               )}
             </div>
           ))}

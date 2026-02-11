@@ -94,9 +94,7 @@ export default function Review({ data }: { data: ReviewData }) {
               {/* 답글 내용 */}
               <div className="flex-1 bg-grayscale-gray1 rounded-lg p-5 flex flex-col gap-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-body-m font-semibold text-primary-500">
-                    {data.breederNickname}
-                  </span>
+                  <span className="text-body-m font-semibold text-primary-500">{data.breederNickname}</span>
                   <span className="text-body-s text-grayscale-gray5">{formatDate(replyDate)}</span>
                 </div>
                 <div className="text-body-m font-medium text-primary-500 break-all">{data.replyContent}</div>

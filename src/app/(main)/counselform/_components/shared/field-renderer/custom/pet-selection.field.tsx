@@ -41,7 +41,11 @@ export function PetSelectionReadonly({
       <Button
         variant="input"
         disabled
-        className={cn('w-full py-3 rounded-lg flex items-center justify-between', bgClass, animalValue ? 'text-primary-500' : 'text-grayscale-gray5')}
+        className={cn(
+          'w-full py-3 rounded-lg flex items-center justify-between',
+          bgClass,
+          animalValue ? 'text-primary-500' : 'text-grayscale-gray5',
+        )}
       >
         <span className="text-body-s font-medium">{animalValue || '분양 중인 아이'}</span>
         {isCustomInput ? <DownArrow className="size-4 shrink-0" /> : <Arrow className="size-5 opacity-50" />}

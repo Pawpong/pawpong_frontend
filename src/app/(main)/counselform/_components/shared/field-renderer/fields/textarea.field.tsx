@@ -9,11 +9,7 @@ import type { QuestionConfig } from '../../../../_constants/counsel-questions.co
  */
 export function TextareaEditable({ question }: { question: QuestionConfig }) {
   return (
-    <TextareaWithCount
-      name={question.id as any}
-      placeholder={question.placeholder}
-      maxLength={question.maxLength}
-    />
+    <TextareaWithCount name={question.id as any} placeholder={question.placeholder} maxLength={question.maxLength} />
   );
 }
 

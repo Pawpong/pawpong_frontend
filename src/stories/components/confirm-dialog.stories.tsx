@@ -19,7 +19,7 @@ export const Default: Story = {
     open: true,
     onOpenChange: () => {},
     onConfirm: () => {},
-    title: "확인 다이얼로그",
-    description: "정말 진행하시겠습니까?",
+    title: '확인 다이얼로그',
+    description: '정말 진행하시겠습니까?',
   },
 };

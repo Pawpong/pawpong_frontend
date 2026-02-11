@@ -40,10 +40,13 @@ export function CounselSection({
           : [formData.interestedAnimal]
         : [];
       // readonly 모드를 위해 배열을 객체로 변환 (ReadonlyFieldRenderer가 기대하는 형식)
-      const animalObject = animalArray.reduce((acc, val, idx) => {
-        acc[idx] = val;
-        return acc;
-      }, {} as Record<number, string>);
+      const animalObject = animalArray.reduce(
+        (acc, val, idx) => {
+          acc[idx] = val;
+          return acc;
+        },
+        {} as Record<number, string>,
+      );
       return formData ? { ...animalObject, details: formData.interestedAnimalDetails || '' } : undefined;
     }
     return formData ? formData[question.id] : undefined;
@@ -54,9 +57,7 @@ export function CounselSection({
       {/* 섹션 제목과 설명을 하나의 그룹으로 */}
       {(section.title || section.description) && (
         <div className="flex flex-col gap-[0.38rem] w-full mb-8">
-          {section.title && (
-            <h2 className="text-body-l font-semibold text-grayscale-gray6 w-full">{section.title}</h2>
-          )}
+          {section.title && <h2 className="text-body-l font-semibold text-grayscale-gray6 w-full">{section.title}</h2>}
           {section.description && (
             <p className="text-body-s font-medium text-grayscale-gray5 w-full">{section.description}</p>
           )}

@@ -38,9 +38,13 @@ export const Default: Story = {
         </div>
         <LargeDialogFooter>
           <LargeDialogClose asChild>
-            <Button variant="outline" className="flex-1">취소</Button>
+            <Button variant="outline" className="flex-1">
+              취소
+            </Button>
           </LargeDialogClose>
-          <Button variant="tertiary" className="flex-1">확인</Button>
+          <Button variant="tertiary" className="flex-1">
+            확인
+          </Button>
         </LargeDialogFooter>
       </LargeDialogContent>
     </LargeDialog>

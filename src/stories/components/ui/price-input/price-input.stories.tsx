@@ -7,7 +7,13 @@ const meta = {
   component: PriceInput,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-  decorators: [(Story) => <div style={{ width: 300 }}><Story /></div>],
+  decorators: [
+    (Story) => (
+      <div style={{ width: 300 }}>
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof PriceInput>;
 
 export default meta;
