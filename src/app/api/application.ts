@@ -20,6 +20,10 @@ export interface ApplicationCreateRequest {
   preferredPetDescription?: string;
   desiredAdoptionTiming?: string;
   additionalNotes?: string;
+  customResponses?: Array<{
+    questionId: string;
+    answer: string;
+  }>;
 }
 
 /** API 응답 */
@@ -54,6 +58,9 @@ export interface ApplicationListItemDto {
   petBreed?: string;
   status: 'consultation_pending' | 'consultation_completed' | 'adoption_approved' | 'adoption_rejected';
   applicationDate: string; // "2024. 01. 15." 형식
+  adopterId?: string | { _id: string; nickname?: string } | null;
+  adopterName?: string;
+  adopterNickname?: string;
 }
 
 /**

@@ -222,8 +222,8 @@ export const COUNSEL_SECTIONS: SectionConfig[] = [
   },
   {
     sectionId: 'additional-message',
-      title: '브리더 추가 질문 ',
-    description: '브리더가 개별적으로 확인하고 싶은 사항에 답변해 주세요.',
+    title: '',
+    description: '',
     questions: [
       {
         id: 'additionalMessage',

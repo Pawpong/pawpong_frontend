@@ -7,12 +7,14 @@ import { useSearchParams } from 'next/navigation';
 import { FormLayout, SubmitButton } from '../sections';
 import { COUNSEL_SECTIONS } from '../_constants/counsel-questions.constants';
 import { CounselSection } from './shared/counsel-section';
+import { CustomQuestionSection } from './custom-question-section';
 import ExitConfirmDialog from '@/components/exit-confirmation-dialog';
 import { Separator } from '@/components/ui/separator';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { LoadingState } from '@/components/loading-state';
 import { useCounselGuard } from '../_hooks/use-counsel-guard';
 import { useCounselForm } from '../_hooks/use-counsel-form';
+import { useBreederApplicationForm } from '../_hooks/use-breeder-application-form';
 import { formatPhoneNumber } from '@/utils/phone';
 
 function CounselFormContentInner() {
@@ -25,6 +27,7 @@ function CounselFormContentInner() {
     breederId,
     petId,
   });
+  const { data: breederApplicationForm } = useBreederApplicationForm(breederId);
   const {
     showNavigationDialog,
     handleNavigationConfirm,
@@ -54,6 +57,15 @@ function CounselFormContentInner() {
                 </div>
               );
             })}
+            {/* 브리더 커스텀 질문 섹션 */}
+            {breederApplicationForm?.customQuestions && breederApplicationForm.customQuestions.length > 0 && (
+              <>
+                <Separator className="bg-grayscale-gray2 my-15" />
+                <div className="w-full">
+                  <CustomQuestionSection customQuestions={breederApplicationForm.customQuestions} />
+                </div>
+              </>
+            )}
           </div>
           <SubmitButton isDisabled={isDisabled} isSubmitting={isSubmitting} onSubmit={handleSubmit} />
         </div>

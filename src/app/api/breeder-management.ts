@@ -495,7 +495,7 @@ export const changeBreederLevel = async (breederId: string, level: 'new' | 'elit
 /** 받은 입양 신청 목록 아이템 DTO */
 export interface ReceivedApplicationItemDto {
   applicationId: string;
-  adopterId: string;
+  adopterId: string | { _id: string; nickname?: string } | null;
   adopterName: string;
   adopterNickname: string;
   adopterEmail: string;
@@ -569,7 +569,7 @@ export const getReceivedApplications = async (
 /** 받은 입양 신청 상세 DTO */
 export interface ReceivedApplicationDetailDto {
   applicationId: string;
-  adopterId: string;
+  adopterId: string | { _id: string; nickname?: string } | null;
   adopterName: string;
   adopterEmail: string;
   adopterPhone?: string;
@@ -861,6 +861,59 @@ export const updateApplicationForm = async (data: ApplicationFormUpdateRequest):
       throw error;
     }
     throw new Error('Unknown error during application form update');
+  }
+};
+
+/** 입양 신청 폼 간단 수정 요청 DTO */
+export interface ApplicationFormSimpleUpdateRequest {
+  questions: Array<{
+    question: string;
+  }>;
+}
+
+/** 입양 신청 폼 간단 수정 응답 DTO */
+export interface ApplicationFormSimpleUpdateResponse {
+  message: string;
+  customQuestions: Array<{
+    id: string;
+    question: string;
+    order: number;
+  }>;
+  totalQuestions: number;
+}
+
+/**
+ * 입양 신청 폼 간단 수정 (커스텀 질문만)
+ * PATCH /api/breeder-management/application-form/simple
+ */
+export const updateApplicationFormSimple = async (
+  data: ApplicationFormSimpleUpdateRequest,
+): Promise<ApplicationFormSimpleUpdateResponse> => {
+  try {
+    const response = await apiClient.patch<ApiResponse<ApplicationFormSimpleUpdateResponse>>(
+      '/api/breeder-management/application-form/simple',
+      data,
+    );
+
+    if (!response.data.success || !response.data.data) {
+      // 에러 응답 형식: { success: false, code: 500, error: "..." }
+      const errorMessage = response.data.message || (response.data as any).error || 'Failed to update application form';
+      throw new Error(errorMessage);
+    }
+
+    return response.data.data;
+  } catch (error: any) {
+    // 에러 응답 형식 확인
+    if (error.response?.data) {
+      const errorData = error.response.data;
+      const errorMessage = errorData.message || errorData.error || '저장에 실패했습니다.';
+      throw new Error(errorMessage);
+    }
+    if (error instanceof Error) {
+      console.error('Update application form simple error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during application form simple update');
   }
 };
 

@@ -8,6 +8,7 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { LoadingText } from '@/components/loading-state';
 import { CounselSection } from '@/app/(main)/counselform/_components/shared/counsel-section';
 import { COUNSEL_SECTIONS } from '@/app/(main)/counselform/_constants/counsel-questions.constants';
+import { CustomQuestionReadonlySection } from './custom-question-readonly-section';
 import type { CounselFormData } from '@/app/(main)/counselform/_types/counsel';
 import { formatPhoneNumber } from '@/utils/phone';
 import { useUpdateApplicationStatus } from '../_hooks/use-update-application-status';
@@ -192,8 +193,12 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
                     </div>
                   );
                 })}
-                    </div>
-                  );
+                {/* 브리더 커스텀 질문 섹션 */}
+                {application.customResponses && application.customResponses.length > 0 && (
+                  <CustomQuestionReadonlySection customResponses={application.customResponses} />
+                )}
+              </div>
+            );
           })()}
 
   

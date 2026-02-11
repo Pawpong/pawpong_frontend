@@ -16,6 +16,7 @@ import { getAdopterProfile } from '@/api/adopter';
 import { LoadingText } from '@/components/loading-state';
 import { CounselSection } from '@/app/(main)/counselform/_components/shared/counsel-section';
 import { COUNSEL_SECTIONS } from '@/app/(main)/counselform/_constants/counsel-questions.constants';
+import { CustomQuestionReadonlySection } from './custom-question-readonly-section';
 import type { CounselFormData } from '@/app/(main)/counselform/_types/counsel';
 import { formatPhoneNumber } from '@/utils/phone';
 
@@ -189,6 +190,13 @@ export default function ReviewDialog({
                     </div>
                   );
                 })}
+                {/* 브리더 커스텀 질문 섹션 */}
+                {applicationData?.customResponses && applicationData.customResponses.length > 0 && (
+                  <>
+                    <div className="h-px bg-grayscale-gray2 w-full my-7" />
+                    <CustomQuestionReadonlySection customResponses={applicationData.customResponses} />
+                  </>
+                )}
               </div>
             )}
 

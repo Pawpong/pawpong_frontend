@@ -308,7 +308,7 @@ export const getPopularBreeders = async (): Promise<Breeder[]> => {
 /** 받은 입양 신청 아이템 DTO (브리더용) */
 export interface ReceivedApplicationItemDto {
   applicationId: string;
-  adopterId: string;
+  adopterId: string | { _id: string; nickname?: string } | null;
   adopterName: string;
   adopterNickname: string;
   adopterEmail: string;
@@ -492,6 +492,56 @@ export const getBreederReviews = async (
       throw error;
     }
     throw new Error('Unknown error during breeder reviews fetch');
+  }
+};
+
+/** 입양 신청 폼 응답 DTO (입양자용) */
+export interface BreederApplicationFormDto {
+  standardQuestions: Array<{
+    id: string;
+    type: 'text' | 'textarea' | 'radio' | 'checkbox' | 'select';
+    label: string;
+    required: boolean;
+    options?: string[];
+    placeholder?: string;
+    order: number;
+  }>;
+  customQuestions: Array<{
+    id: string;
+    type: 'text' | 'textarea' | 'radio' | 'checkbox' | 'select';
+    label: string;
+    required: boolean;
+    options?: string[];
+    placeholder?: string;
+    order: number;
+  }>;
+  totalQuestions: number;
+}
+
+/**
+ * 입양 신청 폼 조회 (입양자용 공개 API)
+ * GET /api/breeder/:id/application-form
+ */
+export const getBreederApplicationForm = async (breederId: string): Promise<BreederApplicationFormDto> => {
+  try {
+    const response = await apiClient.get<ApiResponse<BreederApplicationFormDto>>(
+      `/api/breeder/${breederId}/application-form`,
+      {
+        skipAuth: true, // 공개 API - 인증 불필요
+      } as any,
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error('Failed to fetch breeder application form');
+    }
+
+    return response.data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Fetch breeder application form error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during breeder application form fetch');
   }
 };
 
