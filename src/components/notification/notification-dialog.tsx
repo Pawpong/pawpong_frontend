@@ -15,7 +15,7 @@ import {
   useMarkAsRead,
   transformNotificationForUI,
 } from '@/hooks/use-notifications';
-import ReviewWriteDialog from '@/app/(main)/application/_components/review-write-dialog';
+import ReviewWriteDialog from '@/app/(main)/application/_components/review/review-write-dialog';
 import { LoadingText } from '@/components/loading-state';
 
 // UI에서 사용할 알림 데이터 인터페이스

@@ -2,15 +2,16 @@
 
 import { FieldRenderer } from './field-renderer';
 import type { QuestionConfig, QuestionMode } from '../../_constants/counsel-questions.constants';
+import type { CounselFormData } from '../../_types/counsel';
 import { InfoRow } from '../sections/info-row';
 
 interface CounselQuestionProps {
   question: QuestionConfig;
   mode: QuestionMode;
-  value?: any;
+  value?: string | boolean | string[] | number | Record<string, unknown>;
   availablePets?: Array<{ petId: string; name: string; breed: string; gender: 'male' | 'female' }>;
   onFormatPhone?: (value: string) => string;
-  formData?: Record<string, any>;
+  formData?: CounselFormData | Record<string, unknown>;
   readonlyVariant?: 'default' | 'white';
 }
 

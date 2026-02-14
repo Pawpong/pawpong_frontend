@@ -75,10 +75,4 @@ export const APPLICATION_QUESTIONS: ApplicationQuestion[] = [
     question: '원하시는 입양 시기가 있나요?',
     type: 'input',
   },
-  {
-    id: 'additionalNotes',
-    question: '마지막으로 궁금하신 점이나 남기시고 싶으신 말씀이 있나요?',
-    type: 'textarea',
-    maxCount: 800,
-  },
 ];

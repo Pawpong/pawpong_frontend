@@ -48,7 +48,6 @@ export const counselFormSchema = z
     interestedAnimal: z.string().min(1, '관심 있는 동물을 선택해 주세요.'),
     interestedAnimalDetails: z.string(), // 빈 문자열 허용, refine에서 조건부 검증
     adoptionTiming: z.string().min(1, '입양 시기를 선택해 주세요.'),
-    additionalMessage: z.string().min(1, '추가 메시지를 입력해 주세요.'),
   })
   .refine(
     (data) => {

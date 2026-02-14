@@ -3,14 +3,10 @@
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import type { CustomQuestionResponse } from '../../_types/application.types';
 
 interface CustomQuestionReadonlySectionProps {
-  customResponses: Array<{
-    questionId: string;
-    questionLabel: string;
-    questionType: string;
-    answer: string;
-  }>;
+  customResponses: CustomQuestionResponse[];
 }
 
 /**

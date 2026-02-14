@@ -8,7 +8,7 @@ import type { CounselFormData } from '../../_types/counsel';
 interface CounselSectionProps {
   section: SectionConfig;
   mode: QuestionMode;
-  formData?: Record<string, any>;
+  formData?: CounselFormData | Record<string, unknown>;
   availablePets?: Array<{ petId: string; name: string; breed: string; gender: 'male' | 'female' }>;
   onFormatPhone?: (value: string) => string;
   readonlyVariant?: 'default' | 'white'; // readonly 모드에서 배경색 분기: default = rgba(255,255,255,0.40), white = bg-white
@@ -26,7 +26,8 @@ export function CounselSection({
   onFormatPhone,
   readonlyVariant = 'default',
 }: CounselSectionProps) {
-  const formContext = mode === 'editable' ? useFormContext<CounselFormData>() : null;
+  // React Hooks must be called unconditionally
+  const formContext = useFormContext<CounselFormData>();
   const formData = mode === 'editable' && formContext ? formContext.watch() : externalFormData;
 
   const getQuestionValue = (question: SectionConfig['questions'][0]) => {

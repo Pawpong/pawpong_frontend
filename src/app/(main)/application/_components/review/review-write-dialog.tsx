@@ -5,9 +5,9 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Separator } from '@/components/ui/separator';
 
-import { useReviewWrite } from '../_hooks/use-review-write';
+import { useReviewWrite } from '../../_hooks/use-review-write';
 import ReviewHeader from './review-header';
-import BreederSummary from './breeder-summary';
+import BreederSummary from '../shared/breeder-summary';
 import ReviewTabs from './review-tabs';
 import ReviewTextarea from './review-textarea';
 import ReviewFooter from './review-footer';

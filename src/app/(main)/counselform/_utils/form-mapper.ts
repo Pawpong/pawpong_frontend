@@ -42,7 +42,6 @@ export function mapToApplicationRequest(
     canAffordMedicalExpenses: formData.medicalExpense,
     preferredPetDescription,
     desiredAdoptionTiming: formData.adoptionTiming || undefined,
-    additionalNotes: formData.additionalMessage || undefined,
     customResponses,
   };
 }

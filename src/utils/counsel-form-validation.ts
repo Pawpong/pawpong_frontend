@@ -32,7 +32,6 @@ export function isFormEmpty(data: CounselFormData): boolean {
     data.interestedAnimal,
     data.interestedAnimalDetails,
     data.adoptionTiming,
-    data.additionalMessage,
   ];
 
   return !fields.some(hasValue);
@@ -60,7 +59,6 @@ export function isFormComplete(data: CounselFormData): boolean {
     'previousPets',
     'interestedAnimal',
     'adoptionTiming',
-    'additionalMessage',
   ];
 
   const hasRequiredValues = requiredFields.every((key) => hasValue(data[key]));
