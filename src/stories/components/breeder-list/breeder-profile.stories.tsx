@@ -16,9 +16,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: React.createElement('div', null,
+    children: React.createElement(
+      'div',
+      null,
       React.createElement('div', { style: { fontWeight: 'bold', fontSize: '16px' } }, '해피독 브리더'),
-      React.createElement('div', { style: { color: '#999', fontSize: '14px' } }, '서울특별시 강남구')
+      React.createElement('div', { style: { color: '#999', fontSize: '14px' } }, '서울특별시 강남구'),
     ),
   },
 };

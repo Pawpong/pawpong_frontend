@@ -19,7 +19,7 @@ interface DialogLoadingStateProps {
 
 /**
  * 다이얼로그 내부 로딩 상태 컴포넌트
- * 
+ *
  * 다이얼로그의 표준 레이아웃 구조를 유지하면서 로딩 상태를 표시합니다.
  * - 헤더 영역
  * - 구분선
@@ -42,7 +42,9 @@ export function DialogLoadingState({
           <DialogTitle>로딩 중</DialogTitle>
         </VisuallyHidden>
         {/* 헤더 */}
-        <div className={`flex gap-1 ${headerHeight} items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none md:rounded-t-2xl`}></div>
+        <div
+          className={`flex gap-1 ${headerHeight} items-center justify-end px-6 pt-6 pb-2.5 bg-white rounded-t-none md:rounded-t-2xl`}
+        ></div>
         {/* 상단 구분선 */}
         <div className="h-px bg-[#E1E1E1]" />
         {/* 로딩 영역 */}

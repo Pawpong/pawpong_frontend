@@ -16,9 +16,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: React.createElement(React.Fragment, null,
+    children: React.createElement(
+      React.Fragment,
+      null,
       React.createElement('div', { className: 'size-4' }),
-      '카카오로 시작하기'
+      '카카오로 시작하기',
     ),
     className: 'bg-[#FEE500] text-black hover:bg-[#FEE500]/80',
   },

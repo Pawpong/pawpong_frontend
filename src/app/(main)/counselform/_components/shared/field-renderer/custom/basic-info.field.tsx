@@ -42,7 +42,9 @@ export function BasicInfoReadonly({
     <div className="flex flex-col gap-3 items-start w-full">
       {BASIC_INFO_FIELDS.map((field) => {
         const fieldValue =
-          field.name === 'phone' && basicInfo[field.name] ? formatPhoneFn(basicInfo[field.name]) : basicInfo[field.name] || '';
+          field.name === 'phone' && basicInfo[field.name]
+            ? formatPhoneFn(basicInfo[field.name])
+            : basicInfo[field.name] || '';
         return (
           <Input
             key={field.name}
@@ -58,13 +60,7 @@ export function BasicInfoReadonly({
   );
 }
 
-export function BasicInfoView({
-  value,
-  onFormatPhone,
-}: {
-  value?: any;
-  onFormatPhone?: (value: string) => string;
-}) {
+export function BasicInfoView({ value, onFormatPhone }: { value?: any; onFormatPhone?: (value: string) => string }) {
   const basicInfo = value || {};
   const formatPhoneFn = onFormatPhone || formatPhoneNumber;
 

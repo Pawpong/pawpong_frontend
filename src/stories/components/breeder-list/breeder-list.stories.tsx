@@ -16,10 +16,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: React.createElement('div', null,
+    children: React.createElement(
+      'div',
+      null,
       React.createElement('div', { style: { padding: '16px', borderBottom: '1px solid #eee' } }, '브리더 1'),
       React.createElement('div', { style: { padding: '16px', borderBottom: '1px solid #eee' } }, '브리더 2'),
-      React.createElement('div', { style: { padding: '16px' } }, '브리더 3')
+      React.createElement('div', { style: { padding: '16px' } }, '브리더 3'),
     ),
   },
 };

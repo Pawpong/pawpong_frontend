@@ -20,10 +20,13 @@ export default function ReviewsPage() {
   const isMdUp = useBreakpoint('md');
   const breederId = user?.userId || '';
 
-  const { data: reviewsData, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useBreederReviewsInfinite(
-    breederId,
-    PAGE_SIZE,
-  );
+  const {
+    data: reviewsData,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useBreederReviewsInfinite(breederId, PAGE_SIZE);
 
   // 모든 페이지의 데이터를 합쳐서 매핑
   const allReviews =

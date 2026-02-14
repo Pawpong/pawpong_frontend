@@ -21,14 +21,7 @@ export function SelectReadonly({
   readonlyVariant?: 'default' | 'white';
 }) {
   const bgClass = readonlyVariant === 'white' ? 'bg-white' : 'bg-[rgba(255,255,255,0.40)]';
-  return (
-    <Input
-      value={value || ''}
-      readOnly
-      placeholder={question.placeholder}
-      className={`rounded-lg ${bgClass}`}
-    />
-  );
+  return <Input value={value || ''} readOnly placeholder={question.placeholder} className={`rounded-lg ${bgClass}`} />;
 }
 
 export function SelectView({ value }: { value?: any }) {

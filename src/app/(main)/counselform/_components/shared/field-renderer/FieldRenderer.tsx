@@ -6,7 +6,7 @@ import { ModeRenderer } from './renderers/mode.renderer';
 export interface FieldRendererProps {
   question: QuestionConfig;
   mode: QuestionMode;
-  value?: any;
+  value?: string | boolean | string[] | number | Record<string, unknown>;
   availablePets?: Array<{ petId: string; name: string; breed: string; gender: 'male' | 'female' }>;
   onFormatPhone?: (value: string) => string;
   readonlyVariant?: 'default' | 'white';

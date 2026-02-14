@@ -80,7 +80,7 @@ export interface QuestionConfig {
   customComponent?: string; // 'pet-selection', 'basic-info' 등 특수 컴포넌트
   dependsOn?: {
     field: QuestionFieldId;
-    value: any; // 이 값일 때만 표시
+    value: string | boolean | string[] | number; // 이 값일 때만 표시
   };
 }
 
@@ -217,19 +217,6 @@ export const COUNSEL_SECTIONS: SectionConfig[] = [
         label: '원하시는 입양 시기가 있나요?',
         type: 'input',
         placeholder: '입양 희망 시기',
-      },
-    ],
-  },
-  {
-    sectionId: 'additional-message',
-      title: '브리더 추가 질문 ',
-    description: '브리더가 개별적으로 확인하고 싶은 사항에 답변해 주세요.',
-    questions: [
-      {
-        id: 'additionalMessage',
-        label: '마지막으로 궁금하신 점이나 남기시고 싶으신 말씀이 있나요?',
-        type: 'textarea',
-        maxLength: 800,
       },
     ],
   },

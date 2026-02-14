@@ -25,7 +25,6 @@ export const counselSchema = z.object({
   interestedAnimal: z.array(z.string()).default([]),
   interestedAnimalDetails: z.string(),
   adoptionTiming: z.string(),
-  additionalMessage: z.string(),
 });
 
 export type CounselFormSchema = z.infer<typeof counselSchema>;

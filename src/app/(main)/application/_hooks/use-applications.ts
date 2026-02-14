@@ -34,36 +34,54 @@ const PAGE_SIZE = 10;
 /**
  * 입양자용 DTO를 프론트엔드 ApplicationItem으로 변환
  */
-const mapAdopterDtoToApplicationItem = (dto: ApplicationListItemDto): ApplicationItem => ({
-  applicationId: dto.applicationId,
-  breederId: dto.breederId,
-  breederName: dto.breederName,
-  breederLevel: dto.breederLevel,
-  applicationDate: dto.applicationDate,
-  // 탐색 화면과 동일하게 API에서 받은 profileImage를 그대로 사용
-  profileImage: dto.profileImage || '',
-  animalType: dto.animalType,
-  petId: dto.petId,
-  petBreed: dto.petBreed,
-  status: dto.status,
-});
+const mapAdopterDtoToApplicationItem = (dto: ApplicationListItemDto): ApplicationItem => {
+  // adopterId가 객체인 경우 _id를 추출, 문자열이면 그대로 사용, null이면 undefined
+  const adopterId =
+    typeof dto.adopterId === 'object' && dto.adopterId !== null
+      ? (dto.adopterId as { _id: string })._id
+      : dto.adopterId || undefined;
+
+  return {
+    applicationId: dto.applicationId,
+    breederId: dto.breederId,
+    breederName: dto.breederName,
+    breederLevel: dto.breederLevel,
+    applicationDate: dto.applicationDate,
+    // 탐색 화면과 동일하게 API에서 받은 profileImage를 그대로 사용
+    profileImage: dto.profileImage || '',
+    animalType: dto.animalType,
+    petId: dto.petId,
+    petBreed: dto.petBreed,
+    status: dto.status,
+    adopterId,
+    adopterName: dto.adopterName || dto.adopterNickname,
+  };
+};
 
 /**
  * 브리더용 DTO를 프론트엔드 ApplicationItem으로 변환
  */
-const mapBreederDtoToApplicationItem = (dto: ReceivedApplicationItemDto): ApplicationItem => ({
-  applicationId: dto.applicationId,
-  adopterId: dto.adopterId,
-  adopterName: dto.adopterNickname || dto.adopterName, // 닉네임 우선, 없으면 이름
-  adopterEmail: dto.adopterEmail,
-  adopterPhone: dto.adopterPhone,
-  applicationDate: new Date(dto.appliedAt).toLocaleDateString('ko-KR'),
-  profileImage: '/profile-empty.svg', // 입양자 프로필 이미지는 나중에 추가
-  petId: dto.petId,
-  petName: dto.petName,
-  preferredPetInfo: dto.preferredPetInfo, // 입양 원하는 아이 정보 (드롭다운 선택 또는 직접 입력)
-  status: dto.status,
-});
+const mapBreederDtoToApplicationItem = (dto: ReceivedApplicationItemDto): ApplicationItem => {
+  // adopterId가 객체인 경우 _id를 추출, 문자열이면 그대로 사용, null이면 undefined
+  const adopterId =
+    typeof dto.adopterId === 'object' && dto.adopterId !== null
+      ? (dto.adopterId as { _id: string })._id
+      : dto.adopterId || undefined;
+
+  return {
+    applicationId: dto.applicationId,
+    adopterId,
+    adopterName: dto.adopterNickname || dto.adopterName, // 닉네임 우선, 없으면 이름
+    adopterEmail: dto.adopterEmail,
+    adopterPhone: dto.adopterPhone,
+    applicationDate: new Date(dto.appliedAt).toLocaleDateString('ko-KR'),
+    profileImage: '/profile-empty.svg', // 입양자 프로필 이미지는 나중에 추가
+    petId: dto.petId,
+    petName: dto.petName,
+    preferredPetInfo: dto.preferredPetInfo, // 입양 원하는 아이 정보 (드롭다운 선택 또는 직접 입력)
+    status: dto.status,
+  };
+};
 
 const fetchAdopterApplications = async (page: number, animalType?: 'cat' | 'dog'): Promise<ApplicationsResponse> => {
   const result = await getMyApplications(page, PAGE_SIZE, animalType);

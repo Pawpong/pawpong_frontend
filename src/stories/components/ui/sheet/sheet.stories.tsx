@@ -1,13 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from './sheet';
+import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription } from './sheet';
 import { Button } from '../button/button';
 
 const meta = {

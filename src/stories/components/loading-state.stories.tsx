@@ -16,24 +16,24 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    message: "로딩 중...",
-    size: "md",
+    message: '로딩 중...',
+    size: 'md',
     fullScreen: false,
   },
 };
 
 export const Small: Story = {
   args: {
-    message: "로딩 중...",
-    size: "sm",
+    message: '로딩 중...',
+    size: 'sm',
     fullScreen: false,
   },
 };
 
 export const Large: Story = {
   args: {
-    message: "데이터를 불러오는 중...",
-    size: "lg",
+    message: '데이터를 불러오는 중...',
+    size: 'lg',
     fullScreen: false,
   },
 };

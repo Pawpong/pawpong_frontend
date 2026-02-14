@@ -113,7 +113,7 @@ export default function SiteBreederList() {
                   <BreederContent>
                     <BreederDescription>
                       <BreederLocation>{breeder.location}</BreederLocation>
-          
+
                       <BreederPrice>
                         {isLoggedIn ? (
                           !breeder.priceRange ? (

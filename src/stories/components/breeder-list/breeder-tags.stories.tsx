@@ -16,10 +16,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: React.createElement(React.Fragment, null,
+    children: React.createElement(
+      React.Fragment,
+      null,
       React.createElement('span', { className: 'px-2 py-1 bg-gray-100 rounded text-xs' }, '건강검진완료'),
       React.createElement('span', { className: 'px-2 py-1 bg-gray-100 rounded text-xs' }, '예방접종'),
-      React.createElement('span', { className: 'px-2 py-1 bg-gray-100 rounded text-xs' }, '혈통서')
+      React.createElement('span', { className: 'px-2 py-1 bg-gray-100 rounded text-xs' }, '혈통서'),
     ),
   },
 };

@@ -60,15 +60,19 @@ const config: StorybookConfig = {
           const { transform } = await import('@svgr/core');
           const jsx = (await import('@svgr/plugin-jsx')).default;
           const svgCode = await fs.promises.readFile(filePath, 'utf8');
-          const componentCode = await transform(svgCode, {
-            exportType: 'default',
-            plugins: [jsx],
-          }, {
-            filePath,
-            caller: {
-              defaultPlugins: [jsx],
+          const componentCode = await transform(
+            svgCode,
+            {
+              exportType: 'default',
+              plugins: [jsx],
             },
-          });
+            {
+              filePath,
+              caller: {
+                defaultPlugins: [jsx],
+              },
+            },
+          );
           const { transformWithEsbuild } = await import('vite');
           const res = await transformWithEsbuild(componentCode, filePath + '.jsx', {
             loader: 'jsx',

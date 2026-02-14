@@ -1,3 +1,5 @@
+'use client';
+
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import ProfileImageWithBadge from '@/components/breeder/profile-image-with-badge';

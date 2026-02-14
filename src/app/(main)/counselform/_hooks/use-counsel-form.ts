@@ -50,7 +50,7 @@ export function useCounselForm({ breederId, petId }: UseCounselFormParams) {
           interestedAnimal: [],
           interestedAnimalDetails: '',
           adoptionTiming: '',
-          additionalMessage: '',
+          customQuestionResponses: {},
         };
 
   const form = useForm<CounselFormData>({

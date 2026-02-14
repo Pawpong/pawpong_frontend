@@ -24,5 +24,7 @@ export interface CounselFormData {
   interestedAnimal: string[];
   interestedAnimalDetails: string;
   adoptionTiming: string;
-  additionalMessage: string;
+
+  // 커스텀 질문 답변
+  customQuestionResponses?: Record<string, string>;
 }

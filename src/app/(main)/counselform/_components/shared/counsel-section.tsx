@@ -8,7 +8,7 @@ import type { CounselFormData } from '../../_types/counsel';
 interface CounselSectionProps {
   section: SectionConfig;
   mode: QuestionMode;
-  formData?: Record<string, any>;
+  formData?: CounselFormData | Record<string, unknown>;
   availablePets?: Array<{ petId: string; name: string; breed: string; gender: 'male' | 'female' }>;
   onFormatPhone?: (value: string) => string;
   readonlyVariant?: 'default' | 'white'; // readonly 모드에서 배경색 분기: default = rgba(255,255,255,0.40), white = bg-white
@@ -26,7 +26,8 @@ export function CounselSection({
   onFormatPhone,
   readonlyVariant = 'default',
 }: CounselSectionProps) {
-  const formContext = mode === 'editable' ? useFormContext<CounselFormData>() : null;
+  // React Hooks must be called unconditionally
+  const formContext = useFormContext<CounselFormData>();
   const formData = mode === 'editable' && formContext ? formContext.watch() : externalFormData;
 
   const getQuestionValue = (question: SectionConfig['questions'][0]) => {
@@ -40,10 +41,13 @@ export function CounselSection({
           : [formData.interestedAnimal]
         : [];
       // readonly 모드를 위해 배열을 객체로 변환 (ReadonlyFieldRenderer가 기대하는 형식)
-      const animalObject = animalArray.reduce((acc, val, idx) => {
-        acc[idx] = val;
-        return acc;
-      }, {} as Record<number, string>);
+      const animalObject = animalArray.reduce(
+        (acc, val, idx) => {
+          acc[idx] = val;
+          return acc;
+        },
+        {} as Record<number, string>,
+      );
       return formData ? { ...animalObject, details: formData.interestedAnimalDetails || '' } : undefined;
     }
     return formData ? formData[question.id] : undefined;
@@ -54,9 +58,7 @@ export function CounselSection({
       {/* 섹션 제목과 설명을 하나의 그룹으로 */}
       {(section.title || section.description) && (
         <div className="flex flex-col gap-[0.38rem] w-full mb-8">
-          {section.title && (
-            <h2 className="text-body-l font-semibold text-grayscale-gray6 w-full">{section.title}</h2>
-          )}
+          {section.title && <h2 className="text-body-l font-semibold text-grayscale-gray6 w-full">{section.title}</h2>}
           {section.description && (
             <p className="text-body-s font-medium text-grayscale-gray5 w-full">{section.description}</p>
           )}

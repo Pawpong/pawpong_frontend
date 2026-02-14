@@ -7,7 +7,13 @@ const meta = {
   component: ExpandableText,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
-  decorators: [(Story) => <div style={{ width: 400 }}><Story /></div>],
+  decorators: [
+    (Story) => (
+      <div style={{ width: 400 }}>
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof ExpandableText>;
 
 export default meta;

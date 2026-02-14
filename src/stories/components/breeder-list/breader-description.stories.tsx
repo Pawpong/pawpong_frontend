@@ -16,9 +16,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: React.createElement(React.Fragment, null, 
+    children: React.createElement(
+      React.Fragment,
+      null,
       React.createElement('span', null, '골든 리트리버'),
-      React.createElement('span', null, ' · 서울 강남구')
+      React.createElement('span', null, ' · 서울 강남구'),
     ),
   },
 };

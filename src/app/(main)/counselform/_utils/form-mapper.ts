@@ -13,6 +13,17 @@ export function mapToApplicationRequest(
       ? selectedPets.join('/')
       : undefined;
 
+  // 커스텀 질문 답변 변환
+  const customResponses =
+    formData.customQuestionResponses && Object.keys(formData.customQuestionResponses).length > 0
+      ? Object.entries(formData.customQuestionResponses)
+          .filter(([_, answer]) => answer && answer.trim().length > 0)
+          .map(([questionId, answer]) => ({
+            questionId,
+            answer: answer.trim(),
+          }))
+      : undefined;
+
   return {
     name: formData.name,
     phone: formData.phone,
@@ -31,6 +42,6 @@ export function mapToApplicationRequest(
     canAffordMedicalExpenses: formData.medicalExpense,
     preferredPetDescription,
     desiredAdoptionTiming: formData.adoptionTiming || undefined,
-    additionalNotes: formData.additionalMessage || undefined,
+    customResponses,
   };
 }

@@ -16,6 +16,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    breed: "골든 리트리버",
+    breed: '골든 리트리버',
   },
 };

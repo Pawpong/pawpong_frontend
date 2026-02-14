@@ -13,12 +13,24 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Horizontal: Story = {
-  decorators: [(Story) => <div style={{ width: 300 }}><Story /></div>],
+  decorators: [
+    (Story) => (
+      <div style={{ width: 300 }}>
+        <Story />
+      </div>
+    ),
+  ],
   args: { orientation: 'horizontal' },
 };
 
 export const Vertical: Story = {
-  decorators: [(Story) => <div style={{ height: 100, display: 'flex' }}><Story /></div>],
+  decorators: [
+    (Story) => (
+      <div style={{ height: 100, display: 'flex' }}>
+        <Story />
+      </div>
+    ),
+  ],
   args: { orientation: 'vertical' },
 };
 

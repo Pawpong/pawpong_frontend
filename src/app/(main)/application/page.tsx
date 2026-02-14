@@ -2,7 +2,7 @@
 
 import Container from '@/components/ui/container';
 import { Separator } from '@/components/ui/separator';
-import ApplicationListItem from './_components/application-list-item';
+import ApplicationListItem from './_components/shared/application-list-item';
 import LoadMoreButton from '@/components/ui/load-more-button';
 import { useApplications } from './_hooks/use-applications';
 import { useAuthGuard } from '@/hooks/use-auth-guard';

@@ -30,9 +30,7 @@ export const Default: Story = {
 
 export const Small: Story = {
   args: {
-    images: [
-      { id: '1', file: null, preview: '/images/cat.png', isUrl: true },
-    ],
+    images: [{ id: '1', file: null, preview: '/images/cat.png', isUrl: true }],
     onRemove: (id: string) => console.log('Remove:', id),
     imageSize: 'small',
   },
@@ -53,9 +51,7 @@ export const Large: Story = {
 
 export const NoRemoveButton: Story = {
   args: {
-    images: [
-      { id: '1', file: null, preview: '/images/cat.png', isUrl: true },
-    ],
+    images: [{ id: '1', file: null, preview: '/images/cat.png', isUrl: true }],
     onRemove: (id: string) => console.log('Remove:', id),
     showRemoveButton: false,
   },

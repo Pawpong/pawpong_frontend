@@ -16,9 +16,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: React.createElement(React.Fragment, null,
+    children: React.createElement(
+      React.Fragment,
+      null,
       React.createElement('span', { style: { fontWeight: 'bold' } }, '브리더 소개'),
-      React.createElement('button', { style: { fontSize: '12px', color: '#999' } }, '더보기 >')
+      React.createElement('button', { style: { fontSize: '12px', color: '#999' } }, '더보기 >'),
     ),
   },
 };

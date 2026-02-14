@@ -81,9 +81,15 @@ export const AllVariants: Story = {
 export const AllSizes: Story = {
   render: () => (
     <div className="flex flex-wrap gap-3 items-center">
-      <Button variant="tertiary" size="sm">Small</Button>
-      <Button variant="tertiary" size="default">Default</Button>
-      <Button variant="tertiary" size="lg">Large</Button>
+      <Button variant="tertiary" size="sm">
+        Small
+      </Button>
+      <Button variant="tertiary" size="default">
+        Default
+      </Button>
+      <Button variant="tertiary" size="lg">
+        Large
+      </Button>
     </div>
   ),
 };

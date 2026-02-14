@@ -22,6 +22,10 @@ export const Default: Story = {
       date: '2025-01-15',
       content: '안녕하세요, 포퐁입니다.\n\n서비스가 업데이트되었습니다.\n\n감사합니다.',
     },
-    children: React.createElement('button', { style: { padding: '8px 16px', border: '1px solid #ddd', borderRadius: 8 } }, '공지사항 열기'),
+    children: React.createElement(
+      'button',
+      { style: { padding: '8px 16px', border: '1px solid #ddd', borderRadius: 8 } },
+      '공지사항 열기',
+    ),
   },
 };
