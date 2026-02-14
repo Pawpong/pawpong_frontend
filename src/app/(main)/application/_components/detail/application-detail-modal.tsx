@@ -9,7 +9,6 @@ import { Separator } from '@/components/ui/separator';
 import { ApplicationDetailContent } from './application-detail-content';
 import { ApplicationStatusBadge } from '../shared/application-status-badge';
 import { ApplicationDetailStates } from './application-detail-states';
-import { ApplicationDialogHeader } from '../shared/application-dialog-header';
 import { mapToCounselFormData } from '../../_utils/form-data-mapper';
 import type { CounselFormData } from '@/app/(main)/counselform/_types/counsel';
 import { useUpdateApplicationStatus } from '../../_hooks/use-update-application-status';
@@ -58,13 +57,10 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={`${dialogContentClass} p-0 gap-0 bg-white flex flex-col`} showCloseButton={false}>
+      <DialogContent className={`${dialogContentClass} p-0 gap-0 bg-white flex flex-col`}>
         <VisuallyHidden>
           <DialogTitle>입양 신청 상세</DialogTitle>
         </VisuallyHidden>
-
-        {/* 헤더 - 닫기 버튼 */}
-        <ApplicationDialogHeader />
 
         {/* 상단 구분선 */}
         <Separator className="bg-[#E1E1E1]" />
