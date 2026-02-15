@@ -124,16 +124,21 @@ export async function syncParentPets(
       // 임시 ID → 실제 petId 매핑 저장
       idMapping.set(parent.id, newPetId);
 
+      // 업로드된 사진 URL 추적
+      let uploadedPhotos: string[] = [];
+
       // 1. 대표 사진 업로드
       if (parent.imageFile) {
-        await uploadParentPetPhoto(newPetId, parent.imageFile);
+        const uploadResult = await uploadParentPetPhoto(newPetId, parent.imageFile, uploadedPhotos);
+        uploadedPhotos.push(uploadResult.fileName);
       }
 
       // 2. 추가 사진·영상 업로드
       if (parent.photos && parent.photos.length > 0) {
         for (const item of parent.photos) {
           if (item instanceof File) {
-            await uploadParentPetPhoto(newPetId, item);
+            const uploadResult = await uploadParentPetPhoto(newPetId, item, uploadedPhotos);
+            uploadedPhotos.push(uploadResult.fileName);
           }
         }
       }
@@ -163,16 +168,21 @@ export async function syncParentPets(
         });
       }
 
+      // 기존 사진 URL 가져오기 (original.photos가 있으면 사용, 없으면 빈 배열)
+      let uploadedPhotos: string[] = original?.photos || [];
+
       // 1. 대표 사진 업로드
       if (parent.imageFile) {
-        await uploadParentPetPhoto(parent.id, parent.imageFile);
+        const uploadResult = await uploadParentPetPhoto(parent.id, parent.imageFile, uploadedPhotos);
+        uploadedPhotos.push(uploadResult.fileName);
       }
 
       // 2. 추가 사진·영상 업로드
       if (parent.photos && parent.photos.length > 0) {
         for (const item of parent.photos) {
           if (item instanceof File) {
-            await uploadParentPetPhoto(parent.id, item);
+            const uploadResult = await uploadParentPetPhoto(parent.id, item, uploadedPhotos);
+            uploadedPhotos.push(uploadResult.fileName);
           }
         }
       }
@@ -255,16 +265,21 @@ export async function syncAvailablePets(
         await updatePetStatus(newPetId, desiredStatus);
       }
 
+      // 업로드된 사진 URL 추적
+      let uploadedPhotos: string[] = [];
+
       // 1. 대표 사진 업로드
       if (animal.imageFile) {
-        await uploadAvailablePetPhoto(newPetId, animal.imageFile);
+        const uploadResult = await uploadAvailablePetPhoto(newPetId, animal.imageFile, uploadedPhotos);
+        uploadedPhotos.push(uploadResult.fileName);
       }
 
       // 2. 추가 사진·영상 업로드
       if (animal.photos && animal.photos.length > 0) {
         for (const item of animal.photos) {
           if (item instanceof File) {
-            await uploadAvailablePetPhoto(newPetId, item);
+            const uploadResult = await uploadAvailablePetPhoto(newPetId, item, uploadedPhotos);
+            uploadedPhotos.push(uploadResult.fileName);
           }
         }
       }
@@ -307,16 +322,21 @@ export async function syncAvailablePets(
         });
       }
 
+      // 기존 사진 URL 가져오기 (original.photos가 있으면 사용, 없으면 빈 배열)
+      let uploadedPhotos: string[] = original?.photos || [];
+
       // 1. 대표 사진 업로드
       if (animal.imageFile) {
-        await uploadAvailablePetPhoto(animal.id, animal.imageFile);
+        const uploadResult = await uploadAvailablePetPhoto(animal.id, animal.imageFile, uploadedPhotos);
+        uploadedPhotos.push(uploadResult.fileName);
       }
 
       // 2. 추가 사진·영상 업로드
       if (animal.photos && animal.photos.length > 0) {
         for (const item of animal.photos) {
           if (item instanceof File) {
-            await uploadAvailablePetPhoto(animal.id, item);
+            const uploadResult = await uploadAvailablePetPhoto(animal.id, item, uploadedPhotos);
+            uploadedPhotos.push(uploadResult.fileName);
           }
         }
       }

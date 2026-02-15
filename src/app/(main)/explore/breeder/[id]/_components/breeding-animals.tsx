@@ -9,9 +9,7 @@ import BreederProfileSectionMore from '@/components/breeder-profile/breeder-prof
 import BreederProfileSectionTitle from '@/components/breeder-profile/breeder-profile-section-title';
 import AnimalProfile from './animal-profile';
 import type { PetDetailData } from './pet-detail-dialog';
-import { useParentPets } from '../_hooks/use-breeder-detail';
 import EmptyPetState from './empty-pet-state';
-import { formatBirthDateToKorean } from '@/utils/date-utils';
 
 const PetDetailDialog = dynamicClient(() => import('./pet-detail-dialog'));
 
@@ -32,6 +30,15 @@ export default function BreedingAnimals({
     status?: 'available' | 'reserved' | 'completed';
     description?: string;
     photos?: string[];
+    parents?: {
+      id: string;
+      avatarUrl: string;
+      name: string;
+      sex: 'male' | 'female';
+      birth: string;
+      breed: string;
+      photos?: string[];
+    }[];
   }[];
   breederId: string;
   breederDescription?: string;
@@ -40,35 +47,14 @@ export default function BreedingAnimals({
   const router = useRouter();
   const [selectedPet, setSelectedPet] = useState<PetDetailData | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { data: parentPetsData } = useParentPets(breederId, 1, 100);
 
   const handleMoreClick = () => {
     router.push(`/explore/breeder/${breederId}/pets`);
   };
 
   const handlePetClick = (pet: (typeof data)[0]) => {
-    // 부모 정보 찾기 (pet.id와 매칭되는 부모 찾기)
-    // 실제로는 API에서 pet의 parentInfo를 가져와야 하지만, 여기서는 간단히 처리
-    const parents =
-      parentPetsData?.items?.map(
-        (parent: {
-          petId: string;
-          photoUrl?: string;
-          name: string;
-          gender: 'male' | 'female';
-          birthDate?: string;
-          breed: string;
-          photos?: string[];
-        }) => ({
-          id: parent.petId,
-          avatarUrl: parent.photoUrl || '/animal-sample.png',
-          name: parent.name,
-          sex: parent.gender,
-          birth: formatBirthDateToKorean(parent.birthDate),
-          breed: parent.breed,
-          photos: parent.photos || [],
-        }),
-      ) || [];
+    // API에서 받은 부모 정보 사용
+    const parents = pet.parents || [];
 
     const petDetail: PetDetailData = {
       id: pet.id,

@@ -141,34 +141,31 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                   onClick={() => {
                     const input = document.createElement('input');
                     input.type = 'file';
-                    input.accept = '.jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm';
+                    input.accept = '.jpg,.jpeg,.png,.gif,.webp,.heif,.heic';
                     input.onchange = async (e: Event) => {
                       const target = e.target as HTMLInputElement;
                       const file = target.files?.[0];
                       if (file) {
                         const isVideo = isVideoFile(file);
-                        let preview: string;
 
+                        // 동영상 파일 차단
                         if (isVideo) {
-                          try {
-                            preview = await extractVideoThumbnail(file);
-                          } catch {
-                            preview = URL.createObjectURL(file);
-                          }
-                        } else {
-                          preview = await new Promise<string>((resolve) => {
-                            const reader = new FileReader();
-                            reader.onload = (event) => {
-                              resolve(event.target?.result as string);
-                            };
-                            reader.readAsDataURL(file);
-                          });
+                          alert('대표 사진은 이미지만 업로드 가능합니다. 동영상은 추가 사진에서 업로드해주세요.');
+                          return;
                         }
+
+                        const preview = await new Promise<string>((resolve) => {
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            resolve(event.target?.result as string);
+                          };
+                          reader.readAsDataURL(file);
+                        });
 
                         updateAnimal(index, {
                           imagePreview: preview,
                           imageFile: file,
-                          isVideo,
+                          isVideo: false,
                         });
                       }
                     };

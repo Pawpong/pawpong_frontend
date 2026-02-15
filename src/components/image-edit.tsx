@@ -18,6 +18,7 @@ interface ImageEditProps {
   previewLayout?: 'grid' | 'horizontal' | 'vertical';
   initialImages?: string[];
   labelText?: string;
+  allowVideo?: boolean;
 }
 
 export default function ImageEdit({
@@ -31,6 +32,7 @@ export default function ImageEdit({
   previewLayout = 'horizontal',
   initialImages = [],
   labelText,
+  allowVideo = true,
 }: ImageEditProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
@@ -153,12 +155,17 @@ export default function ImageEdit({
   const currentStatus = imageFiles.length > 0 ? 'Filled' : status;
   const isError = currentStatus === 'Error';
 
+  // 허용할 파일 형식 설정
+  const acceptFormats = allowVideo
+    ? '.jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm'
+    : '.jpg,.jpeg,.png,.gif,.webp,.heif,.heic';
+
   return (
     <div className="flex gap-2">
       <input
         ref={fileInputRef}
         type="file"
-        accept=".jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm"
+        accept={acceptFormats}
         multiple
         className="hidden"
         onChange={handleFileSelect}

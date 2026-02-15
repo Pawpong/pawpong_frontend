@@ -220,6 +220,15 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     status?: 'available' | 'reserved' | 'adopted' | string;
     description?: string;
     photos?: string[];
+    parents?: {
+      id: string;
+      avatarUrl: string;
+      name: string;
+      sex: 'male' | 'female';
+      birth: string;
+      breed: string;
+      photos?: string[];
+    }[];
   };
 
   type ParentPetItem = {
@@ -312,6 +321,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
       pet.status === 'adopted' ? 'completed' : ((pet.status || 'available') as 'available' | 'reserved' | 'completed'),
     description: pet.description,
     photos: pet.photos || [],
+    parents: pet.parents || [],
   }));
 
   // 부모견/부모묘 매핑 - 페이지네이션 응답 형태 처리
