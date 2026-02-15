@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Button } from '@/components/ui/button';
 import ReviewWriteDialog from './review-write-dialog';
+import ReviewHeader from './review-header';
 import { getApplicationDetail } from '@/api/application';
 import { getAdopterProfile } from '@/api/adopter';
 import { Separator } from '@/components/ui/separator';
@@ -86,10 +87,14 @@ export default function ReviewDialog({
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
           className={`${dialogContentClass} p-0 gap-0 bg-white flex flex-col`}
+          showCloseButton={false}
         >
           <VisuallyHidden>
             <DialogTitle>신청 내역 상세</DialogTitle>
           </VisuallyHidden>
+
+          {/* 헤더 - 닫기 버튼 */}
+          <ReviewHeader onClose={() => setOpen(false)} />
 
           {/* 상단 구분선 */}
           <Separator className="bg-grayscale-gray2" />

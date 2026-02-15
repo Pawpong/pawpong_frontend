@@ -93,9 +93,8 @@ function CounselFormContentInner() {
       <FormLayout hasFormData={hasFormData} isLgUp={isLgUp}>
         <div className="w-full lg:w-1/2 flex flex-col">
           <div className="flex w-full flex-col items-center pb-20 md:pb-24  md:px-4 lg:px-0.5">
-            {COUNSEL_SECTIONS.filter((section) => section.sectionId !== 'additional-message').map(
-              (section, index, filteredSections) => {
-                const isLast = index === filteredSections.length - 1;
+            {COUNSEL_SECTIONS.map((section, index) => {
+              const isLast = index === COUNSEL_SECTIONS.length - 1;
 
                 return (
                   <div key={section.sectionId} className="w-full">
