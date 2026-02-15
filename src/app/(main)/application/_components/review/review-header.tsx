@@ -10,7 +10,7 @@ interface ReviewHeaderProps {
 
 export default function ReviewHeader({ onClose }: ReviewHeaderProps) {
   return (
-    <div className="flex flex-col gap-[10px] items-start pt-6 px-5 pb-[10px] md:pt-6 md:px-6 md:pb-[10px] shrink-0">
+    <div className="bg-white flex flex-col gap-[10px] items-start pt-6 px-5 pb-[10px] md:pt-6 md:px-6 md:pb-[10px] shrink-0 rounded-t-none md:rounded-t-2xl">
       <div className="flex gap-1 items-center justify-end w-full">
         <DialogClose asChild>
           <Button variant="secondary" size="icon" onClick={onClose}>
