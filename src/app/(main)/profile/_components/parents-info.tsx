@@ -162,13 +162,18 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                       )}
                     </>
                   ) : (
-                    <Camera
-                      className={cn(
-                        'size-7 group-hover:[&_path]:fill-[#4F3B2E]',
-                        errors.parents?.[index] && '[&_path]:fill-[#FF453A]',
-                      )}
-                      aria-hidden="true"
-                    />
+                    <>
+                      <Camera
+                        className={cn(
+                          'size-7 group-hover:[&_path]:fill-[#4F3B2E]',
+                          errors.parents?.[index] && '[&_path]:fill-[#FF453A]',
+                        )}
+                        aria-hidden="true"
+                      />
+                      <p className={cn('text-caption-s font-medium text-grayscale-gray5', errors.parents?.[index] && 'text-[#FF453A]')}>
+                        대표 사진
+                      </p>
+                    </>
                   )}
                 </button>
                 {parent.imagePreview && (

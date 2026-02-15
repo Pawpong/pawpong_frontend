@@ -125,7 +125,7 @@ export async function syncParentPets(
       idMapping.set(parent.id, newPetId);
 
       // 업로드된 사진 URL 추적
-      let uploadedPhotos: string[] = [];
+      const uploadedPhotos: string[] = [];
 
       // 1. 대표 사진 업로드
       if (parent.imageFile) {
@@ -169,7 +169,7 @@ export async function syncParentPets(
       }
 
       // 기존 사진 URL 가져오기 (original.photos가 있으면 사용, 없으면 빈 배열)
-      let uploadedPhotos: string[] = original?.photos || [];
+      const uploadedPhotos: string[] = original?.photos || [];
 
       // 1. 대표 사진 업로드
       if (parent.imageFile) {
@@ -266,7 +266,7 @@ export async function syncAvailablePets(
       }
 
       // 업로드된 사진 URL 추적
-      let uploadedPhotos: string[] = [];
+      const uploadedPhotos: string[] = [];
 
       // 1. 대표 사진 업로드
       if (animal.imageFile) {
@@ -323,7 +323,7 @@ export async function syncAvailablePets(
       }
 
       // 기존 사진 URL 가져오기 (original.photos가 있으면 사용, 없으면 빈 배열)
-      let uploadedPhotos: string[] = original?.photos || [];
+      const uploadedPhotos: string[] = original?.photos || [];
 
       // 1. 대표 사진 업로드
       if (animal.imageFile) {

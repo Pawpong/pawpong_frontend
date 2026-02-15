@@ -192,13 +192,18 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                       )}
                     </>
                   ) : (
-                    <Camera
-                      className={cn(
-                        'size-7 group-hover:[&_path]:fill-[#4F3B2E]',
-                        errors.animals?.[index] && '[&_path]:fill-[#FF453A]',
-                      )}
-                      aria-hidden="true"
-                    />
+                    <>
+                      <Camera
+                        className={cn(
+                          'size-7 group-hover:[&_path]:fill-[#4F3B2E]',
+                          errors.animals?.[index] && '[&_path]:fill-[#FF453A]',
+                        )}
+                        aria-hidden="true"
+                      />
+                      <p className={cn('text-caption-s font-medium text-grayscale-gray5', errors.animals?.[index] && 'text-[#FF453A]')}>
+                        대표 사진
+                      </p>
+                    </>
                   )}
                 </button>
                 {animal.imagePreview && (
