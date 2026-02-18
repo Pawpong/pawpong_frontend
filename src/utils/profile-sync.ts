@@ -395,11 +395,12 @@ export async function syncAvailablePets(
         });
       }
 
-      // 현재 폼에 남아있는 기존 추가사진(string URL)을 path로 정규화
+      // 현재 대표사진 URL (imagePreview)
       const representativeSource = animal.imagePreview;
+
+      // 기존 추가사진: 원본 CDN URL 그대로 유지 (normalizePhotoPath 제거), 대표사진 제외
       const existingAdditionalPhotos: string[] = (animal.photos || [])
         .filter((item): item is string => typeof item === 'string')
-        .map((photo) => normalizePhotoPath(photo))
         .filter((photo) => !!photo && !isSamePhoto(photo, representativeSource));
 
       // 새로 추가된 File들만 추출
@@ -407,16 +408,25 @@ export async function syncAvailablePets(
         (item): item is File => item instanceof File,
       );
 
-      // 추가사진 업로드: 기존 추가사진 path를 existingPhotos로 전달해 보존
-      const uploadedPhotoNames = [...existingAdditionalPhotos];
-      for (const file of newPhotoFiles) {
-        const uploadResult = await uploadAvailablePetPhoto(animal.id, file, uploadedPhotoNames);
-        uploadedPhotoNames.push(uploadResult.fileName);
-      }
-
-      // 대표사진 변경: imageFile이 있는 경우
       if (animal.imageFile) {
-        await uploadAvailablePetPhoto(animal.id, animal.imageFile, uploadedPhotoNames);
+        // 대표사진 변경: 새 대표사진을 photos[0]으로 만들기 위해 먼저 업로드
+        const mainPhotoResult = await uploadAvailablePetPhoto(animal.id, animal.imageFile, []);
+        // 추가사진 업로드: 새 대표사진(cdnUrl)을 앞에 두고 기존+신규 추가사진 이어붙이기
+        const uploadedPhotoNames: string[] = [mainPhotoResult.cdnUrl, ...existingAdditionalPhotos];
+        for (const file of newPhotoFiles) {
+          const uploadResult = await uploadAvailablePetPhoto(animal.id, file, uploadedPhotoNames);
+          uploadedPhotoNames.push(uploadResult.cdnUrl);
+        }
+      } else {
+        // 대표사진 변경 없음: 기존 대표사진을 photos[0]으로 유지
+        const uploadedPhotoNames: string[] = [
+          ...(representativeSource ? [representativeSource] : []),
+          ...existingAdditionalPhotos,
+        ];
+        for (const file of newPhotoFiles) {
+          const uploadResult = await uploadAvailablePetPhoto(animal.id, file, uploadedPhotoNames);
+          uploadedPhotoNames.push(uploadResult.cdnUrl);
+        }
       }
     }
   }
