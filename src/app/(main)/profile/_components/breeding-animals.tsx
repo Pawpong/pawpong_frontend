@@ -200,7 +200,12 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                         )}
                         aria-hidden="true"
                       />
-                      <p className={cn('text-caption-s font-medium text-grayscale-gray5', errors.animals?.[index] && 'text-[#FF453A]')}>
+                      <p
+                        className={cn(
+                          'text-caption-s font-medium text-grayscale-gray5',
+                          errors.animals?.[index] && 'text-[#FF453A]',
+                        )}
+                      >
                         대표 사진
                       </p>
                     </>

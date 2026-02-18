@@ -170,7 +170,12 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                         )}
                         aria-hidden="true"
                       />
-                      <p className={cn('text-caption-s font-medium text-grayscale-gray5', errors.parents?.[index] && 'text-[#FF453A]')}>
+                      <p
+                        className={cn(
+                          'text-caption-s font-medium text-grayscale-gray5',
+                          errors.parents?.[index] && 'text-[#FF453A]',
+                        )}
+                      >
                         대표 사진
                       </p>
                     </>

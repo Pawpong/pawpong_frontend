@@ -39,6 +39,7 @@ type ParentPetOriginal = {
   birthDate?: string | Date;
   photoFileName?: string;
   description?: string;
+  photos?: string[];
 };
 
 type AvailablePetOriginal = {
@@ -48,6 +49,7 @@ type AvailablePetOriginal = {
   breed?: string;
   gender?: 'male' | 'female' | string;
   birthDate?: string | Date;
+  photos?: string[];
   price?: number;
   status?: string;
   description?: string;
@@ -124,22 +126,34 @@ export async function syncParentPets(
       // 임시 ID → 실제 petId 매핑 저장
       idMapping.set(parent.id, newPetId);
 
-      // 업로드된 사진 URL 추적
+      // 업로드된 추가 사진 URL 추적 (대표사진 제외)
       const uploadedPhotos: string[] = [];
 
-      // 1. 대표 사진 업로드
+      // 1. 대표 사진 업로드 (빈 배열 전달하여 photos 배열에 포함되지 않도록 함)
+      let representativePhotoFileName: string | undefined;
       if (parent.imageFile) {
-        const uploadResult = await uploadParentPetPhoto(newPetId, parent.imageFile, uploadedPhotos);
-        uploadedPhotos.push(uploadResult.fileName);
+        const uploadResult = await uploadParentPetPhoto(newPetId, parent.imageFile, []);
+        representativePhotoFileName = uploadResult.fileName;
+        // 대표 사진을 photoFileName으로 업데이트 (photos 배열에는 추가하지 않음)
+        await updateParentPet(newPetId, {
+          photoFileName: representativePhotoFileName,
+        });
       }
 
-      // 2. 추가 사진·영상 업로드
+      // 2. 추가 사진·영상 업로드 (기존 추가사진들만 전달)
+      // 대표사진이 업로드된 경우, 추가사진 업로드 후에도 photoFileName이 유지되도록 다시 업데이트
       if (parent.photos && parent.photos.length > 0) {
         for (const item of parent.photos) {
           if (item instanceof File) {
             const uploadResult = await uploadParentPetPhoto(newPetId, item, uploadedPhotos);
             uploadedPhotos.push(uploadResult.fileName);
           }
+        }
+        // 추가사진 업로드 후 대표사진이 덮어씌워지지 않도록 다시 업데이트
+        if (representativePhotoFileName) {
+          await updateParentPet(newPetId, {
+            photoFileName: representativePhotoFileName,
+          });
         }
       }
     } else {
@@ -168,22 +182,35 @@ export async function syncParentPets(
         });
       }
 
-      // 기존 사진 URL 가져오기 (original.photos가 있으면 사용, 없으면 빈 배열)
-      const uploadedPhotos: string[] = original?.photos || [];
+      // 기존 추가 사진 URL 가져오기 (original.photos가 있으면 사용, 없으면 빈 배열)
+      // 대표사진(photoFileName)은 제외하고 추가사진만 가져옴
+      const uploadedPhotos: string[] = (original?.photos || []).filter((photo) => photo !== original?.photoFileName);
 
-      // 1. 대표 사진 업로드
+      // 1. 대표 사진 업로드 (기존 추가사진만 전달하여 대표사진이 photos 배열에 포함되지 않도록 함)
+      let representativePhotoFileName: string | undefined;
       if (parent.imageFile) {
         const uploadResult = await uploadParentPetPhoto(parent.id, parent.imageFile, uploadedPhotos);
-        uploadedPhotos.push(uploadResult.fileName);
+        representativePhotoFileName = uploadResult.fileName;
+        // 대표 사진을 photoFileName으로 업데이트
+        await updateParentPet(parent.id, {
+          photoFileName: representativePhotoFileName,
+        });
       }
 
-      // 2. 추가 사진·영상 업로드
+      // 2. 추가 사진·영상 업로드 (기존 추가사진들만 전달)
+      // 대표사진이 업로드된 경우, 추가사진 업로드 후에도 photoFileName이 유지되도록 다시 업데이트
       if (parent.photos && parent.photos.length > 0) {
         for (const item of parent.photos) {
           if (item instanceof File) {
             const uploadResult = await uploadParentPetPhoto(parent.id, item, uploadedPhotos);
             uploadedPhotos.push(uploadResult.fileName);
           }
+        }
+        // 추가사진 업로드 후 대표사진이 덮어씌워지지 않도록 다시 업데이트
+        if (representativePhotoFileName) {
+          await updateParentPet(parent.id, {
+            photoFileName: representativePhotoFileName,
+          });
         }
       }
     }
@@ -265,16 +292,16 @@ export async function syncAvailablePets(
         await updatePetStatus(newPetId, desiredStatus);
       }
 
-      // 업로드된 사진 URL 추적
+      // 업로드된 추가 사진 URL 추적 (대표사진 제외)
       const uploadedPhotos: string[] = [];
 
-      // 1. 대표 사진 업로드
+      // 1. 대표 사진 업로드 (빈 배열 전달하여 photos 배열에 포함되지 않도록 함)
       if (animal.imageFile) {
-        const uploadResult = await uploadAvailablePetPhoto(newPetId, animal.imageFile, uploadedPhotos);
-        uploadedPhotos.push(uploadResult.fileName);
+        await uploadAvailablePetPhoto(newPetId, animal.imageFile, []);
+        // 대표사진은 photos 배열에 추가하지 않음
       }
 
-      // 2. 추가 사진·영상 업로드
+      // 2. 추가 사진·영상 업로드 (기존 추가사진들만 전달)
       if (animal.photos && animal.photos.length > 0) {
         for (const item of animal.photos) {
           if (item instanceof File) {
@@ -322,16 +349,18 @@ export async function syncAvailablePets(
         });
       }
 
-      // 기존 사진 URL 가져오기 (original.photos가 있으면 사용, 없으면 빈 배열)
-      const uploadedPhotos: string[] = original?.photos || [];
+      // 기존 추가 사진 URL 가져오기 (original.photos가 있으면 사용, 없으면 빈 배열)
+      // 대표사진(첫 번째 사진)은 제외하고 추가사진만 가져옴
+      const originalPhotos = original?.photos || [];
+      const uploadedPhotos: string[] = originalPhotos.length > 0 ? originalPhotos.slice(1) : [];
 
-      // 1. 대표 사진 업로드
+      // 1. 대표 사진 업로드 (기존 추가사진만 전달하여 대표사진이 photos 배열에 포함되지 않도록 함)
       if (animal.imageFile) {
-        const uploadResult = await uploadAvailablePetPhoto(animal.id, animal.imageFile, uploadedPhotos);
-        uploadedPhotos.push(uploadResult.fileName);
+        await uploadAvailablePetPhoto(animal.id, animal.imageFile, uploadedPhotos);
+        // 대표사진은 photos 배열에 추가하지 않음
       }
 
-      // 2. 추가 사진·영상 업로드
+      // 2. 추가 사진·영상 업로드 (기존 추가사진들만 전달)
       if (animal.photos && animal.photos.length > 0) {
         for (const item of animal.photos) {
           if (item instanceof File) {

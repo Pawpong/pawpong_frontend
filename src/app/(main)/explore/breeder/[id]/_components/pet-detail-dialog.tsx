@@ -208,8 +208,8 @@ export default function PetDetailDialog({
             )}
           </div>
 
-          {/* Photos 섹션 - 소개글 밑에 표시 (2장 이상일 때만) */}
-          {pet.photos && pet.photos.length > 1 && (
+          {/* Photos 섹션 - 소개글 밑에 표시 (추가사진이 있을 때) */}
+          {pet.photos && pet.photos.length > 0 && (
             <div className="flex flex-col gap-3">
               <div className="space-y-3">
                 {pet.photos.slice(0, 4).map((photo, index) => {

@@ -45,6 +45,7 @@ export default function PetsPage({ params }: PageProps) {
     breed: string;
     description?: string;
     status?: 'available' | 'reserved' | 'adopted' | string;
+    photos?: string[];
   };
 
   type MappedPet = {

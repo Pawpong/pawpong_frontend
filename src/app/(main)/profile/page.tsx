@@ -79,6 +79,7 @@ type BreederProfileApi = {
     status?: string;
     parentInfo?: { mother?: string; father?: string };
     price?: number;
+    mainPhoto?: string;
     photos?: string[];
   }>;
 };
@@ -264,22 +265,27 @@ export default function ProfilePage() {
         parents: parentsData,
         animals:
           typedProfile.availablePetInfo?.length && typedProfile.availablePetInfo.length > 0
-            ? typedProfile.availablePetInfo.map((pet) => ({
-                id: pet.petId || pet._id?.toString() || defaultAnimalId,
-                name: pet.name || '',
-                birthDate: formatDateToYYYYMMDD(pet.birthDate),
-                breed: pet.breed ? [pet.breed] : [],
-                gender: pet.gender || null,
-                description: pet.description || '',
-                adoptionStatus: convertStatusToKorean(pet.status || ''),
-                motherId: pet.parentInfo?.mother?.toString() || '',
-                fatherId: pet.parentInfo?.father?.toString() || '',
-                price: pet.price?.toString() || '',
-                isCounselMode: pet.price === 0,
-                imagePreview: pet.photos?.[0] || undefined,
-                isVideo: pet.photos?.[0] ? isVideoUrl(pet.photos[0]) : undefined,
-                photos: pet.photos || [],
-              }))
+            ? typedProfile.availablePetInfo.map((pet) => {
+                // 대표사진(첫 번째 사진)을 photos 배열에서 제외
+                const representativePhoto = pet.photos?.[0];
+                const additionalPhotos = (pet.photos || []).slice(1); // 첫 번째 사진 제외
+                return {
+                  id: pet.petId || pet._id?.toString() || defaultAnimalId,
+                  name: pet.name || '',
+                  birthDate: formatDateToYYYYMMDD(pet.birthDate),
+                  breed: pet.breed ? [pet.breed] : [],
+                  gender: pet.gender || null,
+                  description: pet.description || '',
+                  adoptionStatus: convertStatusToKorean(pet.status || ''),
+                  motherId: pet.parentInfo?.mother?.toString() || '',
+                  fatherId: pet.parentInfo?.father?.toString() || '',
+                  price: pet.price?.toString() || '',
+                  isCounselMode: pet.price === 0,
+                  imagePreview: representativePhoto || undefined,
+                  isVideo: representativePhoto ? isVideoUrl(representativePhoto) : undefined,
+                  photos: additionalPhotos,
+                };
+              })
             : [
                 {
                   id: defaultAnimalId,
