@@ -46,3 +46,7 @@ package-lock.json
 
 *storybook.log
 storybook-static
+
+# Claude Code & Serena
+.claude.json
+.serena/
