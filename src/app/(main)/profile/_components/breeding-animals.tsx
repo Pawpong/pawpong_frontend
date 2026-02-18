@@ -171,7 +171,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                     };
                     input.click();
                   }}
-                  className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden relative"
+                  className="bg-white flex flex-col gap-1.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden relative"
                   aria-label={animal.imagePreview ? '동물 사진 변경' : '동물 사진 업로드'}
                 >
                   {animal.imagePreview ? (

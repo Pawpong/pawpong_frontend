@@ -141,7 +141,7 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                     };
                     input.click();
                   }}
-                  className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden relative"
+                  className="bg-white flex flex-col gap-1.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden relative"
                   aria-label={parent.imagePreview ? '부모 사진 변경' : '부모 사진 업로드'}
                 >
                   {parent.imagePreview ? (
