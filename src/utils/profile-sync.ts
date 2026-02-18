@@ -77,7 +77,40 @@ function formatBirthDate(birthDate: string): string {
  * 임시 ID인지 확인 (클라이언트에서 생성한 ID)
  */
 function isTempId(id: string): boolean {
-  return id.startsWith('parent-') || id.startsWith('animal-');
+  return (
+    id.startsWith('parent-') ||
+    id.startsWith('animal-') ||
+    id.startsWith('parents-') ||
+    id.startsWith('animals-')
+  );
+}
+
+function normalizePhotoPath(value: string | undefined): string {
+  if (!value) return '';
+  try {
+    const url = new URL(value);
+    return url.pathname.replace(/^\/+/, '');
+  } catch {
+    return value.replace(/^\/+/, '');
+  }
+}
+
+function photoBasename(value: string | undefined): string {
+  const normalized = normalizePhotoPath(value);
+  if (!normalized) return '';
+  const parts = normalized.split('/');
+  return parts[parts.length - 1] || '';
+}
+
+function isSamePhoto(a: string | undefined, b: string | undefined): boolean {
+  if (!a || !b) return false;
+  if (a === b) return true;
+  const aPath = normalizePhotoPath(a);
+  const bPath = normalizePhotoPath(b);
+  if (aPath && bPath && aPath === bPath) return true;
+  const aBase = photoBasename(a);
+  const bBase = photoBasename(b);
+  return !!aBase && !!bBase && aBase === bBase;
 }
 
 /**
@@ -184,17 +217,30 @@ export async function syncParentPets(
 
       // 기존 추가 사진 URL 가져오기 (original.photos가 있으면 사용, 없으면 빈 배열)
       // 대표사진(photoFileName)은 제외하고 추가사진만 가져옴
-      const uploadedPhotos: string[] = (original?.photos || []).filter((photo) => photo !== original?.photoFileName);
+      const uploadedPhotos: string[] = (original?.photos || []).filter(
+        (photo) => !isSamePhoto(photo, original?.photoFileName),
+      );
 
-      // 1. 대표 사진 업로드 (기존 추가사진만 전달하여 대표사진이 photos 배열에 포함되지 않도록 함)
+      // 1. 대표 사진 업로드
+      // 백엔드가 자동으로 photos 배열에 추가하므로, 빈 배열을 전달하여 기존 추가사진이 유지되도록 함
+      // 단, 백엔드가 빈 배열을 받으면 기존 photos를 삭제할 수 있으므로, 기존 추가사진을 전달하되
+      // 업로드 후 새 대표사진이 photos 배열에 포함되지 않도록 백엔드 수정이 필요함
+      // 현재는 백엔드가 자동으로 추가하므로, 업로드 후 uploadedPhotos에서 새 대표사진을 제거해야 함
       let representativePhotoFileName: string | undefined;
       if (parent.imageFile) {
+        // 대표사진 업로드 시 기존 추가사진을 전달 (백엔드가 새 파일을 photos에 추가하더라도 기존 추가사진은 유지)
         const uploadResult = await uploadParentPetPhoto(parent.id, parent.imageFile, uploadedPhotos);
         representativePhotoFileName = uploadResult.fileName;
         // 대표 사진을 photoFileName으로 업데이트
         await updateParentPet(parent.id, {
           photoFileName: representativePhotoFileName,
         });
+        // 백엔드가 새로 업로드한 대표사진을 photos 배열에 자동으로 추가했을 수 있으므로,
+        // uploadedPhotos에서 새 대표사진을 제거 (추가사진 업로드 시 포함되지 않도록)
+        const filtered = uploadedPhotos.filter(
+          (photo) => !isSamePhoto(photo, representativePhotoFileName),
+        );
+        uploadedPhotos.splice(0, uploadedPhotos.length, ...filtered);
       }
 
       // 2. 추가 사진·영상 업로드 (기존 추가사진들만 전달)
@@ -349,25 +395,28 @@ export async function syncAvailablePets(
         });
       }
 
-      // 기존 추가 사진 URL 가져오기 (original.photos가 있으면 사용, 없으면 빈 배열)
-      // 대표사진(첫 번째 사진)은 제외하고 추가사진만 가져옴
-      const originalPhotos = original?.photos || [];
-      const uploadedPhotos: string[] = originalPhotos.length > 0 ? originalPhotos.slice(1) : [];
+      // 현재 폼에 남아있는 기존 추가사진(string URL)을 path로 정규화
+      const representativeSource = animal.imagePreview;
+      const existingAdditionalPhotos: string[] = (animal.photos || [])
+        .filter((item): item is string => typeof item === 'string')
+        .map((photo) => normalizePhotoPath(photo))
+        .filter((photo) => !!photo && !isSamePhoto(photo, representativeSource));
 
-      // 1. 대표 사진 업로드 (기존 추가사진만 전달하여 대표사진이 photos 배열에 포함되지 않도록 함)
-      if (animal.imageFile) {
-        await uploadAvailablePetPhoto(animal.id, animal.imageFile, uploadedPhotos);
-        // 대표사진은 photos 배열에 추가하지 않음
+      // 새로 추가된 File들만 추출
+      const newPhotoFiles: File[] = (animal.photos || []).filter(
+        (item): item is File => item instanceof File,
+      );
+
+      // 추가사진 업로드: 기존 추가사진 path를 existingPhotos로 전달해 보존
+      const uploadedPhotoNames = [...existingAdditionalPhotos];
+      for (const file of newPhotoFiles) {
+        const uploadResult = await uploadAvailablePetPhoto(animal.id, file, uploadedPhotoNames);
+        uploadedPhotoNames.push(uploadResult.fileName);
       }
 
-      // 2. 추가 사진·영상 업로드 (기존 추가사진들만 전달)
-      if (animal.photos && animal.photos.length > 0) {
-        for (const item of animal.photos) {
-          if (item instanceof File) {
-            const uploadResult = await uploadAvailablePetPhoto(animal.id, item, uploadedPhotos);
-            uploadedPhotos.push(uploadResult.fileName);
-          }
-        }
+      // 대표사진 변경: imageFile이 있는 경우
+      if (animal.imageFile) {
+        await uploadAvailablePetPhoto(animal.id, animal.imageFile, uploadedPhotoNames);
       }
     }
   }

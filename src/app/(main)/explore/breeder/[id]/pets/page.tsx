@@ -111,6 +111,15 @@ export default function PetsPage({ params }: PageProps) {
         }),
       ) || [];
 
+    // 원본 데이터에서 photos 가져오기 (mainPhoto 제외)
+    const originalPet = petsData?.pages
+      .flatMap((page) => page.items || [])
+      .find((p: Pet & { status?: string; photos?: string[] }) => p.petId === pet.id);
+
+    // mainPhoto를 photos 배열에서 제외
+    const mainPhoto = originalPet?.mainPhoto || pet.avatarUrl;
+    const additionalPhotos = (originalPet?.photos || []).filter((photo) => photo !== mainPhoto);
+
     const petDetail: PetDetailData = {
       id: pet.id,
       avatarUrl: pet.avatarUrl,
@@ -121,6 +130,7 @@ export default function PetsPage({ params }: PageProps) {
       breed: pet.breed,
       status: pet.status || 'available',
       description: pet.description,
+      photos: additionalPhotos,
       parents: parents,
     };
 

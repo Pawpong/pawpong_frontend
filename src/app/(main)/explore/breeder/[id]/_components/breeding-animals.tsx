@@ -56,6 +56,9 @@ export default function BreedingAnimals({
     // API에서 받은 부모 정보 사용
     const parents = pet.parents || [];
 
+    // 대표사진(avatarUrl)을 photos 배열에서 제외
+    const additionalPhotos = (pet.photos || []).filter((photo) => photo !== pet.avatarUrl);
+
     const petDetail: PetDetailData = {
       id: pet.id,
       avatarUrl: pet.avatarUrl,
@@ -66,7 +69,7 @@ export default function BreedingAnimals({
       breed: pet.breed,
       status: pet.status || 'available',
       description: pet.description,
-      photos: pet.photos || [],
+      photos: additionalPhotos,
       parents: parents,
     };
 
