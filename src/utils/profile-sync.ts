@@ -215,49 +215,48 @@ export async function syncParentPets(
         });
       }
 
-      // 기존 추가 사진 URL 가져오기 (original.photos가 있으면 사용, 없으면 빈 배열)
-      // 대표사진(photoFileName)은 제외하고 추가사진만 가져옴
-      const uploadedPhotos: string[] = (original?.photos || []).filter(
-        (photo) => !isSamePhoto(photo, original?.photoFileName),
+      // 현재 대표사진 URL (imagePreview)
+      const representativeSource = parent.imagePreview;
+
+      // 기존 추가사진: string URL만, 대표사진 제외
+      const existingAdditionalPhotos: string[] = (parent.photos || [])
+        .filter((item): item is string => typeof item === 'string')
+        .filter((photo) => !!photo && !isSamePhoto(photo, representativeSource));
+
+      // 새로 추가된 File들만 추출
+      const newPhotoFiles: File[] = (parent.photos || []).filter(
+        (item): item is File => item instanceof File,
       );
 
+      // 업로드된 추가 사진 URL 추적
+      // 백엔드가 photos[0]을 항상 photoFileName으로 저장하므로,
+      // 대표사진을 맨 앞에 포함시켜야 photoFileName이 유지됨
+      const uploadedPhotos: string[] = [
+        ...(representativeSource ? [representativeSource] : []),
+        ...existingAdditionalPhotos,
+      ];
+
       // 1. 대표 사진 업로드
-      // 백엔드가 자동으로 photos 배열에 추가하므로, 빈 배열을 전달하여 기존 추가사진이 유지되도록 함
-      // 단, 백엔드가 빈 배열을 받으면 기존 photos를 삭제할 수 있으므로, 기존 추가사진을 전달하되
-      // 업로드 후 새 대표사진이 photos 배열에 포함되지 않도록 백엔드 수정이 필요함
-      // 현재는 백엔드가 자동으로 추가하므로, 업로드 후 uploadedPhotos에서 새 대표사진을 제거해야 함
       let representativePhotoFileName: string | undefined;
       if (parent.imageFile) {
-        // 대표사진 업로드 시 기존 추가사진을 전달 (백엔드가 새 파일을 photos에 추가하더라도 기존 추가사진은 유지)
-        const uploadResult = await uploadParentPetPhoto(parent.id, parent.imageFile, uploadedPhotos);
-        representativePhotoFileName = uploadResult.fileName;
-        // 대표 사진을 photoFileName으로 업데이트
+        const mainPhotoResult = await uploadParentPetPhoto(parent.id, parent.imageFile, []);
+        representativePhotoFileName = mainPhotoResult.fileName;
         await updateParentPet(parent.id, {
           photoFileName: representativePhotoFileName,
         });
-        // 백엔드가 새로 업로드한 대표사진을 photos 배열에 자동으로 추가했을 수 있으므로,
-        // uploadedPhotos에서 새 대표사진을 제거 (추가사진 업로드 시 포함되지 않도록)
-        const filtered = uploadedPhotos.filter(
-          (photo) => !isSamePhoto(photo, representativePhotoFileName),
-        );
-        uploadedPhotos.splice(0, uploadedPhotos.length, ...filtered);
       }
 
-      // 2. 추가 사진·영상 업로드 (기존 추가사진들만 전달)
-      // 대표사진이 업로드된 경우, 추가사진 업로드 후에도 photoFileName이 유지되도록 다시 업데이트
-      if (parent.photos && parent.photos.length > 0) {
-        for (const item of parent.photos) {
-          if (item instanceof File) {
-            const uploadResult = await uploadParentPetPhoto(parent.id, item, uploadedPhotos);
-            uploadedPhotos.push(uploadResult.fileName);
-          }
-        }
-        // 추가사진 업로드 후 대표사진이 덮어씌워지지 않도록 다시 업데이트
-        if (representativePhotoFileName) {
-          await updateParentPet(parent.id, {
-            photoFileName: representativePhotoFileName,
-          });
-        }
+      // 2. 추가 사진·영상 업로드 (기존 추가사진 + 신규 File)
+      for (const file of newPhotoFiles) {
+        const uploadResult = await uploadParentPetPhoto(parent.id, file, uploadedPhotos);
+        uploadedPhotos.push(uploadResult.cdnUrl);
+      }
+
+      // 추가사진 업로드 후 대표사진이 덮어씌워지지 않도록 다시 업데이트
+      if (representativePhotoFileName) {
+        await updateParentPet(parent.id, {
+          photoFileName: representativePhotoFileName,
+        });
       }
     }
   }

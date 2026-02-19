@@ -19,6 +19,7 @@ interface ImageEditProps {
   initialImages?: string[];
   labelText?: string;
   allowVideo?: boolean;
+  resetKey?: number | string;
 }
 
 export default function ImageEdit({
@@ -33,11 +34,17 @@ export default function ImageEdit({
   initialImages = [],
   labelText,
   allowVideo = true,
+  resetKey,
 }: ImageEditProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
   const initializedRef = useRef(false);
   const { toast } = useToast();
+
+  // resetKey가 바뀌면 강제 재초기화 (저장 완료 후 서버 데이터로 리셋할 때 사용)
+  useEffect(() => {
+    initializedRef.current = false;
+  }, [resetKey]);
 
   // Initialize with existing images (URLs)
   useEffect(() => {
@@ -73,7 +80,8 @@ export default function ImageEdit({
 
       processInitialImages();
     }
-  }, [initialImages]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialImages, resetKey]);
 
   const handleClick = () => {
     fileInputRef.current?.click();

@@ -381,6 +381,11 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                       initialImages={
                         Array.isArray(field.value) ? field.value.filter((v): v is string => typeof v === 'string') : []
                       }
+                      resetKey={
+                        Array.isArray(field.value)
+                          ? field.value.filter((v): v is string => typeof v === 'string').join(',')
+                          : ''
+                      }
                       onFileChange={(files) => {
                         field.onChange(files);
                       }}

@@ -65,6 +65,7 @@ type BreederProfileApi = {
     breed?: string;
     gender?: 'male' | 'female';
     photoFileName?: string;
+    photoUrl?: string;
     description?: string;
     photos?: string[];
   }>;
@@ -237,7 +238,7 @@ export default function ProfilePage() {
       const parentsData: ProfileFormData['parents'] =
         typedProfile.parentPetInfo?.length && typedProfile.parentPetInfo.length > 0
           ? typedProfile.parentPetInfo.map((pet) => {
-              const representativePhoto = pet.photoFileName || pet.photos?.[0];
+              const representativePhoto = pet.photoFileName || pet.photoUrl || pet.photos?.[0];
               const additionalPhotos = (pet.photos || []).filter(
                 (photo) => !isSamePhoto(photo, representativePhoto),
               );
