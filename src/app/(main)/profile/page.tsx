@@ -239,8 +239,10 @@ export default function ProfilePage() {
         typedProfile.parentPetInfo?.length && typedProfile.parentPetInfo.length > 0
           ? typedProfile.parentPetInfo.map((pet) => {
               const representativePhoto = pet.photoFileName || pet.photoUrl || pet.photos?.[0];
-              // photos 배열의 첫 번째 요소(대표사진)를 제외한 나머지만 추가사진으로 설정
-              const additionalPhotos = (pet.photos || []).slice(1);
+              // 백엔드가 API 응답 시 이미 대표사진을 제거하고 반환하므로
+              // photos 배열을 그대로 사용 (추가사진만 포함되어 있음)
+              const additionalPhotos = pet.photos || [];
+
               return {
                 id: pet.petId || pet._id?.toString() || defaultParentId,
                 name: pet.name || '',
@@ -301,8 +303,10 @@ export default function ProfilePage() {
           typedProfile.availablePetInfo?.length && typedProfile.availablePetInfo.length > 0
             ? typedProfile.availablePetInfo.map((pet) => {
                 const representativePhoto = pet.mainPhoto || pet.photos?.[0];
-                // photos 배열의 첫 번째 요소(대표사진)를 제외한 나머지만 추가사진으로 설정
+                // 분양 개체는 photos 배열에 대표사진(photos[0])이 포함되어 있으므로
+                // 첫 번째 요소를 제외한 나머지만 추가사진으로 설정
                 const additionalPhotos = (pet.photos || []).slice(1);
+
                 return {
                   id: pet.petId || pet._id?.toString() || defaultAnimalId,
                   name: pet.name || '',
