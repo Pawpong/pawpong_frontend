@@ -239,9 +239,8 @@ export default function ProfilePage() {
         typedProfile.parentPetInfo?.length && typedProfile.parentPetInfo.length > 0
           ? typedProfile.parentPetInfo.map((pet) => {
               const representativePhoto = pet.photoFileName || pet.photoUrl || pet.photos?.[0];
-              const additionalPhotos = (pet.photos || []).filter(
-                (photo) => !isSamePhoto(photo, representativePhoto),
-              );
+              // photos 배열의 첫 번째 요소(대표사진)를 제외한 나머지만 추가사진으로 설정
+              const additionalPhotos = (pet.photos || []).slice(1);
               return {
                 id: pet.petId || pet._id?.toString() || defaultParentId,
                 name: pet.name || '',
@@ -302,9 +301,8 @@ export default function ProfilePage() {
           typedProfile.availablePetInfo?.length && typedProfile.availablePetInfo.length > 0
             ? typedProfile.availablePetInfo.map((pet) => {
                 const representativePhoto = pet.mainPhoto || pet.photos?.[0];
-                const additionalPhotos = (pet.photos || []).filter(
-                  (photo) => !isSamePhoto(photo, representativePhoto),
-                );
+                // photos 배열의 첫 번째 요소(대표사진)를 제외한 나머지만 추가사진으로 설정
+                const additionalPhotos = (pet.photos || []).slice(1);
                 return {
                   id: pet.petId || pet._id?.toString() || defaultAnimalId,
                   name: pet.name || '',
