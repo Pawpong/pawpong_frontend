@@ -467,31 +467,6 @@ export const submitVerificationDocuments = async (data: SubmitDocumentsRequest):
   }
 };
 
-/**
- * 브리더 레벨 변경
- * PATCH /api/breeder-level-admin/level/{breederId}
- */
-export const changeBreederLevel = async (breederId: string, level: 'new' | 'elite'): Promise<{ message: string }> => {
-  try {
-    const response = await apiClient.patch<ApiResponse<{ message: string }>>(
-      `/api/breeder-level-admin/level/${breederId}`,
-      { level },
-    );
-
-    if (!response.data.success || !response.data.data) {
-      throw new Error('레벨 변경에 실패했습니다.');
-    }
-
-    return response.data.data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error('Change breeder level error:', error.message);
-      throw error;
-    }
-    throw new Error('레벨 변경 중 오류가 발생했습니다.');
-  }
-};
-
 /** 받은 입양 신청 목록 아이템 DTO */
 export interface ReceivedApplicationItemDto {
   applicationId: string;

@@ -111,40 +111,37 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                   onClick={() => {
                     const input = document.createElement('input');
                     input.type = 'file';
-                    input.accept = '.jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm';
+                    input.accept = '.jpg,.jpeg,.png,.gif,.webp,.heif,.heic';
                     input.onchange = async (e: Event) => {
                       const target = e.target as HTMLInputElement;
                       const file = target.files?.[0];
                       if (file) {
                         const isVideo = isVideoFile(file);
-                        let preview: string;
 
+                        // 동영상 파일 차단
                         if (isVideo) {
-                          try {
-                            preview = await extractVideoThumbnail(file);
-                          } catch {
-                            preview = URL.createObjectURL(file);
-                          }
-                        } else {
-                          preview = await new Promise<string>((resolve) => {
-                            const reader = new FileReader();
-                            reader.onload = (event) => {
-                              resolve(event.target?.result as string);
-                            };
-                            reader.readAsDataURL(file);
-                          });
+                          alert('대표 사진은 이미지만 업로드 가능합니다. 동영상은 추가 사진에서 업로드해주세요.');
+                          return;
                         }
+
+                        const preview = await new Promise<string>((resolve) => {
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            resolve(event.target?.result as string);
+                          };
+                          reader.readAsDataURL(file);
+                        });
 
                         updateParent(index, {
                           imagePreview: preview,
                           imageFile: file,
-                          isVideo,
+                          isVideo: false,
                         });
                       }
                     };
                     input.click();
                   }}
-                  className="bg-white flex flex-col gap-0.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden relative"
+                  className="bg-white flex flex-col gap-1.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group overflow-hidden relative"
                   aria-label={parent.imagePreview ? '부모 사진 변경' : '부모 사진 업로드'}
                 >
                   {parent.imagePreview ? (
@@ -165,13 +162,23 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                       )}
                     </>
                   ) : (
-                    <Camera
-                      className={cn(
-                        'size-7 group-hover:[&_path]:fill-[#4F3B2E]',
-                        errors.parents?.[index] && '[&_path]:fill-[#FF453A]',
-                      )}
-                      aria-hidden="true"
-                    />
+                    <>
+                      <Camera
+                        className={cn(
+                          'size-7 group-hover:[&_path]:fill-[#4F3B2E]',
+                          errors.parents?.[index] && '[&_path]:fill-[#FF453A]',
+                        )}
+                        aria-hidden="true"
+                      />
+                      <p
+                        className={cn(
+                          'text-caption-s font-medium text-grayscale-gray5',
+                          errors.parents?.[index] && 'text-[#FF453A]',
+                        )}
+                      >
+                        대표 사진
+                      </p>
+                    </>
                   )}
                 </button>
                 {parent.imagePreview && (
@@ -373,6 +380,11 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
                       labelText="사진·영상"
                       initialImages={
                         Array.isArray(field.value) ? field.value.filter((v): v is string => typeof v === 'string') : []
+                      }
+                      resetKey={
+                        Array.isArray(field.value)
+                          ? field.value.filter((v): v is string => typeof v === 'string').join(',')
+                          : ''
                       }
                       onFileChange={(files) => {
                         field.onChange(files);

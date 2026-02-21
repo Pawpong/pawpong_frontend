@@ -31,6 +31,34 @@ interface BreederDetailClientProps {
   breederId: string;
 }
 
+const normalizePhotoPath = (value: string | undefined): string => {
+  if (!value) return '';
+  try {
+    const url = new URL(value);
+    return url.pathname.replace(/^\/+/, '');
+  } catch {
+    return value.replace(/^\/+/, '');
+  }
+};
+
+const photoBasename = (value: string | undefined): string => {
+  const normalized = normalizePhotoPath(value);
+  if (!normalized) return '';
+  const parts = normalized.split('/');
+  return parts[parts.length - 1] || '';
+};
+
+const isSamePhoto = (a: string | undefined, b: string | undefined): boolean => {
+  if (!a || !b) return false;
+  if (a === b) return true;
+  const aPath = normalizePhotoPath(a);
+  const bPath = normalizePhotoPath(b);
+  if (aPath && bPath && aPath === bPath) return true;
+  const aBase = photoBasename(a);
+  const bBase = photoBasename(b);
+  return !!aBase && !!bBase && aBase === bBase;
+};
+
 export default function BreederDetailClient({ breederId }: BreederDetailClientProps) {
   const router = useRouter();
   const { clearCounselFormData } = useCounselFormStore();
@@ -220,6 +248,15 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     status?: 'available' | 'reserved' | 'adopted' | string;
     description?: string;
     photos?: string[];
+    parents?: {
+      id: string;
+      avatarUrl: string;
+      name: string;
+      sex: 'male' | 'female';
+      birth: string;
+      breed: string;
+      photos?: string[];
+    }[];
   };
 
   type ParentPetItem = {
@@ -300,33 +337,45 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
   const breederDescription = (apiData.description || profileInfo?.profileDescription || '').trim();
 
   // 분양 가능 개체 매핑 (비회원은 가격 정보를 볼 수 없음)
-  const breedingAnimals = ((petsData?.items || []) as BreederPetItem[]).map((pet) => ({
-    id: pet.petId,
-    avatarUrl: pet.mainPhoto || '/animal-sample.png',
-    name: pet.name,
-    sex: pet.gender,
-    birth: formatBirthDateToKorean(pet.birthDate),
-    price: user ? `${pet.price?.toLocaleString() || 0}원` : null,
-    breed: pet.breed,
-    status:
-      pet.status === 'adopted' ? 'completed' : ((pet.status || 'available') as 'available' | 'reserved' | 'completed'),
-    description: pet.description,
-    photos: pet.photos || [],
-  }));
+  const breedingAnimals = ((petsData?.items || []) as BreederPetItem[]).map((pet) => {
+    // mainPhoto를 photos 배열에서 제외
+    const mainPhoto = pet.mainPhoto;
+    const additionalPhotos = (pet.photos || []).filter((photo) => !isSamePhoto(photo, mainPhoto));
+    return {
+      id: pet.petId,
+      avatarUrl: pet.mainPhoto || '/animal-sample.png',
+      name: pet.name,
+      sex: pet.gender,
+      birth: formatBirthDateToKorean(pet.birthDate),
+      price: user ? `${pet.price?.toLocaleString() || 0}원` : null,
+      breed: pet.breed,
+      status:
+        pet.status === 'adopted' ? 'completed' : ((pet.status || 'available') as 'available' | 'reserved' | 'completed'),
+      description: pet.description,
+      photos: additionalPhotos,
+      parents: pet.parents || [],
+    };
+  });
 
   // 부모견/부모묘 매핑 - 페이지네이션 응답 형태 처리
   const parentPetsArray = (parentPetsData?.items || []) as ParentPetItem[];
-  const parentPets = parentPetsArray.map((pet) => ({
-    id: pet.petId,
-    avatarUrl: pet.photoUrl || '/animal-sample.png',
-    name: pet.name,
-    sex: pet.gender,
-    birth: formatBirthDateToKorean(pet.birthDate),
-    price: '', // 부모견은 가격이 없음
-    breed: pet.breed,
-    description: pet.description,
-    photos: pet.photos || [],
-  }));
+  const parentPets = parentPetsArray.map((pet) => {
+    const representativePhoto = pet.photoUrl;
+    const additionalPhotos = (pet.photos || []).filter(
+      (photo) => !isSamePhoto(photo, representativePhoto),
+    );
+    return {
+      id: pet.petId,
+      avatarUrl: pet.photoUrl || '/animal-sample.png',
+      name: pet.name,
+      sex: pet.gender,
+      birth: formatBirthDateToKorean(pet.birthDate),
+      price: '', // 부모견은 가격이 없음
+      breed: pet.breed,
+      description: pet.description,
+      photos: additionalPhotos,
+    };
+  });
 
   // 후기 매핑
   const reviews = ((reviewsData?.items || []) as ReviewItem[]).map((review) => {

@@ -54,10 +54,19 @@ export const uploadRepresentativePhotos = async (files: File[]): Promise<UploadR
  * 부모견/묘 사진 업로드
  * POST /api/upload/parent-pet-photos/:petId
  */
-export const uploadParentPetPhoto = async (petId: string, file: File): Promise<UploadResponse> => {
+export const uploadParentPetPhoto = async (
+  petId: string,
+  file: File,
+  existingPhotos: string[] = [],
+): Promise<UploadResponse> => {
   try {
     const formData = new FormData();
     formData.append('files', file);
+
+    // 기존 사진 URL들을 FormData에 추가
+    existingPhotos.forEach((photo) => {
+      formData.append('existingPhotos', photo);
+    });
 
     const response = await apiClient.post<ApiResponse<UploadResponse | UploadResponse[]>>(
       `/api/upload/parent-pet-photos/${petId}`,
@@ -90,10 +99,19 @@ export const uploadParentPetPhoto = async (petId: string, file: File): Promise<U
  * 분양 개체 사진 업로드
  * POST /api/upload/available-pet-photos/:petId
  */
-export const uploadAvailablePetPhoto = async (petId: string, file: File): Promise<UploadResponse> => {
+export const uploadAvailablePetPhoto = async (
+  petId: string,
+  file: File,
+  existingPhotos: string[] = [],
+): Promise<UploadResponse> => {
   try {
     const formData = new FormData();
     formData.append('files', file);
+
+    // 기존 사진 URL들을 FormData에 추가
+    existingPhotos.forEach((photo) => {
+      formData.append('existingPhotos', photo);
+    });
 
     const response = await apiClient.post<ApiResponse<UploadResponse | UploadResponse[]>>(
       `/api/upload/available-pet-photos/${petId}`,

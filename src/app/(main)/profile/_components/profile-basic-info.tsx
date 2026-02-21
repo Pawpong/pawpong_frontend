@@ -71,7 +71,7 @@ export default function ProfileBasicInfo({
         <input
           ref={fileInputRef}
           type="file"
-          accept=".jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm"
+          accept=".jpg,.jpeg,.png,.gif,.webp,.heif,.heic"
           className="hidden"
           onChange={handleProfileImageChange}
         />
@@ -209,6 +209,7 @@ export default function ProfileBasicInfo({
             <ImageEdit
               maxCount={3}
               status={errors.representativePhotos ? 'Error' : 'Default'}
+              allowVideo={false}
               initialImages={
                 Array.isArray(field.value) ? field.value.filter((v): v is string => typeof v === 'string') : []
               }

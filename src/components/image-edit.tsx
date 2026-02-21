@@ -18,6 +18,8 @@ interface ImageEditProps {
   previewLayout?: 'grid' | 'horizontal' | 'vertical';
   initialImages?: string[];
   labelText?: string;
+  allowVideo?: boolean;
+  resetKey?: number | string;
 }
 
 export default function ImageEdit({
@@ -31,11 +33,18 @@ export default function ImageEdit({
   previewLayout = 'horizontal',
   initialImages = [],
   labelText,
+  allowVideo = true,
+  resetKey,
 }: ImageEditProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
   const initializedRef = useRef(false);
   const { toast } = useToast();
+
+  // resetKey가 바뀌면 강제 재초기화 (저장 완료 후 서버 데이터로 리셋할 때 사용)
+  useEffect(() => {
+    initializedRef.current = false;
+  }, [resetKey]);
 
   // Initialize with existing images (URLs)
   useEffect(() => {
@@ -71,7 +80,8 @@ export default function ImageEdit({
 
       processInitialImages();
     }
-  }, [initialImages]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialImages, resetKey]);
 
   const handleClick = () => {
     fileInputRef.current?.click();
@@ -153,12 +163,17 @@ export default function ImageEdit({
   const currentStatus = imageFiles.length > 0 ? 'Filled' : status;
   const isError = currentStatus === 'Error';
 
+  // 허용할 파일 형식 설정
+  const acceptFormats = allowVideo
+    ? '.jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm'
+    : '.jpg,.jpeg,.png,.gif,.webp,.heif,.heic';
+
   return (
     <div className="flex gap-2">
       <input
         ref={fileInputRef}
         type="file"
-        accept=".jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm"
+        accept={acceptFormats}
         multiple
         className="hidden"
         onChange={handleFileSelect}

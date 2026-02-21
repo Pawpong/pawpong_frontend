@@ -18,6 +18,34 @@ interface PageProps {
   }>;
 }
 
+const normalizePhotoPath = (value: string | undefined): string => {
+  if (!value) return '';
+  try {
+    const url = new URL(value);
+    return url.pathname.replace(/^\/+/, '');
+  } catch {
+    return value.replace(/^\/+/, '');
+  }
+};
+
+const photoBasename = (value: string | undefined): string => {
+  const normalized = normalizePhotoPath(value);
+  if (!normalized) return '';
+  const parts = normalized.split('/');
+  return parts[parts.length - 1] || '';
+};
+
+const isSamePhoto = (a: string | undefined, b: string | undefined): boolean => {
+  if (!a || !b) return false;
+  if (a === b) return true;
+  const aPath = normalizePhotoPath(a);
+  const bPath = normalizePhotoPath(b);
+  if (aPath && bPath && aPath === bPath) return true;
+  const aBase = photoBasename(a);
+  const bBase = photoBasename(b);
+  return !!aBase && !!bBase && aBase === bBase;
+};
+
 export default function ParentsPage({ params }: PageProps) {
   const { id: breederId } = use(params);
   const { data: profileData } = useBreederProfile(breederId);
@@ -59,17 +87,23 @@ export default function ParentsPage({ params }: PageProps) {
   const allParentPets: MappedParentPet[] =
     parentPetsData?.pages
       .flatMap((page) => page.items || [])
-      .map((pet: ParentPet) => ({
-        id: pet.petId,
-        avatarUrl: pet.photoUrl || '/animal-sample.png',
-        name: pet.name,
-        sex: pet.gender,
-        birth: formatBirthDateToKorean(pet.birthDate),
-        price: '', // 부모견은 가격이 없음
-        breed: pet.breed,
-        description: pet.description,
-        photos: pet.photos || [],
-      })) || [];
+      .map((pet: ParentPet) => {
+        const representativePhoto = pet.photoUrl;
+        const additionalPhotos = (pet.photos || []).filter(
+          (photo) => !isSamePhoto(photo, representativePhoto),
+        );
+        return {
+          id: pet.petId,
+          avatarUrl: pet.photoUrl || '/animal-sample.png',
+          name: pet.name,
+          sex: pet.gender,
+          birth: formatBirthDateToKorean(pet.birthDate),
+          price: '', // 부모견은 가격이 없음
+          breed: pet.breed,
+          description: pet.description,
+          photos: additionalPhotos,
+        };
+      }) || [];
 
   // 첫 페이지의 총 개수 확인 (더보기 버튼 표시 여부 결정용)
   const firstPageCount = parentPetsData?.pages[0]?.items?.length || 0;

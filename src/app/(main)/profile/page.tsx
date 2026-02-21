@@ -65,6 +65,7 @@ type BreederProfileApi = {
     breed?: string;
     gender?: 'male' | 'female';
     photoFileName?: string;
+    photoUrl?: string;
     description?: string;
     photos?: string[];
   }>;
@@ -79,8 +80,37 @@ type BreederProfileApi = {
     status?: string;
     parentInfo?: { mother?: string; father?: string };
     price?: number;
+    mainPhoto?: string;
     photos?: string[];
   }>;
+};
+
+const normalizePhotoPath = (value: string | undefined): string => {
+  if (!value) return '';
+  try {
+    const url = new URL(value);
+    return url.pathname.replace(/^\/+/, '');
+  } catch {
+    return value.replace(/^\/+/, '');
+  }
+};
+
+const photoBasename = (value: string | undefined): string => {
+  const normalized = normalizePhotoPath(value);
+  if (!normalized) return '';
+  const parts = normalized.split('/');
+  return parts[parts.length - 1] || '';
+};
+
+const isSamePhoto = (a: string | undefined, b: string | undefined): boolean => {
+  if (!a || !b) return false;
+  if (a === b) return true;
+  const aPath = normalizePhotoPath(a);
+  const bPath = normalizePhotoPath(b);
+  if (aPath && bPath && aPath === bPath) return true;
+  const aBase = photoBasename(a);
+  const bBase = photoBasename(b);
+  return !!aBase && !!bBase && aBase === bBase;
 };
 
 export default function ProfilePage() {
@@ -207,17 +237,24 @@ export default function ProfilePage() {
       // 부모 pet ID를 petId에서 추출 (백엔드에서 petId로 변환됨)
       const parentsData: ProfileFormData['parents'] =
         typedProfile.parentPetInfo?.length && typedProfile.parentPetInfo.length > 0
-          ? typedProfile.parentPetInfo.map((pet) => ({
-              id: pet.petId || pet._id?.toString() || defaultParentId,
-              name: pet.name || '',
-              birthDate: formatDateToYYYYMMDD(pet.birthDate),
-              breed: pet.breed ? [pet.breed] : [],
-              gender: pet.gender || null,
-              imagePreview: pet.photoFileName || undefined,
-              isVideo: pet.photoFileName ? isVideoUrl(pet.photoFileName) : undefined,
-              description: pet.description || '',
-              photos: pet.photos || [],
-            }))
+          ? typedProfile.parentPetInfo.map((pet) => {
+              const representativePhoto = pet.photoFileName || pet.photoUrl || pet.photos?.[0];
+              // 백엔드가 API 응답 시 이미 대표사진을 제거하고 반환하므로
+              // photos 배열을 그대로 사용 (추가사진만 포함되어 있음)
+              const additionalPhotos = pet.photos || [];
+
+              return {
+                id: pet.petId || pet._id?.toString() || defaultParentId,
+                name: pet.name || '',
+                birthDate: formatDateToYYYYMMDD(pet.birthDate),
+                breed: pet.breed ? [pet.breed] : [],
+                gender: pet.gender || null,
+                imagePreview: representativePhoto || undefined,
+                isVideo: representativePhoto ? isVideoUrl(representativePhoto) : undefined,
+                description: pet.description || '',
+                photos: additionalPhotos,
+              };
+            })
           : [
               {
                 id: defaultParentId,
@@ -264,22 +301,29 @@ export default function ProfilePage() {
         parents: parentsData,
         animals:
           typedProfile.availablePetInfo?.length && typedProfile.availablePetInfo.length > 0
-            ? typedProfile.availablePetInfo.map((pet) => ({
-                id: pet.petId || pet._id?.toString() || defaultAnimalId,
-                name: pet.name || '',
-                birthDate: formatDateToYYYYMMDD(pet.birthDate),
-                breed: pet.breed ? [pet.breed] : [],
-                gender: pet.gender || null,
-                description: pet.description || '',
-                adoptionStatus: convertStatusToKorean(pet.status || ''),
-                motherId: pet.parentInfo?.mother?.toString() || '',
-                fatherId: pet.parentInfo?.father?.toString() || '',
-                price: pet.price?.toString() || '',
-                isCounselMode: pet.price === 0,
-                imagePreview: pet.photos?.[0] || undefined,
-                isVideo: pet.photos?.[0] ? isVideoUrl(pet.photos[0]) : undefined,
-                photos: pet.photos || [],
-              }))
+            ? typedProfile.availablePetInfo.map((pet) => {
+                const representativePhoto = pet.mainPhoto || pet.photos?.[0];
+                // 분양 개체는 photos 배열에 대표사진(photos[0])이 포함되어 있으므로
+                // 첫 번째 요소를 제외한 나머지만 추가사진으로 설정
+                const additionalPhotos = (pet.photos || []).slice(1);
+
+                return {
+                  id: pet.petId || pet._id?.toString() || defaultAnimalId,
+                  name: pet.name || '',
+                  birthDate: formatDateToYYYYMMDD(pet.birthDate),
+                  breed: pet.breed ? [pet.breed] : [],
+                  gender: pet.gender || null,
+                  description: pet.description || '',
+                  adoptionStatus: convertStatusToKorean(pet.status || ''),
+                  motherId: pet.parentInfo?.mother?.toString() || '',
+                  fatherId: pet.parentInfo?.father?.toString() || '',
+                  price: pet.price?.toString() || '',
+                  isCounselMode: pet.price === 0,
+                  imagePreview: representativePhoto || undefined,
+                  isVideo: representativePhoto ? isVideoUrl(representativePhoto) : undefined,
+                  photos: additionalPhotos,
+                };
+              })
             : [
                 {
                   id: defaultAnimalId,
