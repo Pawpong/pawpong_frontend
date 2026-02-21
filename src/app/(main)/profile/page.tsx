@@ -447,14 +447,18 @@ export default function ProfilePage() {
           if (photo instanceof File) {
             newFiles.push(photo);
           } else if (typeof photo === 'string') {
-            // 기존 URL에서 파일 경로 추출 (signed URL에서 파일명 추출)
-            // signed URL 형식: https://cdn.pawpong.kr/representative/uuid.jpeg?Expires=...
+            // 기존 URL에서 파일 경로 추출 (CDN URL에서 파일명 추출)
+            // 스마일서브 URL 형식: https://kr.object.iwinv.kr/pawpong_bucket/representative/uuid.jpeg
             // 필요한 결과: representative/uuid.jpeg
             try {
               const url = new URL(photo);
-              // pathname은 /representative/uuid.jpeg 형식
-              // 맨 앞의 / 제거하여 representative/uuid.jpeg 형태로 만듦
-              const filePath = url.pathname.startsWith('/') ? url.pathname.slice(1) : url.pathname;
+              // pathname은 /pawpong_bucket/representative/uuid.jpeg 형식
+              // 맨 앞의 / 제거
+              let filePath = url.pathname.startsWith('/') ? url.pathname.slice(1) : url.pathname;
+              // 스마일서브 URL인 경우 버킷 이름(pawpong_bucket/) 제거
+              if (url.hostname.includes('object.iwinv.kr') && filePath.startsWith('pawpong_bucket/')) {
+                filePath = filePath.slice('pawpong_bucket/'.length);
+              }
               if (filePath) {
                 existingPhotoFileNames.push(filePath);
               }
