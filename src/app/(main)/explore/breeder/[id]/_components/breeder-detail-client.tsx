@@ -343,14 +343,16 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     const additionalPhotos = (pet.photos || []).filter((photo) => !isSamePhoto(photo, mainPhoto));
     return {
       id: pet.petId,
-      avatarUrl: pet.mainPhoto || '/animal-sample.png',
+      avatarUrl: pet.mainPhoto || '',
       name: pet.name,
       sex: pet.gender,
       birth: formatBirthDateToKorean(pet.birthDate),
       price: user ? `${pet.price?.toLocaleString() || 0}원` : null,
       breed: pet.breed,
       status:
-        pet.status === 'adopted' ? 'completed' : ((pet.status || 'available') as 'available' | 'reserved' | 'completed'),
+        pet.status === 'adopted'
+          ? 'completed'
+          : ((pet.status || 'available') as 'available' | 'reserved' | 'completed'),
       description: pet.description,
       photos: additionalPhotos,
       parents: pet.parents || [],
@@ -361,12 +363,10 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
   const parentPetsArray = (parentPetsData?.items || []) as ParentPetItem[];
   const parentPets = parentPetsArray.map((pet) => {
     const representativePhoto = pet.photoUrl;
-    const additionalPhotos = (pet.photos || []).filter(
-      (photo) => !isSamePhoto(photo, representativePhoto),
-    );
+    const additionalPhotos = (pet.photos || []).filter((photo) => !isSamePhoto(photo, representativePhoto));
     return {
       id: pet.petId,
-      avatarUrl: pet.photoUrl || '/animal-sample.png',
+      avatarUrl: pet.photoUrl || '',
       name: pet.name,
       sex: pet.gender,
       birth: formatBirthDateToKorean(pet.birthDate),

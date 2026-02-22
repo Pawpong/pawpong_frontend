@@ -78,12 +78,7 @@ function formatBirthDate(birthDate: string): string {
  * 임시 ID인지 확인 (클라이언트에서 생성한 ID)
  */
 function isTempId(id: string): boolean {
-  return (
-    id.startsWith('parent-') ||
-    id.startsWith('animal-') ||
-    id.startsWith('parents-') ||
-    id.startsWith('animals-')
-  );
+  return id.startsWith('parent-') || id.startsWith('animal-') || id.startsWith('parents-') || id.startsWith('animals-');
 }
 
 function normalizePhotoPath(value: string | undefined): string {
@@ -225,9 +220,7 @@ export async function syncParentPets(
         .filter((photo) => !!photo && !isSamePhoto(photo, representativeSource));
 
       // 새로 추가된 File들만 추출
-      const newPhotoFiles: File[] = (parent.photos || []).filter(
-        (item): item is File => item instanceof File,
-      );
+      const newPhotoFiles: File[] = (parent.photos || []).filter((item): item is File => item instanceof File);
 
       // 1. 대표 사진 업로드
       let representativePhotoFileName: string | undefined;
@@ -246,16 +239,10 @@ export async function syncParentPets(
 
       if (parent.imageFile) {
         // 대표사진 변경 시: 신대표 + 추가사진
-        uploadedPhotos = [
-          representativePhotoFileName!,
-          ...existingAdditionalPhotos,
-        ];
+        uploadedPhotos = [representativePhotoFileName!, ...existingAdditionalPhotos];
       } else {
         // 대표사진 유지 시: 기존 대표사진 + 추가사진
-        uploadedPhotos = [
-          ...(original?.photoFileName ? [original.photoFileName] : []),
-          ...existingAdditionalPhotos,
-        ];
+        uploadedPhotos = [...(original?.photoFileName ? [original.photoFileName] : []), ...existingAdditionalPhotos];
       }
 
       // 새 추가사진 업로드
@@ -424,9 +411,7 @@ export async function syncAvailablePets(
         .filter((photo) => !!photo && !isSamePhoto(photo, originalMainPhoto));
 
       // 새로 추가된 File들만 추출
-      const newPhotoFiles: File[] = (animal.photos || []).filter(
-        (item): item is File => item instanceof File,
-      );
+      const newPhotoFiles: File[] = (animal.photos || []).filter((item): item is File => item instanceof File);
 
       // 추가사진 업로드
       let uploadedPhotoNames: string[];

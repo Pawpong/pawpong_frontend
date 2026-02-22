@@ -43,7 +43,6 @@ export function ApplicationDetailContent({
       {/* 브리더 커스텀 질문 섹션 */}
       {customResponses && customResponses.length > 0 && (
         <>
-      
           <CustomQuestionReadonlySection customResponses={customResponses} />
         </>
       )}

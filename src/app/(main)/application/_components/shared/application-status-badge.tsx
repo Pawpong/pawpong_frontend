@@ -1,7 +1,12 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import { ConsultationPendingIcon, ConsultationCompletedIcon, AdoptionApprovedIcon, AdoptionRejectedIcon } from '../icons/status-icons';
+import {
+  ConsultationPendingIcon,
+  ConsultationCompletedIcon,
+  AdoptionApprovedIcon,
+  AdoptionRejectedIcon,
+} from '../icons/status-icons';
 import type { ApplicationStatus } from '../../_types/application.types';
 
 interface ApplicationStatusBadgeProps {

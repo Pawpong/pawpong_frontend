@@ -96,20 +96,19 @@ function CounselFormContentInner() {
             {COUNSEL_SECTIONS.map((section, index) => {
               const isLast = index === COUNSEL_SECTIONS.length - 1;
 
-                return (
-                  <div key={section.sectionId} className="w-full">
-                    <CounselSection
-                      section={section}
-                      mode="readonly"
-                      formData={formData}
-                      availablePets={availablePets}
-                      onFormatPhone={formatPhoneNumber}
-                    />
-                    {!isLast && <Separator className="bg-grayscale-gray2 my-15" />}
-                  </div>
-                );
-              },
-            )}
+              return (
+                <div key={section.sectionId} className="w-full">
+                  <CounselSection
+                    section={section}
+                    mode="readonly"
+                    formData={formData}
+                    availablePets={availablePets}
+                    onFormatPhone={formatPhoneNumber}
+                  />
+                  {!isLast && <Separator className="bg-grayscale-gray2 my-15" />}
+                </div>
+              );
+            })}
             {/* 브리더 추가 질문 섹션 */}
             <Separator className="bg-grayscale-gray2 my-15" />
             <div className="w-full">

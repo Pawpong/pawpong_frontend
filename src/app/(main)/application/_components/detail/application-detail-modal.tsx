@@ -20,7 +20,11 @@ interface ApplicationDetailModalProps {
 }
 
 const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: ApplicationDetailModalProps) => {
-  const { data: application, isLoading, isError } = useQuery({
+  const {
+    data: application,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ['application', applicationId],
     queryFn: () => getReceivedApplicationDetail(applicationId),
     enabled: open && !!applicationId,
