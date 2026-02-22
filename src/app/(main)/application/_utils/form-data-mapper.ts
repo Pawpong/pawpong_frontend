@@ -14,22 +14,14 @@ interface AdopterProfile {
  */
 export function mapToCounselFormData(
   applicationData: ReceivedApplicationItemDto | ApplicationDetailDto,
-  adopterProfile?: AdopterProfile
+  adopterProfile?: AdopterProfile,
 ): CounselFormData {
   // 브리더용: applicationData에서 직접 가져옴
   // 입양자용: adopterProfile에서 가져옴 (없으면 빈 문자열)
-  const name =
-    'adopterName' in applicationData
-      ? applicationData.adopterName
-      : adopterProfile?.nickname || '';
+  const name = 'adopterName' in applicationData ? applicationData.adopterName : adopterProfile?.nickname || '';
   const phone =
-    'adopterPhone' in applicationData
-      ? applicationData.adopterPhone || ''
-      : adopterProfile?.phoneNumber || '';
-  const email =
-    'adopterEmail' in applicationData
-      ? applicationData.adopterEmail
-      : adopterProfile?.emailAddress || '';
+    'adopterPhone' in applicationData ? applicationData.adopterPhone || '' : adopterProfile?.phoneNumber || '';
+  const email = 'adopterEmail' in applicationData ? applicationData.adopterEmail : adopterProfile?.emailAddress || '';
 
   return {
     privacyAgreement: applicationData.standardResponses?.privacyConsent ?? false,

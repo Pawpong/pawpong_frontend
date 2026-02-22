@@ -89,12 +89,10 @@ export default function ParentsPage({ params }: PageProps) {
       .flatMap((page) => page.items || [])
       .map((pet: ParentPet) => {
         const representativePhoto = pet.photoUrl;
-        const additionalPhotos = (pet.photos || []).filter(
-          (photo) => !isSamePhoto(photo, representativePhoto),
-        );
+        const additionalPhotos = (pet.photos || []).filter((photo) => !isSamePhoto(photo, representativePhoto));
         return {
           id: pet.petId,
-          avatarUrl: pet.photoUrl || '/animal-sample.png',
+          avatarUrl: pet.photoUrl || '',
           name: pet.name,
           sex: pet.gender,
           birth: formatBirthDateToKorean(pet.birthDate),

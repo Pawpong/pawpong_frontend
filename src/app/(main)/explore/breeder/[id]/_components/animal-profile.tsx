@@ -36,11 +36,11 @@ export default function AnimalProfile({
 
   // 이미지 URL 검증 및 폴백 처리
   const getValidImageUrl = (url: string) => {
-    if (!url) return '/animal-sample.png';
+    if (!url) return '';
     if (url.startsWith('http://') || url.startsWith('https://')) {
       return url;
     }
-    return '/animal-sample.png';
+    return '';
   };
 
   return (

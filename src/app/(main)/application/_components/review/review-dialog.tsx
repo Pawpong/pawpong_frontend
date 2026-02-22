@@ -52,10 +52,7 @@ export default function ReviewDialog({
   });
 
   // React Query로 입양자 프로필 조회 (실패해도 계속 진행)
-  const {
-    data: adopterProfile,
-    isLoading: isProfileLoading,
-  } = useQuery({
+  const { data: adopterProfile, isLoading: isProfileLoading } = useQuery({
     queryKey: ['adopter-profile'],
     queryFn: () => getAdopterProfile(),
     enabled: open && !!applicationId,
@@ -74,9 +71,7 @@ export default function ReviewDialog({
   // 신청 데이터를 CounselFormData 형식으로 변환
   // ApplicationDetailDto에는 adopterName, adopterPhone, adopterEmail이 없으므로 프로필에서 가져옴
   const formData: CounselFormData | null =
-    applicationData && !isApplicationError
-      ? mapToCounselFormData(applicationData, adopterProfile)
-      : null;
+    applicationData && !isApplicationError ? mapToCounselFormData(applicationData, adopterProfile) : null;
 
   const dialogContentClass =
     'w-full h-full md:w-[37.5rem] md:h-[37.5rem] md:translate-x-[-50%] md:translate-y-[-50%] md:top-[50%] md:left-[50%] top-0 left-0 translate-x-0 translate-y-0 rounded-none md:rounded-2xl md:overflow-hidden border-none';
@@ -85,10 +80,7 @@ export default function ReviewDialog({
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent
-          className={`${dialogContentClass} p-0 gap-0 bg-white flex flex-col`}
-          showCloseButton={false}
-        >
+        <DialogContent className={`${dialogContentClass} p-0 gap-0 bg-white flex flex-col`} showCloseButton={false}>
           <VisuallyHidden>
             <DialogTitle>신청 내역 상세</DialogTitle>
           </VisuallyHidden>
@@ -122,10 +114,7 @@ export default function ReviewDialog({
 
             {/* 공통 상담 내용 - 신청 데이터가 있고 에러가 없을 때만 표시 */}
             {!isLoading && !isApplicationError && formData && (
-              <ApplicationDetailContent
-                formData={formData}
-                customResponses={applicationData?.customResponses}
-              />
+              <ApplicationDetailContent formData={formData} customResponses={applicationData?.customResponses} />
             )}
 
             {/* 데이터 없음 - 로딩도 에러도 아닌데 데이터가 없을 때 */}

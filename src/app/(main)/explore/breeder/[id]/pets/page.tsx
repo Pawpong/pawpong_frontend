@@ -66,7 +66,7 @@ export default function PetsPage({ params }: PageProps) {
       .flatMap((page) => page.items || [])
       .map((pet: Pet & { status?: string }) => ({
         id: pet.petId,
-        avatarUrl: pet.mainPhoto || '/animal-sample.png',
+        avatarUrl: pet.mainPhoto || '',
         name: pet.name,
         sex: pet.gender,
         birth: formatBirthDateToKorean(pet.birthDate),
@@ -103,7 +103,7 @@ export default function PetsPage({ params }: PageProps) {
           breed: string;
         }) => ({
           id: parent.petId,
-          avatarUrl: parent.photoUrl || '/animal-sample.png',
+          avatarUrl: parent.photoUrl || '',
           name: parent.name,
           sex: parent.gender,
           birth: formatBirthDateToKorean(parent.birthDate),

@@ -80,7 +80,7 @@ export default function ImageEdit({
 
       processInitialImages();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialImages, resetKey]);
 
   const handleClick = () => {

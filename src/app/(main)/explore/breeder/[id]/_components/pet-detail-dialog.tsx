@@ -78,9 +78,9 @@ export default function PetDetailDialog({
   const isMainVideo = pet.avatarUrl ? isVideoUrl(pet.avatarUrl) : false;
 
   const getValidImageUrl = (url: string) => {
-    if (!url) return '/animal-sample.png';
+    if (!url) return '';
     if (url.startsWith('http://') || url.startsWith('https://')) return url;
-    return '/animal-sample.png';
+    return '';
   };
 
   const handleCounselClick = () => {
