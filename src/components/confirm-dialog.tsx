@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, cloneElement, isValidElement } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,38 +15,119 @@ import { cn } from '@/api/utils';
 import ErrorIcon from '@/assets/icons/error';
 
 interface ConfirmDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  /**
+   * 다이얼로그 열림 상태 (선택적)
+   */
+  open?: boolean;
+  /**
+   * 다이얼로그 열림 상태 변경 시 호출되는 함수 (선택적)
+   */
+  onOpenChange?: (open: boolean) => void;
+  /**
+   * 확인 버튼 클릭 시 실행할 함수
+   */
   onConfirm: () => void;
+  /**
+   * 취소 버튼 클릭 시 실행할 함수
+   */
   onCancel?: () => void;
+  /**
+   * 다이얼로그 제목
+   */
   title: string;
-  description: string;
+  /**
+   * 다이얼로그 설명
+   */
+  description: React.ReactNode;
+  /**
+   * 확인 버튼 텍스트 (기본값: '확인')
+   */
   confirmText?: string;
+  /**
+   * 취소 버튼 텍스트 (기본값: '취소')
+   */
   cancelText?: string;
+  /**
+   * 데이터가 있는지 확인하는 함수 또는 boolean 값 (선택적)
+   * 설정하면 hasData가 true일 때만 다이얼로그를 표시
+   */
+  hasData?: boolean | (() => boolean);
+  /**
+   * 다이얼로그 트리거 역할을 할 자식 요소 (선택적)
+   * children의 onClick에 다이얼로그 열기 로직이 자동으로 추가됨
+   */
+  children?: React.ReactNode;
 }
 
 export default function ConfirmDialog({
-  open,
-  onOpenChange,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
   onConfirm,
   onCancel,
   title,
   description,
   confirmText = '확인',
   cancelText = '취소',
+  hasData,
+  children,
 }: ConfirmDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  // 외부 제어 또는 내부 제어
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = isControlled && controlledOnOpenChange ? controlledOnOpenChange : setInternalOpen;
+
+  const check = () => (hasData !== undefined ? (typeof hasData === 'function' ? hasData() : hasData) : true);
+
+  // 트리거 클릭 시 호출
+  const handleTrigger = () => {
+    if (check()) {
+      setOpen(true);
+    } else {
+      // hasData가 false면 바로 confirm 실행
+      onConfirm();
+    }
+  };
+
   const handleConfirm = () => {
-    onOpenChange(false);
+    setOpen(false);
     onConfirm();
   };
 
   const handleCancel = () => {
-    onOpenChange(false);
+    setOpen(false);
     onCancel?.();
   };
 
+  // children이 있으면 클론하여 onClick 이벤트 추가
+  const triggerElement =
+    children && isValidElement(children)
+      ? cloneElement(
+          children as React.ReactElement<{
+            onClick?: (e: React.MouseEvent) => void;
+          }>,
+          {
+            onClick: (e: React.MouseEvent) => {
+              const originalOnClick = (
+                children as React.ReactElement<{
+                  onClick?: (e: React.MouseEvent) => void;
+                }>
+              ).props?.onClick;
+              if (originalOnClick) {
+                originalOnClick(e);
+              }
+              handleTrigger();
+            },
+          },
+        )
+      : children;
+
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <>
+      {triggerElement}
+
+      <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogPortal>
         <AlertDialogOverlay className="bg-[var(--color-alpha-dimmer)]" />
         <AlertDialogPrimitive.Content
@@ -94,5 +176,6 @@ export default function ConfirmDialog({
         </AlertDialogPrimitive.Content>
       </AlertDialogPortal>
     </AlertDialog>
+    </>
   );
 }
