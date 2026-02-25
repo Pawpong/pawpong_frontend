@@ -69,7 +69,7 @@ function SimpleDialogTitle({ className, ...props }: React.ComponentProps<typeof 
 }
 
 function SimpleDialogDescription({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Description>) {
-  return <DialogDescription className={cn('text-body-s', className)} {...props} />;
+  return <DialogDescription className={cn('text-body-s whitespace-pre-line', className)} {...props} />;
 }
 
 export {
