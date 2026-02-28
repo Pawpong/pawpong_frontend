@@ -1,1 +1,1 @@
-export { default as AnimalTabBar, type AnimalType } from './animal-tab-bar';
+export { default as AnimalTabBar, ANIMAL_TAB_ITEMS, type AnimalType } from './animal-tab-bar';
