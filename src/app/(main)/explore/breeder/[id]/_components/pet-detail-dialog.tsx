@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import Female from '@/assets/icons/female';
 import Male from '@/assets/icons/male';
 import AdoptionStatusBadge from '@/components/adoption-status-badge';
-import Image from 'next/image';
+import SafeImage from '@/components/safe-image';
 import { Separator } from '@/components/ui/separator';
 import { useRouter } from 'next/navigation';
 import { useCounselFormStore } from '@/stores/counsel-form-store';
@@ -158,7 +158,7 @@ export default function PetDetailDialog({
                   playsInline
                 />
               ) : (
-                <Image
+                <SafeImage
                   src={getValidImageUrl(pet.avatarUrl)}
                   alt={`${pet.name}의 사진`}
                   fill
@@ -226,7 +226,7 @@ export default function PetDetailDialog({
                           playsInline
                         />
                       ) : (
-                        <Image
+                        <SafeImage
                           src={getValidImageUrl(photo)}
                           alt={`${pet.name} 사진 ${index + 1}`}
                           fill
@@ -263,7 +263,7 @@ export default function PetDetailDialog({
                               playsInline
                             />
                           ) : (
-                            <Image
+                            <SafeImage
                               src={getValidImageUrl(parent.avatarUrl)}
                               alt={`${parent.name}의 사진`}
                               fill

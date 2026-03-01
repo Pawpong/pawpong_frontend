@@ -66,7 +66,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
             width={80}
             height={80}
             className={cn('rounded-lg object-contain bg-white border border-gray-200', getImageSizeClass())}
-            unoptimized={image.isUrl || image.preview.startsWith('blob:')}
+            unoptimized={image.isUrl || image.preview.startsWith('blob:') || image.preview.startsWith('data:')}
           />
           {image.isVideo && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

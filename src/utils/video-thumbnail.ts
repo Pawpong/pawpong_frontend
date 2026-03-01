@@ -5,6 +5,16 @@
 // 동영상 MIME 타입 목록
 const VIDEO_MIME_TYPES = ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/webm'];
 
+// 동영상 썸네일 추출 실패 시 표시할 placeholder SVG
+export const VIDEO_PLACEHOLDER_SVG = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="80" rx="8" fill="#F3F4F6"/>
+  <rect x="18" y="24" width="44" height="32" rx="4" fill="#D1D5DB"/>
+  <polygon points="36,34 36,50 50,42" fill="#9CA3AF"/>
+  <text x="40" y="68" font-size="8" text-anchor="middle" fill="#6B7280" font-family="sans-serif">VIDEO</text>
+</svg>
+`)}`;
+
 /**
  * 파일이 동영상인지 확인
  */

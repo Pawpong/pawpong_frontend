@@ -4,7 +4,7 @@ import Female from '@/assets/icons/female';
 import Male from '@/assets/icons/male';
 import AdoptionStatusBadge from '@/components/adoption-status-badge';
 import { cn } from '@/api/utils';
-import Image from 'next/image';
+import SafeImage from '@/components/safe-image';
 import { Lock } from 'lucide-react';
 import BreedAdInfo from '@/components/breed-ad-info';
 import { isVideoUrl } from '@/utils/video-thumbnail';
@@ -56,7 +56,7 @@ export default function AnimalProfile({
             playsInline
           />
         ) : (
-          <Image
+          <SafeImage
             src={getValidImageUrl(avatarUrl)}
             alt={`${name}의 사진`}
             width={200}

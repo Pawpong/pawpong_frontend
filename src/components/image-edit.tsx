@@ -5,7 +5,14 @@ import { cn } from '@/api/utils';
 import { useState, useRef, useEffect } from 'react';
 import ImagePreview, { ImageFile } from './image-preview';
 import { useToast } from '@/hooks/use-toast';
-import { isVideoFile, extractVideoThumbnail, isVideoUrl, extractVideoThumbnailFromUrl } from '@/utils/video-thumbnail';
+import {
+  isVideoFile,
+  extractVideoThumbnail,
+  isVideoUrl,
+  extractVideoThumbnailFromUrl,
+  VIDEO_PLACEHOLDER_SVG,
+} from '@/utils/video-thumbnail';
+import { getImagePreview } from '@/utils/heic-convert';
 
 interface ImageEditProps {
   className?: string;
@@ -102,7 +109,8 @@ export default function ImageEdit({
       return;
     }
 
-    // 파일별로 썸네일 생성 (동영상은 첫 프레임 추출)
+    // 파일별로 썸네일 생성 (동영상은 첫 프레임 추출, HEIC는 JPEG 변환)
+    const heicErrors: string[] = [];
     const newFiles: ImageFile[] = await Promise.all(
       files.map(async (file) => {
         const isVideo = isVideoFile(file);
@@ -112,10 +120,14 @@ export default function ImageEdit({
           try {
             preview = await extractVideoThumbnail(file);
           } catch {
-            preview = URL.createObjectURL(file);
+            preview = VIDEO_PLACEHOLDER_SVG;
           }
         } else {
-          preview = URL.createObjectURL(file);
+          const result = await getImagePreview(file);
+          preview = result.preview;
+          if (result.error) {
+            heicErrors.push(result.error);
+          }
         }
 
         return {
@@ -127,6 +139,14 @@ export default function ImageEdit({
         };
       }),
     );
+
+    // HEIC 변환 실패 시 토스트 알림
+    if (heicErrors.length > 0) {
+      toast({
+        title: heicErrors[0],
+        position: 'split',
+      });
+    }
 
     // 추가하려는 파일 수와 기존 파일 수를 합쳐서 maxCount를 초과하는지 확인
     const totalCount = imageFiles.length + newFiles.length;

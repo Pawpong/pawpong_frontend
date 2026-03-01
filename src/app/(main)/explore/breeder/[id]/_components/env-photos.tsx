@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import SafeImage from '@/components/safe-image';
 import { isVideoUrl } from '@/utils/video-thumbnail';
 
 export default function EnvPhotos({ photos }: { photos: string[] }) {
@@ -23,7 +23,7 @@ export default function EnvPhotos({ photos }: { photos: string[] }) {
                 playsInline
               />
             ) : (
-              <Image
+              <SafeImage
                 src={photo}
                 alt={`Environment Photo ${index + 1}`}
                 width={400}
