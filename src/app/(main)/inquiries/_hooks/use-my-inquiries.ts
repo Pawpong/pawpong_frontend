@@ -4,7 +4,7 @@ import type { Inquiry, InquiryListResponse } from '../_types/inquiry';
 const PAGE_SIZE = 15;
 
 const MOCK_MY_INQUIRIES: Inquiry[] = Array.from({ length: 20 }, (_, i) => ({
-  id: `my-inquiry-${i + 1}`,
+  id: `inquiry-${i + 1}`,
   title: '리트리버 입양 전, 마당 펜스 높이는 어느 정도가 안전할까요?',
   content:
     '아이와 함께 자랄 대형견을 찾다가 리트리버 입양을 결정했습니다. 단독주택이라 마당에서 뛰어놀게 하고 싶은데, 활동량이 워낙 많다고 들어서 담장 너머로 점프하거나 탈출하지 않을까 걱정됩니다. 안전한 펜스 높이와 바닥 재질 추천 부탁드려요!',

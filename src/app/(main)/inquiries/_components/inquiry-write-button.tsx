@@ -6,10 +6,14 @@ import { Button } from '@/components/ui/button';
 
 
 
-export default function InquiryWriteButton() {
+interface InquiryWriteButtonProps {
+  variant?: 'secondary' | 'tertiary';
+}
+
+export default function InquiryWriteButton({ variant = 'tertiary' }: InquiryWriteButtonProps) {
   return (
     <Link href="/inquiries/write">
-      <Button variant="tertiary" size="sm" className="h-9 pl-4 pr-3 gap-1 text-body-xs">
+      <Button variant={variant} size="sm" className="h-9 pl-4 pr-3 gap-1 text-body-xs">
         공통 질문 작성
         <PencilPixcel className="size-5 shrink-0" />
       </Button>

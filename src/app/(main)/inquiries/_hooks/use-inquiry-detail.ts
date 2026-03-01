@@ -6,6 +6,11 @@ import type { Inquiry } from '../_types/inquiry';
  */
 const fetchInquiryDetail = async (id: string): Promise<Inquiry | null> => {
   await new Promise((resolve) => setTimeout(resolve, 200));
+  const isValidInquiryId = /^inquiry-\d+$/.test(id);
+
+  if (!isValidInquiryId) {
+    return null;
+  }
 
   const mock: Inquiry = {
     id,
@@ -21,10 +26,7 @@ const fetchInquiryDetail = async (id: string): Promise<Inquiry | null> => {
     imageUrls: ['', '', '', ''], // 2x2 placeholder
   };
 
-  if (id === 'inquiry-2' || id.startsWith('inquiry-')) {
-    return mock;
-  }
-  return null;
+  return mock;
 };
 
 export function useInquiryDetail(id: string | null) {
