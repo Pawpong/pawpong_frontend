@@ -1,7 +1,8 @@
-import Cat from '@/assets/icons/cat';
+import { ANIMAL_TAB_ITEMS } from '@/components/animal-tab-bar';
 import type { InquiryAnswer as InquiryAnswerType } from '../_types/inquiry';
 import InquiryDetailImages from '../[id]/_components/inquiry-detail-images';
 import InquiryDetailActions from '../[id]/_components/inquiry-detail-actions';
+import InquiryAnswerHelpful from './inquiry-answer-helpful';
 
 interface InquiryAnswerProps {
   answer: InquiryAnswerType;
@@ -15,7 +16,12 @@ export default function InquiryAnswer({ answer, onEdit, onDelete }: InquiryAnswe
       <div className="bg-secondary-100 rounded-lg p-5 flex items-center justify-between gap-4 w-full">
         <div className="flex min-w-0 flex-1 gap-4 items-center">
           <div className="relative size-12 bg-white rounded-lg flex items-center justify-center shrink-0">
-            <Cat className="size-6 text-primary-500" />
+            {(() => {
+              const isCat = answer.animalTypeName === '고양이';
+              const animalItem = ANIMAL_TAB_ITEMS.find((item) => item.type === (isCat ? 'cat' : 'dog'));
+              const Icon = animalItem?.icon ?? ANIMAL_TAB_ITEMS[0].icon;
+              return <Icon className="size-6 text-primary-500" />;
+            })()}
           </div>
           <div className="flex flex-col min-w-0">
             <p className="text-body-l font-semibold text-primary-500 truncate">{answer.breederName}</p>
@@ -36,26 +42,19 @@ export default function InquiryAnswer({ answer, onEdit, onDelete }: InquiryAnswe
         </button>
       </div>
 
-      <p className="text-body-m font-medium text-grayscale-gray6 whitespace-pre-wrap">
-        {answer.content}
-      </p>
+      <p className="text-body-m font-medium text-grayscale-gray6 whitespace-pre-wrap">{answer.content}</p>
 
       {answer.imageUrls && answer.imageUrls.length > 0 && (
-        <InquiryDetailImages imageUrls={answer.imageUrls} />
+        <InquiryDetailImages imageUrls={answer.imageUrls} className="mx-auto" />
       )}
 
-      <div className="flex items-center justify-between w-full">
-        <div className="flex gap-2 items-center text-body-s font-normal text-grayscale-gray5">
-          <span>{answer.answeredAt}</span>
-        </div>
+      <div className="flex items-center justify-between w-full gap-4 flex-wrap">
+        <span className="text-body-s font-normal text-grayscale-gray5">{answer.answeredAt}</span>
         <div className="flex gap-2 items-center">
-          <button
-            type="button"
-            className="h-8 rounded-lg bg-tertiary-500 pl-2 pr-3 text-body-xs font-normal text-grayscale-gray6 whitespace-nowrap flex items-center gap-1"
-          >
-            도움됐어요
-            <span className="text-secondary-800">{answer.helpfulCount ?? 0}</span>
-          </button>
+          <InquiryAnswerHelpful
+            helpfulCount={answer.helpfulCount ?? 0}
+            onClick={() => {}}
+          />
           <InquiryDetailActions onEdit={onEdit} onDelete={onDelete} />
         </div>
       </div>
