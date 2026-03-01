@@ -4,8 +4,6 @@ import Link from 'next/link';
 import PencilPixcel from '@/assets/icons/pencil-pixcel.svg';
 import { Button } from '@/components/ui/button';
 
-
-
 interface InquiryWriteButtonProps {
   variant?: 'secondary' | 'tertiary';
 }

@@ -7,8 +7,7 @@ export function useInquiries(animal: AnimalType, sort: InquirySortType) {
   return useInfiniteQuery({
     queryKey: ['inquiries', animal, sort],
     queryFn: ({ pageParam }) => getInquiries(pageParam, animal, sort),
-    getNextPageParam: (lastPage: InquiryListResponse, allPages) =>
-      lastPage.hasMore ? allPages.length + 1 : undefined,
+    getNextPageParam: (lastPage: InquiryListResponse, allPages) => (lastPage.hasMore ? allPages.length + 1 : undefined),
     initialPageParam: 1,
   });
 }

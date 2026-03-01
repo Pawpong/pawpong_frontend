@@ -38,10 +38,7 @@ const MOCK_BREEDER_ANSWERED: Inquiry[] = Array.from({ length: 20 }, (_, i) => ({
 /**
  * TODO: 실제 API 연결 시 fetchBreederInquiries를 API 호출로 교체
  */
-const fetchBreederInquiries = async (
-  page: number,
-  answered: boolean,
-): Promise<InquiryListResponse> => {
+const fetchBreederInquiries = async (page: number, answered: boolean): Promise<InquiryListResponse> => {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
   const list = answered ? MOCK_BREEDER_ANSWERED : MOCK_BREEDER_UNANSWERED;
