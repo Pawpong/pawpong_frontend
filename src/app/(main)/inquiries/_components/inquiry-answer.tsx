@@ -1,5 +1,6 @@
 import Cat from '@/assets/icons/cat';
 import type { InquiryAnswer as InquiryAnswerType } from '../_types/inquiry';
+import InquiryDetailImages from '../[id]/_components/inquiry-detail-images';
 
 interface InquiryAnswerProps {
   answer: InquiryAnswerType;
@@ -7,19 +8,37 @@ interface InquiryAnswerProps {
 
 export default function InquiryAnswer({ answer }: InquiryAnswerProps) {
   return (
-    <div className="bg-grayscale-gray1 flex flex-col gap-2 p-5 rounded-lg w-full">
-      <div className="flex items-center justify-between w-full">
-        <div className="flex gap-2.5 items-center">
-          <div className="relative size-8 bg-white rounded-lg flex items-center justify-center shrink-0">
+    <div className="w-full flex flex-col gap-6">
+      <div className="bg-secondary-100 rounded-lg p-5 flex items-center justify-between gap-4 w-full">
+        <div className="flex min-w-0 flex-1 gap-4 items-center">
+          <div className="relative size-12 bg-white rounded-lg flex items-center justify-center shrink-0">
             <Cat className="size-6 text-primary-500" />
           </div>
-          <p className="text-body-m font-semibold text-secondary-700">{answer.breederName}님 답변</p>
+          <p className="text-body-l font-semibold text-primary-500 truncate">{answer.breederName}</p>
         </div>
-        <p className="text-body-s font-normal text-grayscale-gray5">{answer.answeredAt}</p>
+        <button
+          type="button"
+          className="h-8 rounded-lg bg-white pl-[0.75rem] pr-[0.75rem] text-body-xs font-normal text-grayscale-gray6 whitespace-nowrap"
+        >
+          입양 신청하기
+        </button>
       </div>
-      <p className="text-body-m font-medium text-grayscale-gray6 overflow-hidden text-ellipsis whitespace-nowrap">
+
+      <p className="text-body-m font-medium text-grayscale-gray6 whitespace-pre-wrap">
         {answer.content}
       </p>
+
+      <InquiryDetailImages imageUrls={answer.imageUrls} placeholderCount={4} />
+
+      <div className="flex items-center justify-between w-full">
+        <p className="text-body-s font-normal text-grayscale-gray5">{answer.answeredAt}</p>
+        <button
+          type="button"
+          className="h-8 rounded-lg bg-tertiary-500 pl-[0.75rem] pr-[0.75rem] text-body-xs font-normal text-grayscale-gray6 whitespace-nowrap"
+        >
+          도움됐어요 {answer.helpfulCount ?? 0}
+        </button>
+      </div>
     </div>
   );
 }

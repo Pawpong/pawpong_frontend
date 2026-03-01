@@ -7,6 +7,8 @@ export interface InquiryAnswer {
   answeredAt: string;
   content: string;
   profileImageUrl?: string;
+  imageUrls?: string[];
+  helpfulCount?: number;
 }
 
 export interface Inquiry {

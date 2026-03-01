@@ -1,5 +1,3 @@
-'use client';
-
 import EmptyPetState from '@/app/(main)/explore/breeder/[id]/_components/empty-pet-state';
 
 export default function InquiryWaitingAnswer() {
