@@ -18,10 +18,32 @@ export const MOCK_INQUIRY_DETAIL: Inquiry = {
   type: 'common',
   animalType: 'dog',
   viewCount: 42,
-  answerCount: 0,
+  answerCount: 2,
   createdAt: '2025. 02. 15.',
   authorNickname: '입양자 닉네임',
-  imageUrls: [],
+  imageUrls: ['/dog-and-cat.svg', '/profile-empty.svg', '/dog-and-cat.svg'],
+  answers: [
+    {
+      breederName: '해피브리더',
+      answeredAt: '2025. 02. 16.',
+      content:
+        '리트리버는 점프력도 좋지만, 호기심이 많아 담장 너머를 보려다 사고가 나기 쉽습니다. 펜스 높이는 최소 1.5m에서 1.8m를 권장하며, 아래쪽 틈새가 없어야 합니다. 바닥은 배수가 잘되는 인조잔디나 천연잔디가 관절에 가장 좋으며, 배변 활동이 잦은 곳은 고압 세척이 쉬운 판석을 까는 것이 위생적입니다. 입양 전 마당 환경을 사진으로 보내주시면 더 자세히 봐드릴게요.',
+      animalTypeName: '강아지',
+      breed: '골든 리트리버',
+      helpfulCount: 12,
+      imageUrls: ['/dog-and-cat.svg'],
+    },
+    {
+      breederName: '사랑이브리더',
+      answeredAt: '2025. 02. 17.',
+      content:
+        '저희도 리트리버 키우고 있어요. 펜스는 1.8m로 하시고, 땅에 30cm 정도 박아두시면 탈출 방지에 좋아요. 바닥은 잔디보다는 배수가 되는 자재를 추천드립니다.',
+      animalTypeName: '강아지',
+      breed: '래브라도 리트리버',
+      helpfulCount: 5,
+    },
+  ],
+  currentUserHasAnswered: false,
 };
 
 /**

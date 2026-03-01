@@ -9,6 +9,8 @@ export interface InquiryAnswer {
   profileImageUrl?: string;
   imageUrls?: string[];
   helpfulCount?: number;
+  animalTypeName?: string;
+  breed?: string;
 }
 
 export interface Inquiry {
@@ -29,6 +31,8 @@ export interface Inquiry {
   answers?: InquiryAnswer[];
   /** 브리더용: 답변 마감 기한 */
   answerDeadline?: string;
+  /** 브리더용: 현재 로그인한 브리더가 이 질문에 이미 답변했는지 */
+  currentUserHasAnswered?: boolean;
 }
 
 export type InquirySortType = 'latest_answer' | 'latest' | 'most_viewed';
