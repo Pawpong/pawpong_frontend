@@ -25,6 +25,8 @@ export interface Inquiry {
   imageUrls?: string[];
   /** 상세 페이지용: 답변 전체 목록 (상세에서만 사용) */
   answers?: InquiryAnswer[];
+  /** 브리더용: 답변 마감 기한 */
+  answerDeadline?: string;
 }
 
 export type InquirySortType = 'latest_answer' | 'latest' | 'most_viewed';

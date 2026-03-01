@@ -1,7 +1,6 @@
 'use client';
 
-import Pencil from '@/assets/icons/pencil.svg';
-import Trash from '@/assets/icons/trash-1.svg';
+import { Pencil, Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface InquiryDetailActionsProps {
@@ -10,28 +9,20 @@ interface InquiryDetailActionsProps {
 }
 
 export default function InquiryDetailActions({ onEdit, onDelete }: InquiryDetailActionsProps) {
+  if (!onEdit && !onDelete) return null;
+
   return (
-    <div className="flex gap-2 items-center shrink-0">
+    <div className="flex gap-2">
       {onEdit && (
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={onEdit}
-          className="gap-1.5 py-2 pl-3 pr-2"
-        >
+        <Button variant="secondary" size="sm" onClick={onEdit} className="gap-1">
           수정
-          <Pencil aria-hidden />
+          <Pencil className="size-4" />
         </Button>
       )}
       {onDelete && (
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={onDelete}
-          className="gap-1.5 py-2 pl-3 pr-2"
-        >
+        <Button variant="secondary" size="sm" onClick={onDelete} className="gap-1">
           삭제
-          <Trash aria-hidden />
+          <Trash className="size-4" />
         </Button>
       )}
     </div>

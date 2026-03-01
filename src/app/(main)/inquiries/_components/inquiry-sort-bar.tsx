@@ -2,7 +2,6 @@
 
 import Sort from '@/assets/icons/sort';
 import InquiriesFillIcon from '@/assets/icons/inquiries-fill.svg';
-import PencilPixcel from '@/assets/icons/pencil-pixcel.svg';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -10,9 +9,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/api/utils';
 import Link from 'next/link';
 import type { InquirySortType } from '../_types/inquiry';
+import InquiryWriteButton from './inquiry-write-button';
 
 const SORT_OPTIONS: { value: InquirySortType; label: string }[] = [
   { value: 'latest_answer', label: '최신 답변순' },
@@ -64,12 +63,7 @@ export default function InquirySortBar({ currentSort, onSortChange }: InquirySor
             <InquiriesFillIcon className="size-5 shrink-0" />
           </Button>
         </Link>
-        <Link href="/inquiries/write">
-          <Button variant="tertiary" size="sm" className="h-9 pl-4 pr-3 gap-1 text-body-xs">
-            공통 질문 작성
-            <PencilPixcel className="size-5 shrink-0" />
-          </Button>
-        </Link>
+        <InquiryWriteButton />
       </div>
     </div>
   );
