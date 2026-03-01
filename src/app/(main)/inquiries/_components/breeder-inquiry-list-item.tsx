@@ -1,19 +1,12 @@
 import Link from 'next/link';
 import { cn } from '@/api/utils';
+import { isDeadlineUrgent } from '@/utils/date-utils';
 import type { Inquiry } from '../_types/inquiry';
 import InquiryAnswer from './inquiry-answer';
 
 interface BreederInquiryListItemProps {
   inquiry: Inquiry;
   answered: boolean;
-}
-
-function isDeadlineUrgent(deadline?: string): boolean {
-  if (!deadline) return false;
-  const parsed = deadline.replace(/\./g, '-').replace(/-$/, '').trim();
-  const deadlineDate = new Date(parsed);
-  const diff = deadlineDate.getTime() - Date.now();
-  return diff >= 0 && diff <= 7 * 24 * 60 * 60 * 1000;
 }
 
 export default function BreederInquiryListItem({ inquiry, answered }: BreederInquiryListItemProps) {

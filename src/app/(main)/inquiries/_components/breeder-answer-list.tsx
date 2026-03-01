@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Separator } from '@/components/ui/separator';
 import LoadMoreButton from '@/components/ui/load-more-button';
 import { Button } from '@/components/ui/button';
-import { LoadingState } from '@/components/loading-state';
+import { LoadingState, FetchErrorState } from '@/components/loading-state';
 import { cn } from '@/api/utils';
 import { useBreederInquiries } from '../_hooks/use-breeder-inquiries';
 import BreederInquiryListItem from './breeder-inquiry-list-item';
@@ -20,7 +20,7 @@ export default function BreederAnswerList() {
   const [activeTab, setActiveTab] = useState<AnswerTab>('unanswered');
   const answered = activeTab === 'answered';
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } =
     useBreederInquiries(answered);
   const inquiries = data?.pages.flatMap((page) => page.data) ?? [];
 
@@ -44,7 +44,9 @@ export default function BreederAnswerList() {
         ))}
       </div>
 
-      {isLoading ? (
+      {isError ? (
+        <FetchErrorState message="목록을 불러오는데 실패했습니다." onRetry={() => refetch()} />
+      ) : isLoading ? (
         <LoadingState />
       ) : inquiries.length === 0 ? (
         <div className="flex justify-center py-20">

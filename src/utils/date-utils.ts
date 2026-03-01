@@ -59,3 +59,19 @@ export function formatDateToISO(dateString: string | Date | null | undefined): s
     return '';
   }
 }
+
+/**
+ * 마감일이 지정한 일수 이내인지 (당일 23:59:59 기준, 시간대 영향 최소화)
+ * @param deadline - "YYYY.MM.DD." 또는 "YYYY-MM-DD" 형식
+ * @param withinDays - 이 일수 이내면 true (기본 7일)
+ */
+export function isDeadlineUrgent(deadline?: string, withinDays = 7): boolean {
+  if (!deadline) return false;
+  const trimmed = deadline.replace(/\./g, '-').replace(/-$/g, '').trim();
+  const [y, m, d] = trimmed.split('-').map(Number);
+  if (!y || !m || !d) return false;
+  const deadlineEndOfDay = new Date(y, m - 1, d, 23, 59, 59, 999);
+  const now = Date.now();
+  const diff = deadlineEndOfDay.getTime() - now;
+  return diff >= 0 && diff <= withinDays * 24 * 60 * 60 * 1000;
+}
