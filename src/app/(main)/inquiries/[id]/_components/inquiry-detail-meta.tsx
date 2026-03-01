@@ -1,5 +1,3 @@
-'use client';
-
 import type { Inquiry } from '../../_types/inquiry';
 
 interface InquiryDetailMetaProps {
@@ -12,12 +10,12 @@ export default function InquiryDetailMeta({ inquiry }: InquiryDetailMetaProps) {
   const viewCount = inquiry.viewCount ?? 0;
 
   return (
-    <div className="flex gap-2 items-center text-body-s font-normal text-grayscale-gray5">
-      <span>{author}</span>
+    <div className="flex gap-2 items-center text-body-s text-grayscale-gray5">
+      <span className="font-semibold">{author}</span>
       <span aria-hidden>·</span>
-      <span>{date}</span>
+      <span className="font-normal">{date}</span>
       <span aria-hidden>·</span>
-      <span>조회수 {viewCount}</span>
+      <span className="font-normal">조회수 {viewCount}</span>
     </div>
   );
 }

@@ -46,7 +46,7 @@ export default function InquiryDetailPage() {
   }
 
   return (
-    <Container className="pb-20 pt-6 md:pt-7 lg:pt-10">
+    <Container className="pb-20">
       <InquiryDetailContent inquiry={inquiry} onEdit={handleEdit} onDelete={handleDelete} />
     </Container>
   );
