@@ -59,6 +59,10 @@ export const NAV_ITEMS: NavItem[] = [
     href: '/inquiries',
     icon: InquiriesNoFill,
     iconFill: InquiriesFill,
+    children: [
+      { name: '질문', href: '/inquiries' },
+      { name: '내 질문', href: '/inquiries?tab=my' },
+    ],
   },
   {
     name: '마이',
@@ -100,6 +104,10 @@ export const NAV_ITEMS_BREEDER: NavItem[] = [
     href: '/inquiries',
     icon: InquiriesNoFill,
     iconFill: InquiriesFill,
+    children: [
+      { name: '질문', href: '/inquiries' },
+      { name: '내 답변', href: '/inquiries?tab=breeder' },
+    ],
   },
   {
     name: '마이',
