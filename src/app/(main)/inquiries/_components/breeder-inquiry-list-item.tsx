@@ -30,12 +30,7 @@ export default function BreederInquiryListItem({ inquiry, answered }: BreederInq
             {inquiry.answerDeadline && (
               <>
                 <span>
-                  <span
-                    className={cn(
-                      'font-semibold',
-                      urgent ? 'text-status-warning500' : 'text-grayscale-gray5',
-                    )}
-                  >
+                  <span className={cn('font-semibold', urgent ? 'text-status-warning500' : 'text-grayscale-gray5')}>
                     답변 마감 기한{'  '}
                   </span>
                   <span className={cn('ml-1', urgent ? 'text-grayscale-gray5' : 'text-grayscale-gray3')}>
