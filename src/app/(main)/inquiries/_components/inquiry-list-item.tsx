@@ -15,7 +15,7 @@ export default function InquiryListItem({ inquiry }: InquiryListItemProps) {
       <h3 className="text-body-l font-semibold text-primary-500">{inquiry.title}</h3>
 
       {hasAnswer ? (
-        <InquiryAnswer answer={inquiry.latestAnswer!} />
+        <InquiryAnswer inquiryId={inquiry.id} answer={inquiry.latestAnswer!} />
       ) : (
         <p className="text-body-m font-medium text-grayscale-gray5 overflow-hidden text-ellipsis line-clamp-2">
           {inquiry.content}

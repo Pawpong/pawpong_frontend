@@ -3,6 +3,7 @@ import type { AnimalType } from '@/components/animal-tab-bar';
 export type InquiryType = 'common' | 'direct';
 
 export interface InquiryAnswer {
+  id?: string;
   breederName: string;
   answeredAt: string;
   content: string;

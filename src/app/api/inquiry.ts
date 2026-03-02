@@ -24,6 +24,7 @@ export const MOCK_INQUIRY_DETAIL: Inquiry = {
   imageUrls: ['/dog-and-cat.svg', '/profile-empty.svg', '/dog-and-cat.svg'],
   answers: [
     {
+      id: 'answer-1',
       breederName: '해피브리더',
       answeredAt: '2025. 02. 16.',
       content:
@@ -34,6 +35,7 @@ export const MOCK_INQUIRY_DETAIL: Inquiry = {
       imageUrls: ['/dog-and-cat.svg'],
     },
     {
+      id: 'answer-2',
       breederName: '사랑이브리더',
       answeredAt: '2025. 02. 17.',
       content:
@@ -43,6 +45,7 @@ export const MOCK_INQUIRY_DETAIL: Inquiry = {
       helpfulCount: 5,
     },
     {
+      id: 'answer-3',
       breederName: '냥이브리더',
       answeredAt: '2025. 02. 18.',
       content:
@@ -53,6 +56,25 @@ export const MOCK_INQUIRY_DETAIL: Inquiry = {
     },
   ],
   currentUserHasAnswered: false,
+};
+
+/**
+ * 답변 도움됐어요 등록/취소
+ * TODO: API 연동 후 구현
+ * 예상: POST /api/inquiry/:inquiryId/answer/:answerId/helpful (토글)
+ */
+export const submitInquiryAnswerHelpful = async (
+  _inquiryId: string,
+  _answerId: string,
+): Promise<void> => {
+  // TODO: API 연동 후 아래 주석 해제 및 호출
+  // const response = await apiClient.post<ApiResponse<null>>(
+  //   `/api/inquiry/${_inquiryId}/answer/${_answerId}/helpful`,
+  // );
+  // if (!response.data.success) throw new Error('도움됐어요 처리에 실패했습니다.');
+  void _inquiryId;
+  void _answerId;
+  await Promise.resolve();
 };
 
 /**

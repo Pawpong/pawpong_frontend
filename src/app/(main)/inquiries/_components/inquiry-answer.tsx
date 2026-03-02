@@ -5,12 +5,13 @@ import InquiryDetailActions from '../[id]/_components/inquiry-detail-actions';
 import InquiryAnswerHelpful from './inquiry-answer-helpful';
 
 interface InquiryAnswerProps {
+  inquiryId: string | null;
   answer: InquiryAnswerType;
   onEdit?: () => void;
   onDelete?: () => void;
 }
 
-export default function InquiryAnswer({ answer, onEdit, onDelete }: InquiryAnswerProps) {
+export default function InquiryAnswer({ inquiryId, answer, onEdit, onDelete }: InquiryAnswerProps) {
   return (
     <div className="w-full flex flex-col gap-6">
       <div className="bg-secondary-100 rounded-lg p-5 flex items-center justify-between gap-4 w-full">
@@ -52,8 +53,9 @@ export default function InquiryAnswer({ answer, onEdit, onDelete }: InquiryAnswe
         <span className="text-body-s font-normal text-grayscale-gray5">{answer.answeredAt}</span>
         <div className="flex gap-2 items-center">
           <InquiryAnswerHelpful
+            inquiryId={inquiryId}
+            answerId={answer.id}
             helpfulCount={answer.helpfulCount ?? 0}
-            onClick={() => {}}
           />
           <InquiryDetailActions onEdit={onEdit} onDelete={onDelete} />
         </div>
