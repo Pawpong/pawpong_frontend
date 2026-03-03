@@ -57,7 +57,7 @@ export default function InquiryAnswer({ inquiryId, answer, onEdit, onDelete }: I
             answerId={answer.id}
             helpfulCount={answer.helpfulCount ?? 0}
           />
-          <InquiryDetailActions onEdit={onEdit} onDelete={onDelete} />
+          <InquiryDetailActions onEdit={onEdit} onDelete={onDelete} deleteTarget="answer" />
         </div>
       </div>
     </div>

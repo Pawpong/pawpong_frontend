@@ -29,7 +29,7 @@ export default function InquiryDetailContent({
         <InquiryDetailHeader inquiry={inquiry} />
         <div className="flex flex-wrap items-center justify-between gap-2">
           <InquiryDetailMeta inquiry={inquiry} />
-          <InquiryDetailActions onEdit={onEdit} onDelete={onDelete} />
+          <InquiryDetailActions onEdit={onEdit} onDelete={onDelete} deleteTarget="question" />
         </div>
       </section>
 
