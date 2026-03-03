@@ -19,10 +19,11 @@ export default function InquiryDetailPage() {
     if (id) router.push(`/inquiries/${id}/edit`);
   };
   const handleDelete = () => {
-    if (id && typeof window !== 'undefined' && window.confirm('이 질문을 삭제할까요?')) {
-      // TODO: 삭제 API 연동 후 목록으로 이동
-      router.push('/inquiries');
-    }
+    if (!id) return;
+    // TODO: 삭제 API 연동 후 목록으로 이동
+    // 예시:
+    // await deleteInquiry(id);
+    router.push('/inquiries');
   };
 
   const handleWriteAnswer = () => {
