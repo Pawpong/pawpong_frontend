@@ -6,10 +6,13 @@ import { LoadingState } from '@/components/loading-state';
 import { useMyInquiries } from '../_hooks/use-my-inquiries';
 import InquiryListItem from './inquiry-list-item';
 import InquiryWriteButton from './inquiry-write-button';
+import { useAuthStore } from '@/stores/auth-store';
 
 export default function MyInquiryList() {
+  const { user } = useAuthStore();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useMyInquiries();
   const inquiries = data?.pages.flatMap((page) => page.data) ?? [];
+  const showWriteButton = user?.role !== 'breeder';
 
   return (
     <div className="flex flex-col">
@@ -17,7 +20,7 @@ export default function MyInquiryList() {
         <p className="text-body-xs font-medium text-grayscale-gray5">
           제목은 답변을 받기에 적절한 내용으로 일부 수정될 수 있습니다.
         </p>
-        <InquiryWriteButton variant="secondary" />
+        {showWriteButton && <InquiryWriteButton />}
       </div>
 
       {isLoading ? (

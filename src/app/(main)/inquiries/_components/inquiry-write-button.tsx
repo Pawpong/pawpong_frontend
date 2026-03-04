@@ -5,7 +5,7 @@ import PencilPixcel from '@/assets/icons/pencil-pixcel.svg';
 import { Button } from '@/components/ui/button';
 
 interface InquiryWriteButtonProps {
-  variant?: 'secondary' | 'tertiary';
+  variant?: 'tertiary';
 }
 
 export default function InquiryWriteButton({ variant = 'tertiary' }: InquiryWriteButtonProps) {
