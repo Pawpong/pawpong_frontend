@@ -12,6 +12,8 @@ import {
 import Link from 'next/link';
 import type { InquirySortType } from '../_types/inquiry';
 import InquiryWriteButton from './inquiry-write-button';
+import PencilPixcel from '@/assets/icons/pencil-pixcel.svg';
+import { useAuthStore } from '@/stores/auth-store';
 
 const SORT_OPTIONS: { value: InquirySortType; label: string }[] = [
   { value: 'latest_answer', label: '최신 답변순' },
@@ -25,7 +27,18 @@ interface InquirySortBarProps {
 }
 
 export default function InquirySortBar({ currentSort, onSortChange }: InquirySortBarProps) {
+  const { isAuthenticated, user } = useAuthStore();
   const currentLabel = SORT_OPTIONS.find((opt) => opt.value === currentSort)?.label ?? '최신 답변순';
+  const isBreeder = user?.role === 'breeder';
+
+  const myQuestionHref = isAuthenticated
+    ? isBreeder
+      ? '/inquiries?tab=breeder'
+      : '/inquiries?tab=my'
+    : `/login?returnUrl=${encodeURIComponent('/inquiries?tab=my')}`;
+  const writeHref = isAuthenticated ? '/inquiries/write' : `/login?returnUrl=${encodeURIComponent('/inquiries/write')}`;
+
+  const showWriteButton = !isBreeder;
 
   return (
     <div className="flex items-center justify-between w-full">
@@ -57,13 +70,25 @@ export default function InquirySortBar({ currentSort, onSortChange }: InquirySor
       </DropdownMenu>
 
       <div className="flex gap-2 items-center">
-        <Link href="/inquiries?tab=my">
-          <Button variant="secondary" size="sm" className="h-9 pl-4 pr-3 gap-1 text-body-xs">
-            내 질문
-            <InquiriesFillIcon className="size-5 shrink-0" />
-          </Button>
-        </Link>
-        <InquiryWriteButton />
+        {!isBreeder && (
+          <Link href={myQuestionHref}>
+            <Button variant="secondary" size="sm" className="h-9 pl-4 pr-3 gap-1 text-body-xs">
+              내 질문
+              <InquiriesFillIcon className="size-5 shrink-0" />
+            </Button>
+          </Link>
+        )}
+        {showWriteButton &&
+          (isAuthenticated ? (
+            <InquiryWriteButton />
+          ) : (
+            <Link href={writeHref}>
+              <Button variant="tertiary" size="sm" className="h-9 pl-4 pr-3 gap-1 text-body-xs">
+                공통 질문 작성
+                <PencilPixcel className="size-5 shrink-0" />
+              </Button>
+            </Link>
+          ))}
       </div>
     </div>
   );
