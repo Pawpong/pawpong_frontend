@@ -93,6 +93,17 @@ function CounselFormContentInner() {
       <FormLayout hasFormData={hasFormData} isLgUp={isLgUp}>
         <div className="w-full lg:w-1/2 flex flex-col">
           <div className="flex w-full flex-col items-center pb-20 md:pb-24  md:px-4 lg:px-0.5">
+            {/* 페이지 헤더 */}
+            <div className="flex flex-col items-center gap-3 pb-15 text-center">
+              <h2 className="text-heading-2 font-semibold text-primary-500 whitespace-pre-line">
+                {'입양 희망자에게 궁금한 질문을 추가해\n맞춤 신청서를 만들어 주세요.'}
+              </h2>
+              <p className="text-body-m font-medium text-grayscale-gray6">
+                기본 필수 질문 외에{' '}
+                <span className="text-[#4e9cf1]">브리더님만의 질문</span>
+                을 자유롭게 추가할 수 있어요.
+              </p>
+            </div>
             {COUNSEL_SECTIONS.map((section, index) => {
               const isLast = index === COUNSEL_SECTIONS.length - 1;
 
