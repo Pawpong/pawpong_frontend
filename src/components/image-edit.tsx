@@ -69,7 +69,7 @@ export default function ImageEdit({
               try {
                 preview = await extractVideoThumbnailFromUrl(url);
               } catch {
-                preview = url;
+                preview = VIDEO_PLACEHOLDER_SVG;
               }
             }
 
