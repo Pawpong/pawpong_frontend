@@ -15,6 +15,12 @@ export default function EnvPhotos({ photos }: { photos: string[] }) {
           >
             {isVideo ? (
               <video
+                ref={(el) => {
+                  if (el) {
+                    el.muted = true;
+                    el.play().catch(() => {});
+                  }
+                }}
                 src={photo}
                 className="absolute inset-0 w-full h-full object-cover rounded-lg"
                 autoPlay

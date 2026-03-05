@@ -47,6 +47,12 @@ export default function SafeImage({ src, onError, ...props }: ImageProps) {
 
     return (
       <video
+        ref={(el) => {
+          if (el) {
+            el.muted = true;
+            el.play().catch(() => {});
+          }
+        }}
         src={srcStr}
         className={typeof props.className === 'string' ? props.className : undefined}
         style={videoStyle}

@@ -46,6 +46,12 @@ export default function AnimalProfile({
       <div className="relative w-full max-w-[22.0625rem] aspect-square md:max-w-[13.66669rem] lg:max-w-none overflow-hidden rounded-lg">
         {isVideo ? (
           <video
+            ref={(el) => {
+              if (el) {
+                el.muted = true;
+                el.play().catch(() => {});
+              }
+            }}
             src={avatarUrl}
             className="absolute inset-0 w-full h-full object-cover"
             autoPlay

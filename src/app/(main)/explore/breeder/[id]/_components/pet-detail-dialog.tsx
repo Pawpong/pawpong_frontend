@@ -150,6 +150,12 @@ export default function PetDetailDialog({
             <div className="relative w-full aspect-video rounded-2xl overflow-hidden">
               {isMainVideo ? (
                 <video
+                  ref={(el) => {
+                    if (el) {
+                      el.muted = true;
+                      el.play().catch(() => {});
+                    }
+                  }}
                   src={pet.avatarUrl}
                   className="absolute inset-0 w-full h-full object-cover"
                   autoPlay
@@ -218,6 +224,12 @@ export default function PetDetailDialog({
                     <div key={index} className="relative w-full aspect-video rounded-lg overflow-hidden">
                       {isVideo ? (
                         <video
+                          ref={(el) => {
+                            if (el) {
+                              el.muted = true;
+                              el.play().catch(() => {});
+                            }
+                          }}
                           src={photo}
                           className="absolute inset-0 w-full h-full object-cover"
                           autoPlay
@@ -255,6 +267,12 @@ export default function PetDetailDialog({
                         <div className="relative w-[6.25rem] h-[6.25rem] rounded-lg overflow-hidden flex-shrink-0">
                           {isParentVideo ? (
                             <video
+                              ref={(el) => {
+                                if (el) {
+                                  el.muted = true;
+                                  el.play().catch(() => {});
+                                }
+                              }}
                               src={parent.avatarUrl}
                               className="absolute inset-0 w-full h-full object-cover"
                               autoPlay

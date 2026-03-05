@@ -61,14 +61,27 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
     <div className={cn('flex gap-3', getLayoutClass())}>
       {images.slice(0, maxImages).map((image, index) => (
         <div key={image.id} className="relative">
-          <SafeImage
-            src={image.preview}
-            alt={image.isVideo ? `동영상 미리보기 ${index + 1}` : `이미지 미리보기 ${index + 1}`}
-            width={80}
-            height={80}
-            className={cn('rounded-lg object-contain bg-white border border-gray-200', getImageSizeClass())}
-            unoptimized={image.isUrl || image.preview.startsWith('blob:') || image.preview.startsWith('data:')}
-          />
+          {image.isVideo && image.originalUrl ? (
+            <video
+              ref={(el) => {
+                if (el) el.muted = true;
+              }}
+              src={`${image.originalUrl}#t=0.1`}
+              className={cn('rounded-lg object-cover bg-white border border-gray-200', getImageSizeClass())}
+              muted
+              playsInline
+              preload="metadata"
+            />
+          ) : (
+            <SafeImage
+              src={image.preview}
+              alt={image.isVideo ? `동영상 미리보기 ${index + 1}` : `이미지 미리보기 ${index + 1}`}
+              width={80}
+              height={80}
+              className={cn('rounded-lg object-contain bg-white border border-gray-200', getImageSizeClass())}
+              unoptimized={image.isUrl || image.preview.startsWith('blob:') || image.preview.startsWith('data:')}
+            />
+          )}
           {image.isVideo && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="bg-black/50 rounded-full p-1.5">

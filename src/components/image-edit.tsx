@@ -5,13 +5,7 @@ import { cn } from '@/api/utils';
 import { useState, useRef, useEffect } from 'react';
 import ImagePreview, { ImageFile } from './image-preview';
 import { useToast } from '@/hooks/use-toast';
-import {
-  isVideoFile,
-  extractVideoThumbnail,
-  isVideoUrl,
-  extractVideoThumbnailFromUrl,
-  VIDEO_PLACEHOLDER_SVG,
-} from '@/utils/video-thumbnail';
+import { isVideoFile, extractVideoThumbnail, isVideoUrl, VIDEO_PLACEHOLDER_SVG } from '@/utils/video-thumbnail';
 import { getImagePreview } from '@/utils/heic-convert';
 
 interface ImageEditProps {
@@ -82,16 +76,9 @@ export default function ImageEdit({
         const existingImages: ImageFile[] = await Promise.all(
           initialImages.map(async (url, index) => {
             const isVideo = isVideoUrl(url);
-            let preview = url;
-
-            // 동영상 URL인 경우 썸네일 추출
-            if (isVideo) {
-              try {
-                preview = await extractVideoThumbnailFromUrl(url);
-              } catch {
-                preview = VIDEO_PLACEHOLDER_SVG;
-              }
-            }
+            // CDN 동영상은 CORS로 캔버스 썸네일 추출 불가 → placeholder 사용
+            // image-preview에서 <video> 엘리먼트로 첫 프레임 직접 표시
+            const preview = isVideo ? VIDEO_PLACEHOLDER_SVG : url;
 
             return {
               id: `existing-${index}-${Date.now()}`,
