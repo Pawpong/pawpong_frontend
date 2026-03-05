@@ -79,7 +79,7 @@ export default function PetDetailDialog({
 
   const getValidImageUrl = (url: string) => {
     if (!url) return '';
-    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
     return '';
   };
 

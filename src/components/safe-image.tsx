@@ -2,6 +2,7 @@
 
 import Image, { type ImageProps } from 'next/image';
 import { useState } from 'react';
+import { isVideoUrl } from '@/utils/video-thumbnail';
 
 /**
  * HEIC URL인지 확인
@@ -23,7 +24,7 @@ const IMAGE_PLACEHOLDER_SVG = `data:image/svg+xml;charset=utf-8,${encodeURICompo
 `)}`;
 
 /**
- * Next.js Image 래퍼 - HEIC URL 감지 및 onError fallback 제공
+ * Next.js Image 래퍼 - HEIC URL 감지, 빈 src 방어, 동영상 URL 폴백 및 onError fallback 제공
  * S3에 이미 저장된 HEIC 파일이나 깨진 이미지에 대한 방어 처리
  */
 export default function SafeImage({ src, onError, ...props }: ImageProps) {
@@ -31,10 +32,29 @@ export default function SafeImage({ src, onError, ...props }: ImageProps) {
 
   const srcStr = typeof src === 'string' ? src : '';
 
-  // HEIC URL이거나 에러 발생 시 placeholder
-  if (hasError || (srcStr && isHeicUrl(srcStr))) {
+  // 빈 src, HEIC URL, 또는 에러 발생 시 placeholder
+  if (hasError || !srcStr || isHeicUrl(srcStr)) {
     return (
       <Image {...props} src={IMAGE_PLACEHOLDER_SVG} alt={props.alt || '이미지를 표시할 수 없습니다'} unoptimized />
+    );
+  }
+
+  // 동영상 URL이 SafeImage에 도달한 경우 video 엘리먼트로 렌더링
+  if (isVideoUrl(srcStr)) {
+    const videoStyle: React.CSSProperties = props.fill
+      ? { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }
+      : {};
+
+    return (
+      <video
+        src={srcStr}
+        className={typeof props.className === 'string' ? props.className : undefined}
+        style={videoStyle}
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
     );
   }
 

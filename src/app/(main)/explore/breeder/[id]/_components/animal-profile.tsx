@@ -37,9 +37,7 @@ export default function AnimalProfile({
   // 이미지 URL 검증 및 폴백 처리
   const getValidImageUrl = (url: string) => {
     if (!url) return '';
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url;
-    }
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
     return '';
   };
 

@@ -29,6 +29,12 @@ interface ImageEditProps {
   resetKey?: number | string;
 }
 
+/** onFileChange에 전달할 값: URL-based는 원본 URL, File-based는 File 객체 */
+function toFileChangeValue(img: ImageFile): File | string {
+  if (img.isUrl) return img.originalUrl || img.preview;
+  return img.file!;
+}
+
 export default function ImageEdit({
   className,
   limit = 'on',
@@ -46,10 +52,17 @@ export default function ImageEdit({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
   const initializedRef = useRef(false);
+  const internalChangeRef = useRef(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const { toast } = useToast();
 
   // resetKey가 바뀌면 강제 재초기화 (저장 완료 후 서버 데이터로 리셋할 때 사용)
+  // 내부 변경(사진 추가/삭제)으로 인한 resetKey 변경은 무시
   useEffect(() => {
+    if (internalChangeRef.current) {
+      internalChangeRef.current = false;
+      return;
+    }
     initializedRef.current = false;
   }, [resetKey]);
 
@@ -57,6 +70,13 @@ export default function ImageEdit({
   useEffect(() => {
     if (initialImages.length > 0 && !initializedRef.current) {
       initializedRef.current = true;
+
+      // 이전 비동기 초기화가 진행 중이면 취소
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
 
       const processInitialImages = async () => {
         const existingImages: ImageFile[] = await Promise.all(
@@ -79,16 +99,30 @@ export default function ImageEdit({
               preview,
               isUrl: true,
               isVideo,
+              originalUrl: url, // 원본 CDN URL 보존
             };
           }),
         );
-        setImageFiles(existingImages);
+
+        // stale 비동기 결과가 현재 상태를 덮어쓰지 않도록 방어
+        if (!controller.signal.aborted) {
+          setImageFiles(existingImages);
+        }
       };
 
       processInitialImages();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialImages, resetKey]);
+
+  // Cleanup: 언마운트 시 비동기 초기화 취소
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   const handleClick = () => {
     fileInputRef.current?.click();
@@ -160,12 +194,13 @@ export default function ImageEdit({
       const filesToAdd = newFiles.slice(0, remainingSlots);
       const updatedFiles = [...imageFiles, ...filesToAdd];
       setImageFiles(updatedFiles);
-      onFileChange?.(updatedFiles.map((img) => (img.isUrl ? img.preview : img.file!)));
+      internalChangeRef.current = true;
+      onFileChange?.(updatedFiles.map(toFileChangeValue));
     } else {
       const updatedFiles = [...imageFiles, ...newFiles];
       setImageFiles(updatedFiles);
-      // Return File objects for new uploads, string URLs for existing images
-      onFileChange?.(updatedFiles.map((img) => (img.isUrl ? img.preview : img.file!)));
+      internalChangeRef.current = true;
+      onFileChange?.(updatedFiles.map(toFileChangeValue));
     }
 
     if (fileInputRef.current) {
@@ -176,8 +211,8 @@ export default function ImageEdit({
   const handleRemoveImage = (id: string) => {
     const newFiles = imageFiles.filter((img) => img.id !== id);
     setImageFiles(newFiles);
-    // Return File objects for new uploads, string URLs for existing images
-    onFileChange?.(newFiles.map((img) => (img.isUrl ? img.preview : img.file!)));
+    internalChangeRef.current = true;
+    onFileChange?.(newFiles.map(toFileChangeValue));
   };
 
   const currentStatus = imageFiles.length > 0 ? 'Filled' : status;

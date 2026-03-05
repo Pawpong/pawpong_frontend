@@ -3,7 +3,7 @@
 import { cn } from '@/api/utils';
 import PictureRemove from '@/assets/icons/picture-delete.svg';
 import PlayIcon from '@/assets/icons/play.svg';
-import Image from 'next/image';
+import SafeImage from './safe-image';
 
 export interface ImageFile {
   id: string;
@@ -11,6 +11,7 @@ export interface ImageFile {
   preview: string;
   isUrl?: boolean; // true if this is a URL-based image
   isVideo?: boolean; // true if this is a video file
+  originalUrl?: string; // 원본 CDN URL 보존 (동영상 URL의 썸네일 변환 시 원본 소실 방지)
 }
 
 interface ImagePreviewProps {
@@ -60,7 +61,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
     <div className={cn('flex gap-3', getLayoutClass())}>
       {images.slice(0, maxImages).map((image, index) => (
         <div key={image.id} className="relative">
-          <Image
+          <SafeImage
             src={image.preview}
             alt={image.isVideo ? `동영상 미리보기 ${index + 1}` : `이미지 미리보기 ${index + 1}`}
             width={80}
