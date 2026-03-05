@@ -99,9 +99,8 @@ function CounselFormContentInner() {
                 {'입양 희망자에게 궁금한 질문을 추가해\n맞춤 신청서를 만들어 주세요.'}
               </h2>
               <p className="text-body-m font-medium text-grayscale-gray6">
-                기본 필수 질문 외에{' '}
-                <span className="text-[#4e9cf1]">브리더님만의 질문</span>
-                을 자유롭게 추가할 수 있어요.
+                기본 필수 질문 외에 <span className="text-[#4e9cf1]">브리더님만의 질문</span>을 자유롭게 추가할 수
+                있어요.
               </p>
             </div>
             {COUNSEL_SECTIONS.map((section, index) => {

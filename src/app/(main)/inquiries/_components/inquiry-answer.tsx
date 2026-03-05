@@ -52,11 +52,7 @@ export default function InquiryAnswer({ inquiryId, answer, onEdit, onDelete }: I
       <div className="flex items-center justify-between w-full gap-4 flex-wrap">
         <span className="text-body-s font-normal text-grayscale-gray5">{answer.answeredAt}</span>
         <div className="flex gap-2 items-center">
-          <InquiryAnswerHelpful
-            inquiryId={inquiryId}
-            answerId={answer.id}
-            helpfulCount={answer.helpfulCount ?? 0}
-          />
+          <InquiryAnswerHelpful inquiryId={inquiryId} answerId={answer.id} helpfulCount={answer.helpfulCount ?? 0} />
           <InquiryDetailActions onEdit={onEdit} onDelete={onDelete} deleteTarget="answer" />
         </div>
       </div>

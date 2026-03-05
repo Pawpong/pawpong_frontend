@@ -23,6 +23,7 @@ import LocationSelectDialogTrigger from '../location-select-dialog-trigger';
 import { breederInfoSchema, type BreederInfoFormData } from './breeder-info-schema';
 import { checkBreederNameDuplicate } from '@/api/auth';
 import { useToast } from '@/hooks/use-toast';
+import { getImageDataUrl } from '@/utils/heic-convert';
 
 export default function BreederInfoSection() {
   const setPhoto = useSignupFormStore((state) => state.setPhoto);
@@ -138,18 +139,16 @@ export default function BreederInfoSection() {
                 const input = document.createElement('input');
                 input.type = 'file';
                 input.accept = '.jpg,.jpeg,.png,.gif,.webp,.heif,.heic,.mp4,.mov,.avi,.webm';
-                input.onchange = (e: Event) => {
+                input.onchange = async (e: Event) => {
                   const target = e.target as HTMLInputElement;
                   const file = target.files?.[0];
                   if (file) {
                     setPhoto(file);
-                    const reader = new FileReader();
-                    reader.onload = (event: ProgressEvent<FileReader>) => {
-                      if (event.target?.result) {
-                        setPhotoPreview(event.target.result as string);
-                      }
-                    };
-                    reader.readAsDataURL(file);
+                    const result = await getImageDataUrl(file);
+                    if (result.error) {
+                      toast({ title: result.error, position: 'split' });
+                    }
+                    setPhotoPreview(result.preview);
                   }
                 };
                 input.click();

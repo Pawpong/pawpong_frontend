@@ -199,30 +199,34 @@ export default function ImageEdit({
         onChange={handleFileSelect}
       />
 
-      {/* 카메라 박스 */}
-      <div
-        className={cn(
-          'bg-white flex flex-col gap-1.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group',
-          'pb-2.5 pt-2 px-0 border border-transparent',
-          currentStatus === 'Hover' && 'bg-gray-50',
-          isError && '',
-          className,
-        )}
-        onClick={handleClick}
-      >
-        <Camera
-          className={cn('size-7 transition-colors', {
-            'group-hover:[&_path]:fill-[#4F3B2E]': !isError,
-            '[&_path]:fill-status-error-500': isError,
-          })}
-        />
+      {/* 카메라 박스: 최대 등록 시 숨김 */}
+      {imageFiles.length < maxCount && (
+        <div
+          className={cn(
+            'bg-white flex flex-col gap-1.5 items-center justify-center rounded-lg size-20 cursor-pointer transition-colors group',
+            'pb-2.5 pt-2 px-0 border border-transparent',
+            currentStatus === 'Hover' && 'bg-gray-50',
+            isError && '',
+            className,
+          )}
+          onClick={handleClick}
+        >
+          <Camera
+            className={cn('size-7 transition-colors', {
+              'group-hover:[&_path]:fill-[#4F3B2E]': !isError,
+              '[&_path]:fill-status-error-500': isError,
+            })}
+          />
 
-        {limit === 'on' && (
-          <div className={cn('text-caption-s font-medium', isError ? 'text-status-error-500' : 'text-grayscale-gray5')}>
-            {labelText || `${imageFiles.length}/${maxCount}`}
-          </div>
-        )}
-      </div>
+          {limit === 'on' && (
+            <div
+              className={cn('text-caption-s font-medium', isError ? 'text-status-error-500' : 'text-grayscale-gray5')}
+            >
+              {labelText || `${imageFiles.length}/${maxCount}`}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 이미지 미리보기 */}
       {showPreview && (

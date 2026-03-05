@@ -24,14 +24,7 @@ export default function InquiryDetailImages({
           aria-label={url ? `첨부 이미지 ${index + 1}` : '이미지 없음'}
         >
           {url ? (
-            <Image
-              src={url}
-              alt=""
-              width={800}
-              height={1}
-              unoptimized
-              className="block w-full h-auto rounded-lg"
-            />
+            <Image src={url} alt="" width={800} height={1} unoptimized className="block w-full h-auto rounded-lg" />
           ) : (
             <div className="w-full h-[12rem] rounded-lg" aria-hidden />
           )}

@@ -78,10 +78,10 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
           {showRemoveButton && (
             <button
               onClick={() => onRemove(image.id)}
-              className="absolute top-1 right-1 flex bg-[var(--primary-500-basic,#4f3b2e)] rounded-full p-1 hover:opacity-80 transition-opacity"
+              className="absolute top-1 right-1 bg-[var(--primary-500-basic,#4f3b2e)] rounded-full size-6 flex items-center justify-center hover:opacity-80 transition-opacity"
               aria-label={`${image.isVideo ? '동영상' : '이미지'} ${index + 1} 삭제`}
             >
-              <PictureRemove className="group-hover:[&_path]:fill-[#4F3B2E]" aria-hidden="true" />
+              <PictureRemove aria-hidden="true" />
             </button>
           )}
         </div>

@@ -63,10 +63,7 @@ export const MOCK_INQUIRY_DETAIL: Inquiry = {
  * TODO: API 연동 후 구현
  * 예상: POST /api/inquiry/:inquiryId/answer/:answerId/helpful (토글)
  */
-export const submitInquiryAnswerHelpful = async (
-  _inquiryId: string,
-  _answerId: string,
-): Promise<void> => {
+export const submitInquiryAnswerHelpful = async (_inquiryId: string, _answerId: string): Promise<void> => {
   // TODO: API 연동 후 아래 주석 해제 및 호출
   // const response = await apiClient.post<ApiResponse<null>>(
   //   `/api/inquiry/${_inquiryId}/answer/${_answerId}/helpful`,

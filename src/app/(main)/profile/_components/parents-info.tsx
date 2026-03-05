@@ -53,7 +53,7 @@ export default function ParentsInfo({ form }: { form: ReturnType<typeof useFormC
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fields.length]);
 
   const addParent = () => {
     append({
