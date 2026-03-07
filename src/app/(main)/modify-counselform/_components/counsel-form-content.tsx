@@ -2,7 +2,7 @@
 
 import { Suspense, useRef, useState, useCallback, useMemo } from 'react';
 import { FormProvider } from 'react-hook-form';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { FormLayout, SubmitButton } from '../sections';
 import { COUNSEL_SECTIONS } from '@/app/(main)/counselform/_constants/counsel-questions.constants';
@@ -10,6 +10,7 @@ import { CounselSection } from '@/app/(main)/counselform/_components/shared/coun
 import BreederAdditionalQuestionSection from './sections/breeder-additional-question-section';
 import type { BreederAdditionalQuestionSectionRef } from '../_types/breeder-question.types';
 import ExitConfirmDialog from '@/components/exit-confirmation-dialog';
+import ConfirmDialog from '@/components/confirm-dialog';
 import { Separator } from '@/components/ui/separator';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { LoadingState } from '@/components/loading-state';
@@ -25,6 +26,7 @@ import {
  * 상담 신청서 수정 페이지 내부 컴포넌트
  */
 function CounselFormContentInner() {
+  const router = useRouter();
   const isLgUp = useBreakpoint('lg');
   const searchParams = useSearchParams();
   const breederId = searchParams.get('breederId') || '';
@@ -69,6 +71,7 @@ function CounselFormContentInner() {
     if (customQuestionState.hasValidInput) {
       try {
         await breederQuestionRef.current?.saveQuestions();
+        setSaveCompleteOpen(true);
         // 커스텀 질문 저장 성공 시 완료 처리 (다른 필드 검증 없이 종료)
         return;
       } catch {
@@ -91,6 +94,12 @@ function CounselFormContentInner() {
     const hasInvalidCustomQuestions = customQuestionState.hasChanges && !customQuestionState.hasValidInput;
     return isDisabled || hasInvalidCustomQuestions;
   }, [customQuestionState.hasValidInput, customQuestionState.hasChanges, isDisabled]);
+
+  const [saveCompleteOpen, setSaveCompleteOpen] = useState(false);
+  const handleSaveCompleteConfirm = useCallback(() => {
+    setSaveCompleteOpen(false);
+    router.push('/');
+  }, [router]);
 
   return (
     <FormProvider {...form}>
@@ -167,6 +176,18 @@ function CounselFormContentInner() {
           }}
         />
       )}
+
+      <ConfirmDialog
+        open={saveCompleteOpen}
+        onOpenChange={setSaveCompleteOpen}
+        onConfirm={handleSaveCompleteConfirm}
+        title="신청서 저장을 완료했어요!"
+        description={`수정하신 질문들이 입양 신청서에
+실시간으로 반영되었어요.`}
+        confirmText="홈으로"
+        variant="success"
+        singleAction
+      />
     </FormProvider>
   );
 }

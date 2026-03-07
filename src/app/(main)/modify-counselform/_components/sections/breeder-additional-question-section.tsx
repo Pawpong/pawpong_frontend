@@ -4,6 +4,7 @@ import { useState, useEffect, useImperativeHandle, forwardRef, useMemo, useCallb
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import ConfirmDialog from '@/components/confirm-dialog';
 import Plus from '@/assets/icons/plus';
 import Trash from '@/assets/icons/trash.svg';
 import {
@@ -30,6 +31,7 @@ const BreederAdditionalQuestionSection = forwardRef<
 >(({ onSaveComplete, onStateChange }, ref) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [initialQuestions, setInitialQuestions] = useState<Question[]>([]);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; order: number } | null>(null);
   const { data: formData, isLoading } = useApplicationForm();
   const { mutate: updateForm } = useUpdateApplicationFormSimple();
 
@@ -75,7 +77,6 @@ const BreederAdditionalQuestionSection = forwardRef<
         },
         {
           onSuccess: (data) => {
-            toast(BREEDER_QUESTION_MESSAGES.SAVE_SUCCESS(validQuestions.length));
             // 성공 시 서버에서 반환된 데이터로 업데이트
             if (data.customQuestions) {
               const updatedQuestions: Question[] = data.customQuestions.map((q: { id: string; question: string }) => ({
@@ -137,6 +138,12 @@ const BreederAdditionalQuestionSection = forwardRef<
     setQuestions((prev) => prev.filter((q) => q.id !== id));
   }, []);
 
+  const handleDeleteConfirm = useCallback(() => {
+    if (!deleteTarget) return;
+    handleRemoveQuestion(deleteTarget.id);
+    setDeleteTarget(null);
+  }, [deleteTarget, handleRemoveQuestion]);
+
   const handleQuestionChange = useCallback((id: string, value: string) => {
     setQuestions((prev) => prev.map((q) => (q.id === id ? { ...q, question: value } : q)));
   }, []);
@@ -178,7 +185,7 @@ const BreederAdditionalQuestionSection = forwardRef<
               {questions.length > 0 && (
                 <button
                   type="button"
-                  onClick={() => handleRemoveQuestion(q.id)}
+                  onClick={() => setDeleteTarget({ id: q.id, order: index + 1 })}
                   className="flex gap-1 items-center relative shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
                   aria-label="질문 삭제"
                 >
@@ -225,6 +232,22 @@ const BreederAdditionalQuestionSection = forwardRef<
           </p>
         )}
       </div>
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteTarget(null);
+          }
+        }}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteTarget(null)}
+        title={`추가 질문 ${deleteTarget?.order ?? ''}을(를) 삭제할까요?`}
+        description={`질문을 삭제해도 이미 제출된 신청서의 답변은
+안전하게 보관되니 걱정하지 마세요.`}
+        confirmText="질문 삭제"
+        cancelText="질문 유지"
+      />
     </div>
   );
 });
