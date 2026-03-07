@@ -1,0 +1,5 @@
+export const COUNSEL_SUBMIT_BUTTON_LABEL = '상담 신청하기';
+export const COUNSEL_SUBMIT_BUTTON_SUBMITTING_LABEL = '제출 중...';
+
+export const MODIFY_COUNSEL_SUBMIT_BUTTON_LABEL = '저장하기';
+export const MODIFY_COUNSEL_SUBMIT_BUTTON_SUBMITTING_LABEL = '저장 중...';

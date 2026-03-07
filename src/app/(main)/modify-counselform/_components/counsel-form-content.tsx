@@ -16,6 +16,10 @@ import { LoadingState } from '@/components/loading-state';
 import { useCounselGuard } from '@/app/(main)/counselform/_hooks/use-counsel-guard';
 import { useCounselForm } from '@/app/(main)/counselform/_hooks/use-counsel-form';
 import { formatPhoneNumber } from '@/utils/phone';
+import {
+  MODIFY_COUNSEL_SUBMIT_BUTTON_LABEL,
+  MODIFY_COUNSEL_SUBMIT_BUTTON_SUBMITTING_LABEL,
+} from '@/app/(main)/counselform/_constants/submit-button.constants';
 
 /**
  * 상담 신청서 수정 페이지 내부 컴포넌트
@@ -126,7 +130,13 @@ function CounselFormContentInner() {
               <BreederAdditionalQuestionSection ref={breederQuestionRef} onStateChange={handleStateChange} />
             </div>
           </div>
-          <SubmitButton isDisabled={isSubmitDisabled} isSubmitting={isSubmitting} onSubmit={handleSubmit} />
+          <SubmitButton
+            isDisabled={isSubmitDisabled}
+            isSubmitting={isSubmitting}
+            onSubmit={handleSubmit}
+            submitLabel={MODIFY_COUNSEL_SUBMIT_BUTTON_LABEL}
+            submittingLabel={MODIFY_COUNSEL_SUBMIT_BUTTON_SUBMITTING_LABEL}
+          />
         </div>
       </FormLayout>
 
