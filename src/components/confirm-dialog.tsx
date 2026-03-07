@@ -13,6 +13,7 @@ import {
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
 import { cn } from '@/api/utils';
 import ErrorIcon from '@/assets/icons/error';
+import Check from '@/assets/icons/check';
 
 interface ConfirmDialogProps {
   /**
@@ -48,6 +49,14 @@ interface ConfirmDialogProps {
    */
   cancelText?: string;
   /**
+   * 다이얼로그 아이콘 스타일
+   */
+  variant?: 'error' | 'success';
+  /**
+   * 단일 확인 버튼만 표시할지 여부
+   */
+  singleAction?: boolean;
+  /**
    * 데이터가 있는지 확인하는 함수 또는 boolean 값 (선택적)
    * 설정하면 hasData가 true일 때만 다이얼로그를 표시
    */
@@ -68,6 +77,8 @@ export default function ConfirmDialog({
   description,
   confirmText = '확인',
   cancelText = '취소',
+  variant = 'error',
+  singleAction = false,
   hasData,
   children,
 }: ConfirmDialogProps) {
@@ -139,10 +150,21 @@ export default function ConfirmDialog({
             <div className="flex flex-col gap-3 items-center pb-4 pt-8 px-4">
               {/* 경고 아이콘 */}
               <div className="relative size-[60px] flex items-center justify-center">
-                <div className="absolute size-[53.33px] bg-[var(--color-status-error-100)] rounded-full" />
-                <div className="absolute size-[26.67px] flex items-center justify-center">
-                  <ErrorIcon className="size-full" />
-                </div>
+                {variant === 'success' ? (
+                  <>
+                    <div className="absolute size-[53.33px] bg-[var(--color-status-success-100)] rounded-full" />
+                    <div className="absolute size-[26.67px] flex items-center justify-center">
+                      <Check className="size-full text-[var(--color-status-success-500)]" />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="absolute size-[53.33px] bg-[var(--color-status-error-100)] rounded-full" />
+                    <div className="absolute size-[26.67px] flex items-center justify-center">
+                      <ErrorIcon className="size-full" />
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* 텍스트 영역 */}
@@ -159,15 +181,20 @@ export default function ConfirmDialog({
             {/* 하단 버튼 영역 */}
             <div className="flex flex-col gap-3 items-center justify-end pb-5 pt-4 px-4">
               <div className="flex gap-2 w-full">
-                <AlertDialogCancel
-                  onClick={handleCancel}
-                  className="flex-1 h-12 bg-[var(--color-secondary-100)] text-[#4F3B2E] rounded-lg px-4 py-3 text-body-s font-semibold border-0"
-                >
-                  {cancelText}
-                </AlertDialogCancel>
+                {!singleAction && (
+                  <AlertDialogCancel
+                    onClick={handleCancel}
+                    className="flex-1 h-12 bg-[var(--color-secondary-100)] text-[#4F3B2E] rounded-lg px-4 py-3 text-body-s font-semibold border-0"
+                  >
+                    {cancelText}
+                  </AlertDialogCancel>
+                )}
                 <AlertDialogAction
                   onClick={handleConfirm}
-                  className="flex-1 h-12 bg-[#4F3B2E] text-[var(--color-secondary-500)] hover:bg-[#4F3B2E] hover:text-[var(--color-secondary-500)] rounded-lg px-4 py-3 text-body-s font-semibold"
+                  className={cn(
+                    'h-12 bg-[#4F3B2E] text-[var(--color-secondary-500)] hover:bg-[#4F3B2E] hover:text-[var(--color-secondary-500)] rounded-lg px-4 py-3 text-body-s font-semibold',
+                    singleAction ? 'w-full' : 'flex-1',
+                  )}
                 >
                   {confirmText}
                 </AlertDialogAction>
