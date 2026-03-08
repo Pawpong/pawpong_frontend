@@ -204,6 +204,7 @@ export default function ImageEdit({
 
   const currentStatus = imageFiles.length > 0 ? 'Filled' : status;
   const isError = currentStatus === 'Error';
+  const canAddMore = imageFiles.length < maxCount;
 
   // 허용할 파일 형식 설정
   const acceptFormats = allowVideo
