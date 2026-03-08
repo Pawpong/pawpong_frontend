@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import SafeImage from '@/components/safe-image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useCounselFormStore } from '@/stores/counsel-form-store';
@@ -51,7 +51,7 @@ export default function BreederProfile({
       <div className="flex gap-4 lg:flex-col lg:gap-8">
         <div className="w-[8.25rem] h-[8.25rem] md:w-[10rem] md:h-[10rem] lg:w-[12.75rem] lg:h-[12.75rem] rounded-lg overflow-hidden shrink-0 bg-grayscale-gray1 flex items-center justify-center">
           {avatarUrl && avatarUrl !== '/profile-empty.svg' ? (
-            <Image
+            <SafeImage
               src={avatarUrl}
               alt={nickname}
               width={204}

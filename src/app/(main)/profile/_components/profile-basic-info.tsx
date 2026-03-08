@@ -16,6 +16,8 @@ import { useFormContext, Controller } from 'react-hook-form';
 import type { ProfileFormData } from '@/stores/profile-store';
 import ErrorMessage from '@/components/error-message';
 import Image from 'next/image';
+import { getImageDataUrl } from '@/utils/heic-convert';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProfileBasicInfoProps {
   form: ReturnType<typeof useFormContext<ProfileFormData>>;
@@ -49,16 +51,16 @@ export default function ProfileBasicInfo({
     fileInputRef.current?.click();
   };
 
-  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { toast } = useToast();
+
+  const handleProfileImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target?.result) {
-          onProfileImageChange?.(file, event.target.result as string);
-        }
-      };
-      reader.readAsDataURL(file);
+      const result = await getImageDataUrl(file);
+      if (result.error) {
+        toast({ title: result.error, position: 'split' });
+      }
+      onProfileImageChange?.(file, result.preview);
     }
     if (fileInputRef.current) {
       fileInputRef.current.value = '';

@@ -4,7 +4,7 @@ import Female from '@/assets/icons/female';
 import Male from '@/assets/icons/male';
 import AdoptionStatusBadge from '@/components/adoption-status-badge';
 import { cn } from '@/api/utils';
-import Image from 'next/image';
+import SafeImage from '@/components/safe-image';
 import { Lock } from 'lucide-react';
 import BreedAdInfo from '@/components/breed-ad-info';
 import { isVideoUrl } from '@/utils/video-thumbnail';
@@ -37,9 +37,7 @@ export default function AnimalProfile({
   // 이미지 URL 검증 및 폴백 처리
   const getValidImageUrl = (url: string) => {
     if (!url) return '';
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url;
-    }
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
     return '';
   };
 
@@ -48,6 +46,12 @@ export default function AnimalProfile({
       <div className="relative w-full max-w-[22.0625rem] aspect-square md:max-w-[13.66669rem] lg:max-w-none overflow-hidden rounded-lg">
         {isVideo ? (
           <video
+            ref={(el) => {
+              if (el) {
+                el.muted = true;
+                el.play().catch(() => {});
+              }
+            }}
             src={avatarUrl}
             className="absolute inset-0 w-full h-full object-cover"
             autoPlay
@@ -56,7 +60,7 @@ export default function AnimalProfile({
             playsInline
           />
         ) : (
-          <Image
+          <SafeImage
             src={getValidImageUrl(avatarUrl)}
             alt={`${name}의 사진`}
             width={200}

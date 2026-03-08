@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import Female from '@/assets/icons/female';
 import Male from '@/assets/icons/male';
 import AdoptionStatusBadge from '@/components/adoption-status-badge';
-import Image from 'next/image';
+import SafeImage from '@/components/safe-image';
 import { Separator } from '@/components/ui/separator';
 import { useRouter } from 'next/navigation';
 import { useCounselFormStore } from '@/stores/counsel-form-store';
@@ -79,7 +79,7 @@ export default function PetDetailDialog({
 
   const getValidImageUrl = (url: string) => {
     if (!url) return '';
-    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
     return '';
   };
 
@@ -150,6 +150,12 @@ export default function PetDetailDialog({
             <div className="relative w-full aspect-video rounded-2xl overflow-hidden">
               {isMainVideo ? (
                 <video
+                  ref={(el) => {
+                    if (el) {
+                      el.muted = true;
+                      el.play().catch(() => {});
+                    }
+                  }}
                   src={pet.avatarUrl}
                   className="absolute inset-0 w-full h-full object-cover"
                   autoPlay
@@ -158,7 +164,7 @@ export default function PetDetailDialog({
                   playsInline
                 />
               ) : (
-                <Image
+                <SafeImage
                   src={getValidImageUrl(pet.avatarUrl)}
                   alt={`${pet.name}의 사진`}
                   fill
@@ -218,6 +224,12 @@ export default function PetDetailDialog({
                     <div key={index} className="relative w-full aspect-video rounded-lg overflow-hidden">
                       {isVideo ? (
                         <video
+                          ref={(el) => {
+                            if (el) {
+                              el.muted = true;
+                              el.play().catch(() => {});
+                            }
+                          }}
                           src={photo}
                           className="absolute inset-0 w-full h-full object-cover"
                           autoPlay
@@ -226,7 +238,7 @@ export default function PetDetailDialog({
                           playsInline
                         />
                       ) : (
-                        <Image
+                        <SafeImage
                           src={getValidImageUrl(photo)}
                           alt={`${pet.name} 사진 ${index + 1}`}
                           fill
@@ -255,6 +267,12 @@ export default function PetDetailDialog({
                         <div className="relative w-[6.25rem] h-[6.25rem] rounded-lg overflow-hidden flex-shrink-0">
                           {isParentVideo ? (
                             <video
+                              ref={(el) => {
+                                if (el) {
+                                  el.muted = true;
+                                  el.play().catch(() => {});
+                                }
+                              }}
                               src={parent.avatarUrl}
                               className="absolute inset-0 w-full h-full object-cover"
                               autoPlay
@@ -263,7 +281,7 @@ export default function PetDetailDialog({
                               playsInline
                             />
                           ) : (
-                            <Image
+                            <SafeImage
                               src={getValidImageUrl(parent.avatarUrl)}
                               alt={`${parent.name}의 사진`}
                               fill

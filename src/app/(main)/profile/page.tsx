@@ -548,11 +548,24 @@ export default function ProfilePage() {
       const originalAnimals = originalDataRef.current?.availablePetInfo || [];
       await syncAvailablePets(originalAnimals, formData.animals, parentIdMapping);
 
-      // 4. 모든 저장/동기화 완료 후 한 번만 프로필 쿼리 갱신
+      // 4. 모든 저장/동기화 완료 후 관련 쿼리 전체 갱신
       lastSavedDescriptionRef.current = (formData.description ?? '').trim();
       lastSavedAtRef.current = Date.now();
-      await queryClient.invalidateQueries({ queryKey: ['breeder-profile'] });
-      await queryClient.refetchQueries({ queryKey: ['breeder-profile'] });
+      const breederId = (apiProfileData as BreederProfileApi)?.breederId;
+
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['breeder-profile'] }),
+        // 브리더 상세 페이지에서 사용하는 쿼리도 무효화
+        ...(breederId
+          ? [
+              queryClient.invalidateQueries({ queryKey: ['breeder-profile', breederId] }),
+              queryClient.invalidateQueries({ queryKey: ['breeder-pets', breederId] }),
+              queryClient.invalidateQueries({ queryKey: ['breeder-pets-infinite', breederId] }),
+              queryClient.invalidateQueries({ queryKey: ['parent-pets', breederId] }),
+              queryClient.invalidateQueries({ queryKey: ['parent-pets-infinite', breederId] }),
+            ]
+          : []),
+      ]);
 
       setProfileData(formData);
       toast({
@@ -561,7 +574,6 @@ export default function ProfilePage() {
       });
 
       // 내 프로필 페이지로 이동
-      const breederId = (apiProfileData as BreederProfileApi)?.breederId;
       if (breederId) {
         router.push(`/explore/breeder/${breederId}`);
       }

@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import SafeImage from '@/components/safe-image';
 
 // URL이 유효한지 확인하는 함수
 function isValidUrl(url: string): boolean {
@@ -23,7 +23,7 @@ export default function BreederImage({ src, alt }: { src?: string; alt?: string 
 
   return (
     <div className="relative w-full h-[224px] @xl:w-auto @xl:h-56 @xl:aspect-square @4xl:aspect-[432/224] overflow-hidden rounded-lg">
-      <Image src={imageSrc} alt={altText} fill className="object-cover" unoptimized={shouldUnoptimize} />
+      <SafeImage src={imageSrc} alt={altText} fill className="object-cover" unoptimized={shouldUnoptimize} />
     </div>
   );
 }
