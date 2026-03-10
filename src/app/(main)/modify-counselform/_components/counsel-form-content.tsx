@@ -67,33 +67,28 @@ function CounselFormContentInner() {
 
   // 커스텀 질문 저장 로직을 포함한 handleSubmit
   const handleSubmit = useCallback(async () => {
-    // 커스텀 질문이 유효한 경우: 커스텀 질문만 저장하고 종료 (다른 필드 검증 건너뛰기)
-    if (customQuestionState.hasValidInput) {
+    // 커스텀 질문에 변경사항이 있고 유효한 경우: 커스텀 질문만 저장하고 종료
+    if (customQuestionState.hasChanges && customQuestionState.hasValidInput) {
       try {
         await breederQuestionRef.current?.saveQuestions();
         setSaveCompleteOpen(true);
-        // 커스텀 질문 저장 성공 시 완료 처리 (다른 필드 검증 없이 종료)
         return;
       } catch {
-        // 커스텀 질문 저장 실패 시 에러는 이미 toast로 표시됨
         return;
       }
     }
 
     // 커스텀 질문이 없는 경우에만 원래 handleSubmit 실행 (다른 필드 검증 포함)
     await originalHandleSubmit();
-  }, [customQuestionState.hasValidInput, originalHandleSubmit]);
+  }, [customQuestionState.hasChanges, customQuestionState.hasValidInput, originalHandleSubmit]);
 
-  // SubmitButton의 disabled 상태 계산
   const isSubmitDisabled = useMemo(() => {
-    // 커스텀 질문이 유효하면 버튼 활성화 (다른 폼 필드와 관계없이)
-    if (customQuestionState.hasValidInput) {
-      return false;
-    }
-    // 커스텀 질문이 추가되었지만 내용이 없으면 비활성화
-    const hasInvalidCustomQuestions = customQuestionState.hasChanges && !customQuestionState.hasValidInput;
-    return isDisabled || hasInvalidCustomQuestions;
-  }, [customQuestionState.hasValidInput, customQuestionState.hasChanges, isDisabled]);
+    const { hasChanges, hasValidInput: hasValid } = customQuestionState;
+
+    if (!hasChanges) return isDisabled;
+
+    return !hasValid;
+  }, [customQuestionState, isDisabled]);
 
   const [saveCompleteOpen, setSaveCompleteOpen] = useState(false);
   const handleSaveCompleteConfirm = useCallback(() => {
