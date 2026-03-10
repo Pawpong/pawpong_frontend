@@ -1,7 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { COUNSEL_SUBMIT_BUTTON_LABEL, COUNSEL_SUBMIT_BUTTON_SUBMITTING_LABEL } from '../../_constants/submit-button.constants';
+import {
+  COUNSEL_SUBMIT_BUTTON_LABEL,
+  COUNSEL_SUBMIT_BUTTON_SUBMITTING_LABEL,
+} from '../../_constants/submit-button.constants';
 
 type SubmitButtonProps = {
   isDisabled: boolean;
