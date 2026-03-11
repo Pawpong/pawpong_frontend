@@ -4,6 +4,8 @@ import Search from '@/assets/icons/search';
 import SearchFill from '@/assets/icons/search-fill';
 import Letter from '@/assets/icons/letter';
 import LetterFill from '@/assets/icons/letter-fill';
+import InquiriesNoFill from '@/assets/icons/inquiries-no-fill';
+import InquiriesFill from '@/assets/icons/inquiries-fill';
 import Profile from '@/assets/icons/profile';
 import ProfileFill from '@/assets/icons/profile-fill';
 import Cat from '@/assets/icons/cat';
@@ -53,6 +55,16 @@ export const NAV_ITEMS: NavItem[] = [
     requiresAuth: true,
   },
   {
+    name: '질문',
+    href: '/inquiries',
+    icon: InquiriesNoFill,
+    iconFill: InquiriesFill,
+    children: [
+      { name: '질문', href: '/inquiries' },
+      { name: '내 질문', href: '/inquiries?tab=my' },
+    ],
+  },
+  {
     name: '마이',
     href: '/profile',
     icon: Profile,
@@ -86,6 +98,16 @@ export const NAV_ITEMS_BREEDER: NavItem[] = [
     icon: Letter,
     iconFill: LetterFill,
     requiresAuth: true,
+  },
+  {
+    name: '질문',
+    href: '/inquiries',
+    icon: InquiriesNoFill,
+    iconFill: InquiriesFill,
+    children: [
+      { name: '질문', href: '/inquiries' },
+      { name: '내 답변', href: '/inquiries?tab=breeder' },
+    ],
   },
   {
     name: '마이',

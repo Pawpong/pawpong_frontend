@@ -54,13 +54,17 @@ const isParentItemEmpty = (parent: {
   gender?: 'male' | 'female' | null | undefined;
   imageFile?: File;
   imagePreview?: string;
+  description?: string;
+  photos?: (File | string)[];
 }) =>
   (!parent.name || parent.name.trim() === '') &&
   (!parent.breed || parent.breed.length === 0) &&
   (!parent.birthDate || parent.birthDate.trim() === '') &&
   !parent.gender &&
   !parent.imageFile &&
-  !parent.imagePreview;
+  !parent.imagePreview &&
+  (!parent.description || parent.description.trim() === '') &&
+  (!parent.photos || parent.photos.length === 0);
 
 const parentItemSchema = z.object({
   id: z.string(),
@@ -84,6 +88,8 @@ const isAnimalItemEmpty = (animal: {
   price?: string;
   imageFile?: File;
   imagePreview?: string;
+  description?: string;
+  photos?: (File | string)[];
 }) =>
   (!animal.name || animal.name.trim() === '') &&
   (!animal.breed || animal.breed.length === 0) &&
@@ -92,7 +98,9 @@ const isAnimalItemEmpty = (animal: {
   (!animal.adoptionStatus || animal.adoptionStatus.trim() === '') &&
   (!animal.price || animal.price.trim() === '') &&
   !animal.imageFile &&
-  !animal.imagePreview;
+  !animal.imagePreview &&
+  (!animal.description || animal.description.trim() === '') &&
+  (!animal.photos || animal.photos.length === 0);
 
 const breedingAnimalItemSchema = z.object({
   id: z.string(),

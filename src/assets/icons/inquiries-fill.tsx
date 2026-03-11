@@ -1,0 +1,32 @@
+import React from 'react';
+
+export default function InquiriesFill(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M16.667 6.2959H17.4059V12.2216H16.667V6.2959Z" fill="currentColor" />
+      <path d="M15.9277 12.22H16.6666V12.9589H15.9277V12.22Z" fill="currentColor" />
+      <path d="M15.9277 5.55701H16.6666V6.2959H15.9277V5.55701Z" fill="currentColor" />
+      <path d="M15.1846 12.9604H15.9283V13.7042H15.1846V12.9604Z" fill="currentColor" />
+      <path d="M15.1846 4.81323H15.9283V5.55698H15.1846V4.81323Z" fill="currentColor" />
+      <path d="M14.4453 13.7042H15.1842V14.4431H14.4453V13.7042Z" fill="currentColor" />
+      <path d="M14.4453 4.07434H15.1842V4.81323H14.4453V4.07434Z" fill="currentColor" />
+      <path d="M13.7012 14.4431H14.4449V15.182H13.7012V14.4431Z" fill="currentColor" />
+      <path d="M12.9629 3.33057H14.4455V4.07432H12.9629V3.33057Z" fill="currentColor" />
+      <path d="M12.2236 15.182H13.7014V15.9258H12.2236V15.182Z" fill="currentColor" />
+      <path d="M5.5 15.9257H12.224V16.6645H5.5V15.9257Z" fill="currentColor" />
+      <path d="M5.55395 16.6645V15.9257H4.81506V16.6645H4.07617V17.4083H10.7408V16.6645H5.55395Z" fill="currentColor" />
+      <path d="M7.77637 2.59167H12.9632V3.33056H7.77637V2.59167Z" fill="currentColor" />
+      <path
+        d="M16.2998 6.29968H16.8896V12.2303H16.2998V12.9696H3.2998V12.2303H2.58984V6.29968H3.2998V5.56042H16.2998V6.29968ZM9.39941 12.7499H10.8994V11.2499H9.39941V12.7499ZM8.64941 6.74988H7.89941V8.24988H9.39941V7.49988H10.8994V8.24988H10.1494V8.99988H9.39941V10.4999H10.8994V9.74988H11.6494V8.99988H12.3994V6.74988H11.6494V5.99988H8.64941V6.74988Z"
+        fill="currentColor"
+      />
+      <path d="M6.2998 3.33008H14.2998V4.33008H6.2998V3.33008Z" fill="currentColor" />
+      <path d="M12.5002 15.182L14.4446 15.182V14.2487L5.55469 14.2487V15.9257H12.5002V15.182Z" fill="currentColor" />
+      <path d="M4.82031 4.07007H14.8203V5.07007H4.82031V4.07007Z" fill="currentColor" />
+      <path d="M4.82031 13.7001H14.8203V14.4401H4.82031V13.7001Z" fill="currentColor" />
+      <path d="M4.08008 12.96H15.5801V13.7H4.08008V12.96Z" fill="currentColor" />
+      <path d="M4 4.81006H15.5V5.56006H4V4.81006Z" fill="currentColor" />
+      <path d="M3.33301 12.2216H4.07676V12.9604H3.33301V12.2216Z" fill="currentColor" />
+    </svg>
+  );
+}

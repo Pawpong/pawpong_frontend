@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import SafeImage from '@/components/safe-image';
 import { isVideoUrl } from '@/utils/video-thumbnail';
 
 export default function EnvPhotos({ photos }: { photos: string[] }) {
@@ -15,6 +15,12 @@ export default function EnvPhotos({ photos }: { photos: string[] }) {
           >
             {isVideo ? (
               <video
+                ref={(el) => {
+                  if (el) {
+                    el.muted = true;
+                    el.play().catch(() => {});
+                  }
+                }}
                 src={photo}
                 className="absolute inset-0 w-full h-full object-cover rounded-lg"
                 autoPlay
@@ -23,7 +29,7 @@ export default function EnvPhotos({ photos }: { photos: string[] }) {
                 playsInline
               />
             ) : (
-              <Image
+              <SafeImage
                 src={photo}
                 alt={`Environment Photo ${index + 1}`}
                 width={400}

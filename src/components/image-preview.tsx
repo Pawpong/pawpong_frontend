@@ -3,7 +3,7 @@
 import { cn } from '@/api/utils';
 import PictureRemove from '@/assets/icons/picture-delete.svg';
 import PlayIcon from '@/assets/icons/play.svg';
-import Image from 'next/image';
+import SafeImage from './safe-image';
 
 export interface ImageFile {
   id: string;
@@ -11,6 +11,7 @@ export interface ImageFile {
   preview: string;
   isUrl?: boolean; // true if this is a URL-based image
   isVideo?: boolean; // true if this is a video file
+  originalUrl?: string; // 원본 CDN URL 보존 (동영상 URL의 썸네일 변환 시 원본 소실 방지)
 }
 
 interface ImagePreviewProps {
@@ -60,14 +61,27 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
     <div className={cn('flex gap-3', getLayoutClass())}>
       {images.slice(0, maxImages).map((image, index) => (
         <div key={image.id} className="relative">
-          <Image
-            src={image.preview}
-            alt={image.isVideo ? `동영상 미리보기 ${index + 1}` : `이미지 미리보기 ${index + 1}`}
-            width={80}
-            height={80}
-            className={cn('rounded-lg object-contain bg-white border border-gray-200', getImageSizeClass())}
-            unoptimized={image.isUrl || image.preview.startsWith('blob:')}
-          />
+          {image.isVideo && image.originalUrl ? (
+            <video
+              ref={(el) => {
+                if (el) el.muted = true;
+              }}
+              src={`${image.originalUrl}#t=0.1`}
+              className={cn('rounded-lg object-cover bg-white border border-gray-200', getImageSizeClass())}
+              muted
+              playsInline
+              preload="metadata"
+            />
+          ) : (
+            <SafeImage
+              src={image.preview}
+              alt={image.isVideo ? `동영상 미리보기 ${index + 1}` : `이미지 미리보기 ${index + 1}`}
+              width={80}
+              height={80}
+              className={cn('rounded-lg object-contain bg-white border border-gray-200', getImageSizeClass())}
+              unoptimized={image.isUrl || image.preview.startsWith('blob:') || image.preview.startsWith('data:')}
+            />
+          )}
           {image.isVideo && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="bg-black/50 rounded-full p-1.5">
@@ -78,10 +92,10 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
           {showRemoveButton && (
             <button
               onClick={() => onRemove(image.id)}
-              className="absolute top-1 right-1 flex bg-[var(--primary-500-basic,#4f3b2e)] rounded-full p-1 hover:opacity-80 transition-opacity"
+              className="absolute top-1 right-1 bg-[var(--primary-500-basic,#4f3b2e)] rounded-full size-6 flex items-center justify-center hover:opacity-80 transition-opacity"
               aria-label={`${image.isVideo ? '동영상' : '이미지'} ${index + 1} 삭제`}
             >
-              <PictureRemove className="group-hover:[&_path]:fill-[#4F3B2E]" aria-hidden="true" />
+              <PictureRemove aria-hidden="true" />
             </button>
           )}
         </div>

@@ -15,6 +15,8 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { cn } from '@/api/utils';
 import { isVideoFile, extractVideoThumbnail } from '@/utils/video-thumbnail';
+import { getImageDataUrl } from '@/utils/heic-convert';
+import { useToast } from '@/hooks/use-toast';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +30,7 @@ import { BREEDER_PROFILE_ERROR } from '@/constants/errors/breeder-profile-error'
 import ImageEdit from '@/components/image-edit';
 
 export default function BreedingAnimals({ form }: { form: ReturnType<typeof useFormContext<ProfileFormData>> }) {
+  const { toast } = useToast();
   const { control, watch, formState, getValues, setValue } = form;
   const { errors } = formState;
   const selectedBreeds = watch('breeds');
@@ -60,7 +63,7 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fields.length]);
 
   const addAnimal = () => {
     append({
@@ -154,16 +157,13 @@ export default function BreedingAnimals({ form }: { form: ReturnType<typeof useF
                           return;
                         }
 
-                        const preview = await new Promise<string>((resolve) => {
-                          const reader = new FileReader();
-                          reader.onload = (event) => {
-                            resolve(event.target?.result as string);
-                          };
-                          reader.readAsDataURL(file);
-                        });
+                        const result = await getImageDataUrl(file);
+                        if (result.error) {
+                          toast({ title: result.error, position: 'split' });
+                        }
 
                         updateAnimal(index, {
-                          imagePreview: preview,
+                          imagePreview: result.preview,
                           imageFile: file,
                           isVideo: false,
                         });

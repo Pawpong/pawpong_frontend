@@ -104,7 +104,9 @@ export function isParentEmpty(parent: ProfileFormData['parents'][number]): boole
     (!parent.birthDate || parent.birthDate.trim() === '') &&
     !parent.gender &&
     !parent.imageFile &&
-    !parent.imagePreview
+    !parent.imagePreview &&
+    (!parent.description || parent.description.trim() === '') &&
+    (!parent.photos || parent.photos.length === 0)
   );
 }
 
@@ -154,7 +156,9 @@ export function isAnimalEmpty(animal: ProfileFormData['animals'][number]): boole
     (!animal.adoptionStatus || animal.adoptionStatus.trim() === '') &&
     (!animal.price || animal.price.trim() === '') &&
     !animal.imageFile &&
-    !animal.imagePreview
+    !animal.imagePreview &&
+    (!animal.description || animal.description.trim() === '') &&
+    (!animal.photos || animal.photos.length === 0)
   );
 }
 

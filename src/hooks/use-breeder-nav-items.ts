@@ -41,6 +41,20 @@ export function useBreederNavItems(): { navItems: NavItem[]; isLoading: boolean 
 
   // 승인된 브리더는 모든 메뉴 활성화, pending 상태는 '내 프로필' 비활성화
   const dynamicNavItems: NavItem[] = NAV_ITEMS_BREEDER.map((item) => {
+    if (item.name === '질문' && item.children) {
+      return {
+        ...item,
+        children: item.children.map((child) => {
+          if (child.name === '내 답변') {
+            return {
+              ...child,
+              variant: isApproved ? 'default' : ('disabled' as const),
+            };
+          }
+          return child;
+        }),
+      };
+    }
     if (item.name === '마이' && item.children) {
       return {
         ...item,

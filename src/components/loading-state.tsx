@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Button } from '@/components/ui/button';
 
 interface LoadingStateProps {
   /** 로딩 메시지 (기본: "로딩 중...") */
@@ -79,4 +80,30 @@ export function LoadingContainer({ isLoading, message, size, fullScreen, childre
   }
 
   return <>{children}</>;
+}
+
+interface FetchErrorStateProps {
+  message?: string;
+  onRetry?: () => void;
+  className?: string;
+}
+
+/**
+ * 조회 실패 시 메시지 + 재시도 버튼 표시 (목록/상세 등 공통)
+ */
+export function FetchErrorState({
+  message = '목록을 불러오는데 실패했습니다.',
+  onRetry,
+  className,
+}: FetchErrorStateProps) {
+  return (
+    <div className={`flex flex-col items-center justify-center gap-3 py-20 ${className ?? ''}`}>
+      <p className="text-body-s text-grayscale-gray5">{message}</p>
+      {onRetry && (
+        <Button variant="secondary" size="sm" onClick={onRetry}>
+          다시 시도
+        </Button>
+      )}
+    </div>
+  );
 }
