@@ -34,6 +34,7 @@ export default function BreederProfile({
 
   const { isAuthenticated, user } = useAuthStore();
   const isBreeder = user?.role === 'breeder';
+  const directInquiryHref = `/inquiries/write?type=direct&targetBreederId=${breederId}`;
 
   const handleCounselClick = () => {
     if (!isAuthenticated) {
@@ -42,6 +43,14 @@ export default function BreederProfile({
     }
     clearCounselFormData();
     router.push(`/counselform?breederId=${breederId}`);
+  };
+
+  const handleDirectInquiryClick = () => {
+    if (!isAuthenticated) {
+      router.push(`/login?returnUrl=${encodeURIComponent(directInquiryHref)}`);
+      return;
+    }
+    router.push(directInquiryHref);
   };
 
   const IconComponent = animal === 'cat' ? Cat : Dog;
@@ -95,15 +104,28 @@ export default function BreederProfile({
         </div>
         {/* 데스크탑(lg)에서만 버튼 표시 */}
         {isLg && (
-          <Button
-            variant="tertiary"
-            className="w-full h-12 text-body-s font-semibold text-primary-500"
-            type="button"
-            onClick={handleCounselClick}
-            disabled={isOwnProfile || isBreeder}
-          >
-            상담 신청하기
-          </Button>
+          <div className="w-full flex flex-col gap-2">
+            {!isBreeder && (
+              <Button
+                variant="tertiary"
+                className="w-full h-12 text-body-s font-semibold text-primary-500"
+                type="button"
+                onClick={handleDirectInquiryClick}
+                disabled={isOwnProfile}
+              >
+                1:1 질문하기
+              </Button>
+            )}
+            <Button
+              variant="primary"
+              className="w-full h-12 text-body-s font-semibold text-secondary-500 disabled:bg-status-disabled disabled:text-grayscale-gray4"
+              type="button"
+              onClick={handleCounselClick}
+              disabled={isOwnProfile}
+            >
+              입양 신청하기
+            </Button>
+          </div>
         )}
       </div>
     </div>
