@@ -152,6 +152,16 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
     router.push(`/counselform?breederId=${breederId}`);
   };
 
+  const handleDirectInquiryClick = () => {
+    const directInquiryHref = `/inquiries/write?type=direct&targetBreederId=${breederId}`;
+    if (!isAuthenticated) {
+      router.push(`/login?returnUrl=${encodeURIComponent(directInquiryHref)}`);
+      return;
+    }
+    trackButtonClick('1:1 질문하기', '브리더 프로필');
+    router.push(directInquiryHref);
+  };
+
   const handleAlertClose = async () => {
     setShowDeletedAlert(false);
 
@@ -461,16 +471,29 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
         </div>
       </div>
       {!isLg && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2  w-full max-w-[22.0625rem]">
-          <Button
-            variant="tertiary"
-            className="w-full h-12 rounded-lg text-body-s font-semibold text-primary-500"
-            type="button"
-            onClick={handleCounselClick}
-            disabled={isOwnProfile || isBreeder}
-          >
-            상담 신청하기
-          </Button>
+        <div className="fixed bottom-6 left-1/2 z-50 w-[calc(100%-2.5rem)] max-w-[43rem] -translate-x-1/2">
+          <div className="flex gap-2">
+            {!isBreeder && (
+              <Button
+                variant="tertiary"
+                className="flex-1 h-12 rounded-lg text-body-s font-semibold text-primary-500"
+                type="button"
+                onClick={handleDirectInquiryClick}
+                disabled={isOwnProfile}
+              >
+                1:1 질문하기
+              </Button>
+            )}
+            <Button
+              variant="primary"
+              className="flex-1 h-12 rounded-lg text-body-s font-semibold text-secondary-500 disabled:bg-status-disabled disabled:text-grayscale-gray4"
+              type="button"
+              onClick={handleCounselClick}
+              disabled={isOwnProfile}
+            >
+              입양 신청하기
+            </Button>
+          </div>
         </div>
       )}
     </>
