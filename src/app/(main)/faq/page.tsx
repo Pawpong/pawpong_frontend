@@ -13,7 +13,17 @@ const TABS = [
 ] as const;
 
 export default function FaqPage() {
-  const { activeTab, openIndexes, displayedItems, hasMore, showAll, error, handleToggle, handleTabChange, handleShowAll } = useFaqPage();
+  const {
+    activeTab,
+    openIndexes,
+    displayedItems,
+    hasMore,
+    showAll,
+    error,
+    handleToggle,
+    handleTabChange,
+    handleShowAll,
+  } = useFaqPage();
 
   return (
     <Container className="pt-10 pb-20 px-5 md:px-12">

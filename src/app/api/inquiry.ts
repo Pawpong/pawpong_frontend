@@ -123,6 +123,17 @@ export const createInquiry = async (data: {
 };
 
 /**
+ * 브리더 내 답변 목록 조회
+ * GET /api/inquiry/breeder?answered=true|false&page=1&limit=15
+ */
+export const getBreederInquiries = async (answered: boolean, page: number): Promise<InquiryListResponse> => {
+  const response = await apiClient.get<ApiResponse<InquiryListResponse>>('/api/inquiry/breeder', {
+    params: { answered, page, limit: 15 },
+  });
+  return response.data.data || { data: [], hasMore: false };
+};
+
+/**
  * 답변 작성
  * POST /api/inquiry/:inquiryId/answer
  */
