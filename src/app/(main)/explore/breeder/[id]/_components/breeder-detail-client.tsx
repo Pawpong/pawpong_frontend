@@ -473,7 +473,8 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
       {!isLg && (
         <div className="fixed bottom-6 left-1/2 z-50 w-[calc(100%-2.5rem)] max-w-[43rem] -translate-x-1/2">
           <div className="flex gap-2">
-            {!isBreeder && (
+            {/* 1:1 질문하기는 현재 비공개 처리 */}
+            {/* {!isBreeder && (
               <Button
                 variant="tertiary"
                 className="flex-1 h-12 rounded-lg text-body-s font-semibold text-primary-500"
@@ -483,7 +484,7 @@ export default function BreederDetailClient({ breederId }: BreederDetailClientPr
               >
                 1:1 질문하기
               </Button>
-            )}
+            )} */}
             <Button
               variant="primary"
               className="flex-1 h-12 rounded-lg text-body-s font-semibold text-secondary-500 disabled:bg-status-disabled disabled:text-grayscale-gray4"

@@ -121,8 +121,8 @@ export const privacyContents = [
     <p>제9조 (개인정보 보호책임자)</p>
     <p>회사는 개인정보 처리에 관한 업무를 총괄하여 책임지는 개인정보 보호책임자를 지정하고 있습니다.</p>
     <ul className="list-disc">
-      <li className="ms-[21px]">성명: 양세빈</li>
-      <li className="ms-[21px]">연락처: pawriendsofficial@gmail.com</li>
+      <li className="ms-[21px]">성명: 김승찬</li>
+      <li className="ms-[21px]">연락처: coldingcontact@gmail.com</li>
     </ul>
   </div>,
   <div key={10} className="mb-5">

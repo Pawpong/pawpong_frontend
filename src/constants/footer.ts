@@ -34,9 +34,9 @@ export const FOOTER_LINKS: FooterLink[] = [
 export const COMPANY_INFO: CompanyInfo[] = [
   { label: '상호', value: '콜딩(Colding)' },
   { label: '대표자', value: '김승찬' },
-  { label: '이메일', value: 'pawriendsofficial@gmail.com' },
+  { label: '이메일', value: 'coldingcontact@gmail.com' },
   { label: '사업자등록번호', value: '457-49-00942' },
-  { label: '주소', value: '경기도 김포시 김포한강9로75번길 66, 5층 505-A46호 (구래동, 국제프라자)' },
+  { label: '주소', value: '경기도 김포시 김포한강9로75번길 66, 5층 (구래동, 국제프라자)' },
 ];
 
 export const SNS_LINKS: SNSLink[] = [
