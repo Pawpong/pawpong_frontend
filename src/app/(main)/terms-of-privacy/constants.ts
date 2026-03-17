@@ -154,8 +154,8 @@ export const TERMS_OF_PRIVACY_SECTIONS: TermsSection[] = [
       {
         text: '회사는 개인정보 처리에 관한 업무를 총괄하여 책임지는 개인정보 보호책임자를 지정하고 있습니다.',
       },
-      { text: '· 성명: 양세빈', indentLevel: 0 },
-      { text: '· 연락처: pawriendsofficial@gmail.com', indentLevel: 0 },
+      { text: '· 성명: 김승찬', indentLevel: 0 },
+      { text: '· 연락처: coldingcontact@gmail.com', indentLevel: 0 },
     ],
   },
   {

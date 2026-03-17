@@ -57,11 +57,11 @@ export default function SignupComplete() {
               <div>이메일 문의</div>
               <a
                 className="text-secondary-700 underline"
-                href="mailto:pawriendsofficial@gmail.com"
+                href="mailto:coldingcontact@gmail.com"
                 target="_blank"
                 rel="noreferrer"
               >
-                pawriendsofficial@gmail.com
+                coldingcontact@gmail.com
               </a>
             </div>
           </>
@@ -78,11 +78,11 @@ export default function SignupComplete() {
               <div>이메일 문의</div>
               <a
                 className="text-secondary-700 underline"
-                href="mailto:pawriendsofficial@gmail.com"
+                href="mailto:coldingcontact@gmail.com"
                 target="_blank"
                 rel="noreferrer"
               >
-                pawriendsofficial@gmail.com
+                coldingcontact@gmail.com
               </a>
             </div>
           </>

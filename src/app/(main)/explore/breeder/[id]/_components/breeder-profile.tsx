@@ -105,7 +105,8 @@ export default function BreederProfile({
         {/* 데스크탑(lg)에서만 버튼 표시 */}
         {isLg && (
           <div className="w-full flex flex-col gap-2">
-            {!isBreeder && (
+            {/* 1:1 질문하기는 현재 비공개 처리 */}
+            {/* {!isBreeder && (
               <Button
                 variant="tertiary"
                 className="w-full h-12 text-body-s font-semibold text-primary-500"
@@ -115,7 +116,7 @@ export default function BreederProfile({
               >
                 1:1 질문하기
               </Button>
-            )}
+            )} */}
             <Button
               variant="primary"
               className="w-full h-12 text-body-s font-semibold text-secondary-500 disabled:bg-status-disabled disabled:text-grayscale-gray4"
