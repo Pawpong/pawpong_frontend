@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Script from 'next/script';
 
 const STORAGE_KEY = 'notice-modal-hidden-date';
-const INSTAGRAM_POST_URL = 'https://www.instagram.com/p/DVtGIoXkdTQ/';
+const INSTAGRAM_POST_URL = 'https://www.instagram.com/p/DWB5BpYEX1z/';
 
 declare global {
   interface Window {
