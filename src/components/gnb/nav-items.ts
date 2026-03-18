@@ -54,16 +54,17 @@ export const NAV_ITEMS: NavItem[] = [
     iconFill: LetterFill,
     requiresAuth: true,
   },
-  {
-    name: '질문',
-    href: '/inquiries',
-    icon: InquiriesNoFill,
-    iconFill: InquiriesFill,
-    children: [
-      { name: '질문', href: '/inquiries' },
-      { name: '내 질문', href: '/inquiries?tab=my' },
-    ],
-  },
+  // 질문 및 관련 메뉴는 현재 비공개 처리
+  // {
+  //   name: '질문',
+  //   href: '/inquiries',
+  //   icon: InquiriesNoFill,
+  //   iconFill: InquiriesFill,
+  //   children: [
+  //     { name: '질문', href: '/inquiries' },
+  //     { name: '내 질문', href: '/inquiries?tab=my' },
+  //   ],
+  // },
   {
     name: '마이',
     href: '/profile',
@@ -99,16 +100,17 @@ export const NAV_ITEMS_BREEDER: NavItem[] = [
     iconFill: LetterFill,
     requiresAuth: true,
   },
-  {
-    name: '질문',
-    href: '/inquiries',
-    icon: InquiriesNoFill,
-    iconFill: InquiriesFill,
-    children: [
-      { name: '질문', href: '/inquiries' },
-      { name: '내 답변', href: '/inquiries?tab=breeder' },
-    ],
-  },
+  // 질문 및 관련 메뉴는 현재 비공개 처리
+  // {
+  //   name: '질문',
+  //   href: '/inquiries',
+  //   icon: InquiriesNoFill,
+  //   iconFill: InquiriesFill,
+  //   children: [
+  //     { name: '질문', href: '/inquiries' },
+  //     { name: '내 답변', href: '/inquiries?tab=breeder' },
+  //   ],
+  // },
   {
     name: '마이',
     href: '/profile',

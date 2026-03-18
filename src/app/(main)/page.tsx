@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import Container from '@/components/ui/container';
 import HomeBanner from './_components/home-banner';
 import AnimalCategoryButtons from './_components/animal-category-buttons';
+import NoticeModal from './_components/notice-modal';
 
 // 성능 최적화: 초기 로딩 시 필요하지 않은 컴포넌트들을 dynamic import로 lazy loading
 const HomeBreederGrid = dynamic(() => import('./_components/home-breeder-grid'), {
@@ -18,6 +19,7 @@ const ServiceIntroBanner = dynamic(() => import('./_components/service-intro-ban
 export default function HomePage() {
   return (
     <>
+      <NoticeModal />
       <HomeBanner />
       <Container>
         {/* 패드: 서비스 소개 배너 (히어로 배너 바로 아래) */}
