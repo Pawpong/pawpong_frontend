@@ -99,8 +99,22 @@ export interface SectionConfig {
  */
 export const COUNSEL_SECTIONS: SectionConfig[] = [
   {
-    sectionId: 'privacy-and-basic-info',
-    title: '', // 첫 번째 섹션은 제목 없음
+    sectionId: 'pet-selection',
+    title: '희망 아이 및 입양 계획',
+    description: '입양하길 희망하는 아이와 구체적인 시기를 알려주세요.',
+    questions: [
+      {
+        id: 'interestedAnimal',
+        label: '마음에 두신 아이가 있으신가요?',
+        type: 'custom',
+        customComponent: 'pet-selection',
+      },
+    ],
+  },
+  {
+    sectionId: 'care-responsibility',
+    title: '입양 상담을 위한 기본 정보 및 동의',
+    description: '반려동물과의 건강한 동행을 위해 필요한 사항을 확인해주세요.',
     questions: [
       {
         id: 'privacyAgreement',
@@ -112,80 +126,6 @@ export const COUNSEL_SECTIONS: SectionConfig[] = [
           '수집 및 이용 목적: 입양자 상담 및 검토',
           '보유 및 이용기간: 상담 또는 입양 직후 폐기',
         ],
-      },
-      {
-        id: 'name',
-        label: '', // 기본 정보는 제목 없음
-        type: 'custom',
-        customComponent: 'basic-info',
-      },
-    ],
-  },
-  {
-    sectionId: 'introduction-and-family',
-    title: '입양 희망자 및 가족 정보',
-    description: '함께 지낼 가족분들에 대해 알려주세요.',
-    questions: [
-      {
-        id: 'introduction',
-        label: '간단하게 자기소개 부탁드려요.',
-        type: 'textarea',
-        placeholder: '성별, 연령대, 거주지, 결혼 계획, 생활 패턴 등',
-        maxLength: 1500,
-      },
-      {
-        id: 'familyMembers',
-        label: '함께 거주하는 가족 구성원을 알려주세요.',
-        type: 'input',
-        placeholder: '인원 수, 관계, 연령대 등',
-      },
-      {
-        id: 'familyAgreement',
-        label: '모든 가족 구성원들이 입양에 동의하셨나요?',
-        type: 'checkbox',
-        checkboxLabel: '네',
-      },
-      {
-        id: 'allergyCheck',
-        label: '본인을 포함한 모든 가족 구성원분들께서 알러지 검사를 마치셨나요?',
-        type: 'input',
-        placeholder: '알러지 검사 여부와 결과(유무), 혹은 향후 계획',
-      },
-    ],
-  },
-  {
-    sectionId: 'living-environment',
-    title: '반려 및 주거 환경',
-    description: '아이가 지낼 공간과 생활 패턴에 대해 알려주세요.',
-    questions: [
-      {
-        id: 'awayTime',
-        label: '평균적으로 집을 비우는 시간은 얼마나 되나요?',
-        type: 'textarea',
-        placeholder: '출퇴근·외출 시간을 포함해 하루 중 집을 비우는 시간',
-        maxLength: 200,
-      },
-      {
-        id: 'livingSpace',
-        label: '아이와 함께 지내게 될 공간을 소개해 주세요.',
-        type: 'textarea',
-        placeholder: '반려동물이 주로 생활할 공간(예: 거실 등)과 환경(크기, 구조 등)',
-        maxLength: 800,
-        subDescription: '아이들은 철장, 베란다, 야외 등 열악한 공간에서는 지낼 수 없어요',
-      },
-    ],
-  },
-  {
-    sectionId: 'care-responsibility',
-    title: '반려 경험 및 책임감',
-    description: '이전 반려 경험과 평생 책임져 주실 의지를 보여주세요.',
-    questions: [
-      {
-        id: 'previousPets',
-        label: '이전에 함께했던 반려동물에 대해 알려주세요.',
-        type: 'textarea',
-        placeholder: '반려동물의 품종, 성격, 함께한 기간, 이별 사유 등',
-        maxLength: 800,
       },
       {
         id: 'basicCare',
@@ -202,21 +142,21 @@ export const COUNSEL_SECTIONS: SectionConfig[] = [
     ],
   },
   {
-    sectionId: 'pet-selection',
-    title: '희망 아이 및 입양 계획',
-    description: '입양하길 희망하는 아이와 구체적인 시기를 알려주세요.',
+    sectionId: 'introduction-and-family',
+    title: '입양 희망자 및 가족 정보',
+    description: '함께 지낼 가족분들에 대해 알려주세요.',
     questions: [
       {
-        id: 'interestedAnimal',
-        label: '마음에 두신 아이가 있으신가요?',
-        type: 'custom',
-        customComponent: 'pet-selection',
+        id: 'familyMembers',
+        label: '함께 거주하는 가족 구성원을 알려주세요.',
+        type: 'input',
+        placeholder: '인원 수, 관계, 연령대 등',
       },
       {
-        id: 'adoptionTiming',
-        label: '원하시는 입양 시기가 있나요?',
-        type: 'input',
-        placeholder: '입양 희망 시기',
+        id: 'familyAgreement',
+        label: '모든 가족 구성원들이 입양에 동의하셨나요?',
+        type: 'checkbox',
+        checkboxLabel: '네',
       },
     ],
   },
