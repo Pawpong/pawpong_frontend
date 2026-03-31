@@ -140,13 +140,16 @@ export default function ApplicationListItem({
     return (
       <>
         <div
-          className="bg-[#F8F8EE] flex flex-col gap-3 p-5 rounded-lg w-full cursor-pointer hover:bg-[#F0F0E5] transition-colors"
+          className="bg-[#F8F8EE] flex flex-col p-5 rounded-lg w-full cursor-pointer hover:bg-[#F0F0E5] transition-colors"
           onClick={() => setIsModalOpen(true)}
         >
           {/* 신청자 정보 */}
           <div className="flex flex-col gap-1 w-full">
-            {/* 신청자 닉네임 */}
-            <h3 className="text-body-m font-medium text-[#4F3B2E]">{adopterName}</h3>
+            {/* 신청자 닉네임 + 날짜 */}
+            <div className="flex items-center justify-between">
+              <h3 className="text-body-m font-medium text-[#4F3B2E]">{adopterName}</h3>
+              <p className="text-body-s font-normal text-[#888888] shrink-0">{applicationDate}</p>
+            </div>
 
             {/* 분양 중인 아이 정보 (드롭다운 선택 또는 직접 입력 텍스트) */}
             <p className="text-body-s font-normal text-[#888888] overflow-ellipsis overflow-hidden whitespace-nowrap">
@@ -154,11 +157,7 @@ export default function ApplicationListItem({
             </p>
           </div>
 
-          {/* 뱃지 + 날짜 */}
-          <div className="flex items-center gap-3">
-            <ApplicationStatusBadge status={status} />
-            <p className="text-body-s font-normal text-[#888888]">{applicationDate}</p>
-          </div>
+       
         </div>
 
         {/* 상세보기 모달 */}

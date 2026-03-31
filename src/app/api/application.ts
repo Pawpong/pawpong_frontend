@@ -2,19 +2,19 @@ import apiClient from './api';
 
 /** 입양 신청 요청 데이터 */
 export interface ApplicationCreateRequest {
-  name: string;
-  phone: string;
-  email: string;
+  name?: string;
+  phone?: string;
+  email?: string;
   breederId: string;
   petId?: string;
   privacyConsent: boolean;
-  selfIntroduction: string;
+  selfIntroduction?: string;
   familyMembers: string;
   allFamilyConsent: boolean;
-  allergyTestInfo: string;
-  timeAwayFromHome: string;
-  livingSpaceDescription: string;
-  previousPetExperience: string;
+  allergyTestInfo?: string;
+  timeAwayFromHome?: string;
+  livingSpaceDescription?: string;
+  previousPetExperience?: string;
   canProvideBasicCare: boolean;
   canAffordMedicalExpenses: boolean;
   preferredPetDescription?: string;
