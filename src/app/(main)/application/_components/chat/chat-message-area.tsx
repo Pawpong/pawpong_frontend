@@ -1,10 +1,13 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useAuthStore } from '@/stores/auth-store';
 import type { ChatMessage } from '../../_types/chat';
+import { LoadingState } from '@/components/loading-state';
 
 interface ChatMessageAreaProps {
   messages: ChatMessage[];
+  isLoading?: boolean;
 }
 
 function formatTime(date: Date): string {
@@ -21,59 +24,67 @@ function SystemMessage({ message }: { message: ChatMessage }) {
   );
 }
 
-function BreederBubble({ message }: { message: ChatMessage }) {
-  return (
-    <div className="flex justify-start gap-2 px-4">
-      <div className="max-w-[75%]">
-        <div className="bg-white rounded-2xl rounded-tl-sm px-4 py-3">
-          <p className="text-body-s text-grayscale-gray7 whitespace-pre-wrap">{message.content}</p>
-        </div>
-        <span className="text-[11px] text-grayscale-gray4 mt-1 block">{formatTime(new Date(message.timestamp))}</span>
-      </div>
-    </div>
-  );
-}
-
-function AdopterBubble({ message }: { message: ChatMessage }) {
+function OutgoingBubble({ message }: { message: ChatMessage }) {
   return (
     <div className="flex justify-end gap-2 px-4">
       <div className="max-w-[75%]">
         <div className="bg-primary-500 rounded-2xl rounded-tr-sm px-4 py-3">
           <p className="text-body-s text-white whitespace-pre-wrap">{message.content}</p>
         </div>
-        <span className="text-[11px] text-grayscale-gray4 mt-1 block text-right">{formatTime(new Date(message.timestamp))}</span>
+        <span className="text-[11px] text-grayscale-gray4 mt-1 block text-right">
+          {formatTime(new Date(message.createdAt))}
+        </span>
       </div>
     </div>
   );
 }
 
-export function ChatMessageArea({ messages }: ChatMessageAreaProps) {
+function IncomingBubble({ message }: { message: ChatMessage }) {
+  return (
+    <div className="flex justify-start gap-2 px-4">
+      <div className="max-w-[75%]">
+        <div className="bg-white rounded-2xl rounded-tl-sm px-4 py-3">
+          <p className="text-body-s text-grayscale-gray7 whitespace-pre-wrap">{message.content}</p>
+        </div>
+        <span className="text-[11px] text-grayscale-gray4 mt-1 block">
+          {formatTime(new Date(message.createdAt))}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+export function ChatMessageArea({ messages, isLoading }: ChatMessageAreaProps) {
+  const { user } = useAuthStore();
   const bottomRef = useRef<HTMLDivElement>(null);
-  const currentUser: ChatMessage['senderId'] = 'breeder';
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages.length]);
 
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <LoadingState />
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 overflow-y-auto py-4 flex flex-col gap-3">
       {messages.map((msg) => {
-        if (msg.senderId === 'system') {
+        if (msg.senderRole === 'system') {
           return <SystemMessage key={msg.id} message={msg} />;
         }
 
-        const isOutgoing = msg.senderId === currentUser;
-        if (isOutgoing) {
-          return <AdopterBubble key={msg.id} message={msg} />;
-        }
+        // senderId(userId)로 내/외 메시지 구분
+        const isOutgoing = msg.senderId === user?.userId;
 
-        switch (msg.senderId) {
-          case 'breeder':
-          case 'adopter':
-            return <BreederBubble key={msg.id} message={msg} />;
-          default:
-            return null;
-        }
+        return isOutgoing ? (
+          <OutgoingBubble key={msg.id} message={msg} />
+        ) : (
+          <IncomingBubble key={msg.id} message={msg} />
+        );
       })}
       <div ref={bottomRef} />
     </div>

@@ -113,6 +113,7 @@ function BreederApplicationList() {
 }
 
 function AdopterApplicationList() {
+  const router = useRouter();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useApplications();
   const allApplications = data?.pages.flatMap((page) => page.data) ?? [];
 
@@ -132,7 +133,11 @@ function AdopterApplicationList() {
             <div className="flex flex-col gap-3">
               {allApplications.map((item, index) => (
                 <div key={item.applicationId || `application-${index}`}>
-                  <ApplicationListItem {...item} isBreeder={false} />
+                  <ApplicationListItem
+                    {...item}
+                    isBreeder={false}
+                    onChatClick={() => router.push(`/application/chat/${item.applicationId}`)}
+                  />
                   {index < allApplications.length - 1 && (
                     <div className="py-[28px]">
                       <Separator className="bg-grayscale-gray2" />

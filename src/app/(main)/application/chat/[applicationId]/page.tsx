@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { useAuthGuard } from '@/hooks/use-auth-guard';
+import { useAuthStore } from '@/stores/auth-store';
+import { getUserRoleFromCookie } from '@/api/cookie-utils';
 import { useApplications } from '../../_hooks/use-applications';
 import { useResizePanel } from '../../_hooks/use-resize-panel';
 import { ChatRoom } from '../../_components/chat/chat-room';
@@ -17,6 +19,9 @@ export default function ChatPage() {
   useAuthGuard();
   const { applicationId } = useParams<{ applicationId: string }>();
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const { user } = useAuthStore();
+  const cookieRole = getUserRoleFromCookie();
+  const isBreeder = (cookieRole || user?.role) === 'breeder';
   const { data } = useApplications();
   const { width, handleMouseDown } = useResizePanel();
 
@@ -62,7 +67,9 @@ export default function ChatPage() {
             <LeftArrow className="text-primary-500" />
           </Link>
           <span className="flex h-8 items-center text-body-m leading-none font-semibold text-primary-500">
-            {application.adopterName || '입양 신청자'}
+            {isBreeder
+              ? (application.adopterName || '입양 신청자')
+              : (application.breederName || '브리더')}
           </span>
           <Button
             type="button"
