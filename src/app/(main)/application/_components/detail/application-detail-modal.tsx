@@ -17,9 +17,10 @@ interface ApplicationDetailModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   applicationId: string;
+  showActions?: boolean;
 }
 
-const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: ApplicationDetailModalProps) => {
+const ApplicationDetailModal = ({ open, onOpenChange, applicationId, showActions = true }: ApplicationDetailModalProps) => {
   const {
     data: application,
     isLoading,
@@ -62,12 +63,10 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={`${dialogContentClass} p-0 gap-0 bg-white flex flex-col`}>
-        <VisuallyHidden>
-          <DialogTitle>입양 신청 상세</DialogTitle>
-        </VisuallyHidden>
-
-        {/* 상단 구분선 */}
-        <Separator className="bg-[#E1E1E1]" />
+        <div className="px-6 py-4 border-b border-[#E1E1E1] bg-white">
+          <DialogTitle className="text-lg font-semibold text-[#4F3B2E]">받은 신청서</DialogTitle>
+          <VisuallyHidden>입양 신청 상세</VisuallyHidden>
+        </div>
 
         {/* 스크롤 영역 */}
         <div className="overflow-y-auto bg-[#F6F6EA] px-6 py-5 flex-1">
@@ -102,61 +101,66 @@ const ApplicationDetailModal = ({ open, onOpenChange, applicationId }: Applicati
           )}
         </div>
 
-        {/* 하단 구분선 */}
         <Separator className="bg-[#E1E1E1]" />
 
         {/* 하단 버튼 영역 (브리더용) */}
         {application && (
           <div className="bg-white px-6 py-4 rounded-b-none md:rounded-2xl flex items-center justify-between">
-            {application.status !== 'consultation_completed' && (
-              <div className="flex items-center gap-1">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="shrink-0"
-                >
-                  <circle cx="6" cy="6" r="5" fill="#A0A0A0" />
-                  <path
-                    d="M6 3.5V6.5M6 8.5H6.005"
-                    stroke="white"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <p className="text-xs text-[#A0A0A0]">
-                  상담이 끝나면 [상담 완료]를 눌러 상대방이 후기를 남길 수 있게 해주세요.
-                </p>
-              </div>
-            )}
-            {application.status === 'consultation_completed' ? (
-              <div className="flex items-center gap-2 ml-auto">
-                <Button
-                  variant="tertiary"
-                  className="h-9 px-4 bg-[#A0C8F4] hover:bg-[#77B2F3] text-[#4F3B2E] text-sm font-medium rounded"
-                  onClick={handleCancelConsultation}
-                  disabled={updateStatusMutation.isPending}
-                >
-                  완료 취소
-                </Button>
-                <Button
-                  disabled
-                  className="h-9 px-4 bg-[#E1E1E1] text-[#A0A0A0] text-sm font-medium rounded min-w-[72px] cursor-not-allowed"
-                >
-                  상담 완료
-                </Button>
-              </div>
+            {showActions ? (
+              <>
+                {application.status !== 'consultation_completed' && (
+                  <div className="flex items-center gap-1">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="shrink-0"
+                    >
+                      <circle cx="6" cy="6" r="5" fill="#A0A0A0" />
+                      <path
+                        d="M6 3.5V6.5M6 8.5H6.005"
+                        stroke="white"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    <p className="text-xs text-[#A0A0A0]">
+                      상담이 끝나면 [상담 완료]를 눌러 상대방이 후기를 남길 수 있게 해주세요.
+                    </p>
+                  </div>
+                )}
+                {application.status === 'consultation_completed' ? (
+                  <div className="flex items-center gap-2 ml-auto">
+                    <Button
+                      variant="tertiary"
+                      className="h-9 px-4 bg-[#A0C8F4] hover:bg-[#77B2F3] text-[#4F3B2E] text-sm font-medium rounded"
+                      onClick={handleCancelConsultation}
+                      disabled={updateStatusMutation.isPending}
+                    >
+                      완료 취소
+                    </Button>
+                    <Button
+                      disabled
+                      className="h-9 px-4 bg-[#E1E1E1] text-[#A0A0A0] text-sm font-medium rounded min-w-[72px] cursor-not-allowed"
+                    >
+                      상담 완료
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    className="h-9 px-4 bg-[#4F3B2E] hover:bg-[#3E2F23] text-white text-sm font-medium rounded min-w-[72px] ml-auto"
+                    onClick={handleCompleteConsultation}
+                    disabled={updateStatusMutation.isPending}
+                  >
+                    상담 완료
+                  </Button>
+                )}
+              </>
             ) : (
-              <Button
-                className="h-9 px-4 bg-[#4F3B2E] hover:bg-[#3E2F23] text-white text-sm font-medium rounded min-w-[72px] ml-auto"
-                onClick={handleCompleteConsultation}
-                disabled={updateStatusMutation.isPending}
-              >
-                상담 완료
-              </Button>
+              <div className="ml-auto h-9" />
             )}
           </div>
         )}

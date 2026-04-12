@@ -23,12 +23,7 @@ export function ApplicationStatusBadge({ status, size = 'default' }: Application
 
   switch (status) {
     case 'consultation_pending':
-      return (
-        <Badge className="bg-[#A0C8F4] text-[#4F3B2E] hover:bg-[#A0C8F4] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">
-          <ConsultationPendingIcon />
-          <span className="text-caption font-medium">상담 전</span>
-        </Badge>
-      );
+      return null;
     case 'consultation_completed':
       return (
         <Badge className="bg-[#A0A0A0] text-white hover:bg-[#A0A0A0] h-7 px-3 py-1.5 gap-1.5 rounded-full flex items-center">

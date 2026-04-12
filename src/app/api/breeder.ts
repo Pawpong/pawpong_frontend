@@ -566,6 +566,24 @@ export interface ApplicationStatusUpdateResponseDto {
   message: string;
 }
 
+/** 브리더 채팅 메시지 DTO */
+export interface BreederChatMessageDto {
+  messageId: string;
+  senderRole: 'breeder' | 'adopter' | 'system';
+  content: string;
+  sentAt: string;
+}
+
+interface ChatMessagesResponseData {
+  messages?: BreederChatMessageDto[];
+  items?: BreederChatMessageDto[];
+}
+
+/** 채팅 메시지 전송 요청 DTO */
+export interface SendBreederChatMessageRequestDto {
+  content: string;
+}
+
 /**
  * 입양 신청 상태 업데이트 (브리더용)
  * PATCH /api/breeder-management/applications/:applicationId
@@ -591,5 +609,69 @@ export const updateApplicationStatus = async (
       throw error;
     }
     throw new Error('Unknown error during application status update');
+  }
+};
+
+/**
+ * 신청별 채팅 메시지 조회 (브리더용)
+ * GET /api/breeder-management/applications/:applicationId/chat/messages
+ */
+export const getApplicationChatMessages = async (applicationId: string): Promise<BreederChatMessageDto[]> => {
+  try {
+    const response = await apiClient.get<ApiResponse<BreederChatMessageDto[] | ChatMessagesResponseData>>(
+      `/api/breeder-management/applications/${applicationId}/chat/messages`,
+    );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.message || 'Failed to fetch chat messages');
+    }
+
+    if (Array.isArray(response.data.data)) {
+      return response.data.data;
+    }
+
+    if ('messages' in response.data.data && Array.isArray(response.data.data.messages)) {
+      return response.data.data.messages;
+    }
+
+    if ('items' in response.data.data && Array.isArray(response.data.data.items)) {
+      return response.data.data.items;
+    }
+
+    return [];
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Fetch chat messages error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during chat messages fetch');
+  }
+};
+
+/**
+ * 신청별 채팅 메시지 전송 (브리더용)
+ * POST /api/breeder-management/applications/:applicationId/chat/messages
+ */
+export const sendApplicationChatMessage = async (
+  applicationId: string,
+  requestData: SendBreederChatMessageRequestDto,
+): Promise<BreederChatMessageDto | null> => {
+  try {
+    const response = await apiClient.post<ApiResponse<BreederChatMessageDto>>(
+      `/api/breeder-management/applications/${applicationId}/chat/messages`,
+      requestData,
+    );
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || 'Failed to send chat message');
+    }
+
+    return response.data.data ?? null;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Send chat message error:', error.message);
+      throw error;
+    }
+    throw new Error('Unknown error during chat message send');
   }
 };
