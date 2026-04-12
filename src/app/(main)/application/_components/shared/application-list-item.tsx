@@ -30,6 +30,8 @@ interface ApplicationListItemProps {
   petName?: string;
   /** 입양 원하는 아이 정보 (드롭다운 선택 또는 직접 입력 텍스트) */
   preferredPetInfo?: string;
+  /** 채팅방 진입 콜백 (입양자 화면에서 사용) */
+  onChatClick?: () => void;
 }
 
 export default function ApplicationListItem({
@@ -46,6 +48,7 @@ export default function ApplicationListItem({
   adopterName,
   petName,
   preferredPetInfo,
+  onChatClick,
 }: ApplicationListItemProps) {
   // 🔧 모든 hooks는 컴포넌트 최상단에서 호출 (React Hooks 규칙 준수)
   // 입양자 화면용 상태
@@ -89,20 +92,42 @@ export default function ApplicationListItem({
               <BreederInfo breederName={breederName} />
               <div className="flex justify-between items-center gap-2">
                 <p className="text-body-s font-normal text-grayscale-gray5 whitespace-nowrap">{applicationDate}</p>
-                {/* 후기 버튼 - 상담 완료/입양 승인 상태에서만 표시 */}
-                {canWriteReview && (
-                  <Button
-                    variant="ghost"
-                    className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 md:hidden"
-                    onClick={handleReviewButtonClick}
-                  >
-                    <span className="text-body-xs font-normal text-grayscale-gray6">{buttonText}</span>
-                    <Pencil className="size-4" />
-                  </Button>
-                )}
+                <div className="flex items-center gap-2">
+                  {/* 채팅 버튼 (모바일) */}
+                  {onChatClick && (
+                    <Button
+                      variant="ghost"
+                      className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 rounded-lg shrink-0 md:hidden"
+                      onClick={(e) => { e.stopPropagation(); onChatClick(); }}
+                    >
+                      <span className="text-body-xs font-normal text-grayscale-gray6">채팅하기</span>
+                    </Button>
+                  )}
+                  {/* 후기 버튼 - 상담 완료/입양 승인 상태에서만 표시 */}
+                  {canWriteReview && (
+                    <Button
+                      variant="ghost"
+                      className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 gap-1 rounded-lg shrink-0 md:hidden"
+                      onClick={handleReviewButtonClick}
+                    >
+                      <span className="text-body-xs font-normal text-grayscale-gray6">{buttonText}</span>
+                      <Pencil className="size-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
 
+            {/* 채팅 버튼 (데스크톱) */}
+            {onChatClick && (
+              <Button
+                variant="ghost"
+                className="bg-[var(--color-tertiary-500)] hover:bg-[var(--color-tertiary-600)] h-8 px-3 py-2 rounded-lg shrink-0 hidden md:flex"
+                onClick={(e) => { e.stopPropagation(); onChatClick(); }}
+              >
+                <span className="text-body-xs font-normal text-grayscale-gray6">채팅하기</span>
+              </Button>
+            )}
             {/* 후기 버튼 (데스크톱) - 상담 완료/입양 승인 상태에서만 표시 */}
             {canWriteReview && (
               <Button
@@ -140,13 +165,16 @@ export default function ApplicationListItem({
     return (
       <>
         <div
-          className="bg-[#F8F8EE] flex flex-col gap-3 p-5 rounded-lg w-full cursor-pointer hover:bg-[#F0F0E5] transition-colors"
+          className="bg-[#F8F8EE] flex flex-col p-5 rounded-lg w-full cursor-pointer hover:bg-[#F0F0E5] transition-colors"
           onClick={() => setIsModalOpen(true)}
         >
           {/* 신청자 정보 */}
           <div className="flex flex-col gap-1 w-full">
-            {/* 신청자 닉네임 */}
-            <h3 className="text-body-m font-medium text-[#4F3B2E]">{adopterName}</h3>
+            {/* 신청자 닉네임 + 날짜 */}
+            <div className="flex items-center justify-between">
+              <h3 className="text-body-m font-medium text-[#4F3B2E]">{adopterName}</h3>
+              <p className="text-body-s font-normal text-[#888888] shrink-0">{applicationDate}</p>
+            </div>
 
             {/* 분양 중인 아이 정보 (드롭다운 선택 또는 직접 입력 텍스트) */}
             <p className="text-body-s font-normal text-[#888888] overflow-ellipsis overflow-hidden whitespace-nowrap">
@@ -154,11 +182,7 @@ export default function ApplicationListItem({
             </p>
           </div>
 
-          {/* 뱃지 + 날짜 */}
-          <div className="flex items-center gap-3">
-            <ApplicationStatusBadge status={status} />
-            <p className="text-body-s font-normal text-[#888888]">{applicationDate}</p>
-          </div>
+       
         </div>
 
         {/* 상세보기 모달 */}
