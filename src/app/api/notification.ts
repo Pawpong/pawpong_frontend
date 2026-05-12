@@ -148,3 +148,15 @@ export async function deleteNotification(notificationId: string): Promise<void> 
     throw new Error(response.data.error || '알림 삭제에 실패했습니다.');
   }
 }
+
+/**
+ * FCM 푸시 토큰 등록
+ * @param token FCM 디바이스 토큰
+ */
+export async function registerPushToken(token: string): Promise<void> {
+  const response = await api.post<ApiResponse<null>>('/api/notification/push-token', { token });
+
+  if (!response.data.success) {
+    throw new Error(response.data.error || 'FCM 토큰 등록에 실패했습니다.');
+  }
+}
