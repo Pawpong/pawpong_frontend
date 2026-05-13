@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 import { useAnalytics } from '@/hooks/use-analytics';
 import { LoadingState } from '@/components/loading-state';
+import { registerPushToken } from '@/app/api/notification';
 
 /**
  * 소셜 로그인 성공 후 토큰을 쿠키에 저장하는 페이지
@@ -16,6 +17,26 @@ import { LoadingState } from '@/components/loading-state';
  * - Next.js 15에서 Server Component에서는 쿠키 수정 불가
  * - 브라우저에서 직접 fetch해야 Set-Cookie 헤더가 적용됨
  */
+function requestAndRegisterFcmToken() {
+  if (typeof window === 'undefined' || !window.ReactNativeWebView) return;
+
+  const timeout = setTimeout(() => {
+    delete window.__onFCMToken;
+  }, 5000);
+
+  window.__onFCMToken = async (token: string) => {
+    clearTimeout(timeout);
+    delete window.__onFCMToken;
+    try {
+      await registerPushToken(token);
+    } catch {
+      // FCM 등록 실패는 로그인 flow를 막지 않음
+    }
+  };
+
+  window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'REQUEST_FCM_TOKEN' }));
+}
+
 function LoginSuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -72,6 +93,7 @@ function LoginSuccessContent() {
           // 로그인 성공 - returnUrl이 있으면 그곳으로, 없으면 홈으로 이동
           const returnUrl = searchParams.get('returnUrl') || '/';
 
+          requestAndRegisterFcmToken();
           router.replace(returnUrl);
         } else {
           console.error('쿠키 설정 실패');
