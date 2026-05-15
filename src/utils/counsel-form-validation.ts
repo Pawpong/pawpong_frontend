@@ -43,18 +43,10 @@ export function isFormEmpty(data: CounselFormData): boolean {
 export function isFormComplete(data: CounselFormData): boolean {
   const requiredFields: (keyof CounselFormData)[] = [
     'privacyAgreement',
-    'name',
-    'phone',
-    'email',
-    'introduction',
-    'familyMembers',
-    'familyAgreement',
-    'allergyCheck',
-    'awayTime',
-    'livingSpace',
-    'previousPets',
     'basicCare',
     'medicalExpense',
+    'familyMembers',
+    'familyAgreement',
   ];
 
   return requiredFields.every((key) => hasValue(data[key]));
